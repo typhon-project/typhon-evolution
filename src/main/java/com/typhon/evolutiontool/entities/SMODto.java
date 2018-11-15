@@ -5,21 +5,19 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @JsonRootName("smo")
-public class SMO {
-
+public class SMODto {
     private TyphonMLObject typhonObject;
     private EvolutionOperator evolutionOperator;
+    @JsonProperty("input")
     private JsonNode inputParameter;
 
-    public SMO(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {
-        this.typhonObject=typhonObject;
-        this.evolutionOperator=evolutionOperator;
+    public SMODto(){}
+
+    public SMODto(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator, JsonNode inputParameter) {
+        this.typhonObject = typhonObject;
+        this.evolutionOperator = evolutionOperator;
+        this.inputParameter = inputParameter;
     }
-
-    public SMO() {
-    }
-
-
 
     public TyphonMLObject getTyphonObject() {
         return typhonObject;
@@ -28,7 +26,6 @@ public class SMO {
     public void setTyphonObject(TyphonMLObject typhonObject) {
         this.typhonObject = typhonObject;
     }
-
 
     public EvolutionOperator getEvolutionOperator() {
         return evolutionOperator;
@@ -44,14 +41,5 @@ public class SMO {
 
     public void setInputParameter(JsonNode inputParameter) {
         this.inputParameter = inputParameter;
-    }
-
-    @Override
-    public String toString() {
-        return "SMO{" +
-                "typhonObject=" + typhonObject +
-                ", evolutionOperator=" + evolutionOperator +
-                ", inputParameter=" + inputParameter +
-                '}';
     }
 }

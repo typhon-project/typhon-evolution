@@ -8,4 +8,6 @@ public interface EvolutionToolFacade {
     Message executeSMO(SMO smo, long counter);
 
     boolean verifyInputParameter(SMO smo);
+
+    StructureChange createStructureChanges(SMO smo);
 }

@@ -44,10 +44,10 @@ public class SMOTests {
         JsonNode entitynamenode, attributesnode, inputParameter;
         inputParameter = smo.getInputParameter();
         entitynamenode = inputParameter.get("entity");
-        assertTrue(entitynamenode.textValue().equals("Professor"));
+        assertEquals("Professor", entitynamenode.textValue());
 
         attributesnode = inputParameter.get("attributes");
-        assertTrue(attributesnode.get("name").textValue().equals("string"));
+        assertEquals("string",attributesnode.get("name").textValue());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class SMOTests {
         Entity entity;
         try {
             entity = mapper.treeToValue(smo.getInputParameter(), Entity.class);
-            assertEquals("Professor",entity.getEntity());
+            assertEquals("Professor",entity.getEntityName());
             assertEquals("string", entity.getAttributes().get("name").textValue());
         } catch (IOException e) {
             e.printStackTrace();

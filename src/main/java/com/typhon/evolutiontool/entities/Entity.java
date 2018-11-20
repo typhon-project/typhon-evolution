@@ -3,16 +3,16 @@ package com.typhon.evolutiontool.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.HashMap;
-
 public class Entity {
 
-    private String entity;
+    @JsonProperty("entity")
+    private String entityName;
     @JsonProperty("databasetype")
     private String databaseType;
     @JsonProperty("databasemappingname")
     private String databaseMappingName;
-    private String id;
+    @JsonProperty("id")
+    private String entityId;
     private JsonNode attributes;
 
     public Entity() {
@@ -21,20 +21,20 @@ public class Entity {
     @Override
     public String toString() {
         return "Entity{" +
-                "entity='" + entity + '\'' +
+                "entityName='" + entityName + '\'' +
                 ", databaseType='" + databaseType + '\'' +
                 ", databaseMappingName='" + databaseMappingName + '\'' +
-                ", id='" + id + '\'' +
+                ", entityId='" + entityId + '\'' +
                 ", attributes=" + attributes +
                 '}';
     }
 
-    public String getEntity() {
-        return entity;
+    public String getEntityName() {
+        return entityName;
     }
 
-    public void setEntity(String entity) {
-        this.entity = entity;
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     public String getDatabaseType() {
@@ -53,12 +53,12 @@ public class Entity {
         this.databaseMappingName = databaseMappingName;
     }
 
-    public String getId() {
-        return id;
+    public String getEntityId() {
+        return entityId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
     }
 
     public JsonNode getAttributes() {

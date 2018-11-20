@@ -42,6 +42,13 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
         return false;
     }
 
+    @Override
+    public StructureChange createStructureChanges(SMO smo) {
+        StructureChange structureChange = new StructureChange();
+        structureChange = structureChange.computeChanges(smo);
+        return structureChange;
+    }
+
 
     private Entity getEntityParameter(JsonNode inputParameter) {
         //Convert to Entity if possible

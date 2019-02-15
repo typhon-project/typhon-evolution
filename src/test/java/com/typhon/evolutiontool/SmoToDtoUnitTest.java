@@ -17,7 +17,7 @@ public class SmoToDtoUnitTest {
 
     private ObjectMapper mapper = new ObjectMapper();
     private ModelMapper modelMapper = new ModelMapper();
-    private String createEntityFilePath = "src/main/resources/test/smoCreateEntity.json";
+    private String createEntityFilePath = "src/main/resources/test/CreateEntitySmoValid.json";
     private File smoJsonFile;
 
 

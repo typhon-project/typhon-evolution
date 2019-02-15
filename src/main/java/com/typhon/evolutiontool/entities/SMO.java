@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.List;
 import java.util.Map;
 
 @JsonRootName("smo")
@@ -58,5 +59,14 @@ public class SMO {
                 ", evolutionOperator=" + evolutionOperator +
                 ", inputParameter=" + inputParameter +
                 '}';
+    }
+
+    public boolean verifyInputParameters(List<String> expectedInputParams) {
+        for (String expected :
+                expectedInputParams) {
+            if (!this.inputParameter.containsKey(expected))
+                return false;
+        }
+        return true;
     }
 }

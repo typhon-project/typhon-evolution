@@ -8,13 +8,15 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.*;
 
 public class SMOTests {
 
-    private String createEntityFilePath = "src/main/resources/test/smoCreateEntity.json";
+    private String createEntityFilePath = "src/main/resources/test/CreateEntitySmoValid.json";
     private File smoJsonFile;
     private ObjectMapper mapper;
     private SMO smo;
@@ -42,5 +44,14 @@ public class SMOTests {
         assertNotNull(smoDto.getInputParameter().get("targetmodel"));
     }
 
+    @Test
+    public void testVerifyInputParameters() throws IOException {
+        List<String> expectedInputParams = Arrays.asList("entity", "targetmodel");
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        assertTrue(smo.verifyInputParameters(expectedInputParams));
+        expectedInputParams = Arrays.asList("entity");
+        assertTrue(smo.verifyInputParameters(expectedInputParams));
+        assertFalse(smo.verifyInputParameters(Arrays.asList("notin")));
+    }
 
 }

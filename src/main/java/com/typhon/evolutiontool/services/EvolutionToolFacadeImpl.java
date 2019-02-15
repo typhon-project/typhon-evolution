@@ -4,6 +4,7 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
         this.evolutionService = evolutionService;
     }
 
-    public String executeSMO(SMO smo) {
+    public String executeSMO(SMO smo) throws InputParameterException {
         logger.info("Received SMO : [" + smo + "]");
         if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()==EvolutionOperator.ADD)
             return evolutionService.addEntity(smo);

@@ -3,6 +3,7 @@ package com.typhon.evolutiontool.controller;
 import com.typhon.evolutiontool.Message;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.SMODto;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionToolFacade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,12 @@ public class RestController {
     public Message postSmo(@RequestBody SMODto smoDto){
         SMO smo = modelMapper.map(smoDto, SMO.class);
         Message message;
-        message = new Message(evolutionToolFacade.executeSMO(smo));
+        try {
+            evolutionToolFacade.executeSMO(smo);
+            message = new Message("[" + smo.toString() + "] executed");
+        } catch (InputParameterException exception) {
+            message = new Message("FAILED "+exception.getMessage());
+        }
         return message;
     }
 

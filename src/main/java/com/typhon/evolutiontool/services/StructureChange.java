@@ -40,7 +40,7 @@ public class StructureChange {
         //TODO Check SMO Object consistency
         if (smo.getEvolutionOperator() == EvolutionOperator.ADD) {
             if (smo.getTyphonObject() == TyphonMLObject.ENTITY) {
-                return new StructureChange(smo, "CREATE ENTITY "+smo.getInputParameter().get("entity").textValue());
+                return new StructureChange(smo, "CREATE ENTITY "+smo.getInputParameter().get("entity"));
             }
         }
         return this;

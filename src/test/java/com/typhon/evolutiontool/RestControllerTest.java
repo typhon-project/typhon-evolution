@@ -37,9 +37,6 @@ public class RestControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
-    private EvolutionToolFacade evolutionToolFacade;
-
     @Test
     public void testSendSMO() throws Exception {
         mvc.perform(post("/smo").contentType(MediaType.APPLICATION_JSON).content(ADD_ENTITY_JSON)).andReturn().getResponse();

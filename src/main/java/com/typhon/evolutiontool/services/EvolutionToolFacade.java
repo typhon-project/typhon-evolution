@@ -1,13 +1,9 @@
 package com.typhon.evolutiontool.services;
 
-import com.typhon.evolutiontool.Message;
 import com.typhon.evolutiontool.entities.SMO;
 
 public interface EvolutionToolFacade {
 
-    Message executeSMO(SMO smo, long counter);
+    String executeSMO(SMO smo);
 
-    boolean verifyInputParameter(SMO smo);
-
-    StructureChange createStructureChanges(SMO smo);
 }

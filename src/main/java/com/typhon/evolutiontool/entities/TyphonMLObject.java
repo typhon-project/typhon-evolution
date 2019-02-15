@@ -1,14 +1,15 @@
 package com.typhon.evolutiontool.entities;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum TyphonMLObject {
 
-    @JsonProperty("Entity")
+    @JsonAlias("entity")
     ENTITY,
-    @JsonProperty("Attribute")
+    @JsonAlias("attribute")
     ATTRIBUTE,
-    @JsonProperty("Relation")
+    @JsonAlias("relation")
     RELATION,
 
 }

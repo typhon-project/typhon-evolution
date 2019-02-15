@@ -1,23 +1,29 @@
 package com.typhon.evolutiontool.entities;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
 
-@JsonRootName("smo")
+import java.util.Map;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SMODto {
+    @JsonProperty("typhonobject")
     private TyphonMLObject typhonObject;
+    @JsonProperty("operator")
     private EvolutionOperator evolutionOperator;
-    @JsonProperty("input")
-    private JsonNode inputParameter;
+    @JsonProperty("parameters")
+    private Map<String,Object> inputParameter;
 
     public SMODto(){}
 
-    public SMODto(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator, JsonNode inputParameter) {
+    public SMODto(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {
         this.typhonObject = typhonObject;
         this.evolutionOperator = evolutionOperator;
-        this.inputParameter = inputParameter;
     }
+
 
     public TyphonMLObject getTyphonObject() {
         return typhonObject;
@@ -35,11 +41,11 @@ public class SMODto {
         this.evolutionOperator = evolutionOperator;
     }
 
-    public JsonNode getInputParameter() {
+    public Map<String, Object> getInputParameter() {
         return inputParameter;
     }
 
-    public void setInputParameter(JsonNode inputParameter) {
+    public void setInputParameter(Map<String,Object> inputParameter) {
         this.inputParameter = inputParameter;
     }
 }

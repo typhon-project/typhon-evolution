@@ -1,66 +1,46 @@
 package com.typhon.evolutiontool;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typhon.evolutiontool.entities.Entity;
-import com.typhon.evolutiontool.entities.EvolutionOperator;
-import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.entities.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
+import static junit.framework.TestCase.*;
 
 public class SMOTests {
 
+    private String createEntityFilePath = "src/main/resources/test/smoCreateEntity.json";
+    private File smoJsonFile;
     private ObjectMapper mapper;
     private SMO smo;
+    private SMODto smoDto;
 
     @Before
-    public void setUp(){
+    public void setUp() throws IOException {
+        smoJsonFile = new File(createEntityFilePath);
         mapper = new ObjectMapper();
-        smo = new SMO(TyphonMLObject.ENTITY, EvolutionOperator.ADD);
-        try {
-            smo.setInputParameter(mapper.readTree("{\"entity\":\"Professor\",\"attributes\":{\"name\":\"string\",\"hireDate\":\"date\"}, \"databasetype\":\"relationaldb\"" +
-                    ",\"databasemappingname\":\"Professor\",\"id\":\"name\"}"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        }
+        smoDto = mapper.readerFor(SMODto.class).readValue(smoJsonFile);
     }
 
     @Test
-    public void testCreateSMO() {
-        assertEquals(smo.getTyphonObject(), TyphonMLObject.ENTITY);
-        assertEquals(smo.getEvolutionOperator(), EvolutionOperator.ADD);
+    public void testCreateSMODto() {
+        assertNotNull(smoDto);
+        assertEquals(TyphonMLObject.ENTITY,smoDto.getTyphonObject());
+        assertEquals(EvolutionOperator.ADD,smoDto.getEvolutionOperator());
+        assertNotNull(smoDto.getInputParameter());
     }
 
     @Test
-    public void testInputParameterEntityString(){
-        JsonNode entitynamenode, attributesnode, inputParameter;
-        inputParameter = smo.getInputParameter();
-        entitynamenode = inputParameter.get("entity");
-        assertEquals("Professor", entitynamenode.textValue());
-
-        attributesnode = inputParameter.get("attributes");
-        assertEquals("string",attributesnode.get("name").textValue());
+    public void testInputParameterAsMap(){
+        assertTrue(smoDto.getInputParameter() instanceof Map);
+        assertNotNull(smoDto.getInputParameter());
+        assertNotNull(smoDto.getInputParameter().get("targetmodel"));
     }
 
-    @Test
-    public void testInputParameterCastToEntityObject(){
-        Entity entity;
-        try {
-            entity = mapper.treeToValue(smo.getInputParameter(), Entity.class);
-            assertEquals("Professor",entity.getEntityName());
-            assertEquals("string", entity.getAttributes().get("name").textValue());
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        }
-    }
 
 }

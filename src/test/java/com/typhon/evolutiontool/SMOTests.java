@@ -54,4 +54,10 @@ public class SMOTests {
         assertFalse(smo.verifyInputParameters(Arrays.asList("notin")));
     }
 
+    @Test
+    public void testGetParameter() throws IOException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        assertEquals("TyphonML_V2",smo.getInputParameter().get("targetmodel"));
+    }
+
 }

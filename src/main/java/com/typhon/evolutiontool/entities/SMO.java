@@ -3,12 +3,17 @@ package com.typhon.evolutiontool.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-@JsonRootName("smo")
 public class SMO {
+
+    Logger logger = LoggerFactory.getLogger(SMO.class);
 
     @JsonProperty("typhonobject")
     private TyphonMLObject typhonObject;
@@ -61,7 +66,8 @@ public class SMO {
                 '}';
     }
 
-    public boolean verifyInputParameters(List<String> expectedInputParams) {
+    public boolean inputParametersContainsExpected(List<String> expectedInputParams) {
+        logger.info("Verifying input parameter for add entity modification operator");
         for (String expected :
                 expectedInputParams) {
             if (!this.inputParameter.containsKey(expected))
@@ -69,4 +75,10 @@ public class SMO {
         }
         return true;
     }
+
+    public <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass) {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(this.getInputParameter().get(key), pojoclass);
+    }
+
 }

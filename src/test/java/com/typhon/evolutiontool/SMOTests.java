@@ -3,12 +3,12 @@ package com.typhon.evolutiontool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.entities.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +48,10 @@ public class SMOTests {
     public void testVerifyInputParameters() throws IOException {
         List<String> expectedInputParams = Arrays.asList("entity", "targetmodel");
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        assertTrue(smo.verifyInputParameters(expectedInputParams));
+        assertTrue(smo.inputParametersContainsExpected(expectedInputParams));
         expectedInputParams = Arrays.asList("entity");
-        assertTrue(smo.verifyInputParameters(expectedInputParams));
-        assertFalse(smo.verifyInputParameters(Arrays.asList("notin")));
+        assertTrue(smo.inputParametersContainsExpected(expectedInputParams));
+        assertFalse(smo.inputParametersContainsExpected(Arrays.asList("notin")));
     }
 
     @Test
@@ -60,4 +60,19 @@ public class SMOTests {
         assertEquals("TyphonML_V2",smo.getInputParameter().get("targetmodel"));
     }
 
+
+    @Test
+    public void testCastInputParameterToPOJO() throws IOException {
+        Entity expectedEntity, inputEntity;
+        Map<String, String> expectedAttributes = new HashMap<>();
+        expectedAttributes.put("name", "string");
+        expectedAttributes.put("hireDate", "date");
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        expectedEntity = new Entity("Professor");
+        expectedEntity.setAttributes(expectedAttributes);
+
+        inputEntity = smo.getPOJOFromInputParameter("entity", Entity.class);
+        assertEquals(expectedEntity,inputEntity);
+
+    }
 }

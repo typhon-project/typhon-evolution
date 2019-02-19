@@ -3,30 +3,53 @@ package com.typhon.evolutiontool.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+
 public class Entity {
 
-    @JsonProperty("entity")
+    @JsonProperty("name")
     private String entityName;
-    @JsonProperty("databasetype")
-    private String databaseType;
-    @JsonProperty("databasemappingname")
-    private String databaseMappingName;
-    @JsonProperty("id")
-    private String entityId;
-    private JsonNode attributes;
+    @JsonProperty("attributes")
+    private Map<String,String> attributes;
 
     public Entity() {
+    }
+
+    public Entity(String entityName) {
+        this.entityName = entityName;
+    }
+
+    public void addAttribute(String name, String datatype) {
+        if (attributes == null) {
+            attributes = new HashMap<>();
+        }
+        attributes.put(name, datatype);
     }
 
     @Override
     public String toString() {
         return "Entity{" +
                 "entityName='" + entityName + '\'' +
-                ", databaseType='" + databaseType + '\'' +
-                ", databaseMappingName='" + databaseMappingName + '\'' +
-                ", entityId='" + entityId + '\'' +
                 ", attributes=" + attributes +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return Objects.equals(entityName, entity.entityName) &&
+                Objects.equals(attributes, entity.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entityName, attributes);
     }
 
     public String getEntityName() {
@@ -37,35 +60,12 @@ public class Entity {
         this.entityName = entityName;
     }
 
-    public String getDatabaseType() {
-        return databaseType;
-    }
 
-    public void setDatabaseType(String databaseType) {
-        this.databaseType = databaseType;
-    }
-
-    public String getDatabaseMappingName() {
-        return databaseMappingName;
-    }
-
-    public void setDatabaseMappingName(String databaseMappingName) {
-        this.databaseMappingName = databaseMappingName;
-    }
-
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(String entityId) {
-        this.entityId = entityId;
-    }
-
-    public JsonNode getAttributes() {
+    public Map<String,String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(JsonNode attributes) {
+    public void setAttributes(Map<String,String> attributes) {
         this.attributes = attributes;
     }
 }

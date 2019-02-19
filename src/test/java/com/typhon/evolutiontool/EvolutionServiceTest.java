@@ -1,10 +1,13 @@
 package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typhon.evolutiontool.entities.Attribute;
+import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.TyphonDLConnector;
+import com.typhon.evolutiontool.services.TyphonQLGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,6 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.*;
@@ -22,7 +27,8 @@ public class EvolutionServiceTest {
 
     @Mock
     TyphonDLConnector typhonDLConnection;
-
+    @Mock
+    TyphonQLGenerator typhonQLGenerator;
     @InjectMocks
     EvolutionServiceImpl evolutionService= new EvolutionServiceImpl();
     private ObjectMapper mapper = new ObjectMapper();
@@ -45,8 +51,27 @@ public class EvolutionServiceTest {
     @Test
     public void testVerifyTyphonDLStructureForCreateEntity() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        //Database is running case
+        when(typhonDLConnection.isDatabaseRunning(smo.getInputParameter().get("databasetype").toString(), smo.getInputParameter().get("databasename").toString())).thenReturn(true);
         evolutionService.addEntity(smo);
-        verify(typhonDLConnection, times(1)).isRunning(smo.getInputParameter().get("databasetype").toString(),smo.getInputParameter().get("databasename").toString());
+        // Verify that isDatabaseRunning is called. And CreateDatabase is not called.
+        verify(typhonDLConnection, times(1)).isDatabaseRunning(smo.getInputParameter().get("databasetype").toString(),smo.getInputParameter().get("databasename").toString());
+        verify(typhonDLConnection, times(0)).createDatabase(smo.getInputParameter().get("databasetype").toString(),smo.getInputParameter().get("databasename").toString());
+        //Database is not running case
+        when(typhonDLConnection.isDatabaseRunning(smo.getInputParameter().get("databasetype").toString(), smo.getInputParameter().get("databasename").toString())).thenReturn(false);
+        evolutionService.addEntity(smo);
+        //createDatabase method is called.
+        verify(typhonDLConnection, times(1)).createDatabase(smo.getInputParameter().get("databasetype").toString(),smo.getInputParameter().get("databasename").toString());
     }
+
+
+    @Test
+    public void testCallTyphonQLCreateEntity() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        when(typhonQLGenerator.createEntity(any(Entity.class))).thenReturn("TyphonQL create entity command");
+        evolutionService.addEntity(smo);
+        verify(typhonQLGenerator).createEntity(any(Entity.class));
+    }
+
 
 }

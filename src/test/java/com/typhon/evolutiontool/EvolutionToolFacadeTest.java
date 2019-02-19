@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,15 +32,15 @@ public class EvolutionToolFacadeTest {
     @Test
     public void testExecuteAddEntitySMO() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/dummyCreateEntitySmo.json"));
-        when(evolutionServiceMock.addEntity(smo)).thenReturn("add entity");
-        assertTrue(evolutionToolFacade.executeSMO(smo).contains("add entity"));
+        evolutionToolFacade.executeSMO(smo);
+        verify(evolutionServiceMock).addEntity(smo);
     }
 
     @Test
     public void testExecuteRenameEntitySMO() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/dummyRenameEntitySmo.json"));
-        when(evolutionServiceMock.renameEntity(smo)).thenReturn("rename entity");
-        assertTrue(evolutionToolFacade.executeSMO(smo).contains("rename entity"));
+        evolutionToolFacade.executeSMO(smo);
+        verify(evolutionServiceMock).renameEntity(smo);
     }
 
 

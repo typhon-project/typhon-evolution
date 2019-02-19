@@ -2,5 +2,7 @@ package com.typhon.evolutiontool.services;
 
 public interface TyphonDLConnector {
 
-    boolean isRunning(String databasetype, String databasename);
+    boolean isDatabaseRunning(String databasetype, String databasename);
+
+    void createDatabase(String databasetype, String databasename);
 }

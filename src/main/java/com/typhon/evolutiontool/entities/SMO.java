@@ -67,7 +67,6 @@ public class SMO {
     }
 
     public boolean inputParametersContainsExpected(List<String> expectedInputParams) {
-        logger.info("Verifying input parameter for add entity modification operator");
         for (String expected :
                 expectedInputParams) {
             if (!this.inputParameter.containsKey(expected))

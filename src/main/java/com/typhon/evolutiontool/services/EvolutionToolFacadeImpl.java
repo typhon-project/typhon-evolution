@@ -24,9 +24,9 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
 
     public String executeSMO(SMO smo) throws InputParameterException {
         logger.info("Received SMO : [" + smo + "]");
-        if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()==EvolutionOperator.ADD)
+        if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.ADD)
             return evolutionService.addEntity(smo);
-        if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()==EvolutionOperator.RENAME)
+        if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.RENAME)
             return evolutionService.renameEntity(smo);
 
         return null;

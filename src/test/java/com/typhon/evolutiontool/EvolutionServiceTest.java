@@ -1,13 +1,12 @@
 package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typhon.evolutiontool.entities.Attribute;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.TyphonDLConnector;
-import com.typhon.evolutiontool.services.TyphonQLGenerator;
+import com.typhon.evolutiontool.services.TyphonInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,8 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +25,7 @@ public class EvolutionServiceTest {
     @Mock
     TyphonDLConnector typhonDLConnection;
     @Mock
-    TyphonQLGenerator typhonQLGenerator;
+    TyphonInterface typhonInterface;
     @InjectMocks
     EvolutionServiceImpl evolutionService= new EvolutionServiceImpl();
     private ObjectMapper mapper = new ObjectMapper();
@@ -68,10 +65,35 @@ public class EvolutionServiceTest {
     @Test
     public void testCallTyphonQLCreateEntity() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        when(typhonQLGenerator.createEntity(any(Entity.class))).thenReturn("TyphonQL create entity command");
         evolutionService.addEntity(smo);
-        verify(typhonQLGenerator).createEntity(any(Entity.class));
+        verify(typhonInterface).createEntity(any(Entity.class));
     }
 
 
+    /*
+    ** RENAME ENTITY
+     */
+
+    @Test
+    public void testRenameEntity() throws IOException {
+        try {
+            smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
+            assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
+            smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoIncompleteParam.json"));
+            evolutionService.renameEntity(smo);
+            fail();
+        } catch (InputParameterException exception) {
+            assertTrue(exception.getMessage().contains("Missing parameter"));
+        }
+    }
+
+    @Test
+    public void testRenameEntityIgnoreCase() throws IOException {
+        try {
+            smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValidIgnoreCase.json"));
+            assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
+        } catch (InputParameterException exception) {
+            fail();
+        }
+    }
 }

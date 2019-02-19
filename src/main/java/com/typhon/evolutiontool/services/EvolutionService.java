@@ -6,5 +6,5 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 public interface EvolutionService {
     String addEntity(SMO smo) throws InputParameterException;
 
-    String renameEntity(SMO smo);
+    String renameEntity(SMO smo) throws InputParameterException;
 }

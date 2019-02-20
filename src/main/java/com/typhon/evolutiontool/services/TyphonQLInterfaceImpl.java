@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class TyphonQLInterfaceImpl implements TyphonInterface {
 
     Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
-    private String typhonMLTargetModel;
     private TyphonQLConnection typhonQLConnection;
 
     public TyphonQLInterfaceImpl() {
@@ -24,23 +23,20 @@ public class TyphonQLInterfaceImpl implements TyphonInterface {
     }
 
     @Override
-    public String createEntity(Entity newEntity) {
+    public String createEntity(Entity newEntity, String typhonMLVersion) {
         String tql;
-        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getEntityName(),this.typhonMLTargetModel);
+        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getEntityName(),typhonMLVersion);
         tql="TyphonQL CREATE ENTITY "+newEntity.getEntityName()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
-        typhonQLConnection.executeTyphonQLDDL(tql);
+        typhonQLConnection.executeTyphonQLDDL(tql,typhonMLVersion);
         return tql;
     }
 
     @Override
-    public void setTyphonMLTargetModel(String targetmodel) {
-        this.typhonMLTargetModel = targetmodel;
-    }
-
-    @Override
-    public void renameEntity(String oldEntityName, String newEntityName) {
-        logger.info("Rename Entity [{}] to [{}] via TyphonQL", oldEntityName, newEntityName);
+    public void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion) {
+        logger.info("Rename Entity [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, typhonMLVersion);
         String tql = "TyphonQL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
+        typhonQLConnection.executeTyphonQLDDL(tql,typhonMLVersion);
+
     }
 
 }

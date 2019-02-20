@@ -13,21 +13,15 @@ import org.springframework.stereotype.Component;
 public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
 
     Logger logger = LoggerFactory.getLogger(TyphonCRUDApiInterfaceImpl.class);
-    private String typhonMLTargetModel;
 
     @Override
-    public String createEntity(Entity newEntity) {
-        logger.info("Create entity [{}] via TyphonCRUD API", newEntity.getEntityName());
-        return "Call to CRUD API on TyphonML model : "+this.typhonMLTargetModel;
+    public String createEntity(Entity newEntity, String typhonMLVersion) {
+        logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getEntityName());
+        return "Call to CRUD API on TyphonML model : "+typhonMLVersion;
     }
 
     @Override
-    public void setTyphonMLTargetModel(String targetmodel) {
-        this.typhonMLTargetModel = targetmodel;
-    }
-
-    @Override
-    public void renameEntity(String oldEntityName, String newEntityName) {
-        logger.info("Rename Entity [{}] to [{}] via TyphonCRUD API", oldEntityName, newEntityName);
+    public void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion) {
+        logger.info("Rename Entity [{}] to [{}] via TyphonCRUD API on typhonML version [{}]", oldEntityName, newEntityName, typhonMLVersion);
     }
 }

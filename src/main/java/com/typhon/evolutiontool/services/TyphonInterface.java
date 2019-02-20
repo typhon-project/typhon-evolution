@@ -7,9 +7,8 @@ import com.typhon.evolutiontool.entities.Entity;
  */
 public interface TyphonInterface {
 
-    String createEntity(Entity newEntity);
+    String createEntity(Entity newEntity, String typhonMLVersion);
 
-    void setTyphonMLTargetModel(String targetmodel);
+    void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion);
 
-    void renameEntity(String oldEntityName, String newEntityName);
 }

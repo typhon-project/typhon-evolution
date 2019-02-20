@@ -41,7 +41,7 @@ public class EvolutionServiceTest {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
             evolutionService.addEntity(smo);
             verify(typhonDLConnection).isDatabaseRunning(anyString(), anyString());
-            verify(typhonInterface).createEntity(any(Entity.class));
+            verify(typhonInterface).createEntity(any(Entity.class),anyString());
             verify(typhonMLInterface).setNewTyphonMLModel(anyString());
 //            assertTrue(evolutionService.addEntity(smo).equals("entity created"));
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoIncompleteParam.json"));

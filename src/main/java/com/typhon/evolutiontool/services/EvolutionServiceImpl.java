@@ -40,7 +40,6 @@ public class EvolutionServiceImpl implements EvolutionService{
         // Verify InputParameters
         if(containParameters(smo,Arrays.asList("entity","targetmodel","databasetype","databasename"))){
             targetmodelid = smo.getInputParameter().get("targetmodel").toString();
-            typhonInterface.setTyphonMLTargetModel(targetmodelid);
             databasetype = smo.getInputParameter().get("databasetype").toString();
             databasename = smo.getInputParameter().get("databasename").toString();
             // Verify that an instance of the underlying database is running in the TyphonDL.
@@ -49,7 +48,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             }
             //Executing evolution operations
             newEntity = smo.getPOJOFromInputParameter("entity", Entity.class);
-            typhonInterface.createEntity(newEntity);
+            typhonInterface.createEntity(newEntity,targetmodelid);
             //Informing TyphonML to set the targetModel as the current one and regenerate API.
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "entity created";
@@ -61,14 +60,13 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String renameEntity(SMO smo) throws InputParameterException {
-        String oldEntityName,newEntityName, targetmodel;
-        if (containParameters(smo, Arrays.asList("oldentityname", "newentityname", "targetmodel"))) {
-            targetmodel = smo.getInputParameter().get("targetmodel").toString();
+        String oldEntityName,newEntityName, modelversion;
+        if (containParameters(smo, Arrays.asList("oldentityname", "newentityname", "modelversion"))) {
+            modelversion = smo.getInputParameter().get("modelversion").toString();
             oldEntityName = smo.getInputParameter().get("oldentityname").toString();
             newEntityName = smo.getInputParameter().get("newentityname").toString();
-            typhonInterface.setTyphonMLTargetModel(targetmodel);
-            typhonInterface.renameEntity(oldEntityName, newEntityName);
-            typhonMLInterface.setNewTyphonMLModel(targetmodel);
+            typhonInterface.renameEntity(oldEntityName, newEntityName,modelversion);
+            typhonMLInterface.setNewTyphonMLModel(modelversion);
             return "entity renamed";
         } else {
             throw new InputParameterException("Missing parameter");

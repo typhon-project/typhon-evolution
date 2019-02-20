@@ -9,19 +9,13 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     Logger logger = LoggerFactory.getLogger(TyphonQLConnectionImpl.class);
 
+
     public TyphonQLConnectionImpl() {
     }
 
     @Override
-    public TyphonQLConnection getTyphonQLConnectionOnSpecifiedTyphonML(String typhonMLversion) {
-        logger.info("Connection TyphonQL to TyphonML [{}]", typhonMLversion);
-        //TODO implement effective connection
-        return this;
-    }
-
-    @Override
-    public String executeTyphonQLDDL(String tqlDDL) {
-        logger.info("Executing TyphonQL DDL [{}]", tqlDDL);
+    public String executeTyphonQLDDL(String tqlDDL,String targetTyphonMLversion) {
+        logger.info("Executing TyphonQL DDL [{}] \n on TyphonML [{}]", tqlDDL, targetTyphonMLversion);
         //TODO implement effective execution
         return tqlDDL;
     }

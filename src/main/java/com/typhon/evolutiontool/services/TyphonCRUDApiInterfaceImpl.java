@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
+/*
+    This class implements @see TyphonInterface using the TyphonML module CRUD API.
+ */
 @Component("typhoncrudapi")
 public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
 

@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.utils.MyKeyDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SMO {
 
@@ -20,6 +23,7 @@ public class SMO {
     @JsonProperty("operator")
     private EvolutionOperator evolutionOperator;
     @JsonProperty("parameters")
+    @JsonDeserialize(keyUsing = MyKeyDeserializer.class)
     private Map<String,Object> inputParameter;
 
     public SMO(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {

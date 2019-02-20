@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SMODto {
@@ -15,7 +16,7 @@ public class SMODto {
     @JsonProperty("operator")
     private EvolutionOperator evolutionOperator;
     @JsonProperty("parameters")
-    private Map<String,Object> inputParameter;
+    private Map<String,Object> inputParameter = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
 
     public SMODto(){}
 

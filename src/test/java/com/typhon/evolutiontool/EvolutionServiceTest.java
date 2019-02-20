@@ -7,6 +7,7 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.TyphonDLConnector;
 import com.typhon.evolutiontool.services.TyphonInterface;
+import com.typhon.evolutiontool.services.TyphonMLInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,8 @@ public class EvolutionServiceTest {
     TyphonDLConnector typhonDLConnection;
     @Mock
     TyphonInterface typhonInterface;
+    @Mock
+    TyphonMLInterface typhonMLInterface;
     @InjectMocks
     EvolutionServiceImpl evolutionService= new EvolutionServiceImpl();
     private ObjectMapper mapper = new ObjectMapper();
@@ -33,10 +36,14 @@ public class EvolutionServiceTest {
 
 
     @Test
-    public void testCreateEntityParameter() throws IOException {
+    public void testCreateEntity() throws IOException {
         try {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-            assertTrue(evolutionService.addEntity(smo).equals("entity created"));
+            evolutionService.addEntity(smo);
+            verify(typhonDLConnection).isDatabaseRunning(anyString(), anyString());
+            verify(typhonInterface).createEntity(any(Entity.class));
+            verify(typhonMLInterface).setNewTyphonMLModel(anyString());
+//            assertTrue(evolutionService.addEntity(smo).equals("entity created"));
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoIncompleteParam.json"));
             evolutionService.addEntity(smo);
             fail();
@@ -57,17 +64,10 @@ public class EvolutionServiceTest {
         //Database is not running case
         when(typhonDLConnection.isDatabaseRunning(smo.getInputParameter().get("databasetype").toString(), smo.getInputParameter().get("databasename").toString())).thenReturn(false);
         evolutionService.addEntity(smo);
-        //createDatabase method is called.
+        //Verify that createDatabase method is called.
         verify(typhonDLConnection, times(1)).createDatabase(smo.getInputParameter().get("databasetype").toString(),smo.getInputParameter().get("databasename").toString());
     }
 
-
-    @Test
-    public void testCallTyphonQLCreateEntity() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        evolutionService.addEntity(smo);
-        verify(typhonInterface).createEntity(any(Entity.class));
-    }
 
 
     /*
@@ -93,7 +93,26 @@ public class EvolutionServiceTest {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValidIgnoreCase.json"));
             assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
         } catch (InputParameterException exception) {
+            System.out.println(exception);
             fail();
         }
     }
+
+    /**
+     * MIGRATE ENTITY
+     */
+//
+//    @Test public void testMigrateEntity() throws IOException {
+//        Entity expectedEntityToMigrate = new Entity("Client");
+//        expectedEntityToMigrate.addAttribute("id", "int");
+//        expectedEntityToMigrate.addAttribute("name","string");
+//        expectedEntityToMigrate.addAttribute("city", "string");
+//        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmoValid.json"));
+//        when(typhonDLConnection.isDatabaseRunning("mongodb", "myDocDB")).thenReturn(true);
+//        evolutionService.migrateEntity(smo);
+//        verify(typhonInterface).createEntity(expectedEntityToMigrate);
+//        verify(typhonDLConnection).isDatabaseRunning("mongodb", "myDocDB");
+//        verify(typhonInterface).readEntityData("Client");
+//
+//    }
 }

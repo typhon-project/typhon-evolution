@@ -1,7 +1,5 @@
 package com.typhon.evolutiontool.services;
 
 public interface TyphonQLConnection {
-    TyphonQLConnection getTyphonQLConnectionOnSpecifiedTyphonML(String typhonMLversion);
-
-    String executeTyphonQLDDL(String tqlDDL);
+    String executeTyphonQLDDL(String tqlDDL, String targetTyphonMLversion);
 }

@@ -1,9 +1,9 @@
-package com.typhon.evolutiontool.services;
+package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.services.TyphonInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /*
@@ -16,7 +16,7 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
 
     @Override
     public String createEntity(Entity newEntity, String typhonMLVersion) {
-        logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getEntityName());
+        logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getId());
         return "Call to CRUD API on TyphonML model : "+typhonMLVersion;
     }
 

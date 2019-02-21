@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.services;
+package com.typhon.evolutiontool.services.typhonDL;
 
 public interface TyphonDLConnector {
 

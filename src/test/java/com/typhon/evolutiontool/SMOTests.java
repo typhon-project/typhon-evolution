@@ -64,7 +64,7 @@ public class SMOTests {
     @Test
     public void testCastInputParameterToPOJO() throws IOException {
         Entity expectedEntity, inputEntity;
-        Map<String, String> expectedAttributes = new HashMap<>();
+        Map<String, Object> expectedAttributes = new HashMap<>();
         expectedAttributes.put("name", "string");
         expectedAttributes.put("hireDate", "date");
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));

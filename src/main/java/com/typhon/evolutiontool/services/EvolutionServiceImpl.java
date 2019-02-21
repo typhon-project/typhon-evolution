@@ -3,6 +3,8 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLConnector;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
+import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.services.TyphonInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,16 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
         logger.info("Rename Entity [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, typhonMLVersion);
         String tql = "TyphonQL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
         getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
+
+    }
+
+    @Override
+    public WorkingSet readEntityData(Entity entity) {
+        return typhonQLConnection.query("from ? e select e", entity.getId());
+    }
+
+    @Override
+    public void writeWorkingSetData(WorkingSet workingSetData) {
 
     }
 

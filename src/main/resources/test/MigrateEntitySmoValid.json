@@ -1,0 +1,11 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "MIGRATE",
+  "parameters":
+  {
+    "targetmodel": "TyphonML_V2",
+    "entity" : "Client",
+    "databasename": "myDocDB",
+    "databasetype": "mongodb"
+  }
+}

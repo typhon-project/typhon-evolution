@@ -7,4 +7,6 @@ public interface EvolutionService {
     String addEntity(SMO smo) throws InputParameterException;
 
     String renameEntity(SMO smo) throws InputParameterException;
+
+    String migrateEntity(SMO smo) throws InputParameterException;
 }

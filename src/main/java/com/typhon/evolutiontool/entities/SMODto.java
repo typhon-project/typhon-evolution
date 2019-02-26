@@ -1,21 +1,19 @@
 package com.typhon.evolutiontool.entities;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.web.servlet.tags.Param;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SMODto {
-    @JsonProperty("typhonobject")
+    @JsonProperty(ParametersKeyString.TYPHONOBJECT)
     private TyphonMLObject typhonObject;
-    @JsonProperty("operator")
+    @JsonProperty(ParametersKeyString.EVOLUTIONOPERATOR)
     private EvolutionOperator evolutionOperator;
-    @JsonProperty("parameters")
+    @JsonProperty(ParametersKeyString.PARAMETERS)
     private Map<String,Object> inputParameter = new TreeMap<String, Object>(String.CASE_INSENSITIVE_ORDER);
 
     public SMODto(){}

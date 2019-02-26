@@ -3,7 +3,7 @@
   "operator": "RENAME",
   "parameters":
   {
-    "modelversion": "TyphonML_V2",
+    "targetmodel": "TyphonML_V2",
     "oldEntityName" : "Professor"
   }
 }

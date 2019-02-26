@@ -27,6 +27,9 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public WorkingSet query(String queryString, Object... params) {
+        logger.info("TyphonQL query string");
+        //TODO implement real connection
+        logger.info(queryString, params);
         return null;
     }
 

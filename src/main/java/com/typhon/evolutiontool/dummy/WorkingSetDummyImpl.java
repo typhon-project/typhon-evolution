@@ -22,4 +22,11 @@ public class WorkingSetDummyImpl implements WorkingSet {
     public void setEntityRows(String entity, List<Entity> entities) {
         rows.put(entity, entities);
     }
+
+    @Override
+    public String toString() {
+        return "WorkingSetDummyImpl{" +
+                "rows=" + rows +
+                '}';
     }
+}

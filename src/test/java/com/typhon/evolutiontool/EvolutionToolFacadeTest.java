@@ -43,5 +43,12 @@ public class EvolutionToolFacadeTest {
         verify(evolutionServiceMock).renameEntity(smo);
     }
 
+    @Test
+    public void testMigrateEntitySMO() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/dummyMigrateEntitySmo.json"));
+        evolutionToolFacade.executeSMO(smo);
+        verify(evolutionServiceMock).migrateEntity(smo);
+    }
+
 
 }

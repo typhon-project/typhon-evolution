@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
+import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import org.slf4j.Logger;
@@ -27,10 +28,11 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public WorkingSet query(String queryString, Object... params) {
-        logger.info("TyphonQL query string");
+        WorkingSet ws = new WorkingSetDummyImpl();
+        logger.info("TyphonQL 'query' string");
         //TODO implement real connection
         logger.info(queryString, params);
-        return null;
+        return ws;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public WorkingSet insert(WorkingSet ws) {
+        logger.info("TyphonQL 'insert' command working set : [{}] ", ws);
         return null;
     }
 

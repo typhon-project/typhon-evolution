@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.services.typhonDL;
 
-public interface TyphonDLConnector {
+public interface TyphonDLInterface {
 
     boolean isDatabaseRunning(String databasetype, String databasename);
 

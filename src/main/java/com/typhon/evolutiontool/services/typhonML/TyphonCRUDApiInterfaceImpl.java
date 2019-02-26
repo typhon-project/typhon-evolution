@@ -28,12 +28,12 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityData(Entity entity) {
+    public WorkingSet readEntityData(Entity entity, String typhonMLVersion) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void writeWorkingSetData(WorkingSet workingSetData) {
+    public void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion) {
         throw new NotImplementedException();
     }
 }

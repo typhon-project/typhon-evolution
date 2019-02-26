@@ -3,6 +3,7 @@
   "operator": "MIGRATE",
   "parameters":
   {
+    "sourcemodel": "TyphonML_V1",
     "targetmodel": "TyphonML_V2",
     "entity" : "Client",
     "databasename": "myDocDB",

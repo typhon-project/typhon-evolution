@@ -28,6 +28,9 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
             return evolutionService.addEntity(smo);
         if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.RENAME)
             return evolutionService.renameEntity(smo);
+        if (smo.getTyphonObject() == TyphonMLObject.ENTITY && smo.getEvolutionOperator() == EvolutionOperator.MIGRATE) {
+            return evolutionService.migrateEntity(smo);
+        }
 
         return null;
     }

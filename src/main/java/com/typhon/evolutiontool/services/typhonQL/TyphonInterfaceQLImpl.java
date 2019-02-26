@@ -44,13 +44,13 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityData(Entity entity) {
-        return typhonQLConnection.query("from ? e select e", entity.getId());
+    public WorkingSet readEntityData(Entity entity, String typhonMLVersion) {
+        return getTyphonQLConnection(typhonMLVersion).query("from ? e select e", entity.getId());
     }
 
     @Override
-    public void writeWorkingSetData(WorkingSet workingSetData) {
-
+    public void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion) {
+        getTyphonQLConnection(typhonMLVersion).insert(workingSetData);
     }
 
 }

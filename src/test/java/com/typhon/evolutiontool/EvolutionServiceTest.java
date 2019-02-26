@@ -8,7 +8,7 @@ import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import com.typhon.evolutiontool.services.typhonDL.TyphonDLConnector;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.TyphonInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class EvolutionServiceTest {
 
     @Mock
-    TyphonDLConnector typhonDLConnection;
+    TyphonDLInterface typhonDLConnection;
     @Mock
     TyphonInterface typhonInterface;
     @Mock
@@ -108,6 +108,8 @@ public class EvolutionServiceTest {
 
     @Test
     public void testMigrateEntity() throws IOException, InputParameterException {
+        String sourcemodelid, targetmodelid, databasetype, databasename, entity;
+
         Entity expectedEntityToMigrate = new Entity("Client");
         expectedEntityToMigrate.addAttribute("id", "int");
         expectedEntityToMigrate.addAttribute("name","string");
@@ -122,13 +124,19 @@ public class EvolutionServiceTest {
         ((WorkingSetDummyImpl) workingSetData).setEntityRows("Client", Arrays.asList(entity1, entity2));
 
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmoValid.json"));
-        when(typhonDLConnection.isDatabaseRunning("mongodb", "myDocDB")).thenReturn(true);
-        when(typhonMLInterface.getEntityTypeFromId("Client")).thenReturn(expectedEntityToMigrate);
-        when(typhonInterface.readEntityData(expectedEntityToMigrate)).thenReturn(workingSetData);
+        entity = smo.getInputParameter().get(ParametersKeyString.ENTITY).toString();
+        targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+        sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
+        databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+        databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
+
+        when(typhonDLConnection.isDatabaseRunning(databasetype,databasename)).thenReturn(true);
+        when(typhonMLInterface.getEntityTypeFromId(entity)).thenReturn(expectedEntityToMigrate);
+        when(typhonInterface.readEntityData(expectedEntityToMigrate,sourcemodelid)).thenReturn(workingSetData);
         evolutionService.migrateEntity(smo);
         verify(typhonInterface).createEntity(expectedEntityToMigrate, smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
         verify(typhonDLConnection).isDatabaseRunning("mongodb", "myDocDB");
-        verify(typhonInterface).writeWorkingSetData(workingSetData);
+        verify(typhonInterface).writeWorkingSetData(workingSetData,targetmodelid);
     }
 
 }

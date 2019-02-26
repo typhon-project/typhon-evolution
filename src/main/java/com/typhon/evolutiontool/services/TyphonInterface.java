@@ -12,7 +12,7 @@ public interface TyphonInterface {
 
     void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion);
 
-    WorkingSet readEntityData(Entity entity);
+    WorkingSet readEntityData(Entity entity, String typhonMLVersion);
 
-    void writeWorkingSetData(WorkingSet workingSetData);
+    void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion);
 }

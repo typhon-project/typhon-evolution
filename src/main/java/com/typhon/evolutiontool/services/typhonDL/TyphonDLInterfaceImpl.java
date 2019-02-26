@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TyphonDLConnectorImpl implements TyphonDLConnector {
+public class TyphonDLInterfaceImpl implements TyphonDLInterface {
 
 
-    Logger logger = LoggerFactory.getLogger(TyphonDLConnectorImpl.class);
+    Logger logger = LoggerFactory.getLogger(TyphonDLInterfaceImpl.class);
 
     /**
      * Verify on the TyphonDL module that the given @param databasename of type @param databasetype is running.

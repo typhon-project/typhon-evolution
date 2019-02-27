@@ -21,7 +21,7 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public String executeTyphonQLDDL(String tqlDDL) {
-        logger.info("Executing TyphonQL DDL [{}] \n on TyphonML [{}]", tqlDDL, this.schema.getId());
+        logger.info("Executing TyphonQL DDL [{}] \n on TyphonML [{}]", tqlDDL, this.schema.getVersion());
         //TODO implement effective execution
         return tqlDDL;
     }

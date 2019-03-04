@@ -1,0 +1,24 @@
+{
+  "version" : "TyphonML_V1",
+  "databases" : [
+    {
+      "type":"relationaldb",
+      "name":"MySQL",
+      "tables": [
+        {
+          "name":"clientsTable",
+          "entity":"client"
+        }
+      ]
+    }
+  ],
+  "entities" : [
+    {
+      "name":"client",
+      "attributes": {
+        "name": "string",
+        "entrydate": "date"
+      }
+    }
+  ]
+}

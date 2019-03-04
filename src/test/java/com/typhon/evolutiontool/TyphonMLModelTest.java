@@ -16,7 +16,7 @@ public class TyphonMLModelTest {
 
     @Test
     public void testReadTyphonML() throws IOException {
-        schema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/FakeTyphonML.json"));
+        schema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
         assertEquals("TyphonML_V2",schema.getVersion());
         assertTrue(schema.getDatabases().get(0) instanceof RelationalDB);
         assertTrue(schema.getDatabases().get(1) instanceof DocumentDB);

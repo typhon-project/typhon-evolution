@@ -38,6 +38,10 @@ public class EvolutionServiceTest {
     private ObjectMapper mapper = new ObjectMapper();
     private SMO smo;
 
+    /*
+     ** CREATE ENTITY
+     */
+
 
     @Test
     public void testCreateEntity() throws IOException {
@@ -47,7 +51,6 @@ public class EvolutionServiceTest {
             verify(typhonDLConnection).isDatabaseRunning(anyString(), anyString());
             verify(typhonInterface).createEntity(any(Entity.class),anyString());
             verify(typhonMLInterface).setNewTyphonMLModel(anyString());
-//            assertTrue(evolutionService.addEntity(smo).equals("entity created"));
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoIncompleteParam.json"));
             evolutionService.addEntity(smo);
             fail();
@@ -83,6 +86,8 @@ public class EvolutionServiceTest {
         try {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
             assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
+            verify(typhonInterface).renameEntity(smo.getInputParameter().get(ParametersKeyString.OLDENTITYNAME).toString(), smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME).toString(), smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
+            verify(typhonMLInterface).setNewTyphonMLModel(smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoIncompleteParam.json"));
             evolutionService.renameEntity(smo);
             fail();
@@ -131,11 +136,11 @@ public class EvolutionServiceTest {
         databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
 
         when(typhonDLConnection.isDatabaseRunning(databasetype,databasename)).thenReturn(true);
-        when(typhonMLInterface.getEntityTypeFromId(entity)).thenReturn(expectedEntityToMigrate);
+        when(typhonMLInterface.getEntityTypeFromId(entity, sourcemodelid)).thenReturn(expectedEntityToMigrate);
         when(typhonInterface.readEntityData(expectedEntityToMigrate,sourcemodelid)).thenReturn(workingSetData);
         evolutionService.migrateEntity(smo);
         verify(typhonInterface).createEntity(expectedEntityToMigrate, smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
-        verify(typhonDLConnection).isDatabaseRunning("mongodb", "myDocDB");
+        verify(typhonDLConnection).isDatabaseRunning("documentdb", "MongoDB");
         verify(typhonInterface).writeWorkingSetData(workingSetData,targetmodelid);
     }
 

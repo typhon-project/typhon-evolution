@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.springframework.data.annotation.Id;
 
+import java.util.Objects;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -33,5 +35,19 @@ public abstract class Database {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Database database = (Database) o;
+        return Objects.equals(type, database.type) &&
+                Objects.equals(name, database.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, name);
     }
 }

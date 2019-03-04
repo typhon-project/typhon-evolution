@@ -1,0 +1,24 @@
+{
+  "version" : "TyphonML_V2",
+  "databases" : [
+    {
+      "type":"documentdb",
+      "name":"MongoDB",
+      "collections" : [
+        {
+          "name":"clientCollection",
+          "entity":"client"
+        }
+      ]
+    }
+  ],
+  "entities" : [
+    {
+      "name":"client",
+      "attributes": {
+        "name": "string",
+        "entrydate": "date"
+      }
+    }
+  ]
+}

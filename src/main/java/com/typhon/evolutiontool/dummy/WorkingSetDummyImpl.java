@@ -23,6 +23,14 @@ public class WorkingSetDummyImpl implements WorkingSet {
         rows.put(entity, entities);
     }
 
+    public LinkedHashMap<String, List<Entity>> getRows() {
+        return rows;
+    }
+
+    public void setRows(LinkedHashMap<String, List<Entity>> rows) {
+        this.rows = rows;
+    }
+
     @Override
     public String toString() {
         return "WorkingSetDummyImpl{" +

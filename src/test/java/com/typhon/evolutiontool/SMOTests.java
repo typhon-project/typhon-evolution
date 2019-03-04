@@ -66,9 +66,9 @@ public class SMOTests {
         Entity expectedEntity, inputEntity;
         Map<String, Object> expectedAttributes = new HashMap<>();
         expectedAttributes.put("name", "string");
-        expectedAttributes.put("hireDate", "date");
+        expectedAttributes.put("entrydate", "date");
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        expectedEntity = new Entity("Professor");
+        expectedEntity = new Entity("client");
         expectedEntity.setAttributes(expectedAttributes);
 
         inputEntity = smo.getPOJOFromInputParameter("entity", Entity.class);

@@ -3,6 +3,7 @@ package com.typhon.evolutiontool.entities;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TyphonMLSchema {
 
@@ -40,5 +41,35 @@ public class TyphonMLSchema {
 
     public void setEntities(List<Entity> entities) {
         this.entities = entities;
+    }
+
+    public Entity getEntityFromName(String entityid) {
+        return entities.stream().filter(e -> e.getId().equals(entityid)).findAny().orElse(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TyphonMLSchema that = (TyphonMLSchema) o;
+        return Objects.equals(version, that.version) &&
+                databases.containsAll(that.databases) &&
+                that.databases.containsAll(this.databases) &&
+                entities.containsAll(that.entities) &&
+                that.entities.containsAll(this.entities);
+    }
+
+    @Override
+    public String toString() {
+        return "TyphonMLSchema{" +
+                "version='" + version + '\'' +
+                ", databases=" + databases +
+                ", entities=" + entities +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(version, databases, entities);
     }
 }

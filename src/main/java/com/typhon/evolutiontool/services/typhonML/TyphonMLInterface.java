@@ -11,6 +11,6 @@ public interface TyphonMLInterface {
 
     void setNewTyphonMLModel(String newModelIdentifier);
 
-    Entity getEntityTypeFromId(String entityid);
+    Entity getEntityTypeFromId(String entityid, String sourcemodelid);
 
 }

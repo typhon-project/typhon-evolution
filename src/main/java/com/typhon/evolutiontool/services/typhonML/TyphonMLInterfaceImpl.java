@@ -20,8 +20,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Entity getEntityTypeFromId(String entityid) {
-        logger.info("Getting Entity type object from Id [{}]", entityid);
+    public Entity getEntityTypeFromId(String entityid, String sourcemodelid) {
+        logger.info("Getting Entity type object from Id [{}] on model [{}]", entityid, sourcemodelid);
         //TODO Implement real retrieving + casting to Entity object
         return null;
     }

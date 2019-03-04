@@ -28,11 +28,13 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
     @Autowired
+    @Qualifier("fakeimplementation")
     private TyphonDLInterface typhonDLInterface;
     @Autowired
     @Qualifier("typhonql")
     private TyphonInterface typhonInterface;
     @Autowired
+    @Qualifier("fakeimplementation")
     private TyphonMLInterface typhonMLInterface;
 
 
@@ -82,25 +84,38 @@ public class EvolutionServiceImpl implements EvolutionService{
         String entityname, targetmodelid, databasetype, databasename, sourcemodelid;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.TARGETMODEL, ParametersKeyString.SOURCEMODEL, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITY).toString();
-            entity = typhonMLInterface.getEntityTypeFromId(entityname);
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
+            entity = typhonMLInterface.getEntityTypeFromId(entityname, sourcemodelid);
             // Verify that an instance of the underlying database is running in the TyphonDL.
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
             typhonInterface.createEntity(entity, targetmodelid);
             typhonInterface.writeWorkingSetData(typhonInterface.readEntityData(entity,sourcemodelid),targetmodelid);
+            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "entity migrated";
         } else {
             throw new InputParameterException("Missing parameter");
         }
     }
 
-    private boolean containParameters(SMO smo, List<String> parameters) {
+    public boolean containParameters(SMO smo, List<String> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
+    }
+
+    public void setTyphonDLInterface(TyphonDLInterface typhonDLInterface) {
+        this.typhonDLInterface = typhonDLInterface;
+    }
+
+    public void setTyphonInterface(TyphonInterface typhonInterface) {
+        this.typhonInterface = typhonInterface;
+    }
+
+    public void setTyphonMLInterface(TyphonMLInterface typhonMLInterface) {
+        this.typhonMLInterface = typhonMLInterface;
     }
 }

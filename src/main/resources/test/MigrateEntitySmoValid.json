@@ -3,10 +3,10 @@
   "operator": "MIGRATE",
   "parameters":
   {
-    "sourcemodel": "TyphonML_V1",
-    "targetmodel": "TyphonML_V2",
-    "entity" : "Client",
-    "databasename": "myDocDB",
-    "databasetype": "mongodb"
+    "sourcemodel": "TyphonML_V1_MigrateEntity",
+    "targetmodel": "TyphonML_V2_MigrateEntity",
+    "entity" : "client",
+    "databasename": "MongoDB",
+    "databasetype": "documentdb"
   }
 }

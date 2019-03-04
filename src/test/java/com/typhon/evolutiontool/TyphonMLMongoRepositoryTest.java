@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -23,6 +24,8 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @DataMongoTest
+// Line below is to run with the real MongoDB server
+//@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
 public class TyphonMLMongoRepositoryTest {
 
     @Autowired
@@ -36,7 +39,7 @@ public class TyphonMLMongoRepositoryTest {
     @Before
     public void initializeMongo() throws IOException {
         collectionName="TyphonML";
-        schema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/FakeTyphonML.json"));
+        schema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
         mongoTemplate.save(schema);
     }
 
@@ -56,7 +59,7 @@ public class TyphonMLMongoRepositoryTest {
     public void checkTyphonMongoRepository() {
         assertNotNull(typhonMongoRepository);
         TyphonMLSchema savedSchema = typhonMongoRepository.save(schema);
-        assertNotNull(typhonMongoRepository.findByVersion("TyphonML_V2"));
+        assertNotNull(typhonMongoRepository.findByVersion(savedSchema.getVersion()));
     }
 
 }

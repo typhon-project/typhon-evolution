@@ -1,0 +1,9 @@
+{
+  "version": "TyphonDL_Current",
+  "runningdb": [
+    {
+      "databasetype": "documentdb",
+      "databasename": "MongoDB"
+    }
+  ]
+}

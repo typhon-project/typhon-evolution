@@ -4,13 +4,14 @@
   "parameters":
   {
     "targetmodel": "TyphonML_V2",
-    "databasetype": "RELATIONAL",
-    "databasename": "myRdb",
+    "databasetype": "relationaldb",
+    "databasename": "MySQL",
+    "tablename": "clientsTable",
     "entity": {
-      "name":"Professor",
+      "name":"client",
       "attributes": {
         "name": "string",
-        "hireDate": "date"
+        "entrydate": "date"
       }
     }
   }

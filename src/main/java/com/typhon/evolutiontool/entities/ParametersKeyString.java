@@ -14,4 +14,5 @@ public interface ParametersKeyString {
     //Rename entity SMO
     String OLDENTITYNAME = "oldentityname";
     String NEWENTITYNAME = "newentityname";
+    String TABLENAME = "tablename";
 }

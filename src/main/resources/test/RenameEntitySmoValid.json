@@ -4,7 +4,7 @@
   "parameters":
   {
     "targetmodel": "TyphonML_V2",
-    "oldEntityName" : "Professor",
-    "newEntityName": "Employee"
+    "oldEntityName" : "user",
+    "newEntityName": "client"
   }
 }

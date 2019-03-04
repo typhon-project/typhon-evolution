@@ -10,4 +10,8 @@ public interface WorkingSet {
 
     LinkedHashMap<String, List<Entity>> rows();
 
+    public LinkedHashMap<String, List<Entity>> getRows();
+
+    public void setRows(LinkedHashMap<String, List<Entity>> rows) ;
+
 }

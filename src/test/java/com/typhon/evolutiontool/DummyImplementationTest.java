@@ -102,7 +102,6 @@ public class DummyImplementationTest {
         TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
         TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
         assertEquals(expectedMLSchema, retrievedMLSchema);
-
     }
 
     @Test
@@ -147,11 +146,11 @@ public class DummyImplementationTest {
         assertEquals(expectedMLSchema, retrievedMLSchema);
     }
 
-    @After
+    @Test
     public void resetFiles() throws IOException {
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1_MigrateEntity.json"));
         mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_CreateEntitySMO.json"));
+        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_MigrateEntity.json"));
         mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
     }
 

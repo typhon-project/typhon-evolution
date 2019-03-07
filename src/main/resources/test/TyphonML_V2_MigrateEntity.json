@@ -2,6 +2,16 @@
   "version" : "TyphonML_V2",
   "databases" : [
     {
+      "type":"relationaldb",
+      "name":"MySQL",
+      "tables" : [
+        {
+          "name":"orderTable",
+          "entity":"order"
+        }
+      ]
+    },
+    {
       "type":"documentdb",
       "name":"MongoDB",
       "collections" : [
@@ -18,6 +28,14 @@
       "attributes": {
         "name": "string",
         "entrydate": "date"
+      }
+    },
+    {
+      "name":"order",
+      "attributes":
+      {
+        "date": "date",
+        "totalAmount": "double"
       }
     }
   ]

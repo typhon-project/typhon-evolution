@@ -37,7 +37,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     public String createEntity(Entity newEntity, String typhonMLVersion) {
         String tql="ON ["+typhonMLVersion+"] TyphonQL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         executeTyphonQLDDL(tql);
-        return "";
+        return "Entity ["+newEntity.getId()+"] created";
     }
 
     @Override
@@ -133,7 +133,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     @Override
     public WorkingSet query(String queryString, Object... params) {
         logger.info("Executing TyphonQL DML command [{}]",queryString);
-        writeQueryTofile(queryString + params);
+        writeQueryTofile(queryString + params+"\n");
         return null;
     }
 

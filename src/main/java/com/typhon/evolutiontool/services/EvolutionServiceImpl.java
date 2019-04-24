@@ -20,7 +20,7 @@ import java.util.List;
     For each operator it will :
      1. Verify that the needed parameters are in the input parameter map of the SMO object.
      2. Execute the structure and data change operations of the SMO operator by calling the TyphonInterface object implementation
-     3. Informe the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
+     3. Notify the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
  */
 @Service
 public class EvolutionServiceImpl implements EvolutionService{
@@ -64,6 +64,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
+    public String removeEntity(SMO smo) throws InputParameterException {
+        return null;
+    }
+
+    @Override
     public String renameEntity(SMO smo) throws InputParameterException {
         String oldEntityName,newEntityName, targetmodel;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME, ParametersKeyString.TARGETMODEL))) {
@@ -76,6 +81,16 @@ public class EvolutionServiceImpl implements EvolutionService{
         } else {
             throw new InputParameterException("Missing parameter");
         }
+    }
+
+    @Override
+    public String splitHorizontal(SMO smo) throws InputParameterException {
+        return null;
+    }
+
+    @Override
+    public String splitVertical(SMO smo) throws InputParameterException {
+        return null;
     }
 
     @Override
@@ -100,6 +115,121 @@ public class EvolutionServiceImpl implements EvolutionService{
         } else {
             throw new InputParameterException("Missing parameter");
         }
+    }
+
+    @Override
+    public String mergeEntities(SMO smo) throws InputParameterException {
+        return null;
+    }
+
+    @Override
+    public String addRelationship(SMO smo) throws InputParameterException {
+        return null;
+    }
+
+    @Override
+    public String removeRelationship(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String enableContainmentInRelationship(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String disableContainmentInRelationship(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String enableOppositeRelationship(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String disableOppositeRelationship(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String changeCardinality(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String addAttribute(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String removeAttribute(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String renameAttribute(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String changeTypeAttribute(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String addIdentifier(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String addComponentToIdentifier(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String removeIdentifier(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String removeComponentToIdentifier(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String addIndex(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String removeIndex(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String addComponentToIndex(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String removeComponentToIndex(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String renameRelationalTable(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String renameDocumentCollection(SMO smo) {
+        return null;
+    }
+
+    @Override
+    public String renameColumnFamilyName(SMO smo) {
+        return null;
     }
 
     public boolean containParameters(SMO smo, List<String> parameters) {

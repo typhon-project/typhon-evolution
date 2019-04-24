@@ -126,7 +126,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     @Override
     public String executeTyphonQLDDL(String tqlDDL) {
         logger.info("Executing TyphonQL DDL command [{}]",tqlDDL);
-        writeQueryTofile(tqlDDL);
+        writeQueryTofile(tqlDDL+"\n");
         return null;
     }
 

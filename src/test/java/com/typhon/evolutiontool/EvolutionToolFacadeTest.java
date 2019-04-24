@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EvolutionToolFacadeTest {
@@ -33,14 +32,14 @@ public class EvolutionToolFacadeTest {
     public void testExecuteAddEntitySMO() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/dummyCreateEntitySmo.json"));
         evolutionToolFacade.executeSMO(smo);
-        verify(evolutionServiceMock).addEntity(smo);
+        verify(evolutionServiceMock).addEntityType(smo);
     }
 
     @Test
     public void testExecuteRenameEntitySMO() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/dummyRenameEntitySmo.json"));
         evolutionToolFacade.executeSMO(smo);
-        verify(evolutionServiceMock).renameEntity(smo);
+        verify(evolutionServiceMock).renameEntityType(smo);
     }
 
     @Test

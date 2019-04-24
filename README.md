@@ -18,7 +18,7 @@ Default running address : http://localhost:8000 (Can be changed in `application.
  }
  ```
  
- ## Schema Modifiers currently supported
+ ### Schema Modifiers currently supported
  
  - ENTITY / ADD (*entity, targetmodel, databasename, databasetype*)
  - ENTITY / RENAME (*oldentityname, newentityname, targetmodel*)

@@ -47,12 +47,12 @@ public class EvolutionServiceTest {
     public void testCreateEntity() throws IOException {
         try {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-            evolutionService.addEntity(smo);
+            evolutionService.addEntityType(smo);
             verify(typhonDLConnection).isDatabaseRunning(anyString(), anyString());
             verify(typhonInterface).createEntity(any(Entity.class),anyString());
             verify(typhonMLInterface).setNewTyphonMLModel(anyString());
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoIncompleteParam.json"));
-            evolutionService.addEntity(smo);
+            evolutionService.addEntityType(smo);
             fail();
         } catch (InputParameterException exception) {
             assertTrue(exception.getMessage().contains("Missing parameter"));
@@ -64,13 +64,13 @@ public class EvolutionServiceTest {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
         //Database is running case
         when(typhonDLConnection.isDatabaseRunning(smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString(), smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString())).thenReturn(true);
-        evolutionService.addEntity(smo);
+        evolutionService.addEntityType(smo);
         // Verify that isDatabaseRunning is called. And CreateDatabase is not called.
         verify(typhonDLConnection, times(1)).isDatabaseRunning(smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString(),smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString());
         verify(typhonDLConnection, times(0)).createDatabase(smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString(),smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString());
         //Database is not running case
         when(typhonDLConnection.isDatabaseRunning(smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString(), smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString())).thenReturn(false);
-        evolutionService.addEntity(smo);
+        evolutionService.addEntityType(smo);
         //Verify that createDatabase method is called.
         verify(typhonDLConnection, times(1)).createDatabase(smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString(),smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString());
     }
@@ -85,11 +85,11 @@ public class EvolutionServiceTest {
     public void testRenameEntity() throws IOException {
         try {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
-            assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
+            assertTrue(evolutionService.renameEntityType(smo).equals("entity renamed"));
             verify(typhonInterface).renameEntity(smo.getInputParameter().get(ParametersKeyString.OLDENTITYNAME).toString(), smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME).toString(), smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
             verify(typhonMLInterface).setNewTyphonMLModel(smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoIncompleteParam.json"));
-            evolutionService.renameEntity(smo);
+            evolutionService.renameEntityType(smo);
             fail();
         } catch (InputParameterException exception) {
             assertTrue(exception.getMessage().contains("Missing parameter"));
@@ -100,7 +100,7 @@ public class EvolutionServiceTest {
     public void testRenameEntityIgnoreCase() throws IOException {
         try {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValidIgnoreCase.json"));
-            assertTrue(evolutionService.renameEntity(smo).equals("entity renamed"));
+            assertTrue(evolutionService.renameEntityType(smo).equals("entity renamed"));
         } catch (InputParameterException exception) {
             System.out.println(exception);
             fail();

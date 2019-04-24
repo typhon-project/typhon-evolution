@@ -11,7 +11,6 @@ import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.TyphonInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +58,7 @@ public class DummyImplementationTest {
 //        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
 //        schematarget = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
 //
-//        evolutionService.addEntity(smo);
+//        evolutionService.addEntityType(smo);
 //        TyphonMLSchema retrievedSchemaTarget = typhonMongoRepository.findByVersion("TyphonML_V2");
 //    }
 
@@ -93,7 +92,7 @@ public class DummyImplementationTest {
         mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
 
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        evolutionService.addEntity(smo);
+        evolutionService.addEntityType(smo);
         TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
         TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
         TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
@@ -113,7 +112,7 @@ public class DummyImplementationTest {
 
 
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
-        evolutionService.renameEntity(smo);
+        evolutionService.renameEntityType(smo);
         TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
         TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
         TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));

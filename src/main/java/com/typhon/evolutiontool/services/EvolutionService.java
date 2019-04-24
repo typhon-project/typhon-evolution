@@ -4,11 +4,11 @@ import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 
 public interface EvolutionService {
-    String addEntity(SMO smo) throws InputParameterException;
+    String addEntityType(SMO smo) throws InputParameterException;
 
-    String removeEntity(SMO smo) throws InputParameterException;
+    String removeEntityType(SMO smo) throws InputParameterException;
 
-    String renameEntity(SMO smo) throws InputParameterException;
+    String renameEntityType(SMO smo) throws InputParameterException;
 
     String splitHorizontal(SMO smo) throws InputParameterException;
 

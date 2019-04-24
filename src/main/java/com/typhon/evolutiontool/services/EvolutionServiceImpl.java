@@ -39,7 +39,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
 
     @Override
-    public String addEntity(SMO smo) throws InputParameterException {
+    public String addEntityType(SMO smo) throws InputParameterException {
         Entity newEntity;
         String databasetype, databasename, targetmodelid;
         // Verify ParametersKeyString
@@ -64,12 +64,12 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String removeEntity(SMO smo) throws InputParameterException {
+    public String removeEntityType(SMO smo) throws InputParameterException {
         return null;
     }
 
     @Override
-    public String renameEntity(SMO smo) throws InputParameterException {
+    public String renameEntityType(SMO smo) throws InputParameterException {
         String oldEntityName,newEntityName, targetmodel;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME, ParametersKeyString.TARGETMODEL))) {
             targetmodel = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();

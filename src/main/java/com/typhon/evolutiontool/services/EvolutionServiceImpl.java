@@ -65,7 +65,19 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String removeEntityType(SMO smo) throws InputParameterException {
-        return null;
+        String entityname, sourcemodelid, targetmodelid;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL))) {
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
+            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+            //Delete data
+            typhonInterface.deleteEntityData(entityname,sourcemodelid);
+            //Delete structures
+            typhonInterface.deleteEntityStructure(entityname, sourcemodelid);
+            //Modify/set new model
+            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
+        }
+        return "entity structure and data deleted";
     }
 
     @Override

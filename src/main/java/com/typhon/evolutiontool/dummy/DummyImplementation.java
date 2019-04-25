@@ -63,8 +63,24 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
+    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+        Entity entity = new Entity(entityId);
+        return readEntityData(entity, typhonMLVersion);
+    }
+
+    @Override
     public void writeWorkingSetData(WorkingSet workingSetDataToInsert, String typhonMLVersion) {
         query("ON ["+typhonMLVersion+"] insert " + workingSetDataToInsert);
+    }
+
+    @Override
+    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
+        return null;
+    }
+
+    @Override
+    public void deleteEntityStructure(String entityname, String typhonMLVersion) {
+
     }
 
     @Override

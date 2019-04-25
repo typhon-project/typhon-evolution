@@ -9,7 +9,10 @@ import java.util.Map;
  * This interface represent the TyphonQL module interface. Methods specification are directly taken as specified in deliverable D4.2
  */
 public interface TyphonQLConnection {
-    //Added by M.Gobert
+    /*
+    Added by M.Gobert
+    Is supposed to compile to actual ddl command and be sent to TyphonDL module. (ex: CREATE TABLE t...)
+     */
     String executeTyphonQLDDL(String tqlDDL);
 
     //Taken from D4.2

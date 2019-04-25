@@ -14,5 +14,11 @@ public interface TyphonInterface {
 
     WorkingSet readEntityData(Entity entity, String typhonMLVersion);
 
+    WorkingSet readEntityData(String entityId, String typhonMLVersion);
+
     void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion);
+
+    WorkingSet deleteEntityData(String entityid, String typhonMLVersion);
+
+    void deleteEntityStructure(String entityname, String typhonMLVersion);
 }

@@ -25,7 +25,7 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     public String createEntity(Entity newEntity, String typhonMLVersion) {
         String tql;
         logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getId(),typhonMLVersion);
-        tql="TyphonQL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
+        tql="TQLDDL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
         return tql;
     }
@@ -38,7 +38,7 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     @Override
     public void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion) {
         logger.info("Rename Entity [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, typhonMLVersion);
-        String tql = "TyphonQL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
+        String tql = "TQL DDL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
         getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
 
     }
@@ -49,8 +49,25 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
+    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+        return getTyphonQLConnection(typhonMLVersion).query("from ? e select e", entityId);
+    }
+
+    @Override
     public void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion) {
         getTyphonQLConnection(typhonMLVersion).insert(workingSetData);
+    }
+
+    @Override
+    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
+        return getTyphonQLConnection(typhonMLVersion).delete(this.readEntityData(entityid, typhonMLVersion));
+    }
+
+    @Override
+    public void deleteEntityStructure(String entityname, String typhonMLVersion) {
+        String tql = "TQLDDL DELETE ENTITY " + entityname + " on TyphonML [" + typhonMLVersion + "]";
+        logger.info("Delete entity [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, typhonMLVersion);
+        getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
     }
 
 }

@@ -15,4 +15,5 @@ public interface ParametersKeyString {
     String OLDENTITYNAME = "oldentityname";
     String NEWENTITYNAME = "newentityname";
     String TABLENAME = "tablename";
+    String ENTITYNAME = "entityname";
 }

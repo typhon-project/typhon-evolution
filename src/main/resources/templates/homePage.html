@@ -1,15 +1,44 @@
 <html>
 <head>
 <title>
-    Home Page
+    Typhon evolution tool
 </title>
 </head>
 <body>
-<h2>
-    Home page of Spring boot demo app. Made by Max Gob
-</h2>
+<h1>
+    Typhon evolution tool
+</h1>
 <div>
-No content
+    <h2>How to run</h2>
+
+    Main Spring Boot App class : Run `com.typhon.evolutiontool.EvolutionToolApplication`
+
+    Default running address : http://localhost:8000 (Can be changed in `application.properties`)
+
+    <h2>How to use</h2>
+
+    - Send a HTTP POST request to http://localhost:8000/evolve. It can receive Schema Modifier Object in JSON format.
+    ```
+    {
+    "typhonobject": "ENTITY",
+    "operator": "ADD",
+    "parameters":
+    { ... }
+    }
+    ```
+
+    ## Schema Modifiers currently supported
+
+    - ENTITY / ADD (*entity, targetmodel, databasename, databasetype*)
+    - ENTITY / RENAME (*oldentityname, newentityname, targetmodel*)
+    - ENTITY / MIGRATE (*entity, targetmodel, sourcemodel, databasename, databasetype*)
+
+    <h2>How it works</h2>
+
+    The tool receives the SMO and verify its arguments. Afterwards it executes the needed steps via the corresponding Typhon interfaces functions (TyphonML `com.typhon.evolutiontool.services.typhonML.TyphonMLInterface`, TyphonDL `com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface`, TyphonQL `com.typhon.evolutiontool.services.typhonQL.TyphonQLConnection`).
+    Those interfaces are currently implemented with a dummy class `com.typhon.evolutiontool.dummy.DummyImplementation` which prints execution message on the console log.
+
+    Actual implementation and connection to the different work packages to be done.
 </div>
 </body>
 </html>

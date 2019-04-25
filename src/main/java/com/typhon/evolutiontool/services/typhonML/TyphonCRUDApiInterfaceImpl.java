@@ -33,7 +33,22 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     }
 
     @Override
+    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+        return null;
+    }
+
+    @Override
     public void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion) {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
+        return null;
+    }
+
+    @Override
+    public void deleteEntityStructure(String entityname, String typhonMLVersion) {
+
     }
 }

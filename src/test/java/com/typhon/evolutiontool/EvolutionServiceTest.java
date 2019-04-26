@@ -49,7 +49,7 @@ public class EvolutionServiceTest {
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
             evolutionService.addEntityType(smo);
             verify(typhonDLConnection).isDatabaseRunning(anyString(), anyString());
-            verify(typhonInterface).createEntity(any(Entity.class),anyString());
+            verify(typhonInterface).createEntityType(any(Entity.class),anyString());
             verify(typhonMLInterface).setNewTyphonMLModel(anyString());
             smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoIncompleteParam.json"));
             evolutionService.addEntityType(smo);
@@ -137,9 +137,9 @@ public class EvolutionServiceTest {
 
         when(typhonDLConnection.isDatabaseRunning(databasetype,databasename)).thenReturn(true);
         when(typhonMLInterface.getEntityTypeFromId(entity, sourcemodelid)).thenReturn(expectedEntityToMigrate);
-        when(typhonInterface.readEntityData(expectedEntityToMigrate,sourcemodelid)).thenReturn(workingSetData);
+        when(typhonInterface.readAllEntityData(expectedEntityToMigrate,sourcemodelid)).thenReturn(workingSetData);
         evolutionService.migrateEntity(smo);
-        verify(typhonInterface).createEntity(expectedEntityToMigrate, smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
+        verify(typhonInterface).createEntityType(expectedEntityToMigrate, smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());
         verify(typhonDLConnection).isDatabaseRunning("documentdb", "MongoDB");
         verify(typhonInterface).writeWorkingSetData(workingSetData,targetmodelid);
     }

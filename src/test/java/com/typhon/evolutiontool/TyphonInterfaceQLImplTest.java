@@ -23,7 +23,7 @@ public class TyphonInterfaceQLImplTest {
         entity.addAttribute("fakeAttribute", "string");
         entity.addAttribute("fake2", "date");
 //        when(typhonQLConnection.executeTyphonQLDDL(anyString())).thenReturn("dummy");
-        assertEquals("TyphonQL CREATE ENTITY FakeEntity {fake2 date,fakeAttribute string}", typhonQLGenerator.createEntity(entity,"fakeVersion"));
+        assertEquals("TyphonQL CREATE ENTITY FakeEntity {fake2 date,fakeAttribute string}", typhonQLGenerator.createEntityType(entity,"fakeVersion"));
     }
 
 }

@@ -17,7 +17,7 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     Logger logger = LoggerFactory.getLogger(TyphonCRUDApiInterfaceImpl.class);
 
     @Override
-    public String createEntity(Entity newEntity, String typhonMLVersion) {
+    public String createEntityType(Entity newEntity, String typhonMLVersion) {
         logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getId());
         return "Call to CRUD API on TyphonML model : "+typhonMLVersion;
     }
@@ -28,12 +28,12 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityData(Entity entity, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(Entity entity, String typhonMLVersion) {
         throw new NotImplementedException();
     }
 
     @Override
-    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(String entityId, String typhonMLVersion) {
         return null;
     }
 
@@ -43,7 +43,7 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
+    public WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion) {
         return null;
     }
 

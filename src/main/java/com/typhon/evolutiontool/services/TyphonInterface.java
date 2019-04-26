@@ -8,17 +8,17 @@ import com.typhon.evolutiontool.entities.WorkingSet;
  */
 public interface TyphonInterface {
 
-    String createEntity(Entity newEntity, String typhonMLVersion);
+    String createEntityType(Entity newEntity, String typhonMLVersion);
 
     void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion);
 
-    WorkingSet readEntityData(Entity entity, String typhonMLVersion);
+    WorkingSet readAllEntityData(Entity entity, String typhonMLVersion);
 
-    WorkingSet readEntityData(String entityId, String typhonMLVersion);
+    WorkingSet readAllEntityData(String entityId, String typhonMLVersion);
 
     void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion);
 
-    WorkingSet deleteEntityData(String entityid, String typhonMLVersion);
+    WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion);
 
     void deleteEntityStructure(String entityname, String typhonMLVersion);
 }

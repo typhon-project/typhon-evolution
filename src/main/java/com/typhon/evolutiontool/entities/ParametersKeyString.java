@@ -16,4 +16,8 @@ public interface ParametersKeyString {
     String NEWENTITYNAME = "newentityname";
     String TABLENAME = "tablename";
     String ENTITYNAME = "entityname";
+    String SOURCEENTITYNAME = "sourceentityname";
+    String TARGETENTITYNAME = "targetentityname";
+    String ATTRIBUTENAME = "attributename";
+    String ATTRIBUTEVALUE = "attributevalue";
 }

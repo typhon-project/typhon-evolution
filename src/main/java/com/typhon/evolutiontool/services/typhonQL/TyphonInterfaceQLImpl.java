@@ -21,18 +21,19 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
 
     }
 
+
+    private TyphonQLConnection getTyphonQLConnection(String typhonMLVersion) {
+        //TODO Investigate String vs Object typhonML schema.
+        return TyphonQLConnection.newEngine(new TyphonMLSchema(typhonMLVersion));
+    }
+
     @Override
-    public String createEntity(Entity newEntity, String typhonMLVersion) {
+    public String createEntityType(Entity newEntity, String typhonMLVersion) {
         String tql;
         logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getId(),typhonMLVersion);
         tql="TQLDDL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
         return tql;
-    }
-
-    private TyphonQLConnection getTyphonQLConnection(String typhonMLVersion) {
-        //TODO Investigate String vs Object typhonML schema.
-        return TyphonQLConnection.newEngine(new TyphonMLSchema(typhonMLVersion));
     }
 
     @Override
@@ -44,12 +45,12 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityData(Entity entity, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(Entity entity, String typhonMLVersion) {
         return getTyphonQLConnection(typhonMLVersion).query("from ? e select e", entity.getId());
     }
 
     @Override
-    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(String entityId, String typhonMLVersion) {
         return getTyphonQLConnection(typhonMLVersion).query("from ? e select e", entityId);
     }
 
@@ -59,8 +60,8 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
-        return getTyphonQLConnection(typhonMLVersion).delete(this.readEntityData(entityid, typhonMLVersion));
+    public WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion) {
+        return getTyphonQLConnection(typhonMLVersion).delete(this.readAllEntityData(entityid, typhonMLVersion));
     }
 
     @Override

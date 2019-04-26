@@ -53,7 +53,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             }
             //Executing evolution operations
             newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
-            typhonInterface.createEntity(newEntity,targetmodelid);
+            typhonInterface.createEntityType(newEntity,targetmodelid);
             //Informing TyphonML to set the targetModel as the current one and regenerate API.
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "entity created";
@@ -71,11 +71,13 @@ public class EvolutionServiceImpl implements EvolutionService{
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             //Delete data
-            typhonInterface.deleteEntityData(entityname,sourcemodelid);
+            typhonInterface.deleteAllEntityData(entityname,sourcemodelid);
             //Delete structures
             typhonInterface.deleteEntityStructure(entityname, sourcemodelid);
             //Modify/set new model
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
+        }else {
+            throw new InputParameterException("Missing parameter");
         }
         return "entity structure and data deleted";
     }
@@ -97,7 +99,26 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String splitHorizontal(SMO smo) throws InputParameterException {
-        return null;
+        Entity sourceEntity, targetEntity;
+        String sourceEntityName, targetEntityName, attributeName, attributeValue, sourcemodelid, targetmodelid;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL))) {
+            sourceEntityName = ParametersKeyString.SOURCEENTITYNAME;
+            targetEntityName = ParametersKeyString.TARGETENTITYNAME;
+            attributeName = ParametersKeyString.ATTRIBUTENAME;
+            attributeValue = ParametersKeyString.ATTRIBUTEVALUE;
+            sourcemodelid = ParametersKeyString.SOURCEMODEL;
+            targetmodelid = ParametersKeyString.TARGETMODEL;
+
+            sourceEntity = typhonMLInterface.getEntityTypeFromId(sourceEntityName, sourcemodelid);
+            targetEntity = typhonMLInterface.getEntityTypeFromId(targetEntityName, targetmodelid);
+            if (sourceEntity.sameAttributes(targetEntity)) {
+
+                return null;
+            }else
+                throw new InputParameterException("Source and target Entity types must be identical");
+        } else {
+            throw new InputParameterException("Missing parameter");
+        }
     }
 
     @Override
@@ -120,8 +141,8 @@ public class EvolutionServiceImpl implements EvolutionService{
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
-            typhonInterface.createEntity(entity, targetmodelid);
-            typhonInterface.writeWorkingSetData(typhonInterface.readEntityData(entity,sourcemodelid),targetmodelid);
+            typhonInterface.createEntityType(entity, targetmodelid);
+            typhonInterface.writeWorkingSetData(typhonInterface.readAllEntityData(entity,sourcemodelid),targetmodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "entity migrated";
         } else {

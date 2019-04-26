@@ -34,7 +34,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
 
 
     @Override
-    public String createEntity(Entity newEntity, String typhonMLVersion) {
+    public String createEntityType(Entity newEntity, String typhonMLVersion) {
         String tql="ON ["+typhonMLVersion+"] TyphonQL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         executeTyphonQLDDL(tql);
         return "Entity ["+newEntity.getId()+"] created";
@@ -47,7 +47,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
-    public WorkingSet readEntityData(Entity entity, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(Entity entity, String typhonMLVersion) {
         try {
             query("ON ["+typhonMLVersion+"] from ? e select e " + entity.getId());
             workingSetData.setRows(mapper.readerFor(LinkedHashMap.class).readValue(new File("src/main/resources/test/"+typhonMLVersion+"_WorkingSetData.json")));
@@ -63,9 +63,9 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
-    public WorkingSet readEntityData(String entityId, String typhonMLVersion) {
+    public WorkingSet readAllEntityData(String entityId, String typhonMLVersion) {
         Entity entity = new Entity(entityId);
-        return readEntityData(entity, typhonMLVersion);
+        return readAllEntityData(entity, typhonMLVersion);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
-    public WorkingSet deleteEntityData(String entityid, String typhonMLVersion) {
+    public WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion) {
         return null;
     }
 

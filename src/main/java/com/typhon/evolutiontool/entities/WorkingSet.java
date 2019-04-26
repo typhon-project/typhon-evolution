@@ -8,10 +8,14 @@ import java.util.List;
  */
 public interface WorkingSet {
 
-    LinkedHashMap<String, List<EntityInstance>> rows();
+    void setEntityRows(String entity, List<EntityInstance> entities);
 
-    public LinkedHashMap<String, List<EntityInstance>> getRows();
+    List<EntityInstance> getEntityInstanceRows(String entityname);
 
-    public void setRows(LinkedHashMap<String, List<EntityInstance>> rows) ;
+    void deleteEntityRows(String entityname);
+
+    LinkedHashMap<String, List<EntityInstance>> getRows();
+
+    void setRows(LinkedHashMap<String, List<EntityInstance>> rows) ;
 
 }

@@ -52,6 +52,10 @@ public class Entity {
         return Objects.hash(id, attributes);
     }
 
+    public boolean sameAttributes(Entity e) {
+        return Objects.equals(this.attributes, e.attributes);
+    }
+
     public String getId() {
         return id;
     }

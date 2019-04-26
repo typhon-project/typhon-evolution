@@ -21,4 +21,8 @@ public interface TyphonInterface {
     WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion);
 
     void deleteEntityStructure(String entityname, String typhonMLVersion);
+
+    WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid);
+
+    void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion);
 }

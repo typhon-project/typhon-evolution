@@ -3,9 +3,11 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +103,8 @@ public class EvolutionServiceImpl implements EvolutionService{
     public String splitHorizontal(SMO smo) throws InputParameterException {
         Entity sourceEntity, targetEntity;
         String sourceEntityName, targetEntityName, attributeName, attributeValue, sourcemodelid, targetmodelid;
+        WorkingSet dataSource, dataTarget;
+        dataTarget = WorkingSetFactory.createEmptyWorkingSet();
         if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL))) {
             sourceEntityName = ParametersKeyString.SOURCEENTITYNAME;
             targetEntityName = ParametersKeyString.TARGETENTITYNAME;
@@ -111,11 +115,16 @@ public class EvolutionServiceImpl implements EvolutionService{
 
             sourceEntity = typhonMLInterface.getEntityTypeFromId(sourceEntityName, sourcemodelid);
             targetEntity = typhonMLInterface.getEntityTypeFromId(targetEntityName, targetmodelid);
-            if (sourceEntity.sameAttributes(targetEntity)) {
-
-                return null;
-            }else
+            if (!sourceEntity.sameAttributes(targetEntity)) {
                 throw new InputParameterException("Source and target Entity types must be identical");
+            }
+            dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntity, attributeName, attributeValue, sourcemodelid);
+            dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
+            typhonInterface.writeWorkingSetData(dataTarget, targetmodelid);
+            typhonInterface.deleteWorkingSetData(dataSource,sourcemodelid);
+
+            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
+            return "entity " + sourceEntityName + "splitted";
         } else {
             throw new InputParameterException("Missing parameter");
         }

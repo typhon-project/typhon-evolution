@@ -71,4 +71,15 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
         getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
     }
 
+    @Override
+    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid) {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion) {
+        getTyphonQLConnection(typhonMLVersion).delete(dataToDelete);
+    }
+
 }

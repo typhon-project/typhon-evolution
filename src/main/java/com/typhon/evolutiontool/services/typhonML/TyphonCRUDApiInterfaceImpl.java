@@ -51,4 +51,14 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     public void deleteEntityStructure(String entityname, String typhonMLVersion) {
 
     }
+
+    @Override
+    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid) {
+        return null;
+    }
+
+    @Override
+    public void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion) {
+
+    }
 }

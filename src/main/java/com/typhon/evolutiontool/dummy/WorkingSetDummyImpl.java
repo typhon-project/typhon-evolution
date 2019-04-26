@@ -16,18 +16,26 @@ public class WorkingSetDummyImpl implements WorkingSet {
     }
 
     @Override
-    public LinkedHashMap<String, List<EntityInstance>> rows() {
-        return rows;
-    }
-
     public void setEntityRows(String entity, List<EntityInstance> entities) {
         rows.put(entity, entities);
     }
 
+    @Override
+    public List<EntityInstance> getEntityInstanceRows(String entityname) {
+        return rows.get(entityname);
+    }
+
+    @Override
+    public void deleteEntityRows(String entityname) {
+        rows.remove(entityname);
+    }
+
+    @Override
     public LinkedHashMap<String, List<EntityInstance>> getRows() {
         return rows;
     }
 
+    @Override
     public void setRows(LinkedHashMap<String, List<EntityInstance>> rows) {
         this.rows = rows;
     }

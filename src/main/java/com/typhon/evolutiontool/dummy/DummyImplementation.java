@@ -53,7 +53,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
             workingSetData.setRows(mapper.readerFor(LinkedHashMap.class).readValue(new File("src/main/resources/test/"+typhonMLVersion+"_WorkingSetData.json")));
             WorkingSet workingSet = new WorkingSetDummyImpl();
             LinkedHashMap<String, List<EntityInstance>> data = new LinkedHashMap();
-            data.put(entity.getId(), workingSetData.rows().get(entity.getId()));
+            data.put(entity.getId(), workingSetData.getRows().get(entity.getId()));
             workingSet.setRows(data);
             return workingSet;
         } catch (IOException e) {
@@ -86,6 +86,11 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     @Override
     public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid) {
         return null;
+    }
+
+    @Override
+    public void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion) {
+
     }
 
     @Override

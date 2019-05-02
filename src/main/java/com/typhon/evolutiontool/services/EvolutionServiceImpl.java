@@ -99,6 +99,15 @@ public class EvolutionServiceImpl implements EvolutionService{
         }
     }
 
+
+    /**
+     * Migrates the instances data instances of sourceEntity that has a given attributeValue of their attribute
+     * attributeName to an existing targetEntity with the same attributes.
+     * //TODO With a non already existing targetEntity
+     * @param smo
+     * @return
+     * @throws InputParameterException
+     */
     @Override
     public String splitHorizontal(SMO smo) throws InputParameterException {
         Entity sourceEntity, targetEntity;
@@ -130,15 +139,31 @@ public class EvolutionServiceImpl implements EvolutionService{
         }
     }
 
+    /**
+     * Partially migrates the instances of sourceEntity to a new entity targetEntity. Only the values
+     * of attributes [attributesNames] are migrated. The link between the instances of entity1 and entity2 is
+     * kept via a new one-to-one relationship relName.
+     * @param smo
+     * @return
+     * @throws InputParameterException
+     */
     @Override
     public String splitVertical(SMO smo) throws InputParameterException {
         return null;
     }
 
+    /**
+     * Migrates data of entity in sourceModel (read) to entity in targetModel (write).
+     * Data is then deleted from sourceModel.
+     * @param smo
+     * @return
+     * @throws InputParameterException
+     */
     @Override
     public String migrateEntity(SMO smo) throws InputParameterException {
         Entity entity;
         String entityname, targetmodelid, databasetype, databasename, sourcemodelid;
+        WorkingSet data;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.TARGETMODEL, ParametersKeyString.SOURCEMODEL, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITY).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
@@ -151,7 +176,9 @@ public class EvolutionServiceImpl implements EvolutionService{
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
             typhonInterface.createEntityType(entity, targetmodelid);
-            typhonInterface.writeWorkingSetData(typhonInterface.readAllEntityData(entity,sourcemodelid),targetmodelid);
+            data = typhonInterface.readAllEntityData(entity,sourcemodelid);
+            typhonInterface.writeWorkingSetData(data,targetmodelid);
+            typhonInterface.deleteWorkingSetData(data, sourcemodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "entity migrated";
         } else {

@@ -1,8 +1,12 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.services.TyphonInterface;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,7 +22,7 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
 
     @Override
     public String createEntityType(Entity newEntity, String typhonMLVersion) {
-        logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getId());
+        logger.info("Create entity [{}] via TyphonCRUD API on typhon", newEntity.getName());
         return "Call to CRUD API on TyphonML model : "+typhonMLVersion;
     }
 
@@ -53,12 +57,60 @@ public class TyphonCRUDApiInterfaceImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid) {
+    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String typhonMLVersion) {
         return null;
     }
 
     @Override
     public void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion) {
 
+    }
+
+	@Override
+	public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes,
+			String typhonMLVersion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteAttributes(String entityname, List<String> attributes, String typhonMLVersion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createRelationshipType(Relation relation, String typhonMLVersion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addForeignKey(Entity sourceEntity, Entity targetEntity, String targetmodelid, boolean isMandatory,
+			boolean isIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createJoinTable(Entity sourceEntity, Entity targetEntity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteForeignKey(Entity sourceEntity, Entity targetEntity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+    @Override
+    public WorkingSet readRelationship(Relation relation, String typhonMLVersion) {
+        return null;
+    }
+
+    @Override
+    public WorkingSet deleteRelationship(Relation relation, boolean datadelete, String typhonMLversion) {
+        return null;
     }
 }

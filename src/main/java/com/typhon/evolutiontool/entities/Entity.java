@@ -12,15 +12,17 @@ public class Entity {
 
     @Id
     @JsonProperty("name")
-    private String id;
+    private String name;
     @JsonProperty("attributes")
     private Map<String,Object> attributes;
+    private String identifier;
+
 
     public Entity() {
     }
 
-    public Entity(String id) {
-        this.id = id;
+    public Entity(String name) {
+        this.name = name;
     }
 
     public void addAttribute(String name, String datatype) {
@@ -33,8 +35,9 @@ public class Entity {
     @Override
     public String toString() {
         return "Entity{" +
-                "id='" + id + '\'' +
+                "name='" + name + '\'' +
                 ", attributes=" + attributes +
+                ", identifier='" + identifier + '\'' +
                 '}';
     }
 
@@ -43,27 +46,35 @@ public class Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entity entity = (Entity) o;
-        return Objects.equals(id, entity.id) &&
+        return Objects.equals(name, entity.name) &&
                 Objects.equals(attributes, entity.attributes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, attributes);
+        return Objects.hash(name, attributes);
     }
 
     public boolean sameAttributes(Entity e) {
         return Objects.equals(this.attributes, e.attributes);
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
     public Map<String,Object> getAttributes() {
         return attributes;

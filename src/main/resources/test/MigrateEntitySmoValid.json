@@ -5,7 +5,7 @@
   {
     "sourcemodel": "TyphonML_V1_MigrateEntity",
     "targetmodel": "TyphonML_V2_MigrateEntity",
-    "entity" : "client",
+    "entityname" : "client",
     "databasename": "MongoDB",
     "databasetype": "documentdb"
   }

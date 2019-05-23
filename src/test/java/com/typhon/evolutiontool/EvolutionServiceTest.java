@@ -2,10 +2,7 @@ package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
-import com.typhon.evolutiontool.entities.Entity;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
-import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -119,17 +116,17 @@ public class EvolutionServiceTest {
         expectedEntityToMigrate.addAttribute("id", "int");
         expectedEntityToMigrate.addAttribute("name","string");
         expectedEntityToMigrate.addAttribute("city", "string");
-        Entity entity1 = new Entity("101");
+        EntityInstance entity1 = new EntityInstance("101");
         entity1.addAttribute("name","Gobert");
         entity1.addAttribute("city","Namur");
-        Entity entity2 = new Entity("3013");
+        EntityInstance entity2 = new EntityInstance("3013");
         entity2.addAttribute("name","Cleve");
         entity2.addAttribute("city","Namur");
         WorkingSet workingSetData = new WorkingSetDummyImpl();
         ((WorkingSetDummyImpl) workingSetData).setEntityRows("Client", Arrays.asList(entity1, entity2));
 
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmoValid.json"));
-        entity = smo.getInputParameter().get(ParametersKeyString.ENTITY).toString();
+        entity = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
         targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
         sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
         databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();

@@ -1,6 +1,8 @@
 package com.typhon.evolutiontool.services.typhonML;
 
+import com.typhon.evolutiontool.entities.Database;
 import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,4 +27,33 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //TODO Implement real retrieving + casting to Entity object
         return null;
     }
+
+	@Override
+	public String getAttributeIdOfEntityType(String sourceEntityName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasRelationship(String entityname) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Database getDatabaseType(String entityname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttributeOfType(String entityname, Entity targetEntityType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Relation getRelationFromName(String relationname) {
+		return null;
+	}
 }

@@ -35,9 +35,9 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
 
     @Override
     public String createEntityType(Entity newEntity, String typhonMLVersion) {
-        String tql="ON ["+typhonMLVersion+"] TyphonQL CREATE ENTITY "+newEntity.getId()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
+        String tql="ON ["+typhonMLVersion+"] TyphonQL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         executeTyphonQLDDL(tql);
-        return "Entity ["+newEntity.getId()+"] created";
+        return "Entity ["+newEntity.getName()+"] created";
     }
 
     @Override
@@ -49,11 +49,11 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     @Override
     public WorkingSet readAllEntityData(Entity entity, String typhonMLVersion) {
         try {
-            query("ON ["+typhonMLVersion+"] from ? e select e " + entity.getId());
+            query("ON ["+typhonMLVersion+"] from ? e select e " + entity.getName());
             workingSetData.setRows(mapper.readerFor(LinkedHashMap.class).readValue(new File("src/main/resources/test/"+typhonMLVersion+"_WorkingSetData.json")));
             WorkingSet workingSet = new WorkingSetDummyImpl();
             LinkedHashMap<String, List<EntityInstance>> data = new LinkedHashMap();
-            data.put(entity.getId(), workingSetData.getRows().get(entity.getId()));
+            data.put(entity.getName(), workingSetData.getRows().get(entity.getName()));
             workingSet.setRows(data);
             return workingSet;
         } catch (IOException e) {
@@ -84,13 +84,23 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
-    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String sourcemodelid) {
+    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String typhonMLVersion) {
         return null;
     }
 
     @Override
     public void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion) {
 
+    }
+
+    @Override
+    public void createRelationshipType(Relation relation, String typhonMLVersion) {
+
+    }
+
+    @Override
+    public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, String typhonMLVersion) {
+        return null;
     }
 
     @Override
@@ -150,6 +160,16 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
     }
 
     @Override
+    public String getAttributeIdOfEntityType(String sourceEntityName) {
+        return null;
+    }
+
+    @Override
+    public boolean hasRelationship(String entityname) {
+        return false;
+    }
+
+    @Override
     public String executeTyphonQLDDL(String tqlDDL) {
         logger.info("Executing TyphonQL DDL command [{}]",tqlDDL);
         writeQueryTofile(tqlDDL+"\n");
@@ -205,5 +225,63 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
 
     public void setWorkingSetData(WorkingSet workingSetData) {
         this.workingSetData = workingSetData;
+    }
+
+
+	@Override
+	public Database getDatabaseType(String entityname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String getAttributeOfType(String entityname, Entity targetEntityType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    @Override
+    public Relation getRelationFromName(String relationname) {
+        return null;
+    }
+
+
+    @Override
+	public void deleteAttributes(String entityname, List<String> attributes, String typhonMLVersion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void addForeignKey(Entity sourceEntity, Entity targetEntity, String targetmodelid, boolean isMandatory,
+			boolean isIdentifier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void createJoinTable(Entity sourceEntity, Entity targetEntity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void deleteForeignKey(Entity sourceEntity, Entity targetEntity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+    @Override
+    public WorkingSet readRelationship(Relation relation, String typhonMLVersion) {
+        return null;
+    }
+
+    @Override
+    public WorkingSet deleteRelationship(Relation relation, boolean datadelete, String typhonMLversion) {
+        return null;
     }
 }

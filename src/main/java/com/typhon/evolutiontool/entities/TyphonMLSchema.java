@@ -44,7 +44,7 @@ public class TyphonMLSchema {
     }
 
     public Entity getEntityFromName(String entityid) {
-        return entities.stream().filter(e -> e.getId().equals(entityid)).findAny().orElse(null);
+        return entities.stream().filter(e -> e.getName().equals(entityid)).findAny().orElse(null);
     }
 
     @Override

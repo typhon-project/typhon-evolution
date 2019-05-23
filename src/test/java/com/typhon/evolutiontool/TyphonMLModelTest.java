@@ -20,7 +20,7 @@ public class TyphonMLModelTest {
         assertEquals("TyphonML_V2",schema.getVersion());
         assertTrue(schema.getDatabases().get(0) instanceof RelationalDB);
         assertTrue(schema.getDatabases().get(1) instanceof DocumentDB);
-        assertEquals("client",schema.getEntities().get(0).getId());
+        assertEquals("client",schema.getEntities().get(0).getName());
         assertEquals("string", schema.getEntities().get(0).getAttributes().get("name"));
     }
 }

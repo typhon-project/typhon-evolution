@@ -22,13 +22,13 @@ public interface EvolutionService {
 
     String removeRelationship(SMO smo);
 
-    String enableContainmentInRelationship(SMO smo);    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
+    String enableContainmentInRelationship(SMO smo) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
 
-    String disableContainmentInRelationship(SMO smo);
+    String disableContainmentInRelationship(SMO smo) throws InputParameterException;
 
-    String enableOppositeRelationship(SMO smo);
+    String enableOppositeRelationship(SMO smo) throws InputParameterException;
 
-    String disableOppositeRelationship(SMO smo);
+    String disableOppositeRelationship(SMO smo) throws InputParameterException;
 
     String changeCardinality(SMO smo);
 

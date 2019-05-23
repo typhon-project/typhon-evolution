@@ -11,7 +11,6 @@ public interface ParametersKeyString {
     String DATABASENAME = "databasename";
     String DATABASETYPE = "databasetype";
     String ENTITY = "entity";
-    //Rename entity SMO
     String OLDENTITYNAME = "oldentityname";
     String NEWENTITYNAME = "newentityname";
     String TABLENAME = "tablename";
@@ -20,4 +19,8 @@ public interface ParametersKeyString {
     String TARGETENTITYNAME = "targetentityname";
     String ATTRIBUTENAME = "attributename";
     String ATTRIBUTEVALUE = "attributevalue";
+    String RELATION = "relation";
+    String ATTRIBUTES = "attributes";
+    String DATADELETE = "datadelete";
+    String RELATIONNAME = "relationname";
 }

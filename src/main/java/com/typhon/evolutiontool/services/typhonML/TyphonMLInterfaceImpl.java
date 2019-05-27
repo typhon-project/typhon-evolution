@@ -41,9 +41,10 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public boolean hasRelationship(String entityname) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasRelationship(String entityname, Model model) {
+	    DataType dataType = this.getDataTypeFromEntityName(entityname,model);
+        typhonml.Entity entity = (typhonml.Entity) dataType;
+        return !entity.getRelations().isEmpty();
 	}
 
 	@Override
@@ -76,7 +77,26 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		return newModel;
 	}
 
-	private Attribute createAttribute(String name, DataType type) {
+    @Override
+    public Model deleteEntityType(String entityname, Model model) {
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, model));
+        return model;
+    }
+
+    private DataType getDataTypeFromEntityName(String entityname, Model model) {
+        for (DataType datatype : model.getDataTypes()) {
+            if (datatype instanceof typhonml.Entity) {
+                if (datatype.getName().equals(entityname)) {
+                    return datatype;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Attribute createAttribute(String name, DataType type) {
 		//TODO Handling of dataTypes
 		Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
 		attribute.setName(name);

@@ -7,7 +7,7 @@ import typhonml.Model;
 public interface EvolutionService {
     Model addEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String removeEntityType(SMO smo, Model model) throws InputParameterException;
+    Model removeEntityType(SMO smo, Model model) throws InputParameterException;
 
     String renameEntityType(SMO smo, Model model) throws InputParameterException;
 

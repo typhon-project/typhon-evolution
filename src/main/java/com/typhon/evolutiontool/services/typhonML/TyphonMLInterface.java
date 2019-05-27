@@ -36,7 +36,7 @@ public interface TyphonMLInterface {
      * @param entityname
      * @return
      */
-    boolean hasRelationship(String entityname);
+    boolean hasRelationship(String entityname, Model model);
 
     Database getDatabaseType(String entityname);
 
@@ -45,4 +45,6 @@ public interface TyphonMLInterface {
     Relation getRelationFromName(String relationname);
 
     Model createEntityType(Model sourceModel, Entity newEntity);
+
+    Model deleteEntityType(String entityname, Model model);
 }

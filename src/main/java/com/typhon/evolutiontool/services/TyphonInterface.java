@@ -19,28 +19,28 @@ public interface TyphonInterface {
      */
     String createEntityType(Entity newEntity, Model model);
 
-    void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion);
+    void renameEntity(String oldEntityName, String newEntityName, Model model);
 
-    WorkingSet readAllEntityData(Entity entity, String typhonMLVersion);
+    WorkingSet readAllEntityData(Entity entity, Model model);
 
-    WorkingSet readAllEntityData(String entityId, String typhonMLVersion);
+    WorkingSet readAllEntityData(String entityId, Model model);
 
-    WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, String typhonMLVersion);
+    WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, Model model);
 
-    WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, String typhonMLVersion);
+    WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model);
 
 
-    WorkingSet deleteAllEntityData(String entityid, String typhonMLVersion);
+    WorkingSet deleteAllEntityData(String entityid, Model model);
 
-    void deleteEntityStructure(String entityname, String typhonMLVersion);
+    void deleteEntityStructure(String entityname, Model model);
 
-    void deleteAttributes(String entityname, List<String> attributes, String typhonMLVersion);
+    void deleteAttributes(String entityname, List<String> attributes, Model model);
 
-    void deleteWorkingSetData(WorkingSet dataToDelete, String typhonMLVersion);
+    void deleteWorkingSetData(WorkingSet dataToDelete, Model model);
 
-    void createRelationshipType(Relation relation, String typhonMLVersion);
+    void createRelationshipType(Relation relation, Model model);
 
-    void writeWorkingSetData(WorkingSet workingSetData, String typhonMLVersion);
+    void writeWorkingSetData(WorkingSet workingSetData, Model model);
 
     void addForeignKey(Entity sourceEntity, Entity targetEntity, String targetmodelid, boolean isMandatory, boolean isIdentifier);
 
@@ -48,7 +48,7 @@ public interface TyphonInterface {
 
     void deleteForeignKey(Entity sourceEntity, Entity targetEntity);
 
-    WorkingSet readRelationship(Relation relation, String typhonMLVersion);
+    WorkingSet readRelationship(Relation relation, Model model);
 
-    WorkingSet deleteRelationship(Relation relation, boolean datadelete, String typhonMLversion);
+    WorkingSet deleteRelationship(Relation relation, boolean datadelete, Model model);
 }

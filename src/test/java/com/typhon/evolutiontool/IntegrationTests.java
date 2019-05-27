@@ -27,7 +27,9 @@ public class IntegrationTests {
     private ObjectMapper mapper = new ObjectMapper();
     private SMO smo;
     public static Model sourceModel, targetModel;
-    public static final String sourcemodelpath = "resources/baseModel.xmi";
+//    public static final String sourcemodelpath = "resources/baseModel.xmi";
+    public static final String sourcemodelpath = "resources/generated_demo.xmi";
+    public static final String finalModelPath = "resources/finalModel.xmi";
 
     @Before
     public void setUp() {
@@ -44,6 +46,15 @@ public class IntegrationTests {
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.addEntityType(smo,sourceModel);
+    }
+
+    @Test
+    public void testRemoveEntity() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));
+
+        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        targetModel = evolutionService.removeEntityType(smo,sourceModel);
+        TyphonMLUtils.saveModel(targetModel,finalModelPath);
     }
 
 

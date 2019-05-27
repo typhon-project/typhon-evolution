@@ -21,7 +21,7 @@ public class TyphonMLInterfaceTests {
 
     TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
     public static Model sourceModel, targetModel;
-    public static final String sourcemodelpath = "resources/emptyModel.xmi";
+    public static final String sourcemodelpath = "resources/baseModel.xmi";
 
     @BeforeClass
     public static void setUp() {

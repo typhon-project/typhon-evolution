@@ -37,121 +37,121 @@ public class DummyImplementationTest {
     //@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
 //    @Autowired
 //    TyphonMongoRepository typhonMongoRepository;
-
-    @Before
-    public void setUp() throws IOException {
-        DummyImplementation dummyImplementation = new DummyImplementation();
-        typhonDLInterface = dummyImplementation;
-        typhonInterface = dummyImplementation;
-        typhonMLInterface = dummyImplementation;
-        evolutionService.setTyphonDLInterface(typhonDLInterface);
-        evolutionService.setTyphonInterface(typhonInterface);
-        evolutionService.setTyphonMLInterface(typhonMLInterface);
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
-        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_CreateEntitySMO.json"));
-        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
-    }
-
+//
+//    @Before
+//    public void setUp() throws IOException {
+//        DummyImplementation dummyImplementation = new DummyImplementation();
+//        typhonDLInterface = dummyImplementation;
+//        typhonInterface = dummyImplementation;
+//        typhonMLInterface = dummyImplementation;
+//        evolutionService.setTyphonDLInterface(typhonDLInterface);
+//        evolutionService.setTyphonInterface(typhonInterface);
+//        evolutionService.setTyphonMLInterface(typhonMLInterface);
+//        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+//        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
+//        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_CreateEntitySMO.json"));
+//        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
+//    }
+//
+////    @Test
+////    public void testCreateEntity() throws IOException, InputParameterException {
+////        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+////        schematarget = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
+////
+////        evolutionService.addEntityType(smo);
+////        TyphonMLSchema retrievedSchemaTarget = typhonMongoRepository.findByVersion("TyphonML_V2");
+////    }
+//
+//    @Test
+//    public void testFakeTyphonDLInterfaceIsDatabaseRunning(){
+//        assertFalse(typhonDLInterface.isDatabaseRunning("dummy","dummy"));
+//        assertTrue(typhonDLInterface.isDatabaseRunning("documentdb","MongoDB"));
+//    }
+//
+//    @Test
+//    public void testFakeTyphonDLInterfaceCreateDatabase() throws IOException {
+//        TyphonDLSchema expectedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
+//        typhonDLInterface.createDatabase("relationaldb", "MySQL");
+//        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
+//        assertTrue(expectedSchema.getRunningdb().containsAll(retrievedSchema.getRunningdb()));
+//        assertTrue(retrievedSchema.getRunningdb().containsAll(expectedSchema.getRunningdb()));
+//    }
+//
+//    @Test
+//    public void testWorkingSetJSON() throws IOException {
+//        WorkingSetDummyImpl workingSetDummy = new WorkingSetDummyImpl();
+//        workingSetDummy.setRows(mapper.readerFor(LinkedHashMap.class).readValue(new File("src/main/resources/test/WorkingSetData.json")));
+//        assertNotNull(workingSetDummy);
+//    }
+//
 //    @Test
 //    public void testCreateEntity() throws IOException, InputParameterException {
-//        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-//        schematarget = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
+//        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+//        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
+//        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_CreateEntitySMO.json"));
+//        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
 //
+//        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
 //        evolutionService.addEntityType(smo);
-//        TyphonMLSchema retrievedSchemaTarget = typhonMongoRepository.findByVersion("TyphonML_V2");
+//        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
+//        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
+//        TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+//        assertEquals(expectedDLSchema,retrievedSchema);
+//        assertFalse(falseSchema.equals(retrievedSchema));
+//        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
+//        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
+//        assertEquals(expectedMLSchema, retrievedMLSchema);
 //    }
-
-    @Test
-    public void testFakeTyphonDLInterfaceIsDatabaseRunning(){
-        assertFalse(typhonDLInterface.isDatabaseRunning("dummy","dummy"));
-        assertTrue(typhonDLInterface.isDatabaseRunning("documentdb","MongoDB"));
-    }
-
-    @Test
-    public void testFakeTyphonDLInterfaceCreateDatabase() throws IOException {
-        TyphonDLSchema expectedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
-        typhonDLInterface.createDatabase("relationaldb", "MySQL");
-        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
-        assertTrue(expectedSchema.getRunningdb().containsAll(retrievedSchema.getRunningdb()));
-        assertTrue(retrievedSchema.getRunningdb().containsAll(expectedSchema.getRunningdb()));
-    }
-
-    @Test
-    public void testWorkingSetJSON() throws IOException {
-        WorkingSetDummyImpl workingSetDummy = new WorkingSetDummyImpl();
-        workingSetDummy.setRows(mapper.readerFor(LinkedHashMap.class).readValue(new File("src/main/resources/test/WorkingSetData.json")));
-        assertNotNull(workingSetDummy);
-    }
-
-    @Test
-    public void testCreateEntity() throws IOException, InputParameterException {
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
-        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_CreateEntitySMO.json"));
-        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
-
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        evolutionService.addEntityType(smo);
-        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
-        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
-        TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
-        assertEquals(expectedDLSchema,retrievedSchema);
-        assertFalse(falseSchema.equals(retrievedSchema));
-        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
-        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
-        assertEquals(expectedMLSchema, retrievedMLSchema);
-    }
-
-    @Test
-    public void testRenameEntity() throws IOException, InputParameterException {
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
-        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_RenameEntitySMO.json"));
-        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
-
-
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
-        evolutionService.renameEntityType(smo);
-        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
-        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
-        TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
-        assertEquals(expectedDLSchema,retrievedSchema);
-        assertFalse(falseSchema.equals(retrievedSchema));
-        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
-        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
-        assertEquals(expectedMLSchema, retrievedMLSchema);
-        assertNotNull(retrievedMLSchema.getEntityFromName("client"));
-        assertNull(retrievedMLSchema.getEntityFromName("user"));
-
-
-    }
-
-    @Test
-    public void testMigrateEntity() throws IOException, InputParameterException {
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1_MigrateEntity.json"));
-        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_MigrateEntity.json"));
-        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
-
-
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmoValid.json"));
-        evolutionService.migrateEntity(smo);
-        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
-        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
-        assertEquals(expectedDLSchema,retrievedSchema);
-        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2_MigrateEntity.json"));
-        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
-        assertEquals(expectedMLSchema, retrievedMLSchema);
-    }
-
-    @Test
-    public void resetFiles() throws IOException {
+//
+//    @Test
+//    public void testRenameEntity() throws IOException, InputParameterException {
+//        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
+//        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
+//        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_RenameEntitySMO.json"));
+//        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
+//
+//
+//        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmoValid.json"));
+//        evolutionService.renameEntityType(smo);
+//        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
+//        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
+//        TyphonDLSchema falseSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+//        assertEquals(expectedDLSchema,retrievedSchema);
+//        assertFalse(falseSchema.equals(retrievedSchema));
+//        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
+//        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
+//        assertEquals(expectedMLSchema, retrievedMLSchema);
+//        assertNotNull(retrievedMLSchema.getEntityFromName("client"));
+//        assertNull(retrievedMLSchema.getEntityFromName("user"));
+//
+//
+//    }
+//
+//    @Test
+//    public void testMigrateEntity() throws IOException, InputParameterException {
 //        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1_MigrateEntity.json"));
-        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
-        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
-        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_RenameEntitySMO.json"));
-        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
-    }
+//        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
+//        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_MigrateEntity.json"));
+//        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
+//
+//
+//        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmoValid.json"));
+//        evolutionService.migrateEntity(smo);
+//        TyphonDLSchema expectedDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V2.json"));
+//        TyphonDLSchema retrievedSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_Current.json"));
+//        assertEquals(expectedDLSchema,retrievedSchema);
+//        TyphonMLSchema expectedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2_MigrateEntity.json"));
+//        TyphonMLSchema retrievedMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_Current.json"));
+//        assertEquals(expectedMLSchema, retrievedMLSchema);
+//    }
+//
+//    @Test
+//    public void resetFiles() throws IOException {
+////        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1_MigrateEntity.json"));
+//        TyphonDLSchema typhonDLSchema = mapper.readerFor(TyphonDLSchema.class).readValue(new File("src/main/resources/test/TyphonDL_V1.json"));
+//        mapper.writerFor(TyphonDLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonDL_Current.json"), typhonDLSchema);
+//        TyphonMLSchema typhonMLSchema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V1_RenameEntitySMO.json"));
+//        mapper.writerFor(TyphonMLSchema.class).writeValue(new File("C:\\Users\\Admin\\Documents\\IdeaProjects\\typhon\\src\\main\\resources\\test\\TyphonML_Current.json"), typhonMLSchema);
+//    }
 
 }

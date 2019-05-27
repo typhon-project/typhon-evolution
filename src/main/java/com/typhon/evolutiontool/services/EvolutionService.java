@@ -5,62 +5,62 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface EvolutionService {
-    Model addEntityType(SMO smo) throws InputParameterException;
+    Model addEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String removeEntityType(SMO smo) throws InputParameterException;
+    String removeEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String renameEntityType(SMO smo) throws InputParameterException;
+    String renameEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String splitHorizontal(SMO smo) throws InputParameterException;
+    String splitHorizontal(SMO smo, Model model) throws InputParameterException;
 
-    String splitVertical(SMO smo) throws InputParameterException;
+    String splitVertical(SMO smo, Model model) throws InputParameterException;
 
-    String migrateEntity(SMO smo) throws InputParameterException;
+    String migrateEntity(SMO smo, Model model) throws InputParameterException;
 
-    String mergeEntities(SMO smo) throws InputParameterException;
+    String mergeEntities(SMO smo, Model model) throws InputParameterException;
 
-    String addRelationship(SMO smo) throws InputParameterException;
+    String addRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String removeRelationship(SMO smo);
+    String removeRelationship(SMO smo, Model model);
 
-    String enableContainmentInRelationship(SMO smo) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
+    String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
 
-    String disableContainmentInRelationship(SMO smo) throws InputParameterException;
+    String disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String enableOppositeRelationship(SMO smo) throws InputParameterException;
+    String enableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String disableOppositeRelationship(SMO smo) throws InputParameterException;
+    String disableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String changeCardinality(SMO smo);
+    String changeCardinality(SMO smo, Model model);
 
-    String addAttribute(SMO smo);
+    String addAttribute(SMO smo, Model model);
 
-    String removeAttribute(SMO smo);
+    String removeAttribute(SMO smo, Model model);
 
-    String renameAttribute(SMO smo);
+    String renameAttribute(SMO smo, Model model);
 
-    String changeTypeAttribute(SMO smo);
+    String changeTypeAttribute(SMO smo, Model model);
 
-    String addIdentifier(SMO smo);
+    String addIdentifier(SMO smo, Model model);
 
-    String addComponentToIdentifier(SMO smo);
+    String addComponentToIdentifier(SMO smo, Model model);
 
-    String removeIdentifier(SMO smo);
+    String removeIdentifier(SMO smo, Model model);
 
-    String removeComponentToIdentifier(SMO smo);
+    String removeComponentToIdentifier(SMO smo, Model model);
 
-    String addIndex(SMO smo);
+    String addIndex(SMO smo, Model model);
 
-    String removeIndex(SMO smo);
+    String removeIndex(SMO smo, Model model);
 
-    String addComponentToIndex(SMO smo);
+    String addComponentToIndex(SMO smo, Model model);
 
-    String removeComponentToIndex(SMO smo);
+    String removeComponentToIndex(SMO smo, Model model);
 
-    String renameRelationalTable(SMO smo);
+    String renameRelationalTable(SMO smo, Model model);
 
-    String renameDocumentCollection(SMO smo);
+    String renameDocumentCollection(SMO smo, Model model);
 
-    String renameColumnFamilyName(SMO smo);
+    String renameColumnFamilyName(SMO smo, Model model);
 
 }

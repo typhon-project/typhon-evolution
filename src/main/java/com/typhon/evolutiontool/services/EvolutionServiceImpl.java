@@ -38,17 +38,14 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Autowired
     @Qualifier("fakeimplementation")
     private TyphonMLInterface typhonMLInterface;
-    private Model sourceModel, targetModel;
+    private Model targetModel;
 
     @Override
-    public Model addEntityType(SMO smo) throws InputParameterException {
+    public Model addEntityType(SMO smo, Model model) throws InputParameterException {
         Entity newEntity;
-        String databasetype, databasename, targetmodelpath, sourcemodelpath;
+        String databasetype, databasename;
         // Verify ParametersKeyString
-        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE))){
-            sourcemodelpath = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
-            targetmodelpath = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE))){
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
             // Verify that an instance of the underlying database is running in the TyphonDL.
@@ -57,10 +54,8 @@ public class EvolutionServiceImpl implements EvolutionService{
             }
             //Executing evolution operations
             newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
-            typhonInterface.createEntityType(newEntity,targetmodelpath);
-            targetModel = typhonMLInterface.createEntityType(sourceModel, newEntity);
-            //Informing TyphonML to set the targetModel as the current one and regenerate API.
-            TyphonMLUtils.saveModel(targetModel,targetmodelpath);
+            targetModel = typhonMLInterface.createEntityType(model, newEntity);
+            typhonInterface.createEntityType(newEntity,targetModel);
             return targetModel;
         }
         else
@@ -69,9 +64,9 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String removeEntityType(SMO smo) throws InputParameterException {
+    public String removeEntityType(SMO smo, Model model) throws InputParameterException {
         String entityname, sourcemodelid, targetmodelid;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.TARGETMODEL))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
@@ -92,7 +87,7 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String renameEntityType(SMO smo) throws InputParameterException {
+    public String renameEntityType(SMO smo, Model model) throws InputParameterException {
         String oldEntityName,newEntityName, targetmodel;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME, ParametersKeyString.TARGETMODEL))) {
             targetmodel = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
@@ -116,12 +111,12 @@ public class EvolutionServiceImpl implements EvolutionService{
      * @throws InputParameterException
      */
     @Override
-    public String splitHorizontal(SMO smo) throws InputParameterException {
+    public String splitHorizontal(SMO smo, Model model) throws InputParameterException {
         Entity sourceEntity, targetEntity;
         String sourceEntityName, targetEntityName, attributeName, attributeValue, sourcemodelid, targetmodelid;
         WorkingSet dataSource, dataTarget;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.TARGETMODEL))) {
             sourceEntityName = ParametersKeyString.SOURCEENTITYNAME;
             targetEntityName = ParametersKeyString.TARGETENTITYNAME;
             attributeName = ParametersKeyString.ATTRIBUTENAME;
@@ -155,7 +150,7 @@ public class EvolutionServiceImpl implements EvolutionService{
      * @throws InputParameterException
      */
     @Override
-    public String splitVertical(SMO smo) throws InputParameterException {
+    public String splitVertical(SMO smo, Model model) throws InputParameterException {
         String sourceEntityName, sourcemodelid, targetmodelid, databasetype, databasename, sourceEntityId;
         Relation relation;
         Entity targetEntity, sourceEntity;
@@ -183,7 +178,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             }
 
             relation = new Relation("splitVerticalResult", sourceEntity, targetEntity, null, false, Cardinality.ONE_ONE);
-            typhonInterface.createEntityType(targetEntity, targetmodelid);
+//            typhonInterface.createEntityType(targetEntity, targetmodelid);
             this.createRelationshipType(relation, targetmodelid);
             sourceEntityId = typhonMLInterface.getAttributeIdOfEntityType(sourceEntityName);
             attributes.add(sourceEntityId);
@@ -210,11 +205,11 @@ public class EvolutionServiceImpl implements EvolutionService{
      * @throws InputParameterException
      */
     @Override
-    public String migrateEntity(SMO smo) throws InputParameterException {
+    public String migrateEntity(SMO smo, Model model) throws InputParameterException {
         Entity entity;
         String entityname, targetmodelid, databasetype, databasename, sourcemodelid;
         WorkingSet data;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.TARGETMODEL, ParametersKeyString.SOURCEMODEL, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.TARGETMODEL, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
@@ -225,7 +220,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
-            typhonInterface.createEntityType(entity, targetmodelid);
+//            typhonInterface.createEntityType(entity, targetmodelid);
             data = typhonInterface.readAllEntityData(entity,sourcemodelid);
             typhonInterface.writeWorkingSetData(data,targetmodelid);
             typhonInterface.deleteWorkingSetData(data, sourcemodelid);
@@ -238,12 +233,12 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String mergeEntities(SMO smo) throws InputParameterException {
+    public String mergeEntities(SMO smo, Model model) throws InputParameterException {
         return null;
     }
 
     @Override
-    public String addRelationship(SMO smo) throws InputParameterException {
+    public String addRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation;
         String targetmodelid;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.TARGETMODEL))) {
@@ -259,11 +254,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String removeRelationship(SMO smo) {
+    public String removeRelationship(SMO smo, Model model) {
         boolean datadelete;
         Relation relation;
         String sourcemodelid, targetmodelid;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
             datadelete = Boolean.parseBoolean(smo.getInputParameter().get(ParametersKeyString.DATADELETE).toString());
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, Relation.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
@@ -280,11 +275,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String enableContainmentInRelationship(SMO smo) throws InputParameterException {
+    public String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation;
         String sourcemodelid, targetmodelid;
         WorkingSet ws;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
@@ -302,11 +297,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String disableContainmentInRelationship(SMO smo) throws InputParameterException {
+    public String disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation;
         String sourcemodelid, targetmodelid;
         WorkingSet ws;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION))) {
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
@@ -314,7 +309,7 @@ public class EvolutionServiceImpl implements EvolutionService{
                 throw new InputParameterException("Please use splitHorizontal operation in case of relational model");
             }
             ws = typhonInterface.readRelationship(relation,sourcemodelid);
-            typhonInterface.createEntityType(relation.getTargetEntity(),targetmodelid);
+//            typhonInterface.createEntityType(relation.getTargetEntity(),targetmodelid);
             typhonInterface.writeWorkingSetData(ws, targetmodelid);
             typhonInterface.deleteRelationship(relation, true, sourcemodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
@@ -326,10 +321,10 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String enableOppositeRelationship(SMO smo) throws InputParameterException {
+    public String enableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation, oppositeRel;
         String sourcemodelid, targetmodelid, relationname;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME))) {
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
@@ -349,11 +344,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String disableOppositeRelationship(SMO smo) throws InputParameterException {
+    public String disableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation, oppositeRel;
         String relationname, sourcemodelid, targetmodelid;
         boolean datadelete;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME, ParametersKeyString.DATADELETE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME, ParametersKeyString.DATADELETE))) {
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
@@ -374,82 +369,82 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String changeCardinality(SMO smo) {
+    public String changeCardinality(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String addAttribute(SMO smo) {
+    public String addAttribute(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String removeAttribute(SMO smo) {
+    public String removeAttribute(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String renameAttribute(SMO smo) {
+    public String renameAttribute(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String changeTypeAttribute(SMO smo) {
+    public String changeTypeAttribute(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String addIdentifier(SMO smo) {
+    public String addIdentifier(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String addComponentToIdentifier(SMO smo) {
+    public String addComponentToIdentifier(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String removeIdentifier(SMO smo) {
+    public String removeIdentifier(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String removeComponentToIdentifier(SMO smo) {
+    public String removeComponentToIdentifier(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String addIndex(SMO smo) {
+    public String addIndex(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String removeIndex(SMO smo) {
+    public String removeIndex(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String addComponentToIndex(SMO smo) {
+    public String addComponentToIndex(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String removeComponentToIndex(SMO smo) {
+    public String removeComponentToIndex(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String renameRelationalTable(SMO smo) {
+    public String renameRelationalTable(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String renameDocumentCollection(SMO smo) {
+    public String renameDocumentCollection(SMO smo, Model model) {
         return null;
     }
 
     @Override
-    public String renameColumnFamilyName(SMO smo) {
+    public String renameColumnFamilyName(SMO smo, Model model) {
         return null;
     }
 

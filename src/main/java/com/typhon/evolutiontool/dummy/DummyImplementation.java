@@ -35,7 +35,7 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
 
 
     @Override
-    public String createEntityType(Entity newEntity, String typhonMLVersion) {
+    public String createEntityType(Entity newEntity, Model typhonMLVersion) {
         String tql="ON ["+typhonMLVersion+"] TyphonQL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
         executeTyphonQLDDL(tql);
         return "Entity ["+newEntity.getName()+"] created";

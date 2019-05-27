@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import typhonml.Model;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,12 +32,12 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public String createEntityType(Entity newEntity, String typhonMLVersion) {
+    public String createEntityType(Entity newEntity, Model typhonMLVersion) {
         //TODO Handling of Identifier, index, etc...
         String tql;
         logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(),typhonMLVersion);
         tql="TQLDDL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
-        getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
+//        getTyphonQLConnection(typhonMLVersion).executeTyphonQLDDL(tql);
         return tql;
     }
 

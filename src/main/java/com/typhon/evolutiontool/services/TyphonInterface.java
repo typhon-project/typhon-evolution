@@ -3,6 +3,7 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.Model;
 
 import java.util.List;
 
@@ -14,10 +15,9 @@ public interface TyphonInterface {
     /**
      * Creates a new Entity
      * @param newEntity
-     * @param typhonMLVersion
      * @return
      */
-    String createEntityType(Entity newEntity, String typhonMLVersion);
+    String createEntityType(Entity newEntity, Model model);
 
     void renameEntity(String oldEntityName, String newEntityName, String typhonMLVersion);
 

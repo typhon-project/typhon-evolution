@@ -1,0 +1,18 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "ADD",
+  "parameters":
+  {
+    "targetmodel": "TyphonML_V2",
+    "databasetype": "relationaldb",
+    "databasename": "MySQL",
+    "tablename": "orderTable",
+    "entity": {
+      "name":"order",
+      "attributes": {
+        "idorder": "string",
+        "quantity": "number"
+      }
+    }
+  }
+}

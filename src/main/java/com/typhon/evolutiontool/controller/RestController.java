@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
+
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -33,7 +35,8 @@ public class RestController {
         SMO smo = modelMapper.map(smoDto, SMO.class);
         Message message;
         try {
-            evolutionToolFacade.executeSMO(smo);
+            //TODO Change how to pass source and target typhonML together with SMO List
+            evolutionToolFacade.executeSMO(Arrays.asList(smo),"resources/baseModel.xmi","resources/baseModel.xmi");
             message = new Message("[" + smo.toString() + "] executed");
         } catch (InputParameterException exception) {
             logger.error("Missing input parameters");

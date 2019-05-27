@@ -1,0 +1,50 @@
+package com.typhon.evolutiontool;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.services.TyphonInterface;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import org.junit.Before;
+import org.junit.Test;
+import typhonml.Model;
+
+import java.io.File;
+import java.io.IOException;
+
+public class IntegrationTests {
+
+    TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
+    TyphonInterface typhonInterface = new TyphonInterfaceQLImpl();
+    TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
+    EvolutionServiceImpl evolutionService = new EvolutionServiceImpl();
+    private ObjectMapper mapper = new ObjectMapper();
+    private SMO smo;
+    public static Model sourceModel, targetModel;
+    public static final String sourcemodelpath = "resources/baseModel.xmi";
+
+    @Before
+    public void setUp() {
+        TyphonMLUtils.typhonMLPackageRegistering();
+        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        evolutionService.setTyphonDLInterface(typhonDLInterface);
+        evolutionService.setTyphonInterface(typhonInterface);
+        evolutionService.setTyphonMLInterface(typhonMLInterface);
+    }
+
+    @Test
+    public void testCreateEntity() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
+
+        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        targetModel = evolutionService.addEntityType(smo,sourceModel);
+    }
+
+
+}

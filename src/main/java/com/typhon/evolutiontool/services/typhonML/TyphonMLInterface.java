@@ -4,6 +4,7 @@ package com.typhon.evolutiontool.services.typhonML;
 import com.typhon.evolutiontool.entities.Database;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.Relation;
+import typhonml.Model;
 
 import java.util.List;
 
@@ -42,4 +43,6 @@ public interface TyphonMLInterface {
     String getAttributeOfType(String entityname, Entity targetEntityType);
 
     Relation getRelationFromName(String relationname);
+
+    Model createEntityType(Model sourceModel, Entity newEntity);
 }

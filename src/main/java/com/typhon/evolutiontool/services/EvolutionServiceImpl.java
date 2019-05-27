@@ -4,12 +4,14 @@ import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import typhonml.Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,15 +38,17 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Autowired
     @Qualifier("fakeimplementation")
     private TyphonMLInterface typhonMLInterface;
-
+    private Model sourceModel, targetModel;
 
     @Override
-    public String addEntityType(SMO smo) throws InputParameterException {
+    public Model addEntityType(SMO smo) throws InputParameterException {
         Entity newEntity;
-        String databasetype, databasename, targetmodelid;
+        String databasetype, databasename, targetmodelpath, sourcemodelpath;
         // Verify ParametersKeyString
-        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY,ParametersKeyString.TARGETMODEL,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE))){
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.SOURCEMODEL, ParametersKeyString.TARGETMODEL,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE))){
+            sourcemodelpath = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
+            sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+            targetmodelpath = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
             // Verify that an instance of the underlying database is running in the TyphonDL.
@@ -53,10 +57,11 @@ public class EvolutionServiceImpl implements EvolutionService{
             }
             //Executing evolution operations
             newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
-            typhonInterface.createEntityType(newEntity,targetmodelid);
+            typhonInterface.createEntityType(newEntity,targetmodelpath);
+            targetModel = typhonMLInterface.createEntityType(sourceModel, newEntity);
             //Informing TyphonML to set the targetModel as the current one and regenerate API.
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "entity created";
+            TyphonMLUtils.saveModel(targetModel,targetmodelpath);
+            return targetModel;
         }
         else
             throw new InputParameterException("Missing parameter");

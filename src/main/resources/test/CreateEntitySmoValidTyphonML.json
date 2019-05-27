@@ -1,0 +1,19 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "ADD",
+  "parameters":
+  {
+    "sourcemodel" : "resources/generated_demo.xmi",
+    "targetmodel": "resources/TyphonML_V2.xmi",
+    "databasetype": "relationaldb",
+    "databasename": "MySQL",
+    "tablename": "clientsTable",
+    "entity": {
+      "name":"client",
+      "attributes": {
+        "name": "string",
+        "entrydate": "date"
+      }
+    }
+  }
+}

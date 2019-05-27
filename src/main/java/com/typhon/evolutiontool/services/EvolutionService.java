@@ -2,9 +2,10 @@ package com.typhon.evolutiontool.services;
 
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import typhonml.Model;
 
 public interface EvolutionService {
-    String addEntityType(SMO smo) throws InputParameterException;
+    Model addEntityType(SMO smo) throws InputParameterException;
 
     String removeEntityType(SMO smo) throws InputParameterException;
 

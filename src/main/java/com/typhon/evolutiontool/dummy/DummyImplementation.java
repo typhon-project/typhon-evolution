@@ -9,6 +9,7 @@ import com.typhon.evolutiontool.services.typhonQL.TyphonQLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import typhonml.Model;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -243,6 +244,11 @@ public class DummyImplementation implements TyphonInterface, TyphonQLConnection,
 
     @Override
     public Relation getRelationFromName(String relationname) {
+        return null;
+    }
+
+    @Override
+    public Model createEntityType(Model sourceModel, Entity newEntity) {
         return null;
     }
 

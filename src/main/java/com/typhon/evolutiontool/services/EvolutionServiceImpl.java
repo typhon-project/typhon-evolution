@@ -98,38 +98,28 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     /**
      * Migrates the data instances of sourceEntity that has a given attributeValue of their attribute
-     * attributeName to an existing targetEntity with the same structure.
-     * //TODO With a non already existing targetEntity
+     * attributeName to a newly created targetEntity with the same structure.
      * @param smo
      * @return
      * @throws InputParameterException
      */
     @Override
-    public String splitHorizontal(SMO smo, Model model) throws InputParameterException {
-        Entity sourceEntity, targetEntity;
-        String sourceEntityName, targetEntityName, attributeName, attributeValue, sourcemodelid, targetmodelid;
+    public Model splitHorizontal(SMO smo, Model model) throws InputParameterException {
+        String sourceEntityName, targetEntityName, attributeName, attributeValue;
         WorkingSet dataSource, dataTarget;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.TARGETMODEL))) {
-            sourceEntityName = ParametersKeyString.SOURCEENTITYNAME;
-            targetEntityName = ParametersKeyString.TARGETENTITYNAME;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE))) {
+            sourceEntityName = smo.getInputParameter().get(ParametersKeyString.SOURCEENTITYNAME).toString();
+            targetEntityName = smo.getInputParameter().get(ParametersKeyString.TARGETENTITYNAME).toString();
             attributeName = ParametersKeyString.ATTRIBUTENAME;
             attributeValue = ParametersKeyString.ATTRIBUTEVALUE;
-            sourcemodelid = ParametersKeyString.SOURCEMODEL;
-            targetmodelid = ParametersKeyString.TARGETMODEL;
+            targetModel = typhonMLInterface.copyEntityType(sourceEntityName, targetEntityName, model);
+            dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
+            dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
+            typhonInterface.writeWorkingSetData(dataTarget, targetModel);
+            typhonInterface.deleteWorkingSetData(dataSource,model);
 
-            sourceEntity = typhonMLInterface.getEntityTypeFromId(sourceEntityName, sourcemodelid);
-            targetEntity = typhonMLInterface.getEntityTypeFromId(targetEntityName, targetmodelid);
-            if (!sourceEntity.sameAttributes(targetEntity)) {
-                throw new InputParameterException("Source and target Entity types must be identical");
-            }
-//            dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntity, attributeName, attributeValue, sourcemodelid);
-//            dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
-//            typhonInterface.writeWorkingSetData(dataTarget, targetmodelid);
-//            typhonInterface.deleteWorkingSetData(dataSource,sourcemodelid);
-
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "entity " + sourceEntityName + "split";
+            return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
         }
@@ -166,14 +156,14 @@ public class EvolutionServiceImpl implements EvolutionService{
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-            sourceEntity = typhonMLInterface.getEntityTypeFromId(sourceEntityName,sourcemodelid);
+//            sourceEntity = typhonMLInterface.getEntityTypeFromName(sourceEntityName,sourcemodelid);
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
 
-            relation = new Relation("splitVerticalResult", sourceEntity, targetEntity, null, false, Cardinality.ONE_ONE);
+//            relation = new Relation("splitVerticalResult", sourceEntity, targetEntity, null, false, Cardinality.ONE_ONE);
 //            typhonInterface.createEntityType(targetEntity, targetmodelid);
-            this.createRelationshipType(relation, targetmodelid);
+//            this.createRelationshipType(relation, targetmodelid);
             sourceEntityId = typhonMLInterface.getAttributeIdOfEntityType(sourceEntityName);
             attributes.add(sourceEntityId);
 //            dataSource = typhonInterface.readEntityDataSelectAttributes(sourceEntityName, attributes, sourcemodelid);
@@ -209,7 +199,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-            entity = typhonMLInterface.getEntityTypeFromId(entityname, sourcemodelid);
+//            entity = typhonMLInterface.getEntityTypeFromName(entityname, sourcemodelid);
             // Verify that an instance of the underlying database is running in the TyphonDL.
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);

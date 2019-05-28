@@ -25,7 +25,7 @@ public interface TyphonInterface {
 
     WorkingSet readAllEntityData(String entityId, Model model);
 
-    WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, Model model);
+    WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model);
 
     WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model);
 

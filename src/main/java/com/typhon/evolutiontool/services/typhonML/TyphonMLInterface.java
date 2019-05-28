@@ -24,10 +24,10 @@ public interface TyphonMLInterface {
     /**
      * Returns an Entity object of entity @param entityid in the TyphonML version @param sourcemodelid.
      * @param entityid
-     * @param sourcemodelid
+     * @param model
      * @return
      */
-    Entity getEntityTypeFromId(String entityid, String sourcemodelid);
+    typhonml.Entity getEntityTypeFromName(String entityid, Model model);
 
     String getAttributeIdOfEntityType(String sourceEntityName);
 
@@ -49,4 +49,6 @@ public interface TyphonMLInterface {
     Model deleteEntityType(String entityname, Model model);
 
     Model renameEntity(String oldEntityName, String newEntityName, Model model);
+
+    Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
 }

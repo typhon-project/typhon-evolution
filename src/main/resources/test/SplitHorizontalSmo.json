@@ -1,0 +1,11 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "SPLITHORIZONTAL",
+  "parameters":
+  {
+    "sourceentityname": "Order",
+    "targetentityname": "Order2017",
+    "attributename": "date",
+    "attributevalue": "2017"
+  }
+}

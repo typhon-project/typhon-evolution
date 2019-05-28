@@ -16,5 +16,7 @@ public enum EvolutionOperator {
     @JsonAlias("merge")
     MERGE,
     @JsonAlias("migrate")
-    MIGRATE;
+    MIGRATE,
+    @JsonAlias("splithorizontal")
+    SPLITHORIZONTAL;
 }

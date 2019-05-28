@@ -53,6 +53,7 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public WorkingSet delete(WorkingSet ws) {
+        logger.info("TyphonQL 'delete' command working set : [{}] ", ws);
         return null;
     }
 

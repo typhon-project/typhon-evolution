@@ -28,9 +28,12 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public Entity getEntityTypeFromId(String entityid, String sourcemodelid) {
-		logger.info("Getting Entity type object from Id [{}] on model [{}]", entityid, sourcemodelid);
-		//TODO Implement real retrieving + casting to Entity object
+	public typhonml.Entity getEntityTypeFromName(String entityName, Model model) {
+		logger.info("Getting Entity type object from name [{}] on model [{}]", entityName, model);
+		DataType dataType = this.getDataTypeFromEntityName(entityName, model);
+		if (dataType instanceof typhonml.Entity) {
+			return (typhonml.Entity) dataType;
+		}
 		return null;
 	}
 
@@ -96,7 +99,18 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return newModel;
     }
 
-    private DataType getDataTypeFromEntityName(String entityname, Model model) {
+	@Override
+	public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
+		logger.info("Copying Entity type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));
+		copyEntity.setName(targetEntityName);
+		newModel.getDataTypes().add(copyEntity);
+		return newModel;
+	}
+
+	private DataType getDataTypeFromEntityName(String entityname, Model model) {
         for (DataType datatype : model.getDataTypes()) {
             if (datatype instanceof typhonml.Entity) {
                 if (datatype.getName().equals(entityname)) {

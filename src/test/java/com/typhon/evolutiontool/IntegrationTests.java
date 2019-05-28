@@ -77,4 +77,17 @@ public class IntegrationTests {
     }
 
 
+    /**
+     * Manual verification of produced model.
+     */
+    @Test
+    public void testSplitHorizontal() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/SplitHorizontalSmo.json"));
+
+        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        targetModel = evolutionService.splitHorizontal(smo,sourceModel);
+        TyphonMLUtils.saveModel(targetModel,finalModelPath);
+    }
+
+
 }

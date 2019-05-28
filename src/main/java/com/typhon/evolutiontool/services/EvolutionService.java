@@ -11,7 +11,7 @@ public interface EvolutionService {
 
     Model renameEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String splitHorizontal(SMO smo, Model model) throws InputParameterException;
+    Model splitHorizontal(SMO smo, Model model) throws InputParameterException;
 
     String splitVertical(SMO smo, Model model) throws InputParameterException;
 

@@ -66,8 +66,8 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readEntityDataEqualAttributeValue(Entity sourceEntity, String attributeName, String attributeValue, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e where ? = ?", sourceEntity.getName(), attributeName, attributeValue);
+    public WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model) {
+        return getTyphonQLConnection(model).query("from ? e select e where ? = ?", sourceEntityName, attributeName, attributeValue);
     }
 
     @Override

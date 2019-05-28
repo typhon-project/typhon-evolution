@@ -135,7 +135,7 @@ public class EvolutionServiceTest {
 //        databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
 //
 //        when(typhonDLConnection.isDatabaseRunning(databasetype,databasename)).thenReturn(true);
-//        when(typhonMLInterface.getEntityTypeFromId(entity, sourcemodelid)).thenReturn(expectedEntityToMigrate);
+//        when(typhonMLInterface.getEntityTypeFromName(entity, sourcemodelid)).thenReturn(expectedEntityToMigrate);
 //        when(typhonInterface.readAllEntityData(expectedEntityToMigrate,sourcemodelid)).thenReturn(workingSetData);
 //        evolutionService.migrateEntity(smo);
 //        verify(typhonInterface).createEntityType(expectedEntityToMigrate, smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString());

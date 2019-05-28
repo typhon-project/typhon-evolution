@@ -40,6 +40,9 @@ public class IntegrationTests {
         evolutionService.setTyphonMLInterface(typhonMLInterface);
     }
 
+    /**
+     * Manual verification of produced model.
+     */
     @Test
     public void testCreateEntity() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
@@ -48,6 +51,9 @@ public class IntegrationTests {
         targetModel = evolutionService.addEntityType(smo,sourceModel);
     }
 
+    /**
+     * Manual verification of produced model.
+     */
     @Test
     public void testRemoveEntity() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));

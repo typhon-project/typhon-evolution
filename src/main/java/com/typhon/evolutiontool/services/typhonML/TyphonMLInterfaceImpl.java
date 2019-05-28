@@ -81,8 +81,9 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     public Model deleteEntityType(String entityname, Model model) {
         Model newModel;
         newModel = EcoreUtil.copy(model);
-        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, model));
-        return model;
+//        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, newModel));
+        EcoreUtil.delete(this.getDataTypeFromEntityName(entityname, newModel));
+        return newModel;
     }
 
     private DataType getDataTypeFromEntityName(String entityname, Model model) {

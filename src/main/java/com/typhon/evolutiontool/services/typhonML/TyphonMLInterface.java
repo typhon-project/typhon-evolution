@@ -1,12 +1,10 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 
-import com.typhon.evolutiontool.entities.Database;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.Relation;
+import typhonml.Database;
 import typhonml.Model;
-
-import java.util.List;
 
 /**
  * Interface to access TyphonML.
@@ -38,7 +36,7 @@ public interface TyphonMLInterface {
      */
     boolean hasRelationship(String entityname, Model model);
 
-    Database getDatabaseType(String entityname);
+    Database getDatabaseType(String entityname, Model model);
 
     String getAttributeOfType(String entityname, Entity targetEntityType);
 
@@ -51,4 +49,6 @@ public interface TyphonMLInterface {
     Model renameEntity(String oldEntityName, String newEntityName, Model model);
 
     Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
+
+    Model createNewEntityMappingInDatabase(Database databaseType, String targetLogicalName, typhonml.Entity entityTypeToMap, Model targetModel);
 }

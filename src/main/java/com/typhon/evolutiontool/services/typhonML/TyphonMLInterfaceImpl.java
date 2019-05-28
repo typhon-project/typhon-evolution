@@ -1,6 +1,5 @@
 package com.typhon.evolutiontool.services.typhonML;
 
-import com.typhon.evolutiontool.entities.Database;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
@@ -8,12 +7,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import typhonml.Attribute;
-import typhonml.DataType;
-import typhonml.Model;
-import typhonml.TyphonmlFactory;
-import typhonml.impl.DataTypeImpl;
-import typhonml.impl.PrimitiveDataTypeImpl;
+import typhonml.*;
 
 
 @Component
@@ -51,8 +45,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public Database getDatabaseType(String entityname) {
-		// TODO Auto-generated method stub
+	public Database getDatabaseType(String entityname, Model model) {
+		//TODO implement. GenericList?
 		return null;
 	}
 
@@ -108,6 +102,12 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		copyEntity.setName(targetEntityName);
 		newModel.getDataTypes().add(copyEntity);
 		return newModel;
+	}
+
+	@Override
+	public Model createNewEntityMappingInDatabase(Database databaseType, String targetLogicalName, typhonml.Entity entityTypeToMap, Model targetModel) {
+		//TODO To implement
+		return targetModel;
 	}
 
 	private DataType getDataTypeFromEntityName(String entityname, Model model) {

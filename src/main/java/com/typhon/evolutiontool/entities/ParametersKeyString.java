@@ -23,4 +23,5 @@ public interface ParametersKeyString {
     String ATTRIBUTES = "attributes";
     String DATADELETE = "datadelete";
     String RELATIONNAME = "relationname";
+    String TARGETLOGICALNAME = "targetlogicalname";
 }

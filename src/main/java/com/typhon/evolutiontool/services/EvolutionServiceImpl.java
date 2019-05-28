@@ -99,21 +99,25 @@ public class EvolutionServiceImpl implements EvolutionService{
     /**
      * Migrates the data instances of sourceEntity that has a given attributeValue of their attribute
      * attributeName to a newly created targetEntity with the same structure.
+     * This new entity is mapped to a new table/collection/.. in the same database as sourceEntity.
      * @param smo
      * @return
      * @throws InputParameterException
      */
     @Override
     public Model splitHorizontal(SMO smo, Model model) throws InputParameterException {
-        String sourceEntityName, targetEntityName, attributeName, attributeValue;
+        String sourceEntityName, targetEntityName, targetLogicalName, attributeName, attributeValue;
         WorkingSet dataSource, dataTarget;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.TARGETLOGICALNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE))) {
             sourceEntityName = smo.getInputParameter().get(ParametersKeyString.SOURCEENTITYNAME).toString();
             targetEntityName = smo.getInputParameter().get(ParametersKeyString.TARGETENTITYNAME).toString();
+            targetLogicalName = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
             attributeName = ParametersKeyString.ATTRIBUTENAME;
             attributeValue = ParametersKeyString.ATTRIBUTEVALUE;
             targetModel = typhonMLInterface.copyEntityType(sourceEntityName, targetEntityName, model);
+            // Create a new logical mapping for the created Entity type.
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(typhonMLInterface.getDatabaseType(sourceEntityName,model), targetLogicalName, typhonMLInterface.getEntityTypeFromName(targetEntityName, targetModel), targetModel);
             dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
             dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
             typhonInterface.writeWorkingSetData(dataTarget, targetModel);
@@ -267,14 +271,14 @@ public class EvolutionServiceImpl implements EvolutionService{
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
-                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
-            }
+//            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
+//                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
+//            }
 //            ws = typhonInterface.readRelationship(relation,sourcemodelid);
 //            typhonInterface.writeWorkingSetData(ws, targetmodelid);
 //            typhonInterface.deleteRelationship(relation, true, sourcemodelid);
             // = delete Entity if relational. TODO
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
+//            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "Relationship containement enabled";
         }
         return null;
@@ -289,9 +293,9 @@ public class EvolutionServiceImpl implements EvolutionService{
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
-                throw new InputParameterException("Please use splitHorizontal operation in case of relational model");
-            }
+//            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
+//                throw new InputParameterException("Please use splitHorizontal operation in case of relational model");
+//            }
 //            ws = typhonInterface.readRelationship(relation,sourcemodelid);
 //            typhonInterface.createEntityType(relation.getTargetEntity(),targetmodelid);
 //            typhonInterface.writeWorkingSetData(ws, targetmodelid);
@@ -441,27 +445,27 @@ public class EvolutionServiceImpl implements EvolutionService{
         // Implement here rules detailed in appendix file about actions on specific datamodels.
 
         //If source & target are on relational
-        if(typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB &&
-                typhonMLInterface.getDatabaseType(relation.getTargetEntity().getName()) instanceof RelationalDB)
-            switch (relation.getCardinality()) {
-                case N_N:
-                    typhonInterface.createJoinTable(relation.getSourceEntity(), relation.getTargetEntity());
-                    break;
-                case ONE_N:
-                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, true, false);
-                    break;
-                case ZERO_ONE:
-                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, false, true);
-                    break;
-                case ONE_ONE:
-                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, true, true);
-                    //+ data verification rule (all ids must referenced as fk).
-                    break;
-                case ZERO_N:
-                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, false, false);
-            } else{
-            // No specific action, but changes the way data is inserted. (Construction of key value pairs, or adding of reference attribute data.
-        }
+//        if(typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB &&
+//                typhonMLInterface.getDatabaseType(relation.getTargetEntity().getName()) instanceof RelationalDB)
+//            switch (relation.getCardinality()) {
+//                case N_N:
+//                    typhonInterface.createJoinTable(relation.getSourceEntity(), relation.getTargetEntity());
+//                    break;
+//                case ONE_N:
+//                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, true, false);
+//                    break;
+//                case ZERO_ONE:
+//                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, false, true);
+//                    break;
+//                case ONE_ONE:
+//                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, true, true);
+//                    //+ data verification rule (all ids must referenced as fk).
+//                    break;
+//                case ZERO_N:
+//                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, false, false);
+//            } else{
+//            // No specific action, but changes the way data is inserted. (Construction of key value pairs, or adding of reference attribute data.
+//        }
     }
 
     public void setTyphonDLInterface(TyphonDLInterface typhonDLInterface) {

@@ -29,13 +29,11 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
     @Autowired
-    @Qualifier("fakeimplementation")
     private TyphonDLInterface typhonDLInterface;
     @Autowired
     @Qualifier("typhonql")
     private TyphonInterface typhonInterface;
     @Autowired
-    @Qualifier("fakeimplementation")
     private TyphonMLInterface typhonMLInterface;
     private Model targetModel;
 
@@ -84,15 +82,14 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String renameEntityType(SMO smo, Model model) throws InputParameterException {
-        String oldEntityName,newEntityName, targetmodel;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME, ParametersKeyString.TARGETMODEL))) {
-            targetmodel = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+    public Model renameEntityType(SMO smo, Model model) throws InputParameterException {
+        String oldEntityName,newEntityName;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME))) {
             oldEntityName = smo.getInputParameter().get(ParametersKeyString.OLDENTITYNAME).toString();
             newEntityName = smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME).toString();
-//            typhonInterface.renameEntity(oldEntityName, newEntityName,targetmodel);
-            typhonMLInterface.setNewTyphonMLModel(targetmodel);
-            return "entity renamed";
+            typhonInterface.renameEntity(oldEntityName, newEntityName,model);
+            targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
+            return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
         }

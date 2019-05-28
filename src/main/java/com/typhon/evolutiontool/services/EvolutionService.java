@@ -9,7 +9,7 @@ public interface EvolutionService {
 
     Model removeEntityType(SMO smo, Model model) throws InputParameterException;
 
-    String renameEntityType(SMO smo, Model model) throws InputParameterException;
+    Model renameEntityType(SMO smo, Model model) throws InputParameterException;
 
     String splitHorizontal(SMO smo, Model model) throws InputParameterException;
 

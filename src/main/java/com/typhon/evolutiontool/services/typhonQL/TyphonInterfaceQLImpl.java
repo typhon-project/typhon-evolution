@@ -77,6 +77,7 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
 
     @Override
     public WorkingSet deleteAllEntityData(String entityid, Model model) {
+        //TODO Implement
         return null;
     }
 

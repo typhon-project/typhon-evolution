@@ -79,10 +79,20 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model deleteEntityType(String entityname, Model model) {
+	    logger.info("Delete Entity type [{}] in TyphonML model", entityname);
         Model newModel;
         newModel = EcoreUtil.copy(model);
 //        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, newModel));
         EcoreUtil.delete(this.getDataTypeFromEntityName(entityname, newModel));
+        return newModel;
+    }
+
+    @Override
+    public Model renameEntity(String oldEntityName, String newEntityName, Model model) {
+	    logger.info("Renaming Entity type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        getDataTypeFromEntityName(oldEntityName, newModel).setName(newEntityName);
         return newModel;
     }
 

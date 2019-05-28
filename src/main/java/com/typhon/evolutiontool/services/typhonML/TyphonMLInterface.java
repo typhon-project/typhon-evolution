@@ -47,4 +47,6 @@ public interface TyphonMLInterface {
     Model createEntityType(Model sourceModel, Entity newEntity);
 
     Model deleteEntityType(String entityname, Model model);
+
+    Model renameEntity(String oldEntityName, String newEntityName, Model model);
 }

@@ -19,7 +19,7 @@ public interface TyphonQLConnection {
     static TyphonQLConnection newEngine(TyphonMLSchema schema) {
         return new TyphonQLConnectionImpl(schema);}
 
-    WorkingSet query(String queryString, Object ...params);
+    WorkingSet query(String queryString, String ...params);
     WorkingSet query(String queryString, Map<String,Object> params);
     WorkingSet update(WorkingSet ws);
     WorkingSet insert(WorkingSet ws);

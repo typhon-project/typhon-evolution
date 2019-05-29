@@ -111,18 +111,23 @@ public class EvolutionServiceImpl implements EvolutionService{
      */
     @Override
     public Model splitHorizontal(SMO smo, Model model) throws InputParameterException {
-        String sourceEntityName, targetEntityName, targetLogicalName, attributeName, attributeValue;
+        String sourceEntityName, targetEntityName, targetLogicalName, attributeName, attributeValue, databasename, databasetype;
         WorkingSet dataSource, dataTarget;
+        DatabaseType dbtype;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.TARGETLOGICALNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.SOURCEENTITYNAME, ParametersKeyString.TARGETENTITYNAME, ParametersKeyString.TARGETLOGICALNAME, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE, ParametersKeyString.DATABASETYPE, ParametersKeyString.DATABASENAME))) {
             sourceEntityName = smo.getInputParameter().get(ParametersKeyString.SOURCEENTITYNAME).toString();
             targetEntityName = smo.getInputParameter().get(ParametersKeyString.TARGETENTITYNAME).toString();
             targetLogicalName = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
-            attributeName = ParametersKeyString.ATTRIBUTENAME;
-            attributeValue = ParametersKeyString.ATTRIBUTEVALUE;
+            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
+            attributeName = smo.getInputParameter().get(ParametersKeyString.ATTRIBUTENAME).toString();
+            attributeValue = smo.getInputParameter().get(ParametersKeyString.ATTRIBUTEVALUE).toString();
+            dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
             targetModel = typhonMLInterface.copyEntityType(sourceEntityName, targetEntityName, model);
+            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             // Create a new logical mapping for the created Entity type.
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(typhonMLInterface.getDatabaseType(sourceEntityName,model),typhonMLInterface.getDatabaseName(sourceEntityName,model), targetLogicalName, targetEntityName, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype,databasename, targetLogicalName, targetEntityName, targetModel);
             dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
             dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
             typhonInterface.writeWorkingSetData(dataTarget, targetModel);

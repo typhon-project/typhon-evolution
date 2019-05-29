@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Map;
+
+import static java.util.stream.Collectors.joining;
 
 
 public class TyphonQLConnectionImpl implements TyphonQLConnection {
@@ -27,11 +30,10 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
     }
 
     @Override
-    public WorkingSet query(String queryString, Object... params) {
+    public WorkingSet query(String queryString, String... params) {
         WorkingSet ws = new WorkingSetDummyImpl();
-        logger.info("TyphonQL 'query' string");
         //TODO implement real connection
-        logger.info(queryString, params);
+        logger.info(queryString + Arrays.stream(params).collect(joining(",")));
         return ws;
     }
 

@@ -48,7 +48,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public DatabaseType getDatabaseType(String entityname, Model model) {
-		//TODO implement. GenericList?
 		return null;
 	}
 
@@ -109,7 +108,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	@Override
 	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
 
-		logger.info("Creating an instance (table/collection...) in Database of type [{}] with name [{}] in TyphonML", databaseType.toString(), dbname);
+		logger.info("Creating an instance (table/collection...) in Database [{}] of type [{}]  in TyphonML", dbname, databaseType);
 		Model newModel;
 		newModel = EcoreUtil.copy(targetModel);
 		Database db = this.getDatabaseFromName(dbname, newModel);

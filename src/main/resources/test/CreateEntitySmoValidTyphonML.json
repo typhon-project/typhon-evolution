@@ -7,11 +7,11 @@
     "targetmodel": "resources/TyphonML_V2.xmi",
     "databasetype": "relationaldb",
     "databasename": "MySQL",
-    "tablename": "clientsTable",
+    "targetlogicalname": "invoiceTable",
     "entity": {
-      "name":"client",
+      "name":"Invoice",
       "attributes": {
-        "name": "string",
+        "total": "string",
         "entrydate": "date"
       }
     }

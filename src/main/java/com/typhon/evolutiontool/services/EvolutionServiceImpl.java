@@ -40,11 +40,14 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Override
     public Model addEntityType(SMO smo, Model model) throws InputParameterException {
         Entity newEntity;
-        String databasetype, databasename;
+        String databasetype, databasename, logicalname;
+        DatabaseType dbtype;
         // Verify ParametersKeyString
-        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE))){
+        if(containParameters(smo,Arrays.asList(ParametersKeyString.ENTITY,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))){
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+            dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
+            logicalname = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
             // Verify that an instance of the underlying database is running in the TyphonDL.
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
@@ -52,6 +55,8 @@ public class EvolutionServiceImpl implements EvolutionService{
             //Executing evolution operations
             newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
+            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);
             typhonInterface.createEntityType(newEntity,targetModel);
             return targetModel;
         }
@@ -117,7 +122,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             attributeValue = ParametersKeyString.ATTRIBUTEVALUE;
             targetModel = typhonMLInterface.copyEntityType(sourceEntityName, targetEntityName, model);
             // Create a new logical mapping for the created Entity type.
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(typhonMLInterface.getDatabaseType(sourceEntityName,model), targetLogicalName, typhonMLInterface.getEntityTypeFromName(targetEntityName, targetModel), targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(typhonMLInterface.getDatabaseType(sourceEntityName,model),typhonMLInterface.getDatabaseName(sourceEntityName,model), targetLogicalName, targetEntityName, targetModel);
             dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
             dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
             typhonInterface.writeWorkingSetData(dataTarget, targetModel);
@@ -258,7 +263,6 @@ public class EvolutionServiceImpl implements EvolutionService{
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "relationship type deleted";
         }
-
         return null;
     }
 

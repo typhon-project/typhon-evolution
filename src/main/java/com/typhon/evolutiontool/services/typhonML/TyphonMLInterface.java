@@ -1,9 +1,10 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 
+import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.Relation;
-import typhonml.Database;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 /**
@@ -36,7 +37,7 @@ public interface TyphonMLInterface {
      */
     boolean hasRelationship(String entityname, Model model);
 
-    Database getDatabaseType(String entityname, Model model);
+    DatabaseType getDatabaseType(String entityname, Model model);
 
     String getAttributeOfType(String entityname, Entity targetEntityType);
 
@@ -50,5 +51,9 @@ public interface TyphonMLInterface {
 
     Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
 
-    Model createNewEntityMappingInDatabase(Database databaseType, String targetLogicalName, typhonml.Entity entityTypeToMap, Model targetModel);
+    Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel);
+
+    Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
+
+    String getDatabaseName(String sourceEntityName, Model model);
 }

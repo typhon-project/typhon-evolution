@@ -49,6 +49,7 @@ public class IntegrationTests {
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.addEntityType(smo,sourceModel);
+        TyphonMLUtils.saveModel(targetModel,finalModelPath);
     }
 
     /**

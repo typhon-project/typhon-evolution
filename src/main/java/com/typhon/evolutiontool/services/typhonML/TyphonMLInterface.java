@@ -56,4 +56,6 @@ public interface TyphonMLInterface {
     Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
 
     String getDatabaseName(String sourceEntityName, Model model);
+
+    Model deleteEntityMappings(String entityname, Model model);
 }

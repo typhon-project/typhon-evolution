@@ -203,28 +203,31 @@ public class EvolutionServiceImpl implements EvolutionService{
      * @throws InputParameterException
      */
     @Override
-    public String migrateEntity(SMO smo, Model model) throws InputParameterException {
-        Entity entity;
-        String entityname, targetmodelid, databasetype, databasename, sourcemodelid;
+    public Model migrateEntity(SMO smo, Model model) throws InputParameterException {
+        typhonml.Entity entity;
+        String entityname, databasetype, databasename, targetLogicalName;
+        DatabaseType dbtype;
         WorkingSet data;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.TARGETMODEL, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+            dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-//            entity = typhonMLInterface.getEntityTypeFromName(entityname, sourcemodelid);
+            targetLogicalName = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
+            entity = typhonMLInterface.getEntityTypeFromName(entityname, model);
             // Verify that an instance of the underlying database is running in the TyphonDL.
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
-//            typhonInterface.createEntityType(entity, targetmodelid);
-//            data = typhonInterface.readAllEntityData(entity,sourcemodelid);
-//            typhonInterface.writeWorkingSetData(data,targetmodelid);
-//            typhonInterface.deleteWorkingSetData(data, sourcemodelid);
-//            typhonInterface.deleteEntityStructure(entityname, sourcemodelid);
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "entity migrated";
+            targetModel = typhonMLInterface.deleteEntityMappings(entityname, model);
+            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype,databasename, targetLogicalName, entityname, targetModel);
+            typhonInterface.createEntityType(entity, targetModel);
+            data = typhonInterface.readAllEntityData(entityname,model);
+            typhonInterface.writeWorkingSetData(data,targetModel);
+            typhonInterface.deleteWorkingSetData(data, model);
+            typhonInterface.deleteEntityStructure(entityname, model);
+            return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
         }

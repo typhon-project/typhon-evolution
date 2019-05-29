@@ -15,7 +15,7 @@ public interface EvolutionService {
 
     String splitVertical(SMO smo, Model model) throws InputParameterException;
 
-    String migrateEntity(SMO smo, Model model) throws InputParameterException;
+    Model migrateEntity(SMO smo, Model model) throws InputParameterException;
 
     String mergeEntities(SMO smo, Model model) throws InputParameterException;
 

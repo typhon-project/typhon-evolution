@@ -90,5 +90,17 @@ public class IntegrationTests {
         TyphonMLUtils.saveModel(targetModel,finalModelPath);
     }
 
+    /**
+     * Manual verification of produced model.
+     */
+    @Test
+    public void testMigrateEntity() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmo.json"));
+
+        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        targetModel = evolutionService.migrateEntity(smo,sourceModel);
+        TyphonMLUtils.saveModel(targetModel,finalModelPath);
+    }
+
 
 }

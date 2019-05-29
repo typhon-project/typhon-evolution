@@ -42,6 +42,16 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
+    public String createEntityType(typhonml.Entity newEntity, Model model) {
+        //TODO Handling of Identifier, index, etc...
+        String tql;
+        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(),model);
+        tql="TQLDDL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().stream().map(attribute -> attribute.getName()+" "+attribute.getType()).collect(Collectors.joining(","))+"}";
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+        return tql;
+    }
+
+    @Override
     public void renameEntity(String oldEntityName, String newEntityName, Model model) {
         logger.info("Rename Entity [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, model);
         String tql = "TQL DDL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;

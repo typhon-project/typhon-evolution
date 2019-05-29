@@ -19,6 +19,8 @@ public interface TyphonInterface {
      */
     String createEntityType(Entity newEntity, Model model);
 
+    String createEntityType(typhonml.Entity newEntity, Model model);
+
     void renameEntity(String oldEntityName, String newEntityName, Model model);
 
     WorkingSet readAllEntityData(Entity entity, Model model);

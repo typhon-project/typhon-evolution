@@ -25,7 +25,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public typhonml.Entity getEntityTypeFromName(String entityName, Model model) {
-		logger.info("Getting Entity type object from name [{}] on model [{}]", entityName, model);
 		DataType dataType = this.getDataTypeFromEntityName(entityName, model);
 		if (dataType instanceof typhonml.Entity) {
 			return (typhonml.Entity) dataType;
@@ -107,7 +106,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
-
 		logger.info("Creating an instance (table/collection...) in Database [{}] of type [{}]  in TyphonML", dbname, databaseType);
 		Model newModel;
 		newModel = EcoreUtil.copy(targetModel);
@@ -190,6 +188,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	@Override
 	public String getDatabaseName(String sourceEntityName, Model model) {
 		return null;
+	}
+
+	@Override
+	public Model deleteEntityMappings(String entityname, Model model) {
+		logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityname);
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
+		EcoreUtil.remove(entity.getGenericList());
+		return newModel;
 	}
 
 	private DataType getDataTypeFromEntityName(String entityname, Model model) {

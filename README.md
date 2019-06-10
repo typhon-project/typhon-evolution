@@ -1,3 +1,5 @@
+[![Build Status](http://typhon.clmsuk.com:8081/buildStatus/icon?job=TyphonEvolution)](http://typhon.clmsuk.com:8081/job/TyphonEvolution)
+
 # Typhon evolution tool
 
 ## How to run

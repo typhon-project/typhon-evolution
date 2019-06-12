@@ -44,6 +44,9 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
             logger.info("Processing SMO : [" + smo + "]");
             if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.ADD)
                 model = evolutionService.addEntityType(smo,model);
+            if (smo.getTyphonObject() == TyphonMLObject.ENTITY && smo.getEvolutionOperator() == EvolutionOperator.SPLITHORIZONTAL) {
+                model = evolutionService.splitHorizontal(smo, model);
+            }
             if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.RENAME)
 //                model = evolutionService.renameEntityType(smo,model);
             if (smo.getTyphonObject() == TyphonMLObject.ENTITY && smo.getEvolutionOperator() == EvolutionOperator.MIGRATE) {

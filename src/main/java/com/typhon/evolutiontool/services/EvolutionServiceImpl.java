@@ -21,7 +21,7 @@ import java.util.List;
     For each operator it will :
      1. Verify that the needed parameters are in the input parameter map of the SMO object.
      2. Execute the structure and data change operations of the SMO operator by calling the TyphonInterface object implementation
-     3. Notify the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
+     3. Modify the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
  */
 @Service
 public class EvolutionServiceImpl implements EvolutionService{

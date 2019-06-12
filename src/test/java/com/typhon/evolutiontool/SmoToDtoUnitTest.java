@@ -1,10 +1,7 @@
 package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typhon.evolutiontool.entities.EvolutionOperator;
-import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.entities.SMODto;
-import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.entities.*;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 
@@ -35,7 +32,7 @@ public class SmoToDtoUnitTest {
     @Test
     public void DtoToSMO() throws IOException {
         SMODto smoDto = mapper.readerFor(SMODto.class).readValue(new File(createEntityFilePath));
-        SMO smo = modelMapper.map(smoDto, SMO.class);
+        SMO smo = modelMapper.map(smoDto, SMOJsonImpl.class);
         assertEquals(smo.getEvolutionOperator(), smoDto.getEvolutionOperator());
         assertEquals(smo.getTyphonObject(), smoDto.getTyphonObject());
         assertEquals(smo.getInputParameter(), smoDto.getInputParameter());

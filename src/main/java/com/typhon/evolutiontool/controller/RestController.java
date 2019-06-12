@@ -1,11 +1,10 @@
 package com.typhon.evolutiontool.controller;
 
 import com.typhon.evolutiontool.Message;
-import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.SMODto;
+import com.typhon.evolutiontool.entities.SMOJsonImpl;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionToolFacade;
-import com.typhon.evolutiontool.services.EvolutionToolFacadeImpl;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +29,18 @@ public class RestController {
         this.evolutionToolFacade = evolutionToolFacade;
     }
 
+    /**
+     * Method used to pass SMO via a JSON text format.
+     * Can only process one SMO at a time.
+     * @param smoDto
+     * @return
+     */
     @RequestMapping(value="/evolve", method=RequestMethod.POST)
     public Message postSmo(@RequestBody SMODto smoDto){
-        SMO smo = modelMapper.map(smoDto, SMO.class);
+        SMOJsonImpl smo = modelMapper.map(smoDto, SMOJsonImpl.class);
         Message message;
         try {
-            //TODO Change how to pass source and target typhonML together with SMO List
+            //TODO Change how to pass source and target typhonML.
             evolutionToolFacade.executeSMO(Arrays.asList(smo),"resources/baseModel.xmi","resources/baseModel.xmi");
             message = new Message("[" + smo.toString() + "] executed");
         } catch (InputParameterException exception) {

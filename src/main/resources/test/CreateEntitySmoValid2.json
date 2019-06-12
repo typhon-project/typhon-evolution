@@ -6,12 +6,14 @@
     "targetmodel": "TyphonML_V2",
     "databasetype": "relationaldb",
     "databasename": "MySQL",
-    "tablename": "orderTable",
+    "targetlogicalname": "partofproductTable",
     "entity": {
-      "name":"order",
+      "name":"partofproduct",
       "attributes": {
-        "idorder": "string",
-        "quantity": "number"
+        "idppart": "string",
+        "productpart": "string",
+        "quantity": "number",
+        "color": "string"
       }
     }
   }

@@ -2,6 +2,7 @@ package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.SMOJsonImpl;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.TyphonInterface;
@@ -45,7 +46,7 @@ public class IntegrationTests {
      */
     @Test
     public void testCreateEntity() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.addEntityType(smo,sourceModel);
@@ -57,7 +58,7 @@ public class IntegrationTests {
      */
     @Test
     public void testRemoveEntity() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.removeEntityType(smo,sourceModel);
@@ -70,7 +71,7 @@ public class IntegrationTests {
      */
     @Test
     public void testRenameEntity() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/RenameEntitySmo.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RenameEntitySmo.json"));
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.renameEntityType(smo,sourceModel);
@@ -83,7 +84,7 @@ public class IntegrationTests {
      */
     @Test
     public void testSplitHorizontal() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/SplitHorizontalSmo.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/SplitHorizontalSmo.json"));
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.splitHorizontal(smo,sourceModel);
@@ -95,7 +96,7 @@ public class IntegrationTests {
      */
     @Test
     public void testMigrateEntity() throws IOException, InputParameterException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/MigrateEntitySmo.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/MigrateEntitySmo.json"));
 
         sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         targetModel = evolutionService.migrateEntity(smo,sourceModel);

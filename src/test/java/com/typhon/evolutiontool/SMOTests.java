@@ -47,7 +47,7 @@ public class SMOTests {
     @Test
     public void testVerifyInputParameters() throws IOException {
         List<String> expectedInputParams = Arrays.asList("entity", "targetmodel");
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
         assertTrue(smo.inputParametersContainsExpected(expectedInputParams));
         expectedInputParams = Arrays.asList("entity");
         assertTrue(smo.inputParametersContainsExpected(expectedInputParams));
@@ -56,7 +56,7 @@ public class SMOTests {
 
     @Test
     public void testGetParameter() throws IOException {
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
         assertEquals("TyphonML_V2",smo.getInputParameter().get("targetmodel"));
     }
 
@@ -67,7 +67,7 @@ public class SMOTests {
         Map<String, Object> expectedAttributes = new HashMap<>();
         expectedAttributes.put("name", "string");
         expectedAttributes.put("entrydate", "date");
-        smo = mapper.readerFor(SMO.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
         expectedEntity = new Entity("client");
         expectedEntity.setAttributes(expectedAttributes);
 

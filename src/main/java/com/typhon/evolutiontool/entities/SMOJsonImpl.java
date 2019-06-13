@@ -37,11 +37,6 @@ public class SMOJsonImpl implements SMO {
         return typhonObject;
     }
 
-    @Override
-    public void setTyphonObject(TyphonMLObject typhonObject) {
-        this.typhonObject = typhonObject;
-    }
-
 
     @Override
     public EvolutionOperator getEvolutionOperator() {
@@ -49,18 +44,8 @@ public class SMOJsonImpl implements SMO {
     }
 
     @Override
-    public void setEvolutionOperator(EvolutionOperator evolutionOperator) {
-        this.evolutionOperator = evolutionOperator;
-    }
-
-    @Override
     public Map<String,Object> getInputParameter() {
         return inputParameter;
-    }
-
-    @Override
-    public void setInputParameter(Map<String, Object> inputParameter) {
-        this.inputParameter = inputParameter;
     }
 
     @Override

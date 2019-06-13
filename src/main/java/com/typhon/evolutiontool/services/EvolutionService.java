@@ -19,7 +19,7 @@ public interface EvolutionService {
 
     String mergeEntities(SMO smo, Model model) throws InputParameterException;
 
-    String addRelationship(SMO smo, Model model) throws InputParameterException;
+    Model addRelationship(SMO smo, Model model) throws InputParameterException;
 
     String removeRelationship(SMO smo, Model model);
 

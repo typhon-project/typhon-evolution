@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool;
 
 import com.typhon.evolutiontool.entities.EvolutionOperator;
-import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
 import com.typhon.evolutiontool.services.SMOFactory;
@@ -39,6 +38,7 @@ public class ChangeOperatorsTest {
         SMOAdapter smo2 = SMOFactory.createSMOAdapterFromChangeOperator(changeOperator);
         assertEquals(TyphonMLObject.ENTITY,smo2.getTyphonObject());
         assertEquals(EvolutionOperator.RENAME, smo2.getEvolutionOperator());
+
 
     }
 

@@ -239,16 +239,14 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String addRelationship(SMO smo, Model model) throws InputParameterException {
+    public Model addRelationship(SMO smo, Model model) throws InputParameterException {
         Relation relation;
         String targetmodelid;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.TARGETMODEL))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
             relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, Relation.class);
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            this.createRelationshipType(relation, targetmodelid);
-
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "Relationship created";
+            targetModel = typhonMLInterface.createRelationship(relation, model);
+            typhonInterface.createRelationshipType(relation,targetModel);
+            return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
         }

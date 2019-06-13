@@ -4,12 +4,20 @@ import typhonml.ChangeOperator;
 import typhonml.RemoveEntity;
 import typhonml.RenameEntity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * This class converts ChangeOperatorof TyphonML package object to an intern SMO object used by the EvolutionService class.
+ * Implementation is currently naive and non optimal as no attributes allow the detection of the specific operators. Downcasting is the current implementation.
+ *
+ */
 public class SMOAdapter implements SMO {
 
     private ChangeOperator changeOperator;
+    private Map<String, Object> inputParameter;
 
     public SMOAdapter(ChangeOperator changeOperator) {
         this.changeOperator = changeOperator;
@@ -22,10 +30,6 @@ public class SMOAdapter implements SMO {
         return null;
     }
 
-    @Override
-    public void setTyphonObject(TyphonMLObject typhonObject) {
-
-    }
 
     @Override
     public EvolutionOperator getEvolutionOperator() {
@@ -37,20 +41,13 @@ public class SMOAdapter implements SMO {
         return null;
     }
 
-    @Override
-    public void setEvolutionOperator(EvolutionOperator evolutionOperator) {
-
-    }
 
     @Override
     public Map<String, Object> getInputParameter() {
+        //TODO
         return null;
     }
 
-    @Override
-    public void setInputParameter(Map<String, Object> inputParameter) {
-
-    }
 
     @Override
     public boolean inputParametersContainsExpected(List<String> expectedInputParams) {

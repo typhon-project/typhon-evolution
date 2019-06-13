@@ -6,7 +6,7 @@
     "targetmodel": "TyphonML_V2",
     "databasetype": "relationaldb",
     "databasename": "MySQL",
-    "tablename": "clientsTable",
+    "targetlogicalname": "clientsTable",
     "entity": {
       "name":"client",
       "attributes": {

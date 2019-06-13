@@ -1,0 +1,14 @@
+{
+  "typhonobject": "RELATION",
+  "operator": "ADD",
+  "parameters":
+  {
+    "relation": {
+      "name": "paymentDetails",
+      "sourceentityname": "User",
+      "targetentityname": "CreditCard",
+      "containment": true,
+      "cardinality": "ZERO_ONE"
+    }
+  }
+}

@@ -104,6 +104,18 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		return newModel;
 	}
 
+
+	@Override
+	public Model createRelationship(Relation relation, Model model) {
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		typhonml.Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
+		typhonml.Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
+		sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality().name(), relation.isContainment(), targetEntity));
+
+		return newModel;
+	}
+
 	@Override
 	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
 		logger.info("Creating an instance (table/collection...) in Database [{}] of type [{}]  in TyphonML", dbname, databaseType);
@@ -210,6 +222,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         }
         return null;
     }
+
+	private typhonml.Relation createRelation(String name, String cardinality, boolean isContainment, typhonml.Entity targetType) {
+		//TODO Type safe checking of string cardinality
+		typhonml.Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
+		relation.setName(name);
+		relation.setIsContainment(isContainment);
+		relation.setCardinality(Cardinality.getByName(cardinality));
+		relation.setType(targetType);
+		return relation;
+	}
 
     private Attribute createAttribute(String name, DataType type) {
 		//TODO Handling of dataTypes

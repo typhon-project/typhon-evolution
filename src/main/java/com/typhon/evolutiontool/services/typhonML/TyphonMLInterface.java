@@ -60,4 +60,6 @@ public interface TyphonMLInterface {
     Model deleteEntityMappings(String entityname, Model model);
 
     Model createRelationship(Relation relation, Model model);
+
+    Model deleteRelationshipInEntity(String relationname, String entityname, Model model);
 }

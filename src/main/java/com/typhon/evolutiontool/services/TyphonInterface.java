@@ -53,4 +53,6 @@ public interface TyphonInterface {
     WorkingSet readRelationship(Relation relation, Model model);
 
     WorkingSet deleteRelationship(Relation relation, boolean datadelete, Model model);
+
+    void deleteRelationshipInEntity(String relationname, String entityname, Model model);
 }

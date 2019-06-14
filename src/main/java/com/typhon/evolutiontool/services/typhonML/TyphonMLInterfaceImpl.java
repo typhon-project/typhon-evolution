@@ -117,6 +117,23 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
+	public Model deleteRelationshipInEntity(String relationname, String entityname, Model model) {
+		logger.info("Deleting Relationship type [{}] in [{}] in TyphonML model", relationname, entityname);
+		Model newModel;
+		typhonml.Relation relToDelete=null;
+		newModel = EcoreUtil.copy(model);
+		typhonml.Entity e = this.getEntityTypeFromName(entityname, newModel);
+		for(typhonml.Relation relation : e.getRelations()){
+			if (relation.getName().equals(relationname)) {
+				relToDelete=relation;
+			}
+		}
+		if(relToDelete!=null)
+		EcoreUtil.delete(relToDelete);
+		return newModel;
+	}
+
+	@Override
 	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
 		logger.info("Creating an instance (table/collection...) in Database [{}] of type [{}]  in TyphonML", dbname, databaseType);
 		Model newModel;
@@ -215,7 +232,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	private DataType getDataTypeFromEntityName(String entityname, Model model) {
         for (DataType datatype : model.getDataTypes()) {
             if (datatype instanceof typhonml.Entity) {
-                if (datatype.getName().equals(entityname)) {
+                if (datatype.getName().equalsIgnoreCase(entityname)) {
                     return datatype;
                 }
             }

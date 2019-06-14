@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import com.typhon.evolutiontool.services.SMOFactory;
+import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.services.TyphonInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
@@ -39,7 +39,6 @@ public class IntegrationTests {
     @Before
     public void setUp() {
         TyphonMLUtils.typhonMLPackageRegistering();
-        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
         evolutionService.setTyphonDLInterface(typhonDLInterface);
         evolutionService.setTyphonInterface(typhonInterface);
         evolutionService.setTyphonMLInterface(typhonMLInterface);
@@ -111,10 +110,22 @@ public class IntegrationTests {
      * Manual verification of produced model.
      */
     @Test
+    public void testDeleteRelationship() throws IOException, InputParameterException {
+        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/DeleteRelationSmo.json"));
+
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
+        targetModel = evolutionService.removeRelationship(smo,sourceModel);
+        TyphonMLUtils.saveModel(targetModel,finalModelPath);
+    }
+
+    /**
+     * Manual verification of produced model.
+     */
+    @Test
     public void testCreateRelation() throws IOException, InputParameterException {
         smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateRelationSmo.json"));
 
-        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
         targetModel = evolutionService.addRelationship(smo,sourceModel);
         TyphonMLUtils.saveModel(targetModel,finalModelPath);
     }

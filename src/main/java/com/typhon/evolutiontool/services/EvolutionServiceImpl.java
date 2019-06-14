@@ -149,6 +149,7 @@ public class EvolutionServiceImpl implements EvolutionService{
      */
     @Override
     public String splitVertical(SMO smo, Model model) throws InputParameterException {
+        //TODO
         String sourceEntityName, sourcemodelid, targetmodelid, databasetype, databasename, sourceEntityId;
         Relation relation;
         Entity targetEntity, sourceEntity;
@@ -240,6 +241,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public Model addRelationship(SMO smo, Model model) throws InputParameterException {
+        //TODO
         Relation relation;
         String targetmodelid;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
@@ -253,21 +255,15 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String removeRelationship(SMO smo, Model model) {
-        boolean datadelete;
-        Relation relation;
-        String sourcemodelid, targetmodelid;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
-            datadelete = Boolean.parseBoolean(smo.getInputParameter().get(ParametersKeyString.DATADELETE).toString());
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, Relation.class);
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            typhonInterface.deleteForeignKey(relation.getSourceEntity(), relation.getTargetEntity());
-            if(datadelete)
-//                typhonInterface.deleteAttributes(relation.getSourceEntity().getName(),Arrays.asList(typhonMLInterface.getAttributeOfType(relation.getSourceEntity().getName(),relation.getTargetEntity())),sourcemodelid);
-
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "relationship type deleted";
+    public Model removeRelationship(SMO smo, Model model) {
+        String relationname;
+        String entityname;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATIONNAME, ParametersKeyString.ENTITYNAME))) {
+            relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
+            typhonInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
+            return targetModel;
         }
         return null;
     }
@@ -286,7 +282,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 //            }
 //            ws = typhonInterface.readRelationship(relation,sourcemodelid);
 //            typhonInterface.writeWorkingSetData(ws, targetmodelid);
-//            typhonInterface.deleteRelationship(relation, true, sourcemodelid);
+//            typhonInterface.deleteRelationshipInEntity(relation, true, sourcemodelid);
             // = delete Entity if relational. TODO
 //            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "Relationship containement enabled";
@@ -309,7 +305,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 //            ws = typhonInterface.readRelationship(relation,sourcemodelid);
 //            typhonInterface.createEntityType(relation.getTargetEntity(),targetmodelid);
 //            typhonInterface.writeWorkingSetData(ws, targetmodelid);
-//            typhonInterface.deleteRelationship(relation, true, sourcemodelid);
+//            typhonInterface.deleteRelationshipInEntity(relation, true, sourcemodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "Relationship containement disabled";
         }
@@ -356,7 +352,7 @@ public class EvolutionServiceImpl implements EvolutionService{
                 throw new InputParameterException("No existing relationship with name provided relationship name");
             }
             oppositeRel = relation.getOpposite();
-//            typhonInterface.deleteRelationship(oppositeRel, datadelete, sourcemodelid);
+//            typhonInterface.deleteRelationshipInEntity(oppositeRel, datadelete, sourcemodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "opposite relationship deleted";

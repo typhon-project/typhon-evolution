@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.services;
+package com.typhon.evolutiontool.utils;
 
 
 import com.typhon.evolutiontool.entities.SMOAdapter;

@@ -21,7 +21,7 @@ public interface EvolutionService {
 
     Model addRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String removeRelationship(SMO smo, Model model);
+    Model removeRelationship(SMO smo, Model model);
 
     String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
 

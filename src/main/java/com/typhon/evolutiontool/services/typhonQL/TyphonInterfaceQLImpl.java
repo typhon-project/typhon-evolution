@@ -87,8 +87,7 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
 
     @Override
     public WorkingSet deleteAllEntityData(String entityid, Model model) {
-        //TODO Implement
-        return null;
+        return getTyphonQLConnection(model).delete(this.readAllEntityData(entityid, model));
     }
 
     @Override
@@ -127,6 +126,13 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
         }
 
         return null;
+    }
+
+    @Override
+    public void deleteRelationshipInEntity(String relationname, String entityname, Model model) {
+        logger.info("Delete Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationname, entityname, model);
+        String tql = "TQL DDL DELETE RELATION "+ relationname +" IN "+ entityname;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override

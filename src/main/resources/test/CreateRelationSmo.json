@@ -5,8 +5,12 @@
   {
     "relation": {
       "name": "paymentDetails",
-      "sourceentityname": "User",
-      "targetentityname": "CreditCard",
+      "sourceEntity": {
+        "name": "User"
+      },
+      "targetEntity": {
+        "name": "CreditCard"
+      },
       "containment": true,
       "cardinality": "ZERO_ONE"
     }

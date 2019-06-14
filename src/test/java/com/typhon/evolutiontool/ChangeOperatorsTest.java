@@ -12,8 +12,7 @@ import typhonml.*;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ChangeOperatorsTest extends InitialTest{
 
@@ -46,12 +45,60 @@ public class ChangeOperatorsTest extends InitialTest{
         attribute.setName("attribute");
         attribute.setType(addEntity);
         addEntity.getAttributes().add(attribute);
+        //TODO Missing other required parameters in AddEntity ChangeOperator (databasename, targetlogicalname, etc...)
         sourceModel.getChangeOperators().add(addEntity);
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addEntity);
         targetModel = evolutionService.addEntityType(smo, sourceModel);
         assertNotNull(typhonMLInterface.getEntityTypeFromName("NEWENTITY",targetModel));
 
+    }
+
+    @Test
+    public void testRemoveEntityTypeChangeOperator() throws InputParameterException {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        RemoveEntity removeEntity = TyphonmlFactory.eINSTANCE.createRemoveEntity();
+        removeEntity.setEntityToRemove(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeEntity);
+        targetModel = evolutionService.removeEntityType(smo, sourceModel);
+        assertNotNull(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+        assertNull(typhonMLInterface.getEntityTypeFromName("User", targetModel));
+    }
+
+    @Test
+    public void testRenameEntityChangeOperator() throws InputParameterException {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        RenameEntity renameEntity = TyphonmlFactory.eINSTANCE.createRenameEntity();
+        renameEntity.setEntityToRename(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+        renameEntity.setNewEntityName("CUSTOMER");
+
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameEntity);
+        targetModel = evolutionService.renameEntityType(smo, sourceModel);
+        assertNotNull(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+        assertNull(typhonMLInterface.getEntityTypeFromName("User", targetModel));
+        assertNotNull(typhonMLInterface.getEntityTypeFromName("CUSTOMER", targetModel));
+    }
+
+    @Test
+    public void testSplitHorizontalChangeOperator() {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        SplitEntity splitEntity = TyphonmlFactory.eINSTANCE.createSplitEntity();
+        splitEntity.setEntityToBeSplit(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
+        //TODO
+    }
+
+    @Test
+    public void testCreateRelationshipChangeOperator() throws InputParameterException {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        AddRelation addRelation = TyphonmlFactory.eINSTANCE.createAddRelation();
+        addRelation.setName("ADDEDRELATION");
+        addRelation.setType(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
+        addRelation.setIsContainment(false);
+        //TODO Missing sourceEntity info in AddRelation ChnageOperator.
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
+        targetModel = evolutionService.addRelationship(smo, sourceModel);
+        assertNotNull(typhonMLInterface.getRelationFromNameInEntity("ADDEDRELATION", "User",targetModel));
     }
 
 }

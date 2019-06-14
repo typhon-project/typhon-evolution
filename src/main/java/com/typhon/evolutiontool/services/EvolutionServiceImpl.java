@@ -152,7 +152,7 @@ public class EvolutionServiceImpl implements EvolutionService{
     public String splitVertical(SMO smo, Model model) throws InputParameterException {
         //TODO
         String sourceEntityName, sourcemodelid, targetmodelid, databasetype, databasename, sourceEntityId;
-        Relation relation;
+        RelationDO relation;
         EntityDO targetEntity, sourceEntity;
         List<String> attributes;
         WorkingSet dataSource, dataTarget;
@@ -177,7 +177,7 @@ public class EvolutionServiceImpl implements EvolutionService{
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
 
-//            relation = new Relation("splitVerticalResult", sourceEntity, targetEntity, null, false, Cardinality.ONE_ONE);
+//            relation = new RelationDO("splitVerticalResult", sourceEntity, targetEntity, null, false, CardinalityDO.ONE_ONE);
 //            typhonInterface.createEntityType(targetEntity, targetmodelid);
 //            this.createRelationshipType(relation, targetmodelid);
             sourceEntityId = typhonMLInterface.getAttributeIdOfEntityType(sourceEntityName);
@@ -242,11 +242,10 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public Model addRelationship(SMO smo, Model model) throws InputParameterException {
-        //TODO
-        Relation relation;
+        RelationDO relation;
         String targetmodelid;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, Relation.class);
+            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
             targetModel = typhonMLInterface.createRelationship(relation, model);
             typhonInterface.createRelationshipType(relation,targetModel);
             return targetModel;
@@ -271,11 +270,11 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
-        Relation relation;
+        RelationDO relation;
         String sourcemodelid, targetmodelid;
         WorkingSet ws;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
+            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, RelationDOJsonImpl.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
 //            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
@@ -293,11 +292,11 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
-        Relation relation;
+        RelationDO relation;
         String sourcemodelid, targetmodelid;
         WorkingSet ws;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION))) {
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION,Relation.class);
+            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, RelationDOJsonImpl.class);
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
 //            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
@@ -317,21 +316,19 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String enableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
-        Relation relation, oppositeRel;
-        String sourcemodelid, targetmodelid, relationname;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME))) {
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+        RelationDO relation, oppositeRel;
+        String entityname, relationname;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.RELATIONNAME))) {
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
-            relation = typhonMLInterface.getRelationFromName(relationname);
+            relation = typhonMLInterface.getRelationFromNameInEntity(relationname, entityname, model);
             if (relation == null) {
                 throw new InputParameterException("No existing relationship with name provided relationship name");
             }
             //Quid opposite cardinality? TODO
-            oppositeRel = new Relation("opposite - " + relation.getName(), relation.getTargetEntity(), relation.getSourceEntity(), relation, false, relation.getCardinality());
-            this.createRelationshipType(oppositeRel, targetmodelid);
+            oppositeRel = new RelationDOJsonImpl("opposite - " + relation.getName(), relation.getTargetEntity(), relation.getSourceEntity(), relation, false, relation.getCardinality());
+//            this.createRelationshipType(oppositeRel, targetmodelid);
 
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
         }else{
             throw new InputParameterException("Missing parameters");
         }
@@ -340,22 +337,20 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String disableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
-        Relation relation, oppositeRel;
-        String relationname, sourcemodelid, targetmodelid;
+        RelationDO relation, oppositeRel;
+        String relationname, sourcemodelid, entityname;
         boolean datadelete;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATIONNAME, ParametersKeyString.DATADELETE))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.RELATIONNAME, ParametersKeyString.DATADELETE))) {
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
             datadelete = Boolean.parseBoolean(smo.getInputParameter().get(ParametersKeyString.DATADELETE).toString());
-            relation = typhonMLInterface.getRelationFromName(relationname);
+            relation = typhonMLInterface.getRelationFromNameInEntity(relationname,entityname,model);
             if (relation == null) {
                 throw new InputParameterException("No existing relationship with name provided relationship name");
             }
             oppositeRel = relation.getOpposite();
 //            typhonInterface.deleteRelationshipInEntity(oppositeRel, datadelete, sourcemodelid);
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "opposite relationship deleted";
         }
         else{
@@ -448,7 +443,7 @@ public class EvolutionServiceImpl implements EvolutionService{
         return smo.inputParametersContainsExpected(parameters);
     }
 
-    private void createRelationshipType(Relation relation, String targetmodelid) {
+    private void createRelationshipType(RelationDO relation, String targetmodelid) {
         // Implement here rules detailed in appendix file about actions on specific datamodels.
 
         //If source & target are on relational

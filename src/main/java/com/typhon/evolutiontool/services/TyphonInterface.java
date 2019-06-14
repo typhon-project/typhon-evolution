@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.services;
 
 import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.Relation;
+import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import typhonml.Model;
 
@@ -40,7 +40,7 @@ public interface TyphonInterface {
 
     void deleteWorkingSetData(WorkingSet dataToDelete, Model model);
 
-    void createRelationshipType(Relation relation, Model model);
+    void createRelationshipType(RelationDO relation, Model model);
 
     void writeWorkingSetData(WorkingSet workingSetData, Model model);
 
@@ -50,9 +50,9 @@ public interface TyphonInterface {
 
     void deleteForeignKey(EntityDO sourceEntity, EntityDO targetEntity);
 
-    WorkingSet readRelationship(Relation relation, Model model);
+    WorkingSet readRelationship(RelationDO relation, Model model);
 
-    WorkingSet deleteRelationship(Relation relation, boolean datadelete, Model model);
+    WorkingSet deleteRelationship(RelationDO relation, boolean datadelete, Model model);
 
     void deleteRelationshipInEntity(String relationname, String entityname, Model model);
 }

@@ -1,14 +1,13 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.Relation;
+import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.services.TyphonInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import typhonml.Model;
 
 import java.util.List;
@@ -111,12 +110,12 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public WorkingSet readRelationship(Relation relation, Model model) {
+    public WorkingSet readRelationship(RelationDO relation, Model model) {
         return getTyphonQLConnection(model).query("from ? s , ? t select s, t where s.?==? " , relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(),relation.getTargetEntity().getIdentifier());
     }
 
     @Override
-    public WorkingSet deleteRelationship(Relation relation, boolean datadelete, Model model) {
+    public WorkingSet deleteRelationship(RelationDO relation, boolean datadelete, Model model) {
         this.deleteForeignKey(relation.getSourceEntity(), relation.getTargetEntity());
         if(datadelete){
             //For nosql document db
@@ -171,8 +170,11 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
      * @param model
      */
     @Override
-    public void createRelationshipType(Relation relation, Model model) {
-        throw new NotImplementedException();
+    public void createRelationshipType(RelationDO relation, Model model) {
+        String tql;
+        logger.info("Create relationship [{}] via TyphonQL DDL query on TyphonML model [{}] ", relation.getName(),model);
+        tql = "TQLDDL CREATE RELATIONSHIP " + relation;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
 

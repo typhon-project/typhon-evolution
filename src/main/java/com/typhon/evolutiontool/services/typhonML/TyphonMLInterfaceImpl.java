@@ -1,10 +1,12 @@
 package com.typhon.evolutiontool.services.typhonML;
 
+import com.typhon.evolutiontool.entities.CardinalityDO;
 import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.Relation;
+import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,12 +59,22 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public Relation getRelationFromName(String relationname) {
+	public RelationDO getRelationFromNameInEntity(String relationname, String entityname, Model model) {
+		Entity entity;
+		entity = this.getEntityTypeFromName(entityname, model);
+		if (entity != null) {
+			for (Relation r : entity.getRelations()) {
+				if (r.getName().equalsIgnoreCase(relationname)) {
+					return RelationDOFactory.createRelationDOFromRelationML(r);
+				}
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Model createEntityType(Model sourceModel, EntityDO newEntity) {
+		logger.info("Create Entity type [{}] in TyphonML model", newEntity.getName());
 		Model newModel;
 		newModel = EcoreUtil.copy(sourceModel);
 
@@ -106,12 +118,13 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 
 	@Override
-	public Model createRelationship(Relation relation, Model model) {
+	public Model createRelationship(RelationDO relation, Model model) {
+		logger.info("Create Relationship [{}] in [{}] in TyphonML model", relation.getName(), relation.getSourceEntity().getName());
 		Model newModel;
 		newModel = EcoreUtil.copy(model);
-		typhonml.Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
-		typhonml.Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
-		sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality().name(), relation.isContainment(), targetEntity));
+		Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
+		Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
+		sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality(), relation.isContainment(), targetEntity));
 
 		return newModel;
 	}
@@ -240,12 +253,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return null;
     }
 
-	private typhonml.Relation createRelation(String name, String cardinality, boolean isContainment, typhonml.Entity targetType) {
-		//TODO Type safe checking of string cardinality
-		typhonml.Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
+	private Relation createRelation(String name, CardinalityDO cardinality, boolean isContainment, Entity targetType) {
+		Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
 		relation.setName(name);
 		relation.setIsContainment(isContainment);
-		relation.setCardinality(Cardinality.getByName(cardinality));
+		relation.setCardinality(Cardinality.getByName(cardinality.getName()));
 		relation.setType(targetType);
 		return relation;
 	}

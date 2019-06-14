@@ -79,4 +79,10 @@ public class SMOJsonImpl implements SMO {
         return mapper.convertValue(this.getInputParameter().get(parameterkey), EntityDOJsonImpl.class);
     }
 
+    @Override
+    public RelationDO getRelationDOFromInputParameter(String parameterkey) {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.convertValue(this.getInputParameter().get(parameterkey), RelationDOJsonImpl.class);
+    }
+
 }

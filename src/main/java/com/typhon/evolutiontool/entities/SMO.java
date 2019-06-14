@@ -15,4 +15,6 @@ public interface SMO {
     <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass);
 
     EntityDO getEntityDOFromInputParameter(String parameterkey);
+
+    RelationDO getRelationDOFromInputParameter(String parameterkey);
 }

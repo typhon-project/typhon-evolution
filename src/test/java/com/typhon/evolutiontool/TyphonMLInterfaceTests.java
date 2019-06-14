@@ -1,18 +1,15 @@
 package com.typhon.evolutiontool;
 
-import com.typhon.evolutiontool.entities.Entity;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.EntityDOJsonImpl;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import typhonml.Attribute;
 import typhonml.Model;
-import typhonml.TyphonmlFactory;
 
-import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
@@ -31,7 +28,7 @@ public class TyphonMLInterfaceTests {
 
     @Test
     public void testCreateEntityTyphonML() throws IOException, InputParameterException {
-        Entity entity = new Entity("fakeEntity");
+        EntityDO entity = new EntityDOJsonImpl("fakeEntity");
         targetModel = typhonMLInterface.createEntityType(sourceModel,entity);
         assertNotNull(targetModel);
         assertEquals(entity.getName(),targetModel.getDataTypes().get(0).getName());
@@ -39,7 +36,7 @@ public class TyphonMLInterfaceTests {
 
     @Test
     public void testCreateEntityWithAttributesTyphonML() throws IOException, InputParameterException {
-        Entity entity = new Entity("fakeEntity");
+        EntityDO entity = new EntityDOJsonImpl("fakeEntity");
         entity.addAttribute("attr1","string");
         entity.addAttribute("attr2", "number");
         targetModel = typhonMLInterface.createEntityType(sourceModel,entity);

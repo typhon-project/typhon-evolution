@@ -3,19 +3,22 @@ package com.typhon.evolutiontool.entities;
 public class Relation {
 
     private String name;
-    private Entity sourceEntity;
-    private Entity targetEntity;
+    private EntityDO sourceEntity;
+    private EntityDO targetEntity;
     private Relation opposite;
     private boolean containment;
     private Cardinality cardinality;
 
-    public Relation(String name, Entity sourceEntity, Entity targetEntity, Relation opposite, boolean containment, Cardinality cardinality) {
+    public Relation(String name, EntityDO sourceEntity, EntityDO targetEntity, Relation opposite, boolean containment, Cardinality cardinality) {
         this.name = name;
         this.sourceEntity = sourceEntity;
         this.targetEntity = targetEntity;
         this.opposite = opposite;
         this.containment = containment;
         this.cardinality = cardinality;
+    }
+
+    public Relation() {
     }
 
     public String getName() {
@@ -26,19 +29,19 @@ public class Relation {
         this.name = name;
     }
 
-    public Entity getSourceEntity() {
+    public EntityDO getSourceEntity() {
         return sourceEntity;
     }
 
-    public void setSourceEntity(Entity sourceEntity) {
+    public void setSourceEntity(EntityDO sourceEntity) {
         this.sourceEntity = sourceEntity;
     }
 
-    public Entity getTargetEntity() {
+    public EntityDO getTargetEntity() {
         return targetEntity;
     }
 
-    public void setTargetEntity(Entity targetEntity) {
+    public void setTargetEntity(EntityDO targetEntity) {
         this.targetEntity = targetEntity;
     }
 

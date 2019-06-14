@@ -10,7 +10,7 @@ public class TyphonMLSchema {
     @Id
     private String version;
     private List<Database> databases;
-    private List<Entity> entities;
+    private List<EntityDO> entities;
 
     public TyphonMLSchema() {
     }
@@ -35,15 +35,15 @@ public class TyphonMLSchema {
         this.databases = databases;
     }
 
-    public List<Entity> getEntities() {
+    public List<EntityDO> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Entity> entities) {
+    public void setEntities(List<EntityDO> entities) {
         this.entities = entities;
     }
 
-    public Entity getEntityFromName(String entityid) {
+    public EntityDO getEntityFromName(String entityid) {
         return entities.stream().filter(e -> e.getName().equals(entityid)).findAny().orElse(null);
     }
 

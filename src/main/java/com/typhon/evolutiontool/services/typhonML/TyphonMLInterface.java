@@ -2,7 +2,7 @@ package com.typhon.evolutiontool.services.typhonML;
 
 
 import com.typhon.evolutiontool.entities.DatabaseType;
-import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
@@ -21,7 +21,7 @@ public interface TyphonMLInterface {
 
 
     /**
-     * Returns an Entity object of entity @param entityid in the TyphonML version @param sourcemodelid.
+     * Returns an EntityDO object of entity @param entityid in the TyphonML version @param sourcemodelid.
      * @param entityid
      * @param model
      * @return
@@ -39,11 +39,11 @@ public interface TyphonMLInterface {
 
     DatabaseType getDatabaseType(String entityname, Model model);
 
-    String getAttributeOfType(String entityname, Entity targetEntityType);
+    String getAttributeOfType(String entityname, EntityDO targetEntityType);
 
     Relation getRelationFromName(String relationname);
 
-    Model createEntityType(Model sourceModel, Entity newEntity);
+    Model createEntityType(Model sourceModel, EntityDO newEntity);
 
     Model deleteEntityType(String entityname, Model model);
 

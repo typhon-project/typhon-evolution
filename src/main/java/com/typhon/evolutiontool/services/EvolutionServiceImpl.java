@@ -39,7 +39,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public Model addEntityType(SMO smo, Model model) throws InputParameterException {
-        Entity newEntity;
+        EntityDO newEntity;
         String databasetype, databasename, logicalname;
         DatabaseType dbtype;
         // Verify ParametersKeyString
@@ -53,7 +53,8 @@ public class EvolutionServiceImpl implements EvolutionService{
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
             //Executing evolution operations
-            newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
+//            newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
+            newEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.ENTITY);
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);
@@ -126,7 +127,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
             targetModel = typhonMLInterface.copyEntityType(sourceEntityName, targetEntityName, model);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
-            // Create a new logical mapping for the created Entity type.
+            // Create a new logical mapping for the created EntityDO type.
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype,databasename, targetLogicalName, targetEntityName, targetModel);
             dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
             dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
@@ -152,7 +153,7 @@ public class EvolutionServiceImpl implements EvolutionService{
         //TODO
         String sourceEntityName, sourcemodelid, targetmodelid, databasetype, databasename, sourceEntityId;
         Relation relation;
-        Entity targetEntity, sourceEntity;
+        EntityDO targetEntity, sourceEntity;
         List<String> attributes;
         WorkingSet dataSource, dataTarget;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
@@ -165,7 +166,7 @@ public class EvolutionServiceImpl implements EvolutionService{
                 ParametersKeyString.ENTITYNAME,
                 ParametersKeyString.ATTRIBUTES))) {
             sourceEntityName = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
-            targetEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, Entity.class);
+            targetEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
             attributes = smo.getPOJOFromInputParameter(ParametersKeyString.ATTRIBUTES, ArrayList.class);
             targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
             sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
@@ -283,7 +284,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 //            ws = typhonInterface.readRelationship(relation,sourcemodelid);
 //            typhonInterface.writeWorkingSetData(ws, targetmodelid);
 //            typhonInterface.deleteRelationshipInEntity(relation, true, sourcemodelid);
-            // = delete Entity if relational. TODO
+            // = delete EntityDO if relational. TODO
 //            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
             return "Relationship containement enabled";
         }

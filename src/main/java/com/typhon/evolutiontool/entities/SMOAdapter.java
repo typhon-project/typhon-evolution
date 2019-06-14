@@ -1,10 +1,8 @@
 package com.typhon.evolutiontool.entities;
 
-import typhonml.ChangeOperator;
-import typhonml.RemoveEntity;
-import typhonml.RenameEntity;
+import com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class SMOAdapter implements SMO {
 
     @Override
     public TyphonMLObject getTyphonObject() {
-        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RenameEntity)
+        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RenameEntity || changeOperator instanceof AddEntity)
             return TyphonMLObject.ENTITY;
         return null;
     }
@@ -37,6 +35,8 @@ public class SMOAdapter implements SMO {
             return EvolutionOperator.REMOVE;
         if(changeOperator instanceof RenameEntity)
             return EvolutionOperator.RENAME;
+        if(changeOperator instanceof AddEntity)
+            return EvolutionOperator.ADD;
 
         return null;
     }
@@ -56,6 +56,14 @@ public class SMOAdapter implements SMO {
 
     @Override
     public <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass) {
+        return null;
+    }
+
+    @Override
+    public EntityDO getEntityDOFromInputParameter(String parameterkey) {
+        //Because AddEntity Operator exends Enity in TyphonML meta model.
+        if(changeOperator instanceof AddEntity)
+            return EntityDOFactory.createEntityDOFromEntityML((AddEntity)changeOperator);
         return null;
     }
 }

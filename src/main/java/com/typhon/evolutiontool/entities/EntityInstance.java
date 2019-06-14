@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /*
-Implementation of Entity data contained in WorkingSet. Following D4.2
+Implementation of EntityDO data contained in WorkingSet. Following D4.2
  */
 public class EntityInstance {
 
@@ -34,7 +34,7 @@ public class EntityInstance {
 
     @Override
     public String toString() {
-        return "Entity{" +
+        return "EntityDO{" +
                 "id='" + id + '\'' +
                 ", attributes=" + attributes +
                 '}';

@@ -1,6 +1,5 @@
 package com.typhon.evolutiontool.dummy;
 
-import com.typhon.evolutiontool.entities.Entity;
 import com.typhon.evolutiontool.entities.EntityInstance;
 import com.typhon.evolutiontool.entities.WorkingSet;
 

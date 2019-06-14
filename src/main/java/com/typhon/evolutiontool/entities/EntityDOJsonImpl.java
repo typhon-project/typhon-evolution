@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class Entity {
+public class EntityDOJsonImpl implements EntityDO {
 
     @Id
     @JsonProperty("name")
@@ -18,13 +18,14 @@ public class Entity {
     private String identifier;
 
 
-    public Entity() {
+    public EntityDOJsonImpl() {
     }
 
-    public Entity(String name) {
+    public EntityDOJsonImpl(String name) {
         this.name = name;
     }
 
+    @Override
     public void addAttribute(String name, String datatype) {
         if (attributes == null) {
             attributes = new HashMap<>();
@@ -34,7 +35,7 @@ public class Entity {
 
     @Override
     public String toString() {
-        return "Entity{" +
+        return "EntityDO{" +
                 "name='" + name + '\'' +
                 ", attributes=" + attributes +
                 ", identifier='" + identifier + '\'' +
@@ -45,7 +46,7 @@ public class Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Entity entity = (Entity) o;
+        EntityDOJsonImpl entity = (EntityDOJsonImpl) o;
         return Objects.equals(name, entity.name) &&
                 Objects.equals(attributes, entity.attributes);
     }
@@ -55,32 +56,24 @@ public class Entity {
         return Objects.hash(name, attributes);
     }
 
-    public boolean sameAttributes(Entity e) {
-        return Objects.equals(this.attributes, e.attributes);
-    }
-
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-
+    @Override
     public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
+    @Override
     public Map<String,Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<String,Object> attributes) {
-        this.attributes = attributes;
-    }
 }

@@ -13,4 +13,6 @@ public interface SMO {
     boolean inputParametersContainsExpected(List<String> expectedInputParams);
 
     <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass);
+
+    EntityDO getEntityDOFromInputParameter(String parameterkey);
 }

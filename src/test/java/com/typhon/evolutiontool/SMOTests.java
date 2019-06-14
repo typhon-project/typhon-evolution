@@ -63,15 +63,13 @@ public class SMOTests {
 
     @Test
     public void testCastInputParameterToPOJO() throws IOException {
-        Entity expectedEntity, inputEntity;
-        Map<String, Object> expectedAttributes = new HashMap<>();
-        expectedAttributes.put("name", "string");
-        expectedAttributes.put("entrydate", "date");
+        EntityDO expectedEntity, inputEntity;
+        expectedEntity = new EntityDOJsonImpl("client");
+        expectedEntity.addAttribute("name", "string");
+        expectedEntity.addAttribute("entrydate", "date");
         smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValid.json"));
-        expectedEntity = new Entity("client");
-        expectedEntity.setAttributes(expectedAttributes);
 
-        inputEntity = smo.getPOJOFromInputParameter("entity", Entity.class);
+        inputEntity = smo.getPOJOFromInputParameter("entity", EntityDOJsonImpl.class);
         assertEquals(expectedEntity,inputEntity);
 
     }

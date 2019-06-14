@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import com.typhon.evolutiontool.entities.WorkingSet;
@@ -32,7 +32,7 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public String createEntityType(Entity newEntity, Model model) {
+    public String createEntityType(EntityDO newEntity, Model model) {
         //TODO Handling of Identifier, index, etc...
         String tql;
         logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(),model);
@@ -53,14 +53,14 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
 
     @Override
     public void renameEntity(String oldEntityName, String newEntityName, Model model) {
-        logger.info("Rename Entity [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, model);
+        logger.info("Rename EntityDO [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, model);
         String tql = "TQL DDL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
 
     }
 
     @Override
-    public WorkingSet readAllEntityData(Entity entity, Model model) {
+    public WorkingSet readAllEntityData(EntityDO entity, Model model) {
         return getTyphonQLConnection(model).query("from ? e select e", entity.getName());
     }
 
@@ -96,17 +96,17 @@ public class TyphonInterfaceQLImpl implements TyphonInterface {
     }
 
     @Override
-    public void addForeignKey(Entity sourceEntity, Entity targetEntity, String targetmodelid, boolean isMandatory, boolean isIdentifier) {
+    public void addForeignKey(EntityDO sourceEntity, EntityDO targetEntity, String targetmodelid, boolean isMandatory, boolean isIdentifier) {
 
     }
 
     @Override
-    public void createJoinTable(Entity sourceEntity, Entity targetEntity) {
+    public void createJoinTable(EntityDO sourceEntity, EntityDO targetEntity) {
 
     }
 
     @Override
-    public void deleteForeignKey(Entity sourceEntity, Entity targetEntity) {
+    public void deleteForeignKey(EntityDO sourceEntity, EntityDO targetEntity) {
 
     }
 

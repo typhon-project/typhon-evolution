@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.services;
 
-import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import typhonml.Model;
@@ -13,17 +13,17 @@ import java.util.List;
 public interface TyphonInterface {
 
     /**
-     * Creates a new Entity
+     * Creates a new EntityDO
      * @param newEntity
      * @return
      */
-    String createEntityType(Entity newEntity, Model model);
+    String createEntityType(EntityDO newEntity, Model model);
 
     String createEntityType(typhonml.Entity newEntity, Model model);
 
     void renameEntity(String oldEntityName, String newEntityName, Model model);
 
-    WorkingSet readAllEntityData(Entity entity, Model model);
+    WorkingSet readAllEntityData(EntityDO entity, Model model);
 
     WorkingSet readAllEntityData(String entityId, Model model);
 
@@ -44,11 +44,11 @@ public interface TyphonInterface {
 
     void writeWorkingSetData(WorkingSet workingSetData, Model model);
 
-    void addForeignKey(Entity sourceEntity, Entity targetEntity, String targetmodelid, boolean isMandatory, boolean isIdentifier);
+    void addForeignKey(EntityDO sourceEntity, EntityDO targetEntity, String targetmodelid, boolean isMandatory, boolean isIdentifier);
 
-    void createJoinTable(Entity sourceEntity, Entity targetEntity);
+    void createJoinTable(EntityDO sourceEntity, EntityDO targetEntity);
 
-    void deleteForeignKey(Entity sourceEntity, Entity targetEntity);
+    void deleteForeignKey(EntityDO sourceEntity, EntityDO targetEntity);
 
     WorkingSet readRelationship(Relation relation, Model model);
 

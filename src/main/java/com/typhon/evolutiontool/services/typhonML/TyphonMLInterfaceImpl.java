@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.DatabaseType;
-import com.typhon.evolutiontool.entities.Entity;
+import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.Relation;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
@@ -51,7 +51,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public String getAttributeOfType(String entityname, Entity targetEntityType) {
+	public String getAttributeOfType(String entityname, EntityDO targetEntityType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -62,7 +62,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 	}
 
 	@Override
-	public Model createEntityType(Model sourceModel, Entity newEntity) {
+	public Model createEntityType(Model sourceModel, EntityDO newEntity) {
 		Model newModel;
 		newModel = EcoreUtil.copy(sourceModel);
 
@@ -76,7 +76,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model deleteEntityType(String entityname, Model model) {
-	    logger.info("Delete Entity type [{}] in TyphonML model", entityname);
+	    logger.info("Delete EntityDO type [{}] in TyphonML model", entityname);
         Model newModel;
         newModel = EcoreUtil.copy(model);
 //        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, newModel));
@@ -86,7 +86,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model renameEntity(String oldEntityName, String newEntityName, Model model) {
-	    logger.info("Renaming Entity type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
+	    logger.info("Renaming EntityDO type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
         Model newModel;
         newModel = EcoreUtil.copy(model);
         getDataTypeFromEntityName(oldEntityName, newModel).setName(newEntityName);
@@ -95,7 +95,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
-		logger.info("Copying Entity type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
+		logger.info("Copying EntityDO type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
 		Model newModel;
 		newModel = EcoreUtil.copy(model);
 		DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));

@@ -23,26 +23,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class IntegrationTests {
-
-    TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
-    TyphonInterface typhonInterface = new TyphonInterfaceQLImpl();
-    TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
-    EvolutionServiceImpl evolutionService = new EvolutionServiceImpl();
-    private ObjectMapper mapper = new ObjectMapper();
-    private SMO smo;
-    public static Model sourceModel, targetModel;
-//    public static final String sourcemodelpath = "resources/baseModel.xmi";
-    public static final String sourcemodelpath = "resources/generated_demo.xmi";
-    public static final String finalModelPath = "resources/finalModel.xmi";
-
-    @Before
-    public void setUp() {
-        TyphonMLUtils.typhonMLPackageRegistering();
-        evolutionService.setTyphonDLInterface(typhonDLInterface);
-        evolutionService.setTyphonInterface(typhonInterface);
-        evolutionService.setTyphonMLInterface(typhonMLInterface);
-    }
+public class IntegrationTests extends InitialTest{
 
     /**
      * Manual verification of produced model.

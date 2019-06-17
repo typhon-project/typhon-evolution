@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import typhonml.Model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -149,48 +149,44 @@ public class EvolutionServiceImpl implements EvolutionService{
      * @throws InputParameterException
      */
     @Override
-    public String splitVertical(SMO smo, Model model) throws InputParameterException {
+    public Model splitVertical(SMO smo, Model model) throws InputParameterException {
         //TODO
-        String sourceEntityName, sourcemodelid, targetmodelid, databasetype, databasename, sourceEntityId;
+        String databasetype, databasename, sourceEntityId;
         RelationDO relation;
-        EntityDO targetEntity, sourceEntity;
-        List<String> attributes;
+        EntityDO sourceEntity, firstNewEntity, secondNewEntity;
         WorkingSet dataSource, dataTarget;
         dataTarget = WorkingSetFactory.createEmptyWorkingSet();
         if (containParameters(smo, Arrays.asList(
                 ParametersKeyString.ENTITY,
-                ParametersKeyString.TARGETMODEL,
-                ParametersKeyString.SOURCEMODEL,
+                ParametersKeyString.FIRSTNEWENTITY,
+                ParametersKeyString.SECONDNEWENTITY,
                 ParametersKeyString.DATABASENAME,
-                ParametersKeyString.DATABASETYPE,
-                ParametersKeyString.ENTITYNAME,
-                ParametersKeyString.ATTRIBUTES))) {
-            sourceEntityName = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
-            targetEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
-            attributes = smo.getPOJOFromInputParameter(ParametersKeyString.ATTRIBUTES, ArrayList.class);
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
+                ParametersKeyString.DATABASETYPE))) {
+            sourceEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.ENTITY);
+            firstNewEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.FIRSTNEWENTITY);
+            secondNewEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.SECONDNEWENTITY);
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-//            sourceEntity = typhonMLInterface.getEntityTypeFromName(sourceEntityName,sourcemodelid);
+
+            //TyphonDL
             if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
                 typhonDLInterface.createDatabase(databasetype, databasename);
             }
 
-//            relation = new RelationDO("splitVerticalResult", sourceEntity, targetEntity, null, false, CardinalityDO.ONE_ONE);
-//            typhonInterface.createEntityType(targetEntity, targetmodelid);
-//            this.createRelationshipType(relation, targetmodelid);
-            sourceEntityId = typhonMLInterface.getAttributeIdOfEntityType(sourceEntityName);
-            attributes.add(sourceEntityId);
-//            dataSource = typhonInterface.readEntityDataSelectAttributes(sourceEntityName, attributes, sourcemodelid);
-//            dataTarget.setEntityRows(targetEntity.getName(), dataSource.getEntityInstanceRows(sourceEntityName));
-//            typhonInterface.writeWorkingSetData(dataTarget,targetmodelid);
-            attributes.remove(sourceEntityId);
-//            typhonInterface.deleteAttributes(sourceEntityName, attributes, sourcemodelid);
+            //TyphonML
+            targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
+            targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
+            relation = RelationDOFactory.createRelationDO("splitRelation", firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
+            targetModel = typhonMLInterface.createRelationship(relation,targetModel);
+            targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
+            //TyphonQL
+            typhonInterface.createEntityType(firstNewEntity, targetModel);
+            typhonInterface.createEntityType(secondNewEntity, targetModel);
+            typhonInterface.createRelationshipType(relation, targetModel);
+            //TODO Data Manipulation
 
-            return "entity splitted vertically";
+            return targetModel;
         }
 
         return null;

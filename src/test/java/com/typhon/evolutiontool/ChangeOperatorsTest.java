@@ -89,6 +89,18 @@ public class ChangeOperatorsTest extends InitialTest{
     }
 
     @Test
+    public void testMigrateEntityChangeOperator() throws InputParameterException {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        MigrateEntity migrateEntity = TyphonmlFactory.eINSTANCE.createMigrateEntity();
+        migrateEntity.setEntity(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+        migrateEntity.setNewDatabase(typhonMLInterface.getDatabaseFromName("MongoDB",sourceModel));
+
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
+        targetModel = evolutionService.migrateEntity(smo, sourceModel);
+
+    }
+
+    @Test
     public void testCreateRelationshipChangeOperator() throws InputParameterException {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         AddRelation addRelation = TyphonmlFactory.eINSTANCE.createAddRelation();

@@ -24,4 +24,6 @@ public interface ParametersKeyString {
     String DATADELETE = "datadelete";
     String RELATIONNAME = "relationname";
     String TARGETLOGICALNAME = "targetlogicalname";
+    String FIRSTNEWENTITY = "firstnewentity";
+    String SECONDNEWENTITY = "secondnewentity";
 }

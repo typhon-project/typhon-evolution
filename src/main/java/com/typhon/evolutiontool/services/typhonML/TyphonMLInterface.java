@@ -5,6 +5,7 @@ import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import typhonml.Database;
 import typhonml.Model;
 
 /**
@@ -52,6 +53,8 @@ public interface TyphonMLInterface {
     Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
 
     Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel);
+
+    Database getDatabaseFromName(String dbname, Model model);
 
     Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
 

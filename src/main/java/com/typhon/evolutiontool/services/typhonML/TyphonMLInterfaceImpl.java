@@ -182,7 +182,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		return newModel;
 	}
 
-	private Database getDatabaseFromName(String dbname, Model model) {
+	@Override
+	public Database getDatabaseFromName(String dbname, Model model) {
 		for (Database db : model.getDatabases()) {
 			if (db.getName().equals(dbname)) {
 				return db;

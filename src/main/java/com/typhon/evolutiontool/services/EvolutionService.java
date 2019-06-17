@@ -13,7 +13,7 @@ public interface EvolutionService {
 
     Model splitHorizontal(SMO smo, Model model) throws InputParameterException;
 
-    String splitVertical(SMO smo, Model model) throws InputParameterException;
+    Model splitVertical(SMO smo, Model model) throws InputParameterException;
 
     Model migrateEntity(SMO smo, Model model) throws InputParameterException;
 

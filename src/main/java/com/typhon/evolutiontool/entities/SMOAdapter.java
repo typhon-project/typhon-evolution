@@ -43,7 +43,8 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.RENAME;
         if(changeOperator instanceof AddEntity || changeOperator instanceof AddRelation)
             evolutionOperator = EvolutionOperator.ADD;
-
+        if(changeOperator instanceof MigrateEntity)
+            evolutionOperator = EvolutionOperator.MIGRATE;
     }
 
     private void initializeInputParameterAttribute() {
@@ -60,6 +61,13 @@ public class SMOAdapter implements SMO {
         }
         if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator==EvolutionOperator.ADD) {
             inputParameter.put(ParametersKeyString.RELATION, (Relation) changeOperator);
+        }
+        if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.MIGRATE) {
+            inputParameter.put(ParametersKeyString.ENTITYNAME, ((MigrateEntity) changeOperator).getEntity().getName());
+            inputParameter.put(ParametersKeyString.DATABASENAME, ((MigrateEntity) changeOperator).getNewDatabase().getName());
+            //TODO by TyphonML
+//            inputParameter.put(ParametersKeyString.DATABASETYPE,((MigrateEntity)changeOperator).getNewDatabase().getType());
+//            inputParameter.put(ParametersKeyString.TARGETLOGICALNAME, ((MigrateEntity) changeOperator).getTargetLogicalName());
         }
     }
 

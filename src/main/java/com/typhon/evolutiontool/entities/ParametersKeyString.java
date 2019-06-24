@@ -26,4 +26,5 @@ public interface ParametersKeyString {
     String TARGETLOGICALNAME = "targetlogicalname";
     String FIRSTNEWENTITY = "firstnewentity";
     String SECONDNEWENTITY = "secondnewentity";
+    String CARDINALITY = "cardinality";
 }

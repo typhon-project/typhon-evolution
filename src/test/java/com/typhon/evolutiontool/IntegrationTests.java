@@ -1,18 +1,9 @@
 package com.typhon.evolutiontool;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
-import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.utils.SMOFactory;
-import com.typhon.evolutiontool.services.TyphonInterface;
-import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
-import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
-import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-import org.junit.Before;
 import org.junit.Test;
 import typhonml.ChangeOperator;
 import typhonml.Model;

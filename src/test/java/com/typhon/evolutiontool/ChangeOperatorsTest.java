@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Before;
@@ -19,7 +20,7 @@ public class ChangeOperatorsTest extends InitialTest{
 
     @Test
     public void testReadChangeOperators(){
-        sourceModel = TyphonMLUtils.loadModelTyphonML(sourcemodelpath);
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
         List<ChangeOperator> changeOperatorList = sourceModel.getChangeOperators();
         ChangeOperator changeOperator;
         changeOperator = changeOperatorList.get(0);
@@ -80,13 +81,13 @@ public class ChangeOperatorsTest extends InitialTest{
         assertNotNull(typhonMLInterface.getEntityTypeFromName("CUSTOMER", targetModel));
     }
 
-    @Test
-    public void testSplitHorizontalChangeOperator() {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        SplitEntity splitEntity = TyphonmlFactory.eINSTANCE.createSplitEntity();
-        splitEntity.setEntityToBeSplit(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
-        //TODO
-    }
+//    @Test
+//    public void testSplitHorizontalChangeOperator() {
+//        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+//        SplitEntity splitEntity = TyphonmlFactory.eINSTANCE.createSplitEntity();
+//        splitEntity.setEntityToBeSplit(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
+//        //TODO
+//    }
 
     @Test
     public void testMigrateEntityChangeOperator() throws InputParameterException {
@@ -95,9 +96,10 @@ public class ChangeOperatorsTest extends InitialTest{
         migrateEntity.setEntity(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
         migrateEntity.setNewDatabase(typhonMLInterface.getDatabaseFromName("MongoDB",sourceModel));
 
+        assertNotEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
         targetModel = evolutionService.migrateEntity(smo, sourceModel);
-
+        assertEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
     }
 
     @Test
@@ -111,6 +113,18 @@ public class ChangeOperatorsTest extends InitialTest{
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
         targetModel = evolutionService.addRelationship(smo, sourceModel);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("ADDEDRELATION", "User",targetModel));
+    }
+
+    @Test
+    public void testRemoveRelationship() {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
+        RemoveRelation removeRelation = TyphonmlFactory.eINSTANCE.createRemoveRelation();
+        removeRelation.setRelationToRemove(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
+
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
+        assertNotNull(typhonMLInterface.getRelationFromNameInEntity("paidWith","Order",sourceModel));
+        targetModel = evolutionService.removeRelationship(smo, sourceModel);
+        assertNull(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", targetModel));
     }
 
 }

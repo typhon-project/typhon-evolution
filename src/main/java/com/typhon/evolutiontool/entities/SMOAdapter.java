@@ -29,15 +29,15 @@ public class SMOAdapter implements SMO {
     }
 
     private void initializeTyphonObjectAttribute() {
-        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RenameEntity || changeOperator instanceof AddEntity)
+        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RenameEntity || changeOperator instanceof AddEntity || changeOperator instanceof MigrateEntity)
             typhonMLObject = TyphonMLObject.ENTITY;
-        if(changeOperator instanceof AddRelation)
+        if(changeOperator instanceof AddRelation || changeOperator instanceof RemoveRelation)
             typhonMLObject = TyphonMLObject.RELATION;
 
     }
 
     private void initializeEvolutionOperatorAttribute() {
-        if(changeOperator instanceof RemoveEntity)
+        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RemoveRelation)
             evolutionOperator=EvolutionOperator.REMOVE;
         if(changeOperator instanceof RenameEntity)
             evolutionOperator = EvolutionOperator.RENAME;
@@ -56,7 +56,7 @@ public class SMOAdapter implements SMO {
         if(typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator==EvolutionOperator.REMOVE)
             inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
         if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.RENAME) {
-            inputParameter.put(ParametersKeyString.OLDENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
+            inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
             inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
         }
         if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator==EvolutionOperator.ADD) {
@@ -68,6 +68,11 @@ public class SMOAdapter implements SMO {
             //TODO by TyphonML
 //            inputParameter.put(ParametersKeyString.DATABASETYPE,((MigrateEntity)changeOperator).getNewDatabase().getType());
 //            inputParameter.put(ParametersKeyString.TARGETLOGICALNAME, ((MigrateEntity) changeOperator).getTargetLogicalName());
+        }
+        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.REMOVE) {
+            //TODO by TyphonML
+//            inputParameter.put(ParametersKeyString.ENTITYNAME),((RemoveRelation) changeOperator).getRelationToRemove().getSourceEntity().getName();
+            inputParameter.put(ParametersKeyString.RELATIONNAME, ((RemoveRelation) changeOperator).getRelationToRemove().getName());
         }
     }
 

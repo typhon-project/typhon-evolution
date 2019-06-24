@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import java.util.List;
     This class implements the operations needed to complete the execution of a Schema Modification Operator (SMO).
     For each operator it will :
      1. Verify that the needed parameters are in the input parameter map of the SMO object.
-     2. Execute the structure and data change operations of the SMO operator by calling the TyphonInterface object implementation
+     2. Execute the structure and data change operations of the SMO operator by calling the TyphonQLInterface object implementation
      3. Modify the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
  */
 @Service
@@ -32,7 +33,7 @@ public class EvolutionServiceImpl implements EvolutionService{
     private TyphonDLInterface typhonDLInterface;
     @Autowired
     @Qualifier("typhonql")
-    private TyphonInterface typhonInterface;
+    private TyphonQLInterface typhonQLInterface;
     @Autowired
     private TyphonMLInterface typhonMLInterface;
     private Model targetModel;
@@ -58,7 +59,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);
-            typhonInterface.createEntityType(newEntity,targetModel);
+            typhonQLInterface.createEntityType(newEntity,targetModel);
             return targetModel;
         }
         else
@@ -76,9 +77,9 @@ public class EvolutionServiceImpl implements EvolutionService{
                 throw new InputParameterException("Cannot delete an entity involved in a relationship. Remove the relationships first.");
             }
             //Delete data
-            typhonInterface.deleteAllEntityData(entityname,model);
+            typhonQLInterface.deleteAllEntityData(entityname,model);
             //Delete structures
-            typhonInterface.deleteEntityStructure(entityname, model);
+            typhonQLInterface.deleteEntityStructure(entityname, model);
             targetModel = typhonMLInterface.deleteEntityType(entityname, model);
 
             return targetModel;
@@ -90,10 +91,10 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Override
     public Model renameEntityType(SMO smo, Model model) throws InputParameterException {
         String oldEntityName,newEntityName;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.OLDENTITYNAME, ParametersKeyString.NEWENTITYNAME))) {
-            oldEntityName = smo.getInputParameter().get(ParametersKeyString.OLDENTITYNAME).toString();
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.NEWENTITYNAME))) {
+            oldEntityName = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             newEntityName = smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME).toString();
-            typhonInterface.renameEntity(oldEntityName, newEntityName,model);
+            typhonQLInterface.renameEntity(oldEntityName, newEntityName,model);
             targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
         } else {
@@ -129,10 +130,10 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             // Create a new logical mapping for the created EntityDO type.
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype,databasename, targetLogicalName, targetEntityName, targetModel);
-            dataSource = typhonInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
+            dataSource = typhonQLInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
             dataTarget.setEntityRows(targetEntityName,dataSource.getEntityInstanceRows(sourceEntityName));
-            typhonInterface.writeWorkingSetData(dataTarget, targetModel);
-            typhonInterface.deleteWorkingSetData(dataSource,model);
+            typhonQLInterface.writeWorkingSetData(dataTarget, targetModel);
+            typhonQLInterface.deleteWorkingSetData(dataSource,model);
 
             return targetModel;
         } else {
@@ -150,7 +151,6 @@ public class EvolutionServiceImpl implements EvolutionService{
      */
     @Override
     public Model splitVertical(SMO smo, Model model) throws InputParameterException {
-        //TODO
         String databasetype, databasename, sourceEntityId;
         RelationDO relation;
         EntityDO sourceEntity, firstNewEntity, secondNewEntity;
@@ -181,9 +181,9 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 
             //TyphonQL
-            typhonInterface.createEntityType(firstNewEntity, targetModel);
-            typhonInterface.createEntityType(secondNewEntity, targetModel);
-            typhonInterface.createRelationshipType(relation, targetModel);
+            typhonQLInterface.createEntityType(firstNewEntity, targetModel);
+            typhonQLInterface.createEntityType(secondNewEntity, targetModel);
+            typhonQLInterface.createRelationshipType(relation, targetModel);
             //TODO Data Manipulation
 
             return targetModel;
@@ -220,11 +220,11 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.deleteEntityMappings(entityname, model);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype,databasename, targetLogicalName, entityname, targetModel);
-            typhonInterface.createEntityType(entity, targetModel);
-            data = typhonInterface.readAllEntityData(entityname,model);
-            typhonInterface.writeWorkingSetData(data,targetModel);
-            typhonInterface.deleteWorkingSetData(data, model);
-            typhonInterface.deleteEntityStructure(entityname, model);
+            typhonQLInterface.createEntityType(entity, targetModel);
+            data = typhonQLInterface.readAllEntityData(entityname,model);
+            typhonQLInterface.writeWorkingSetData(data,targetModel);
+            typhonQLInterface.deleteWorkingSetData(data, model);
+            typhonQLInterface.deleteEntityStructure(entityname, model);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
@@ -233,6 +233,17 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String mergeEntities(SMO smo, Model model) throws InputParameterException {
+        /*
+        TyphonML :
+        - Check cardinality between the two entities (one_to_many only)
+        - Delete relation between the two
+        - Check that second entity is not any relationship. If yes, cancel.
+        - Copy attribute of secondentity
+        - Rename entity.
+
+        - TyphonQL :
+        -
+         */
         return null;
     }
 
@@ -243,7 +254,7 @@ public class EvolutionServiceImpl implements EvolutionService{
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
             targetModel = typhonMLInterface.createRelationship(relation, model);
-            typhonInterface.createRelationshipType(relation,targetModel);
+            typhonQLInterface.createRelationshipType(relation,targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter");
@@ -258,52 +269,23 @@ public class EvolutionServiceImpl implements EvolutionService{
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
-            typhonInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
+            typhonQLInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
             return targetModel;
         }
         return null;
     }
 
     @Override
-    public String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
+    public Model enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
-        String sourcemodelid, targetmodelid;
-        WorkingSet ws;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION, ParametersKeyString.DATADELETE))) {
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, RelationDOJsonImpl.class);
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-//            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
-//                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
-//            }
-//            ws = typhonInterface.readRelationship(relation,sourcemodelid);
-//            typhonInterface.writeWorkingSetData(ws, targetmodelid);
-//            typhonInterface.deleteRelationshipInEntity(relation, true, sourcemodelid);
-            // = delete EntityDO if relational. TODO
-//            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "Relationship containement enabled";
-        }
-        return null;
-    }
-
-    @Override
-    public String disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation;
-        String sourcemodelid, targetmodelid;
-        WorkingSet ws;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.TARGETMODEL,ParametersKeyString.RELATION))) {
-            relation = smo.getPOJOFromInputParameter(ParametersKeyString.RELATION, RelationDOJsonImpl.class);
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
-            targetmodelid = smo.getInputParameter().get(ParametersKeyString.TARGETMODEL).toString();
-//            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB) {
-//                throw new InputParameterException("Please use splitHorizontal operation in case of relational model");
-//            }
-//            ws = typhonInterface.readRelationship(relation,sourcemodelid);
-//            typhonInterface.createEntityType(relation.getTargetEntity(),targetmodelid);
-//            typhonInterface.writeWorkingSetData(ws, targetmodelid);
-//            typhonInterface.deleteRelationshipInEntity(relation, true, sourcemodelid);
-            typhonMLInterface.setNewTyphonMLModel(targetmodelid);
-            return "Relationship containement disabled";
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
+            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName(),model) == DatabaseType.RELATIONALDB) {
+                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
+            }
+            targetModel = typhonMLInterface.enableContainment(relation, model);
+            typhonQLInterface.enableContainment(relation.getName(),relation.getSourceEntity().getName(), targetModel);
+            return targetModel;
         }
         else{
             throw new InputParameterException("Missing parameter");
@@ -311,43 +293,57 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String enableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation, oppositeRel;
+    public Model disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
+        RelationDO relation;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
+            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            targetModel = typhonMLInterface.disableContainment(relation, model);
+            typhonQLInterface.disableContainment(relation.getName(),relation.getSourceEntity().getName(), targetModel);
+            return targetModel;
+        }
+        else{
+            throw new InputParameterException("Missing parameter");
+        }
+    }
+
+    @Override
+    public Model enableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
+        RelationDO relation,oppositeRel;
         String entityname, relationname;
+        //TODO Add the new Relation name. Change arg to Relation instead of relationname and entityname.
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.RELATIONNAME))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
-            relation = typhonMLInterface.getRelationFromNameInEntity(relationname, entityname, model);
+            relation = RelationDOFactory.createRelationDOFromRelationML(typhonMLInterface.getRelationFromNameInEntity(relationname, entityname, model));
             if (relation == null) {
-                throw new InputParameterException("No existing relationship with name provided relationship name");
+                throw new InputParameterException("No existing relationship with name ["+ relationname+"] in entity ["+entityname+"]");
             }
-            //Quid opposite cardinality? TODO
+//            Quid opposite cardinality? TODO
             oppositeRel = new RelationDOJsonImpl("opposite - " + relation.getName(), relation.getTargetEntity(), relation.getSourceEntity(), relation, false, relation.getCardinality());
-//            this.createRelationshipType(oppositeRel, targetmodelid);
+            targetModel = typhonMLInterface.createRelationship(oppositeRel, model);
+            typhonQLInterface.createRelationshipType(oppositeRel, targetModel);
 
+            return targetModel;
         }else{
             throw new InputParameterException("Missing parameters");
         }
-        return null;
     }
 
     @Override
-    public String disableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
+    public Model disableOppositeRelationship(SMO smo, Model model) throws InputParameterException {
         RelationDO relation, oppositeRel;
         String relationname, sourcemodelid, entityname;
-        boolean datadelete;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.RELATIONNAME, ParametersKeyString.DATADELETE))) {
-            sourcemodelid = smo.getInputParameter().get(ParametersKeyString.SOURCEMODEL).toString();
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME,ParametersKeyString.RELATIONNAME))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
-            datadelete = Boolean.parseBoolean(smo.getInputParameter().get(ParametersKeyString.DATADELETE).toString());
-            relation = typhonMLInterface.getRelationFromNameInEntity(relationname,entityname,model);
+            relation = RelationDOFactory.createRelationDOFromRelationML(typhonMLInterface.getRelationFromNameInEntity(relationname, entityname, model));
             if (relation == null) {
-                throw new InputParameterException("No existing relationship with name provided relationship name");
+                throw new InputParameterException("No existing relationship with name ["+ relationname+"] in entity ["+entityname+"]");
             }
             oppositeRel = relation.getOpposite();
-//            typhonInterface.deleteRelationshipInEntity(oppositeRel, datadelete, sourcemodelid);
-            return "opposite relationship deleted";
+            targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRel.getName(), relation.getTargetEntity().getName(), model);
+            typhonQLInterface.deleteRelationshipInEntity(oppositeRel.getName(),relation.getTargetEntity().getName(), targetModel);
+            return targetModel;
         }
         else{
             throw new InputParameterException("Missing parameter");
@@ -355,7 +351,16 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String changeCardinality(SMO smo, Model model) {
+    public Model changeCardinality(SMO smo, Model model) {
+        RelationDO relation;
+        CardinalityDO cardinality;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
+            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            cardinality = CardinalityDO.getByName(smo.getInputParameter().get(ParametersKeyString.CARDINALITY).toString());
+            targetModel = typhonMLInterface.changeCardinalityInRelation(relation, cardinality, model);
+            typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getSourceEntity().getName(), cardinality, targetModel);
+            return targetModel;
+        }
         return null;
     }
 
@@ -447,20 +452,20 @@ public class EvolutionServiceImpl implements EvolutionService{
 //                typhonMLInterface.getDatabaseType(relation.getTargetEntity().getName()) instanceof RelationalDB)
 //            switch (relation.getCardinality()) {
 //                case N_N:
-//                    typhonInterface.createJoinTable(relation.getSourceEntity(), relation.getTargetEntity());
+//                    typhonQLInterface.createJoinTable(relation.getSourceEntity(), relation.getTargetEntity());
 //                    break;
 //                case ONE_N:
-//                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, true, false);
+//                    typhonQLInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, true, false);
 //                    break;
 //                case ZERO_ONE:
-//                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, false, true);
+//                    typhonQLInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, false, true);
 //                    break;
 //                case ONE_ONE:
-//                    typhonInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, true, true);
+//                    typhonQLInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, true, true);
 //                    //+ data verification rule (all ids must referenced as fk).
 //                    break;
 //                case ZERO_N:
-//                    typhonInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, false, false);
+//                    typhonQLInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, false, false);
 //            } else{
 //            // No specific action, but changes the way data is inserted. (Construction of key value pairs, or adding of reference attribute data.
 //        }
@@ -470,8 +475,8 @@ public class EvolutionServiceImpl implements EvolutionService{
         this.typhonDLInterface = typhonDLInterface;
     }
 
-    public void setTyphonInterface(TyphonInterface typhonInterface) {
-        this.typhonInterface = typhonInterface;
+    public void setTyphonQLInterface(TyphonQLInterface typhonQLInterface) {
+        this.typhonQLInterface = typhonQLInterface;
     }
 
     public void setTyphonMLInterface(TyphonMLInterface typhonMLInterface) {

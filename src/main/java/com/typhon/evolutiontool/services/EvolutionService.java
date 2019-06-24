@@ -23,15 +23,15 @@ public interface EvolutionService {
 
     Model removeRelationship(SMO smo, Model model);
 
-    String enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
+    Model enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
 
-    String disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;
+    Model disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String enableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
+    Model enableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String disableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
+    Model disableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 
-    String changeCardinality(SMO smo, Model model);
+    Model changeCardinality(SMO smo, Model model);
 
     String addAttribute(SMO smo, Model model);
 

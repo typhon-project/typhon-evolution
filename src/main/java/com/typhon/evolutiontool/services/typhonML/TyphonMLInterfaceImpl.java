@@ -1,17 +1,19 @@
 package com.typhon.evolutiontool.services.typhonML;
 
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.DatabaseType;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import com.typhon.evolutiontool.utils.RelationDOFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import typhonml.*;
+import typhonml.Attribute;
+import typhonml.Collection;
+import typhonml.Database;
+import typhonml.DocumentDB;
+import typhonml.RelationalDB;
+import typhonml.Table;
 
 
 @Component
@@ -19,24 +21,13 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
 
-	@Override
-	public void setNewTyphonMLModel(String newModelIdentifier) {
-		logger.info("Setting current TyphonML to [{}] ", newModelIdentifier);
-		//TODO Implement TyphonML interface
-	}
 
 	@Override
-	public typhonml.Entity getEntityTypeFromName(String entityName, Model model) {
+	public Entity getEntityTypeFromName(String entityName, Model model) {
 		DataType dataType = this.getDataTypeFromEntityName(entityName, model);
 		if (dataType instanceof typhonml.Entity) {
 			return (typhonml.Entity) dataType;
 		}
-		return null;
-	}
-
-	@Override
-	public String getAttributeIdOfEntityType(String sourceEntityName) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -49,23 +40,22 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public DatabaseType getDatabaseType(String entityname, Model model) {
+		//TODO
+		Entity e = this.getEntityTypeFromName(entityname, model);
+		Database db;
+//		db = e.getGenericList();
 		return null;
 	}
 
-	@Override
-	public String getAttributeOfType(String entityname, EntityDO targetEntityType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public RelationDO getRelationFromNameInEntity(String relationname, String entityname, Model model) {
+	public Relation getRelationFromNameInEntity(String relationname, String entityname, Model model) {
 		Entity entity;
 		entity = this.getEntityTypeFromName(entityname, model);
 		if (entity != null) {
 			for (Relation r : entity.getRelations()) {
 				if (r.getName().equalsIgnoreCase(relationname)) {
-					return RelationDOFactory.createRelationDOFromRelationML(r);
+					return r;
 				}
 			}
 		}
@@ -144,6 +134,56 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		if(relToDelete!=null)
 		EcoreUtil.delete(relToDelete);
 		return newModel;
+	}
+
+	@Override
+	public Model enableContainment(RelationDO relation, Model model) {
+		Relation relationML;
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+		relationML.setIsContainment(true);
+		return newModel;
+	}
+
+	@Override
+	public Model disableContainment(RelationDO relation, Model model) {
+		Relation relationML;
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+		relationML.setIsContainment(false);
+		return newModel;
+	}
+
+	@Override
+	public Model changeCardinalityInRelation(RelationDO relation, CardinalityDO cardinality, Model model) {
+		Relation relationML;
+		Model newModel;
+		newModel = EcoreUtil.copy(model);
+		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+		relationML.setCardinality(Cardinality.getByName(cardinality.getName()));
+		return newModel;
+	}
+
+	@Override
+	public Model addAttribute(AttributeDO attribute, String entityname) {
+		return null;
+	}
+
+	@Override
+	public Model deleteAttribute(String attributename, String entityname) {
+		return null;
+	}
+
+	@Override
+	public Model renameAttribute(String oldattributename, String newattributename, String entityname) {
+		return null;
+	}
+
+	@Override
+	public Model changeTypeAttribute(AttributeDO attribute, String entityname) {
+		return null;
 	}
 
 	@Override

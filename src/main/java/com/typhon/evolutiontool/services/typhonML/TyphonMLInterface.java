@@ -1,12 +1,12 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 
-import com.typhon.evolutiontool.entities.DatabaseType;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Database;
+import typhonml.Entity;
 import typhonml.Model;
+import typhonml.Relation;
 
 /**
  * Interface to access TyphonML.
@@ -15,21 +15,12 @@ import typhonml.Model;
 public interface TyphonMLInterface {
 
     /**
-     *  Asks the TyphonML module to set the running TyphonML model to the specified version @param newModelIdentifier
-     * @param newModelIdentifier
-     */
-    void setNewTyphonMLModel(String newModelIdentifier);
-
-
-    /**
      * Returns an EntityDO object of entity @param entityid in the TyphonML version @param sourcemodelid.
      * @param entityid
      * @param model
      * @return
      */
-    typhonml.Entity getEntityTypeFromName(String entityid, Model model);
-
-    String getAttributeIdOfEntityType(String sourceEntityName);
+    Entity getEntityTypeFromName(String entityid, Model model);
 
     /**
      * Asks TyphonML module if the given entity name @param entityname is involved (as source or target) in a relationship.
@@ -40,9 +31,7 @@ public interface TyphonMLInterface {
 
     DatabaseType getDatabaseType(String entityname, Model model);
 
-    String getAttributeOfType(String entityname, EntityDO targetEntityType);
-
-    RelationDO getRelationFromNameInEntity(String relationname, String entityname, Model model);
+    Relation getRelationFromNameInEntity(String relationname, String entityname, Model model);
 
     Model createEntityType(Model sourceModel, EntityDO newEntity);
 
@@ -65,4 +54,18 @@ public interface TyphonMLInterface {
     Model createRelationship(RelationDO relation, Model model);
 
     Model deleteRelationshipInEntity(String relationname, String entityname, Model model);
+
+    Model enableContainment(RelationDO relation, Model model);
+
+    Model disableContainment(RelationDO relation, Model model);
+
+    Model changeCardinalityInRelation(RelationDO relationName, CardinalityDO cardinality, Model model);
+
+    Model addAttribute(AttributeDO attribute, String entityname);
+
+    Model deleteAttribute(String attributename, String entityname);
+
+    Model renameAttribute(String oldattributename, String newattributename, String entityname);
+
+    Model changeTypeAttribute(AttributeDO attribute, String entityname);
 }

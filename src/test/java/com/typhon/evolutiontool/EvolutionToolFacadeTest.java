@@ -6,7 +6,7 @@ import com.typhon.evolutiontool.entities.SMOJsonImpl;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.EvolutionToolFacadeImpl;
-import com.typhon.evolutiontool.services.TyphonInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
@@ -33,7 +33,7 @@ public class EvolutionToolFacadeTest {
     private ObjectMapper mapper = new ObjectMapper();
     private SMO smo;
     private TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
-    private TyphonInterface typhonInterface = new TyphonInterfaceQLImpl();
+    private TyphonQLInterface typhonQLInterface = new TyphonInterfaceQLImpl();
     private TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
     private EvolutionServiceImpl evolutionService = new EvolutionServiceImpl();
     private EvolutionToolFacadeImpl evolutionToolFacade = new EvolutionToolFacadeImpl();
@@ -45,7 +45,7 @@ public class EvolutionToolFacadeTest {
     public void setUp() {
         TyphonMLUtils.typhonMLPackageRegistering();
         evolutionService.setTyphonDLInterface(typhonDLInterface);
-        evolutionService.setTyphonInterface(typhonInterface);
+        evolutionService.setTyphonQLInterface(typhonQLInterface);
         evolutionService.setTyphonMLInterface(typhonMLInterface);
         evolutionToolFacade.setEvolutionService(evolutionService);
     }

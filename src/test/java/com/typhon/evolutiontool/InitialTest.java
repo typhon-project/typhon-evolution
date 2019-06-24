@@ -3,7 +3,7 @@ package com.typhon.evolutiontool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import com.typhon.evolutiontool.services.TyphonInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
@@ -15,7 +15,7 @@ import typhonml.Model;
 
 public class InitialTest {
     TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
-    TyphonInterface typhonInterface = new TyphonInterfaceQLImpl();
+    TyphonQLInterface typhonQLInterface = new TyphonInterfaceQLImpl();
     TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
     EvolutionServiceImpl evolutionService = new EvolutionServiceImpl();
     ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +29,7 @@ public class InitialTest {
     public void setUp() {
         TyphonMLUtils.typhonMLPackageRegistering();
         evolutionService.setTyphonDLInterface(typhonDLInterface);
-        evolutionService.setTyphonInterface(typhonInterface);
+        evolutionService.setTyphonQLInterface(typhonQLInterface);
         evolutionService.setTyphonMLInterface(typhonMLInterface);
     }
 }

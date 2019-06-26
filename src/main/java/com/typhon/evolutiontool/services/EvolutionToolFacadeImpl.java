@@ -31,33 +31,51 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
 
     }
 
-    public String executeSMO(List<SMO> smoList, String initialModelPath, String finalModelPath) throws InputParameterException {
-        logger.info("Received list SMO : [" + smoList + "]");
-        logger.info("Registering TyphonML Package needed resources ");
-        TyphonMLUtils.typhonMLPackageRegistering();
-        //Get initial model. To adapt TODO
-        model = TyphonMLUtils.loadModelTyphonML(initialModelPath);
-        if (model == null) {
-            throw new InputParameterException("Could not load initial model");
-        }
-        for (SMO smo : smoList ) {
+    public Model executeChangeOperators(Model model) throws InputParameterException {
+        List<SMO> smoList;
+        logger.info("Received TyphonML model : [" + model + "]");
+        smoList = TyphonMLUtils.getListSMOFromChangeOperators(model);
+        for (SMO smo : smoList) {
             logger.info("Processing SMO : [" + smo + "]");
-            if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.ADD)
-                model = evolutionService.addEntityType(smo,model);
-            if (smo.getTyphonObject() == TyphonMLObject.ENTITY && smo.getEvolutionOperator() == EvolutionOperator.SPLITHORIZONTAL) {
-                model = evolutionService.splitHorizontal(smo, model);
+            if(smo.getTyphonObject()==TyphonMLObject.ENTITY){
+                if (smo.getEvolutionOperator() == EvolutionOperator.ADD)
+                    model = evolutionService.addEntityType(smo,model);
+                if (smo.getEvolutionOperator()==EvolutionOperator.REMOVE)
+                    model = evolutionService.removeEntityType(smo, model);
+                if(smo.getEvolutionOperator()==EvolutionOperator.RENAME)
+                    model = evolutionService.renameEntityType(smo,model);
+                if(smo.getEvolutionOperator()==EvolutionOperator.MIGRATE)
+                    model = evolutionService.migrateEntity(smo,model);
+                if (smo.getEvolutionOperator()==EvolutionOperator.SPLITHORIZONTAL)
+                    model = evolutionService.splitHorizontal(smo, model);
+                if(smo.getEvolutionOperator()==EvolutionOperator.SPLITVERTICAL)
+                    model = evolutionService.splitVertical(smo, model);
+                if (smo.getEvolutionOperator() == EvolutionOperator.MERGE) {
+                    //TODO
+                }
             }
-            if(smo.getTyphonObject()==TyphonMLObject.ENTITY && smo.getEvolutionOperator()== EvolutionOperator.RENAME)
-//                model = evolutionService.renameEntityType(smo,model);
-            if (smo.getTyphonObject() == TyphonMLObject.ENTITY && smo.getEvolutionOperator() == EvolutionOperator.MIGRATE) {
-//                model = evolutionService.migrateEntity(smo,model);
+            if (smo.getTyphonObject() == TyphonMLObject.RELATION) {
+                if (smo.getEvolutionOperator() == EvolutionOperator.ADD)
+                    model = evolutionService.addRelationship(smo,model);
+                if (smo.getEvolutionOperator()==EvolutionOperator.REMOVE)
+                    model = evolutionService.removeRelationship(smo, model);
+                if(smo.getEvolutionOperator()==EvolutionOperator.RENAME){}
+                //TODO
+                if(smo.getEvolutionOperator()==EvolutionOperator.ENABLECONTAINMENT)
+                    model = evolutionService.enableContainmentInRelationship(smo, model);
+                if(smo.getEvolutionOperator()==EvolutionOperator.DISABLECONTAINMENT)
+                    model = evolutionService.disableContainmentInRelationship(smo, model);
             }
-        }
-        // Saving last model
-        logger.info("Saving last TyphonML model to  [" + finalModelPath + "]");
-        TyphonMLUtils.saveModel(model,finalModelPath);
+            //...
 
-        return "List of SMO processed";
+            //TODO : Saving the ChangeOperator or SMO to a Database
+
+        }
+        //Removing Change Operators from the model
+        //TODO : Change to only remove executed ones?
+        TyphonMLUtils.removeChangeOperators(model);
+
+        return model;
     }
 
     public void setEvolutionService(EvolutionService evolutionService) {

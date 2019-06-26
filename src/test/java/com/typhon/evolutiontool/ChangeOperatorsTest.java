@@ -60,6 +60,8 @@ public class ChangeOperatorsTest extends InitialTest{
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         RemoveEntity removeEntity = TyphonmlFactory.eINSTANCE.createRemoveEntity();
         removeEntity.setEntityToRemove(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
+        sourceModel.getChangeOperators().add(removeEntity);
+        TyphonMLUtils.saveModel(sourceModel,"resources/tml_removeEntityChangeOp.xmi");
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeEntity);
         targetModel = evolutionService.removeEntityType(smo, sourceModel);

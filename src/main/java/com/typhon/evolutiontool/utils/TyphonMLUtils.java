@@ -1,15 +1,19 @@
 package com.typhon.evolutiontool.utils;
 
+import com.typhon.evolutiontool.entities.SMO;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import typhonml.ChangeOperator;
 import typhonml.Model;
 import typhonml.TyphonmlPackage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class TyphonMLUtils {
@@ -63,5 +67,18 @@ public class TyphonMLUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<SMO> getListSMOFromChangeOperators(Model model) {
+        List<SMO> smos = new ArrayList<>();
+        List<ChangeOperator> changeOperatorList = model.getChangeOperators();
+        for (ChangeOperator changeOperator : changeOperatorList) {
+            smos.add(SMOFactory.createSMOAdapterFromChangeOperator(changeOperator));
+        }
+        return smos;
+    }
+
+    public static void removeChangeOperators(Model model) {
+        model.getChangeOperators().clear();
     }
 }

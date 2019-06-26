@@ -12,11 +12,13 @@ public enum EvolutionOperator {
     @JsonAlias("rename")
     RENAME,
     @JsonAlias("split")
-    SPLIT,
+    SPLITVERTICAL,
     @JsonAlias("merge")
     MERGE,
     @JsonAlias("migrate")
     MIGRATE,
     @JsonAlias("splithorizontal")
-    SPLITHORIZONTAL;
+    SPLITHORIZONTAL,
+    ENABLECONTAINMENT,
+    DISABLECONTAINMENT;
 }

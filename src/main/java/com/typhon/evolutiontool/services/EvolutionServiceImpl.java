@@ -81,6 +81,8 @@ public class EvolutionServiceImpl implements EvolutionService{
             //Delete structures
             typhonQLInterface.deleteEntityStructure(entityname, model);
             targetModel = typhonMLInterface.deleteEntityType(entityname, model);
+            typhonMLInterface.deleteEntityMappings(entityname, model);
+            //TODO Delete table mapping in TyphonML.
 
             return targetModel;
         }else {
@@ -233,6 +235,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public String mergeEntities(SMO smo, Model model) throws InputParameterException {
+        //TODO
         /*
         TyphonML :
         - Check cardinality between the two entities (one_to_many only)
@@ -442,33 +445,6 @@ public class EvolutionServiceImpl implements EvolutionService{
     public boolean containParameters(SMO smo, List<String> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
-    }
-
-    private void createRelationshipType(RelationDO relation, String targetmodelid) {
-        // Implement here rules detailed in appendix file about actions on specific datamodels.
-
-        //If source & target are on relational
-//        if(typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName()) instanceof RelationalDB &&
-//                typhonMLInterface.getDatabaseType(relation.getTargetEntity().getName()) instanceof RelationalDB)
-//            switch (relation.getCardinality()) {
-//                case N_N:
-//                    typhonQLInterface.createJoinTable(relation.getSourceEntity(), relation.getTargetEntity());
-//                    break;
-//                case ONE_N:
-//                    typhonQLInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, true, false);
-//                    break;
-//                case ZERO_ONE:
-//                    typhonQLInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, false, true);
-//                    break;
-//                case ONE_ONE:
-//                    typhonQLInterface.addForeignKey(relation.getSourceEntity(), relation.getTargetEntity(),targetmodelid, true, true);
-//                    //+ data verification rule (all ids must referenced as fk).
-//                    break;
-//                case ZERO_N:
-//                    typhonQLInterface.addForeignKey(relation.getTargetEntity(), relation.getSourceEntity(),targetmodelid, false, false);
-//            } else{
-//            // No specific action, but changes the way data is inserted. (Construction of key value pairs, or adding of reference attribute data.
-//        }
     }
 
     public void setTyphonDLInterface(TyphonDLInterface typhonDLInterface) {

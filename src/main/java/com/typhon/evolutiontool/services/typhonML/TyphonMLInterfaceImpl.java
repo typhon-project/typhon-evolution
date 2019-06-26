@@ -188,7 +188,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
 	@Override
 	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
-		logger.info("Creating an instance (table/collection...) in Database [{}] of type [{}]  in TyphonML", dbname, databaseType);
+		logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
 		Model newModel;
 		newModel = EcoreUtil.copy(targetModel);
 		Database db = this.getDatabaseFromName(dbname, newModel);

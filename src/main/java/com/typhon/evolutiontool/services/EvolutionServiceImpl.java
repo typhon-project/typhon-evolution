@@ -370,8 +370,18 @@ public class EvolutionServiceImpl implements EvolutionService{
     }
 
     @Override
-    public String addAttribute(SMO smo, Model model) {
-        return null;
+    public Model addAttribute(SMO smo, Model model) throws InputParameterException {
+        AttributeDO attributeDO;
+        String entityname;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.ATTRIBUTE))) {
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            attributeDO = smo.getAttributeDOFromInputParameter(ParametersKeyString.ATTRIBUTE);
+            targetModel = typhonMLInterface.addAttribute(attributeDO, entityname);
+            typhonQLInterface.addAttribute(attributeDO, entityname, targetModel);
+            return targetModel;
+        }else {
+            throw new InputParameterException("Missing parameter. ");
+        }
     }
 
     @Override

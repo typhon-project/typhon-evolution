@@ -122,11 +122,17 @@ public class ChangeOperatorsTest extends InitialTest{
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
         RemoveRelation removeRelation = TyphonmlFactory.eINSTANCE.createRemoveRelation();
         removeRelation.setRelationToRemove(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
-        //TODO by TyphonML Missing sourceEntity info in AddRelation ChnageOperator.
+        //TODO by TyphonML Missing sourceEntity info in AddRelation ChangeOperator.
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("paidWith","Order",sourceModel));
         targetModel = evolutionService.removeRelationship(smo, sourceModel);
         assertNull(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", targetModel));
+    }
+
+    @Test
+    public void testAddAttributeChangeOperator(){
+        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
+        AddAttribute addAttribute = TyphonmlFactory.eINSTANCE.createAddAttribute();
     }
 
 }

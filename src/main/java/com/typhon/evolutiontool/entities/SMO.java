@@ -17,4 +17,6 @@ public interface SMO {
     EntityDO getEntityDOFromInputParameter(String parameterkey);
 
     RelationDO getRelationDOFromInputParameter(String parameterkey);
+
+    AttributeDO getAttributeDOFromInputParameter(String parameterkey);
 }

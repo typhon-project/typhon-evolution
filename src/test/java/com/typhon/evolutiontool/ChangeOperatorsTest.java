@@ -46,7 +46,7 @@ public class ChangeOperatorsTest extends InitialTest{
         attribute.setName("attribute");
         attribute.setType(addEntity);
         addEntity.getAttributes().add(attribute);
-        //TODO Missing other required parameters in AddEntity ChangeOperator (databasename, targetlogicalname, etc...)
+        //TODO by TyphonML Missing other required parameters in AddEntity ChangeOperator (databasename, targetlogicalname, etc...)
         sourceModel.getChangeOperators().add(addEntity);
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addEntity);
@@ -111,18 +111,18 @@ public class ChangeOperatorsTest extends InitialTest{
         addRelation.setName("ADDEDRELATION");
         addRelation.setType(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
         addRelation.setIsContainment(false);
-        //TODO Missing sourceEntity info in AddRelation ChnageOperator.
+        //TODO by TyphonML Missing sourceEntity info in AddRelation ChnageOperator.
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
         targetModel = evolutionService.addRelationship(smo, sourceModel);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("ADDEDRELATION", "User",targetModel));
     }
 
     @Test
-    public void testRemoveRelationship() {
+    public void testRemoveRelationship() throws InputParameterException {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
         RemoveRelation removeRelation = TyphonmlFactory.eINSTANCE.createRemoveRelation();
         removeRelation.setRelationToRemove(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
-
+        //TODO by TyphonML Missing sourceEntity info in AddRelation ChnageOperator.
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("paidWith","Order",sourceModel));
         targetModel = evolutionService.removeRelationship(smo, sourceModel);

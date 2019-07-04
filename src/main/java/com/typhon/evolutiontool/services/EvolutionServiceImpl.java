@@ -63,7 +63,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             return targetModel;
         }
         else
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.TARGETLOGICALNAME+"]");
 
     }
 
@@ -86,7 +86,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
             return targetModel;
         }else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+"]");
         }
     }
 
@@ -100,7 +100,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+", "+ ParametersKeyString.NEWENTITYNAME +"]");
         }
     }
 
@@ -139,7 +139,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.SOURCEENTITYNAME+", "+ParametersKeyString.TARGETENTITYNAME+", "+ ParametersKeyString.TARGETLOGICALNAME+", "+ ParametersKeyString.ATTRIBUTENAME+", "+ ParametersKeyString.ATTRIBUTEVALUE+", "+ ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.DATABASENAME+"]");
         }
     }
 
@@ -189,9 +189,9 @@ public class EvolutionServiceImpl implements EvolutionService{
             //TODO Data Manipulation
 
             return targetModel;
+        }else{
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
         }
-
-        return null;
     }
 
 
@@ -229,7 +229,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             typhonQLInterface.deleteEntityStructure(entityname, model);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+", "+ ParametersKeyString.DATABASENAME+", "+  ParametersKeyString.DATABASETYPE+", "+  ParametersKeyString.TARGETLOGICALNAME+"]");
         }
     }
 
@@ -241,7 +241,7 @@ public class EvolutionServiceImpl implements EvolutionService{
         - Check cardinality between the two entities (one_to_many only)
         - Delete relation between the two
         - Check that second entity is not any relationship. If yes, cancel.
-        - Copy attribute of secondentity
+        - Copy attribute of second entity
         - Rename entity.
 
         - TyphonQL :
@@ -260,12 +260,12 @@ public class EvolutionServiceImpl implements EvolutionService{
             typhonQLInterface.createRelationshipType(relation,targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
         }
     }
 
     @Override
-    public Model removeRelationship(SMO smo, Model model) {
+    public Model removeRelationship(SMO smo, Model model) throws InputParameterException {
         String relationname;
         String entityname;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATIONNAME, ParametersKeyString.ENTITYNAME))) {
@@ -274,8 +274,9 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
             typhonQLInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
             return targetModel;
+        }else {
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
-        return null;
     }
 
     @Override
@@ -291,7 +292,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             return targetModel;
         }
         else{
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
         }
     }
 
@@ -305,7 +306,7 @@ public class EvolutionServiceImpl implements EvolutionService{
             return targetModel;
         }
         else{
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
         }
     }
 
@@ -328,7 +329,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
             return targetModel;
         }else{
-            throw new InputParameterException("Missing parameters");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
     }
 
@@ -349,12 +350,12 @@ public class EvolutionServiceImpl implements EvolutionService{
             return targetModel;
         }
         else{
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
     }
 
     @Override
-    public Model changeCardinality(SMO smo, Model model) {
+    public Model changeCardinality(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         CardinalityDO cardinality;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
@@ -363,8 +364,9 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.changeCardinalityInRelation(relation, cardinality, model);
             typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getSourceEntity().getName(), cardinality, targetModel);
             return targetModel;
+        }else{
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATION+", "+ParametersKeyString.CARDINALITY+"]");
         }
-        return null;
     }
 
     @Override

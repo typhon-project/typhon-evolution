@@ -279,7 +279,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 		Model newModel;
 		newModel = EcoreUtil.copy(model);
 		typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
-		EcoreUtil.remove(entity.getGenericList());
+		//TODO GenericList has been deleted from TyphonML. Adapt to getTable, get Collection, etc...
+//		EcoreUtil.remove(entity.getGenericList());
 		return newModel;
 	}
 

@@ -4,6 +4,7 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.slf4j.Logger;
@@ -31,40 +32,18 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
 
     }
 
-    public Model executeChangeOperators(Model model) throws InputParameterException {
+    public Model executeChangeOperators(Model model) throws InputParameterException, EvolutionOperationNotSupported {
         List<SMO> smoList;
         logger.info("Received TyphonML model : [" + model + "]");
         smoList = TyphonMLUtils.getListSMOFromChangeOperators(model);
         for (SMO smo : smoList) {
+
             logger.info("Processing SMO : [" + smo + "]");
             if(smo.getTyphonObject()==TyphonMLObject.ENTITY){
-                if (smo.getEvolutionOperator() == EvolutionOperator.ADD)
-                    model = evolutionService.addEntityType(smo,model);
-                if (smo.getEvolutionOperator()==EvolutionOperator.REMOVE)
-                    model = evolutionService.removeEntityType(smo, model);
-                if(smo.getEvolutionOperator()==EvolutionOperator.RENAME)
-                    model = evolutionService.renameEntityType(smo,model);
-                if(smo.getEvolutionOperator()==EvolutionOperator.MIGRATE)
-                    model = evolutionService.migrateEntity(smo,model);
-                if (smo.getEvolutionOperator()==EvolutionOperator.SPLITHORIZONTAL)
-                    model = evolutionService.splitHorizontal(smo, model);
-                if(smo.getEvolutionOperator()==EvolutionOperator.SPLITVERTICAL)
-                    model = evolutionService.splitVertical(smo, model);
-                if (smo.getEvolutionOperator() == EvolutionOperator.MERGE) {
-                    //TODO
-                }
+                model = evolutionService.evolveEntity(smo, model);
             }
             if (smo.getTyphonObject() == TyphonMLObject.RELATION) {
-                if (smo.getEvolutionOperator() == EvolutionOperator.ADD)
-                    model = evolutionService.addRelationship(smo,model);
-                if (smo.getEvolutionOperator()==EvolutionOperator.REMOVE)
-                    model = evolutionService.removeRelationship(smo, model);
-                if(smo.getEvolutionOperator()==EvolutionOperator.RENAME){}
-                //TODO
-                if(smo.getEvolutionOperator()==EvolutionOperator.ENABLECONTAINMENT)
-                    model = evolutionService.enableContainmentInRelationship(smo, model);
-                if(smo.getEvolutionOperator()==EvolutionOperator.DISABLECONTAINMENT)
-                    model = evolutionService.disableContainmentInRelationship(smo, model);
+                model = evolutionService.evolveRelation(smo, model);
             }
             //...
 

@@ -1,31 +1,15 @@
 package com.typhon.evolutiontool.services;
 
 import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface EvolutionService {
-    Model addEntityType(SMO smo, Model model) throws InputParameterException;
 
-    Model removeEntityType(SMO smo, Model model) throws InputParameterException;
+    Model evolveEntity(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
-    Model renameEntityType(SMO smo, Model model) throws InputParameterException;
-
-    Model splitHorizontal(SMO smo, Model model) throws InputParameterException;
-
-    Model splitVertical(SMO smo, Model model) throws InputParameterException;
-
-    Model migrateEntity(SMO smo, Model model) throws InputParameterException;
-
-    String mergeEntities(SMO smo, Model model) throws InputParameterException;
-
-    Model addRelationship(SMO smo, Model model) throws InputParameterException;
-
-    Model removeRelationship(SMO smo, Model model);
-
-    Model enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;    // Or modifyRelationship()? Generalize enable, disable containment or opposite?
-
-    Model disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException;
+    Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
     Model enableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 

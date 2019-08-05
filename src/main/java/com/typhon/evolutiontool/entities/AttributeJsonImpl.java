@@ -1,14 +1,19 @@
 package com.typhon.evolutiontool.entities;
 
-public class Attribute {
+public class AttributeJsonImpl implements AttributeDO {
     private String name;
     private String datatype;
 
-    public Attribute() {
+    public AttributeJsonImpl() {
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getDataTypeString() {
+        return datatype;
     }
 
     public void setName(String name) {

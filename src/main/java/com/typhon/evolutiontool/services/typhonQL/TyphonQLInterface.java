@@ -1,9 +1,6 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
 import java.util.List;
@@ -57,4 +54,6 @@ public interface TyphonQLInterface {
     void disableContainment(String relationName, String entityname, Model model);
 
     void changeCardinalityInRelation(String relationname, String entityname, CardinalityDO cardinality, Model model);
+
+    void addAttribute(AttributeDO attributeDO, String entityname, Model model);
 }

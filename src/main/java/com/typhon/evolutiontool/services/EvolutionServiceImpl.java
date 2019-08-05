@@ -111,7 +111,7 @@ public class EvolutionServiceImpl implements EvolutionService{
 
             return targetModel;
         }else{
-            throw new InputParameterException("Missing parameters");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
     }
 
@@ -132,12 +132,12 @@ public class EvolutionServiceImpl implements EvolutionService{
             return targetModel;
         }
         else{
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
     }
 
     @Override
-    public Model changeCardinality(SMO smo, Model model) {
+    public Model changeCardinality(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         CardinalityDO cardinality;
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
@@ -146,13 +146,24 @@ public class EvolutionServiceImpl implements EvolutionService{
             targetModel = typhonMLInterface.changeCardinalityInRelation(relation, cardinality, model);
             typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getSourceEntity().getName(), cardinality, targetModel);
             return targetModel;
+        }else{
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATION+", "+ParametersKeyString.CARDINALITY+"]");
         }
-        return null;
     }
 
     @Override
-    public String addAttribute(SMO smo, Model model) {
-        return null;
+    public Model addAttribute(SMO smo, Model model) throws InputParameterException {
+        AttributeDO attributeDO;
+        String entityname;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.ATTRIBUTE))) {
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            attributeDO = smo.getAttributeDOFromInputParameter(ParametersKeyString.ATTRIBUTE);
+            targetModel = typhonMLInterface.addAttribute(attributeDO, entityname);
+            typhonQLInterface.addAttribute(attributeDO, entityname, targetModel);
+            return targetModel;
+        }else {
+            throw new InputParameterException("Missing parameter. ");
+        }
     }
 
     @Override

@@ -15,9 +15,9 @@ public interface EvolutionService {
 
     Model disableOppositeRelationship(SMO smo, Model model) throws InputParameterException;
 
-    Model changeCardinality(SMO smo, Model model);
+    Model changeCardinality(SMO smo, Model model) throws InputParameterException;
 
-    String addAttribute(SMO smo, Model model);
+    Model addAttribute(SMO smo, Model model) throws InputParameterException;
 
     String removeAttribute(SMO smo, Model model);
 

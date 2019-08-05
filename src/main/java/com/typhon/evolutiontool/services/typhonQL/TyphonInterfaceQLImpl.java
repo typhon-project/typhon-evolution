@@ -140,6 +140,13 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     }
 
     @Override
+    public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
+        logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
+        String tql = "dummy add attribute";
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
     public void deleteEntityStructure(String entityname, Model model) {
         String tql = "TQLDDL DELETE ENTITY " + entityname + " on TyphonML [" + model + "]";
         logger.info("Delete entity [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, model);

@@ -75,14 +75,30 @@ public class SMOJsonImpl implements SMO {
 
     @Override
     public EntityDO getEntityDOFromInputParameter(String parameterkey) {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(this.getInputParameter().get(parameterkey), EntityDOJsonImpl.class);
+        if (this.getInputParameter().containsKey(parameterkey)) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.convertValue(this.getInputParameter().get(parameterkey), EntityDOJsonImpl.class);
+        }
+        return null;
     }
 
     @Override
     public RelationDO getRelationDOFromInputParameter(String parameterkey) {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(this.getInputParameter().get(parameterkey), RelationDOJsonImpl.class);
+        if (this.getInputParameter().containsKey(parameterkey)) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.convertValue(this.getInputParameter().get(parameterkey), RelationDOJsonImpl.class);
+
+        }
+        return null;
+    }
+
+    @Override
+    public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
+        if (this.getInputParameter().containsKey(parameterkey)) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.convertValue(this.getInputParameter().get(parameterkey), AttributeJsonImpl.class);
+        }
+        return null;
     }
 
 }

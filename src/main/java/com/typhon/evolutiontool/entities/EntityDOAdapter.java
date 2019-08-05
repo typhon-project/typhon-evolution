@@ -35,8 +35,8 @@ public class EntityDOAdapter implements EntityDO {
 
     @Override
     public String getIdentifier() {
-        //TODO Correct implementation.
-        return entityML.getIdentifer().getAttributes().get(0).getName();
+        //TODO New TyphonML does not support user defined identifier anymore. To adapt.
+        return null;
     }
 
     @Override

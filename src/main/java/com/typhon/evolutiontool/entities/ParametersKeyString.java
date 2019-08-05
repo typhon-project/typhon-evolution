@@ -27,4 +27,5 @@ public interface ParametersKeyString {
     String FIRSTNEWENTITY = "firstnewentity";
     String SECONDNEWENTITY = "secondnewentity";
     String CARDINALITY = "cardinality";
+    String ATTRIBUTE = "attribute";
 }

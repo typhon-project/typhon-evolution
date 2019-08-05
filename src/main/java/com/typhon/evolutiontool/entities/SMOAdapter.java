@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
+import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.*;
@@ -60,6 +61,7 @@ public class SMOAdapter implements SMO {
             inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
         }
         if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator==EvolutionOperator.ADD) {
+            //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
             inputParameter.put(ParametersKeyString.RELATION, (Relation) changeOperator);
         }
         if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.MIGRATE) {
@@ -117,6 +119,14 @@ public class SMOAdapter implements SMO {
     public RelationDO getRelationDOFromInputParameter(String parameterkey) {
         if(this.getTyphonObject()==TyphonMLObject.RELATION && this.getEvolutionOperator()==EvolutionOperator.ADD)
             return RelationDOFactory.createRelationDOFromRelationML((AddRelation) changeOperator);
+        return null;
+    }
+
+    @Override
+    public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
+        if (this.getTyphonObject() == TyphonMLObject.ATTRIBUTE && this.getEvolutionOperator() == EvolutionOperator.ADD) {
+            return AttributeDOFactory.createAttributeDOFromAttributeML((AddAttribute) changeOperator);
+        }
         return null;
     }
 

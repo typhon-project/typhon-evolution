@@ -11,8 +11,13 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import typhonml.Model;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class InitialTest {
     TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
     TyphonQLInterface typhonQLInterface = new TyphonInterfaceQLImpl();

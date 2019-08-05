@@ -19,13 +19,17 @@ public class BaseHandler implements Handler{
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
     protected Handler next;
 
-    @Autowired
     protected TyphonDLInterface typhonDLInterface;
-    @Autowired
     protected TyphonMLInterface typhonMLInterface;
-    @Autowired
-    @Qualifier("typhonql")
     protected TyphonQLInterface typhonQLInterface;
+
+    public BaseHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql){
+        typhonMLInterface = tml;
+        typhonQLInterface = tql;
+        typhonDLInterface = tdl;
+    }
+
+
 
     @Override
     public void setNext(Handler handler) {

@@ -39,7 +39,6 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Autowired
     private TyphonDLInterface typhonDLInterface;
     @Autowired
-    @Qualifier("typhonql")
     private TyphonQLInterface typhonQLInterface;
     @Autowired
     private TyphonMLInterface typhonMLInterface;
@@ -50,13 +49,13 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     public EvolutionServiceImpl(){
         // Init chain of responsibility for entity
-        Handler entityAdd = new EntityAddHandler();
-        Handler entityRemove = new EntityRemoveHandler();
-        Handler entityRename = new EntityRenameHandler();
-        Handler entityMigrate = new EntityMigrateHandler();
-        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler();
-        Handler entitySplitVertical = new EntitySplitVerticalHandler();
-        Handler entityMerge = new EntityMergeHandler();
+        Handler entityAdd = new EntityAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entityRemove = new EntityRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entityRename = new EntityRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entityMigrate = new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entitySplitVertical = new EntitySplitVerticalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler entityMerge = new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
 
         entityHandler = entityAdd;
         entityAdd.setNext(entityRemove);
@@ -69,10 +68,10 @@ public class EvolutionServiceImpl implements EvolutionService{
 
 
         // Init chain of responsibility for Relations
-        Handler relationAdd = new RelationAddHandler();
-        Handler relationRemove = new RelationRemoveHandler();
-        Handler relationEnableContainment = new RelationEnableContainmentHandler();
-        Handler relationDisableContainment = new RelationDisableContainmentHandler();
+        Handler relationAdd = new RelationAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler relationRemove = new RelationRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler relationEnableContainment = new RelationEnableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+        Handler relationDisableContainment = new RelationDisableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
 
         relationHandler = relationAdd;
         relationAdd.setNext(relationRemove);

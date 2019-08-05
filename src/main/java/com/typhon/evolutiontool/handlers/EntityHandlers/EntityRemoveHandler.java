@@ -19,7 +19,6 @@ import java.util.Arrays;
 @Component("entityremove")
 public class EntityRemoveHandler extends BaseHandler {
 
-    @Autowired
     public EntityRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

@@ -17,7 +17,6 @@ import java.util.Arrays;
 
 public class RelationAddHandler extends BaseHandler {
 
-    @Autowired
     public RelationAddHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

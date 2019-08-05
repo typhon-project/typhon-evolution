@@ -13,7 +13,6 @@ import typhonml.Model;
 
 public class EntityMergeHandler extends BaseHandler {
 
-    @Autowired
     public EntityMergeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

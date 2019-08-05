@@ -16,7 +16,6 @@ import java.util.Arrays;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
 
-    @Autowired
     public EntitySplitVerticalHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

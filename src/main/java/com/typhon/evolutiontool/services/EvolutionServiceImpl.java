@@ -34,58 +34,52 @@ import java.util.List;
 @Service
 public class EvolutionServiceImpl implements EvolutionService{
 
-
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
-    @Autowired
     private TyphonDLInterface typhonDLInterface;
-    @Autowired
     private TyphonQLInterface typhonQLInterface;
-    @Autowired
     private TyphonMLInterface typhonMLInterface;
-    @Autowired
-    @Qualifier("entityadd")
-    Handler entityAdd;
-    @Autowired
-    @Qualifier("entityremove")
-    Handler entityRemove;
-    @Autowired
-    @Qualifier("entityrename")
+
     Handler entityRename;
     private Model targetModel;
 
     private Handler entityHandler;
     private Handler relationHandler;
 
-    public EvolutionServiceImpl(){
-        // Init chain of responsibility for entity
-//        Handler entityAdd = new EntityAddHandler();
-//        Handler entityRemove = new EntityRemoveHandler();
-//        Handler entityRename = new EntityRenameHandler();
-//        Handler entityMigrate = new EntityMigrateHandler();
-//        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler();
-//        Handler entitySplitVertical = new EntitySplitVerticalHandler();
-//        Handler entityMerge = new EntityMergeHandler();
+    @Autowired
+    public EvolutionServiceImpl(TyphonQLInterface tql, TyphonMLInterface tml, TyphonDLInterface tdl){
+        this.typhonDLInterface = tdl;
+        this.typhonMLInterface = tml;
+        this.typhonQLInterface = tql;
 
-//        entityHandler = entityAdd;
-//        entityAdd.setNext(entityRemove);
-//        entityRemove.setNext(entityRename);
-//        entityRename.setNext(entityMigrate);
-//        entityMigrate.setNext(entitySplitHorizontal);
-//        entitySplitHorizontal.setNext(entitySplitVertical);
-//        entitySplitVertical.setNext(entityMerge);
+
+        Handler entityAdd = new EntityAddHandler(tdl, tml, tql);
+        Handler entityRemove = new EntityRemoveHandler(tdl, tml, tql);
+        Handler entityRename = new EntityRenameHandler(tdl, tml, tql);
+        Handler entityMigrate = new EntityMigrateHandler(tdl, tml, tql);
+        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler(tdl, tml, tql);
+        Handler entitySplitVertical = new EntitySplitVerticalHandler(tdl, tml, tql);
+        Handler entityMerge = new EntityMergeHandler(tdl, tml, tql);
+
+        entityHandler = entityAdd;
+        entityAdd.setNext(entityRemove);
+        entityRemove.setNext(entityRename);
+        entityRename.setNext(entityMigrate);
+        entityMigrate.setNext(entitySplitHorizontal);
+        entitySplitHorizontal.setNext(entitySplitVertical);
+        entitySplitVertical.setNext(entityMerge);
 
 
 
         // Init chain of responsibility for Relations
-//        Handler relationAdd = new RelationAddHandler(   );
-//        Handler relationRemove = new RelationRemoveHandler();
-//        Handler relationEnableContainment = new RelationEnableContainmentHandler();
-//        Handler relationDisableContainment = new RelationDisableContainmentHandler();
+        Handler relationAdd = new RelationAddHandler(tdl, tml, tql);
+        Handler relationRemove = new RelationRemoveHandler(tdl, tml, tql);
+        Handler relationEnableContainment = new RelationEnableContainmentHandler(tdl, tml, tql);
+        Handler relationDisableContainment = new RelationDisableContainmentHandler(tdl, tml, tql);
 
-//        relationHandler = relationAdd;
-//        relationAdd.setNext(relationRemove);
-//        relationRemove.setNext(relationEnableContainment);
-//        relationEnableContainment.setNext(relationDisableContainment);
+        relationHandler = relationAdd;
+        relationAdd.setNext(relationRemove);
+        relationRemove.setNext(relationEnableContainment);
+        relationEnableContainment.setNext(relationDisableContainment);
 
     }
 
@@ -245,13 +239,6 @@ public class EvolutionServiceImpl implements EvolutionService{
         return null;
     }
 
-    @Override
-    public void initializeHandlers() {
-        logger.info("Setup Handlers");
-        entityHandler = entityAdd;
-        entityAdd.setNext(entityRemove);
-        entityRemove.setNext(entityRename);
-    }
 
     public boolean containParameters(SMO smo, List<String> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());

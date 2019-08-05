@@ -18,7 +18,7 @@ public class DefaultPropertiesService implements PropertiesService {
 
     private static Logger logger = LoggerFactory.getLogger(DefaultPropertiesService.class);
     //TODO Changer ce chemin absolu
-    public static final String CONFIGURATION_PATH_SYSTEM_PROPERTY_KEY = "./resources/static/evolutiontool.properties";
+    public static final String CONFIGURATION_PATH_SYSTEM_PROPERTY_KEY = "/home/jfink/Documents/Unamur/Typhon/typhon-evolutiontool/src/main/resources/static/evolutiontool.properties";
 
     private static Properties loadFromPath(final String configurationPath)
             throws IOException, FileNotFoundException {

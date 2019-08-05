@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 public class EntityMigrateHandler extends BaseHandler {
 
-    @Autowired
     public EntityMigrateHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

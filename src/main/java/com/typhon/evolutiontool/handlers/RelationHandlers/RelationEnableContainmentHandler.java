@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 public class RelationEnableContainmentHandler extends BaseHandler {
 
-    @Autowired
     public RelationEnableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

@@ -16,7 +16,6 @@ import java.util.Arrays;
 @Component("entityadd")
 public class EntityAddHandler extends BaseHandler {
 
-    @Autowired
     public EntityAddHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

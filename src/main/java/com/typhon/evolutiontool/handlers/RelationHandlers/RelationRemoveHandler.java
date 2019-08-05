@@ -16,7 +16,6 @@ import java.util.Arrays;
 
 public class RelationRemoveHandler extends BaseHandler {
 
-    @Autowired
     public RelationRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

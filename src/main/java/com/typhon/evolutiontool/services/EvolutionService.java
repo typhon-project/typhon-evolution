@@ -47,5 +47,4 @@ public interface EvolutionService {
 
     String renameColumnFamilyName(SMO smo, Model model);
 
-    void initializeHandlers();
 }

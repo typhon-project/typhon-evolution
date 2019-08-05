@@ -18,7 +18,6 @@ import java.util.Arrays;
 @Component("entityrename")
 public class EntityRenameHandler extends BaseHandler {
 
-    @Autowired
     public EntityRenameHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }

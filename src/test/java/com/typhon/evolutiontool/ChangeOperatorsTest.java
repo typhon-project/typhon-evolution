@@ -3,6 +3,7 @@ package com.typhon.evolutiontool;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.SMOFactory;
@@ -37,7 +38,7 @@ public class ChangeOperatorsTest extends InitialTest{
     }
 
     @Test
-    public void testCreateEntityChangeOperator() throws InputParameterException {
+    public void testCreateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         //Change Operator create entity
         AddEntity addEntity = TyphonmlFactory.eINSTANCE.createAddEntity();
@@ -50,13 +51,13 @@ public class ChangeOperatorsTest extends InitialTest{
         sourceModel.getChangeOperators().add(addEntity);
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addEntity);
-        targetModel = evolutionService.addEntityType(smo, sourceModel);
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
         assertNotNull(typhonMLInterface.getEntityTypeFromName("NEWENTITY",targetModel));
 
     }
 
     @Test
-    public void testRemoveEntityTypeChangeOperator() throws InputParameterException {
+    public void testRemoveEntityTypeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         RemoveEntity removeEntity = TyphonmlFactory.eINSTANCE.createRemoveEntity();
         removeEntity.setEntityToRemove(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
@@ -64,20 +65,20 @@ public class ChangeOperatorsTest extends InitialTest{
         TyphonMLUtils.saveModel(sourceModel,"resources/tml_removeEntityChangeOp.xmi");
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeEntity);
-        targetModel = evolutionService.removeEntityType(smo, sourceModel);
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
         assertNotNull(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
         assertNull(typhonMLInterface.getEntityTypeFromName("User", targetModel));
     }
 
     @Test
-    public void testRenameEntityChangeOperator() throws InputParameterException {
+    public void testRenameEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         RenameEntity renameEntity = TyphonmlFactory.eINSTANCE.createRenameEntity();
         renameEntity.setEntityToRename(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
         renameEntity.setNewEntityName("CUSTOMER");
 
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameEntity);
-        targetModel = evolutionService.renameEntityType(smo, sourceModel);
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
         assertNotNull(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
         assertNull(typhonMLInterface.getEntityTypeFromName("User", targetModel));
         assertNotNull(typhonMLInterface.getEntityTypeFromName("CUSTOMER", targetModel));
@@ -92,7 +93,7 @@ public class ChangeOperatorsTest extends InitialTest{
 //    }
 
     @Test
-    public void testMigrateEntityChangeOperator() throws InputParameterException {
+    public void testMigrateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         MigrateEntity migrateEntity = TyphonmlFactory.eINSTANCE.createMigrateEntity();
         migrateEntity.setEntity(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
@@ -100,12 +101,12 @@ public class ChangeOperatorsTest extends InitialTest{
 
         assertNotEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
-        targetModel = evolutionService.migrateEntity(smo, sourceModel);
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
         assertEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
     }
 
     @Test
-    public void testCreateRelationshipChangeOperator() throws InputParameterException {
+    public void testCreateRelationshipChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
         AddRelation addRelation = TyphonmlFactory.eINSTANCE.createAddRelation();
         addRelation.setName("ADDEDRELATION");
@@ -113,19 +114,19 @@ public class ChangeOperatorsTest extends InitialTest{
         addRelation.setIsContainment(false);
         //TODO by TyphonML Missing sourceEntity info in AddRelation ChnageOperator.
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
-        targetModel = evolutionService.addRelationship(smo, sourceModel);
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("ADDEDRELATION", "User",targetModel));
     }
 
     @Test
-    public void testRemoveRelationship() throws InputParameterException {
+    public void testRemoveRelationship() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
         RemoveRelation removeRelation = TyphonmlFactory.eINSTANCE.createRemoveRelation();
         removeRelation.setRelationToRemove(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
         //TODO by TyphonML Missing sourceEntity info in AddRelation ChangeOperator.
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
         assertNotNull(typhonMLInterface.getRelationFromNameInEntity("paidWith","Order",sourceModel));
-        targetModel = evolutionService.removeRelationship(smo, sourceModel);
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
         assertNull(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", targetModel));
     }
 

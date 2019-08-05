@@ -1,6 +1,7 @@
 package com.typhon.evolutiontool.controller;
 
 import com.typhon.evolutiontool.Message;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionToolFacade;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
@@ -45,6 +46,9 @@ public class RestController {
             message = new Message("Change Operators inside TyphonML model in ["+initialModelPath+"] executed and new TyphonML model saved in ["+finalModelPath+"]");
         } catch (InputParameterException exception) {
             logger.error("Missing input parameters");
+            message = new Message("FAILED "+exception.getMessage());
+        } catch (EvolutionOperationNotSupported exception){
+            logger.error("The operation required is not yet supported");
             message = new Message("FAILED "+exception.getMessage());
         }
 

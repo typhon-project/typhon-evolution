@@ -33,8 +33,9 @@ public class EntityRenameHandler extends BaseHandler {
             typhonQLInterface.renameEntity(oldEntityName, newEntityName,model);
             targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
-        } else {
-            throw new InputParameterException("Missing parameter");
+        }else {
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+", "+ ParametersKeyString.NEWENTITYNAME +"]");
         }
+
     }
 }

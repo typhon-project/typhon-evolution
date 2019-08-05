@@ -23,7 +23,7 @@ public class RelationRemoveHandler extends BaseHandler {
     }
 
 
-    private Model removeRelationship(SMO smo, Model model) {
+    private Model removeRelationship(SMO smo, Model model) throws InputParameterException {
         String relationname;
         String entityname;
         Model targetModel;
@@ -34,8 +34,10 @@ public class RelationRemoveHandler extends BaseHandler {
             targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
             typhonQLInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
             return targetModel;
+        }else {
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
-        return null;
+
     }
 
 }

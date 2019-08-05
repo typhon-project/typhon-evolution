@@ -34,8 +34,9 @@ public class RelationAddHandler extends BaseHandler {
             targetModel = typhonMLInterface.createRelationship(relation, model);
             typhonQLInterface.createRelationshipType(relation,targetModel);
             return targetModel;
-        } else {
-            throw new InputParameterException("Missing parameter");
+        }else {
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
         }
+
     }
 }

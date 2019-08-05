@@ -58,7 +58,8 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.SOURCEENTITYNAME+", "+ParametersKeyString.TARGETENTITYNAME+", "+ ParametersKeyString.TARGETLOGICALNAME+", "+ ParametersKeyString.ATTRIBUTENAME+", "+ ParametersKeyString.ATTRIBUTEVALUE+", "+ ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.DATABASENAME+"]");
         }
+
     }
 }

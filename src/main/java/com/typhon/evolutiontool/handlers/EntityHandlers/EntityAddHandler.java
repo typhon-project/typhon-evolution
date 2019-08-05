@@ -48,7 +48,7 @@ public class EntityAddHandler extends BaseHandler {
             return targetModel;
         }
         else
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.TARGETLOGICALNAME+"]");
 
     }
 }

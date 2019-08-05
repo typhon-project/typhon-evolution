@@ -74,8 +74,9 @@ public class EntitySplitVerticalHandler extends BaseHandler {
 
             return targetModel;
         }
-
-        return null;
+        else{
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
+        }
     }
 
 }

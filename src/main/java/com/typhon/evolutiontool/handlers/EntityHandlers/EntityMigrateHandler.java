@@ -56,8 +56,9 @@ public class EntityMigrateHandler extends BaseHandler {
             typhonQLInterface.deleteWorkingSetData(data, model);
             typhonQLInterface.deleteEntityStructure(entityname, model);
             return targetModel;
-        } else {
-            throw new InputParameterException("Missing parameter");
+        } else{
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
         }
+
     }
 }

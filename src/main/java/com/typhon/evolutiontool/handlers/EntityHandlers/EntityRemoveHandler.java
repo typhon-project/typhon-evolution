@@ -44,7 +44,8 @@ public class EntityRemoveHandler extends BaseHandler {
 
             return targetModel;
         }else {
-            throw new InputParameterException("Missing parameter");
+            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+"]");
         }
+
     }
 }

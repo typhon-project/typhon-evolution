@@ -28,12 +28,10 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
         this.evolutionService = evolutionService;
     }
 
-    public EvolutionToolFacadeImpl() {
-
-    }
-
     public Model executeChangeOperators(Model model) throws InputParameterException, EvolutionOperationNotSupported {
         List<SMO> smoList;
+        evolutionService.initializeHandlers();
+
         logger.info("Received TyphonML model : [" + model + "]");
         smoList = TyphonMLUtils.getListSMOFromChangeOperators(model);
         for (SMO smo : smoList) {

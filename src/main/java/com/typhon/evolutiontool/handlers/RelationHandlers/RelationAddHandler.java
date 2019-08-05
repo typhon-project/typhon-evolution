@@ -22,6 +22,10 @@ public class RelationAddHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
+    public RelationAddHandler() {
+        super();
+    }
+
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
 

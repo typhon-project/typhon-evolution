@@ -42,6 +42,15 @@ public class EvolutionServiceImpl implements EvolutionService{
     private TyphonQLInterface typhonQLInterface;
     @Autowired
     private TyphonMLInterface typhonMLInterface;
+    @Autowired
+    @Qualifier("entityadd")
+    Handler entityAdd;
+    @Autowired
+    @Qualifier("entityremove")
+    Handler entityRemove;
+    @Autowired
+    @Qualifier("entityrename")
+    Handler entityRename;
     private Model targetModel;
 
     private Handler entityHandler;
@@ -49,34 +58,34 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     public EvolutionServiceImpl(){
         // Init chain of responsibility for entity
-        Handler entityAdd = new EntityAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entityRemove = new EntityRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entityRename = new EntityRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entityMigrate = new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entitySplitVertical = new EntitySplitVerticalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler entityMerge = new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+//        Handler entityAdd = new EntityAddHandler();
+//        Handler entityRemove = new EntityRemoveHandler();
+//        Handler entityRename = new EntityRenameHandler();
+//        Handler entityMigrate = new EntityMigrateHandler();
+//        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler();
+//        Handler entitySplitVertical = new EntitySplitVerticalHandler();
+//        Handler entityMerge = new EntityMergeHandler();
 
-        entityHandler = entityAdd;
-        entityAdd.setNext(entityRemove);
-        entityRemove.setNext(entityRename);
-        entityRename.setNext(entityMigrate);
-        entityMigrate.setNext(entitySplitHorizontal);
-        entitySplitHorizontal.setNext(entitySplitVertical);
-        entitySplitVertical.setNext(entityMerge);
+//        entityHandler = entityAdd;
+//        entityAdd.setNext(entityRemove);
+//        entityRemove.setNext(entityRename);
+//        entityRename.setNext(entityMigrate);
+//        entityMigrate.setNext(entitySplitHorizontal);
+//        entitySplitHorizontal.setNext(entitySplitVertical);
+//        entitySplitVertical.setNext(entityMerge);
 
 
 
         // Init chain of responsibility for Relations
-        Handler relationAdd = new RelationAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler relationRemove = new RelationRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler relationEnableContainment = new RelationEnableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
-        Handler relationDisableContainment = new RelationDisableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface);
+//        Handler relationAdd = new RelationAddHandler(   );
+//        Handler relationRemove = new RelationRemoveHandler();
+//        Handler relationEnableContainment = new RelationEnableContainmentHandler();
+//        Handler relationDisableContainment = new RelationDisableContainmentHandler();
 
-        relationHandler = relationAdd;
-        relationAdd.setNext(relationRemove);
-        relationRemove.setNext(relationEnableContainment);
-        relationEnableContainment.setNext(relationDisableContainment);
+//        relationHandler = relationAdd;
+//        relationAdd.setNext(relationRemove);
+//        relationRemove.setNext(relationEnableContainment);
+//        relationEnableContainment.setNext(relationDisableContainment);
 
     }
 
@@ -87,7 +96,8 @@ public class EvolutionServiceImpl implements EvolutionService{
 
     @Override
     public Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported{
-        return relationHandler.handle(smo, model);
+//        return relationHandler.handle(smo, model);
+        return null;
     }
 
 
@@ -233,6 +243,14 @@ public class EvolutionServiceImpl implements EvolutionService{
     @Override
     public String renameColumnFamilyName(SMO smo, Model model) {
         return null;
+    }
+
+    @Override
+    public void initializeHandlers() {
+        logger.info("Setup Handlers");
+        entityHandler = entityAdd;
+        entityAdd.setNext(entityRemove);
+        entityRemove.setNext(entityRename);
     }
 
     public boolean containParameters(SMO smo, List<String> parameters) {

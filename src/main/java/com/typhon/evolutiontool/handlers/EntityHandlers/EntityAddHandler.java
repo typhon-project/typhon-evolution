@@ -8,10 +8,12 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import typhonml.Model;
 
 import java.util.Arrays;
 
+@Component("entityadd")
 public class EntityAddHandler extends BaseHandler {
 
     @Autowired

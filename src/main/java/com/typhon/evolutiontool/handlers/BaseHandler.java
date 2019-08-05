@@ -29,6 +29,9 @@ public class BaseHandler implements Handler{
         typhonDLInterface = tdl;
     }
 
+    public BaseHandler() {
+
+    }
 
 
     @Override

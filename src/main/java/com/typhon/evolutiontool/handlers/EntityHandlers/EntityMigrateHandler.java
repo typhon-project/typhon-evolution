@@ -19,18 +19,6 @@ public class EntityMigrateHandler extends BaseHandler {
     }
 
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.MIGRATE){
-            return migrateEntity(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-
     /**
      * Migrates data of entity in sourceModel (read) to entity in targetModel (write).
      * Data is then deleted from sourceModel.
@@ -38,7 +26,8 @@ public class EntityMigrateHandler extends BaseHandler {
      * @return
      * @throws InputParameterException
      */
-    private Model migrateEntity(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         typhonml.Entity entity;
         String entityname, databasetype, databasename, targetLogicalName;
         DatabaseType dbtype;
@@ -70,4 +59,5 @@ public class EntityMigrateHandler extends BaseHandler {
         }
 
     }
+
 }

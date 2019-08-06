@@ -19,16 +19,6 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.SPLITHORIZONTAL){
-            return splitHorizontal(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
 
 
     /**
@@ -39,7 +29,8 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
      * @return
      * @throws InputParameterException
      */
-    private Model splitHorizontal(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         String sourceEntityName, targetEntityName, targetLogicalName, attributeName, attributeValue, databasename, databasetype;
         WorkingSet dataSource, dataTarget;
         DatabaseType dbtype;
@@ -70,4 +61,6 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
         }
 
     }
+
+
 }

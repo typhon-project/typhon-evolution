@@ -21,17 +21,7 @@ public class EntityAddHandler extends BaseHandler {
     }
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.ADD){
-            return addEntityType(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-    private Model addEntityType(SMO smo, Model model) throws InputParameterException {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         EntityDO newEntity;
         String databasetype, databasename, logicalname;
         DatabaseType dbtype;
@@ -60,4 +50,5 @@ public class EntityAddHandler extends BaseHandler {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.TARGETLOGICALNAME+"]");
 
     }
+
 }

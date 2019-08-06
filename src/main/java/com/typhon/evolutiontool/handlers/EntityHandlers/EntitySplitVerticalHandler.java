@@ -20,16 +20,6 @@ public class EntitySplitVerticalHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.SPLITVERTICAL){
-            return splitVertical(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
 
 
     /**
@@ -40,7 +30,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
      * @return
      * @throws InputParameterException
      */
-    private Model splitVertical(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         String databasetype, databasename, sourceEntityId;
         RelationDO relation;
         EntityDO sourceEntity, firstNewEntity, secondNewEntity;
@@ -86,5 +77,6 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
         }
     }
+
 
 }

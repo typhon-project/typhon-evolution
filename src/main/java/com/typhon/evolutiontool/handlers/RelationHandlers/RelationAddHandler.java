@@ -21,23 +21,9 @@ public class RelationAddHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-    public RelationAddHandler() {
-        super();
-    }
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.ADD){
-            return addRelationship(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-
-    private Model addRelationship(SMO smo, Model model) throws InputParameterException {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         String targetmodelid;
         Model targetModel;
@@ -52,4 +38,5 @@ public class RelationAddHandler extends BaseHandler {
         }
 
     }
+
 }

@@ -21,8 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import typhonml.Model;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /*
     This class implements the operations needed to complete the execution of a Schema Modification Operator (SMO).
@@ -42,8 +41,11 @@ public class EvolutionServiceImpl implements EvolutionService{
     Handler entityRename;
     private Model targetModel;
 
-    private Handler entityHandler;
-    private Handler relationHandler;
+
+    private Map<EvolutionOperator, Handler> entityHandlers;
+    private Map<EvolutionOperator, Handler> relationHandlers;
+
+
 
     @Autowired
     public EvolutionServiceImpl(TyphonQLInterface tql, TyphonMLInterface tml, TyphonDLInterface tdl){
@@ -52,46 +54,45 @@ public class EvolutionServiceImpl implements EvolutionService{
         this.typhonQLInterface = tql;
 
 
-        Handler entityAdd = new EntityAddHandler(tdl, tml, tql);
-        Handler entityRemove = new EntityRemoveHandler(tdl, tml, tql);
-        Handler entityRename = new EntityRenameHandler(tdl, tml, tql);
-        Handler entityMigrate = new EntityMigrateHandler(tdl, tml, tql);
-        Handler entitySplitHorizontal = new EntitySplitHorizontalHandler(tdl, tml, tql);
-        Handler entitySplitVertical = new EntitySplitVerticalHandler(tdl, tml, tql);
-        Handler entityMerge = new EntityMergeHandler(tdl, tml, tql);
+        entityHandlers = new EnumMap<>(EvolutionOperator.class);
 
-        entityHandler = entityAdd;
-        entityAdd.setNext(entityRemove);
-        entityRemove.setNext(entityRename);
-        entityRename.setNext(entityMigrate);
-        entityMigrate.setNext(entitySplitHorizontal);
-        entitySplitHorizontal.setNext(entitySplitVertical);
-        entitySplitVertical.setNext(entityMerge);
+        entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.SPLITVERTICAL,  new EntitySplitVerticalHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.MERGE,  new EntityMergeHandler(tdl, tml, tql));
 
 
 
-        // Init chain of responsibility for Relations
-        Handler relationAdd = new RelationAddHandler(tdl, tml, tql);
-        Handler relationRemove = new RelationRemoveHandler(tdl, tml, tql);
-        Handler relationEnableContainment = new RelationEnableContainmentHandler(tdl, tml, tql);
-        Handler relationDisableContainment = new RelationDisableContainmentHandler(tdl, tml, tql);
+        relationHandlers = new EnumMap<>(EvolutionOperator.class);
 
-        relationHandler = relationAdd;
-        relationAdd.setNext(relationRemove);
-        relationRemove.setNext(relationEnableContainment);
-        relationEnableContainment.setNext(relationDisableContainment);
-
+        relationHandlers.put(EvolutionOperator.ADD, new RelationAddHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.REMOVE, new RelationRemoveHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.ENABLECONTAINMENT, new RelationEnableContainmentHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.DISABLECONTAINMENT, new RelationDisableContainmentHandler(tdl, tml, tql));
     }
 
     @Override
     public Model evolveEntity(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported{
-        return entityHandler.handle(smo, model);
+        Handler operation = entityHandlers.get(smo.getEvolutionOperator());
+        return execute_handlers(operation, smo, model);
     }
 
     @Override
     public Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported{
-//        return relationHandler.handle(smo, model);
-        return null;
+        Handler operation = relationHandlers.get(smo.getEvolutionOperator());
+        return execute_handlers(operation, smo, model);
+    }
+
+    private Model execute_handlers(Handler handler, SMO smo, Model model)throws InputParameterException, EvolutionOperationNotSupported{
+        if(handler != null){
+            return handler.handle(smo, model);
+        }
+
+        String err_msg = String.format("No operation found for [%s] - [%s]", smo.getTyphonObject(), smo.getEvolutionOperator());
+        throw new EvolutionOperationNotSupported(err_msg);
     }
 
 

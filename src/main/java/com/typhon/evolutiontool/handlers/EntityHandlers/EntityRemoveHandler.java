@@ -24,17 +24,7 @@ public class EntityRemoveHandler extends BaseHandler {
     }
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.REMOVE){
-            return removeEntityType(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-    private Model removeEntityType(SMO smo, Model model) throws InputParameterException {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         Model targetModel;
         String entityname;
 
@@ -56,6 +46,6 @@ public class EntityRemoveHandler extends BaseHandler {
         }else {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+"]");
         }
-
     }
+
 }

@@ -6,6 +6,5 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface Handler {
-    public void  setNext(Handler handler);
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
+    public Model handle(SMO smo, Model model) throws InputParameterException;
 }

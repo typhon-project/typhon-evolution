@@ -21,18 +21,8 @@ public class RelationDisableContainmentHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
 
-        if(smo.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT){
-            return disableContainmentInRelationship(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-
-    public Model disableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         Model targetModel;
 
@@ -47,4 +37,5 @@ public class RelationDisableContainmentHandler extends BaseHandler {
         }
 
     }
+
 }

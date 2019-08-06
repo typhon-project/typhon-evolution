@@ -18,17 +18,7 @@ public class EntityMergeHandler extends BaseHandler {
     }
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.MERGE){
-            return mergeEntities(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-    private Model mergeEntities(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         //TODO
         /*
         TyphonML :
@@ -42,6 +32,7 @@ public class EntityMergeHandler extends BaseHandler {
         -
          */
 
-        throw new EvolutionOperationNotSupported("The Merge Entity operation exist but some lazy developers have not finish the job. SHAME !");
+        throw new InputParameterException("The Merge Entity operation is not yet implemented");
     }
+
 }

@@ -24,17 +24,7 @@ public class EntityRenameHandler extends BaseHandler {
 
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.RENAME){
-            return renameEntityType(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-    public Model renameEntityType(SMO smo, Model model) throws InputParameterException {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         String oldEntityName,newEntityName;
         Model targetModel;
 
@@ -47,6 +37,6 @@ public class EntityRenameHandler extends BaseHandler {
         }else {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+", "+ ParametersKeyString.NEWENTITYNAME +"]");
         }
-
     }
+
 }

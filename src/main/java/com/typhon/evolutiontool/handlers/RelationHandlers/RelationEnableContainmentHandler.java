@@ -18,18 +18,7 @@ public class RelationEnableContainmentHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT){
-            return enableContainmentInRelationship(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-
-    private Model enableContainmentInRelationship(SMO smo, Model model) throws InputParameterException {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         Model targetModel;
 
@@ -45,6 +34,6 @@ public class RelationEnableContainmentHandler extends BaseHandler {
         else{
             throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
         }
-
     }
+
 }

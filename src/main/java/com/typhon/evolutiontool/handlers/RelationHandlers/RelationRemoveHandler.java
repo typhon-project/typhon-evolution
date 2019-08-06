@@ -21,18 +21,8 @@ public class RelationRemoveHandler extends BaseHandler {
     }
 
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
 
-        if(smo.getEvolutionOperator() == EvolutionOperator.REMOVE){
-            return removeRelationship(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
-    }
-
-
-    private Model removeRelationship(SMO smo, Model model) throws InputParameterException {
         String relationname;
         String entityname;
         Model targetModel;
@@ -46,7 +36,8 @@ public class RelationRemoveHandler extends BaseHandler {
         }else {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
         }
-
     }
+
+
 
 }

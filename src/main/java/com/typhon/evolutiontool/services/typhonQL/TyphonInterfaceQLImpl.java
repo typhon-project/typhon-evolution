@@ -9,7 +9,7 @@ import typhonml.Model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component("typhonql")
+@Component
 public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     Logger logger = LoggerFactory.getLogger(TyphonInterfaceQLImpl.class);

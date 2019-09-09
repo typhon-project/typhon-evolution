@@ -4,21 +4,18 @@ import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 import java.util.Arrays;
 
 public class EntityMigrateHandler extends BaseHandler {
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.MIGRATE){
-            return migrateEntity(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
+    public EntityMigrateHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+        super(tdl, tml, tql);
     }
 
 
@@ -29,7 +26,8 @@ public class EntityMigrateHandler extends BaseHandler {
      * @return
      * @throws InputParameterException
      */
-    private Model migrateEntity(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         typhonml.Entity entity;
         String entityname, databasetype, databasename, targetLogicalName;
         DatabaseType dbtype;
@@ -61,4 +59,5 @@ public class EntityMigrateHandler extends BaseHandler {
         }
 
     }
+
 }

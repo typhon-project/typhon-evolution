@@ -7,24 +7,24 @@ import com.typhon.evolutiontool.entities.TyphonMLObject;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import typhonml.Model;
 
 import java.util.Arrays;
 
+@Component("entityremove")
 public class EntityRemoveHandler extends BaseHandler {
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.REMOVE){
-            return removeEntityType(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
+    public EntityRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+        super(tdl, tml, tql);
     }
 
-    private Model removeEntityType(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         Model targetModel;
         String entityname;
 
@@ -46,6 +46,6 @@ public class EntityRemoveHandler extends BaseHandler {
         }else {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+"]");
         }
-
     }
+
 }

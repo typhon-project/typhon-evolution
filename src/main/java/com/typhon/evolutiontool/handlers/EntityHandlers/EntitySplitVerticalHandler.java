@@ -4,24 +4,22 @@ import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 import java.util.Arrays;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
 
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
-
-        if(smo.getEvolutionOperator() == EvolutionOperator.SPLITVERTICAL){
-            return splitVertical(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
+    public EntitySplitVerticalHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+        super(tdl, tml, tql);
     }
+
 
 
     /**
@@ -32,7 +30,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
      * @return
      * @throws InputParameterException
      */
-    private Model splitVertical(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         String databasetype, databasename, sourceEntityId;
         RelationDO relation;
         EntityDO sourceEntity, firstNewEntity, secondNewEntity;
@@ -78,5 +77,6 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
         }
     }
+
 
 }

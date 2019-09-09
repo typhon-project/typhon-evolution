@@ -13,11 +13,12 @@ import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Before;
 import typhonml.Model;
 
+
 public class InitialTest {
     TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
     TyphonQLInterface typhonQLInterface = new TyphonInterfaceQLImpl();
     TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
-    EvolutionServiceImpl evolutionService = new EvolutionServiceImpl();
+    EvolutionServiceImpl evolutionService = new EvolutionServiceImpl(typhonQLInterface, typhonMLInterface, typhonDLInterface );
     ObjectMapper mapper = new ObjectMapper();
     SMO smo;
     public static Model sourceModel, targetModel;

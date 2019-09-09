@@ -17,34 +17,21 @@ import java.util.List;
 
 public class BaseHandler implements Handler{
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
-    protected Handler next;
 
-    @Autowired
     protected TyphonDLInterface typhonDLInterface;
-    @Autowired
     protected TyphonMLInterface typhonMLInterface;
-    @Autowired
-    @Qualifier("typhonql")
     protected TyphonQLInterface typhonQLInterface;
 
-    @Override
-    public void setNext(Handler handler) {
-        next = handler;
+    public BaseHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql){
+        typhonMLInterface = tml;
+        typhonQLInterface = tql;
+        typhonDLInterface = tdl;
     }
 
+
     @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         return null;
-    }
-
-    protected Model delegateToNext(SMO smo, Model model) throws EvolutionOperationNotSupported, InputParameterException {
-        if(next == null){
-            String err_msg = String.format("No operation found for [%s] - [%s]", smo.getTyphonObject(), smo.getEvolutionOperator());
-            throw new EvolutionOperationNotSupported(err_msg);
-        }
-        else{
-            return next.handle(smo, model);
-        }
     }
 
     protected boolean containParameters(SMO smo, List<String> parameters) {

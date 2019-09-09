@@ -7,24 +7,23 @@ import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 import java.util.Arrays;
 
 public class RelationAddHandler extends BaseHandler {
-    @Override
-    public Model handle(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
 
-        if(smo.getEvolutionOperator() == EvolutionOperator.ADD){
-            return addRelationship(smo, model);
-        }
-        else{
-            return delegateToNext(smo, model);
-        }
+    public RelationAddHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+        super(tdl, tml, tql);
     }
 
 
-    private Model addRelationship(SMO smo, Model model) throws InputParameterException {
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
         RelationDO relation;
         String targetmodelid;
         Model targetModel;
@@ -39,4 +38,5 @@ public class RelationAddHandler extends BaseHandler {
         }
 
     }
+
 }

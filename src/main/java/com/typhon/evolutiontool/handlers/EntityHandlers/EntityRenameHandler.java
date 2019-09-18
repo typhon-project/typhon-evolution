@@ -1,15 +1,12 @@
 package com.typhon.evolutiontool.handlers.EntityHandlers;
 
-import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import typhonml.Model;
 
@@ -25,17 +22,17 @@ public class EntityRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        String oldEntityName,newEntityName;
+        String oldEntityName, newEntityName;
         Model targetModel;
 
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.NEWENTITYNAME))) {
             oldEntityName = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
             newEntityName = smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME).toString();
-            typhonQLInterface.renameEntity(oldEntityName, newEntityName,model);
+            typhonQLInterface.renameEntity(oldEntityName, newEntityName, model);
             targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
-        }else {
-            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITYNAME+", "+ ParametersKeyString.NEWENTITYNAME +"]");
+        } else {
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITYNAME + ", " + ParametersKeyString.NEWENTITYNAME + "]");
         }
     }
 

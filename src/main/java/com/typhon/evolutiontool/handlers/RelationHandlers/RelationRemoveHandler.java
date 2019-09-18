@@ -1,15 +1,12 @@
 package com.typhon.evolutiontool.handlers.RelationHandlers;
 
-import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 import java.util.Arrays;
@@ -33,11 +30,10 @@ public class RelationRemoveHandler extends BaseHandler {
             targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
             typhonQLInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
             return targetModel;
-        }else {
-            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.RELATIONNAME+", "+ParametersKeyString.ENTITYNAME+"]");
+        } else {
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATIONNAME + ", " + ParametersKeyString.ENTITYNAME + "]");
         }
     }
-
 
 
 }

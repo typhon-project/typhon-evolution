@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.handlers.EntityHandlers;
 
 import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -9,7 +8,6 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 import java.util.Arrays;
@@ -21,11 +19,11 @@ public class EntitySplitVerticalHandler extends BaseHandler {
     }
 
 
-
     /**
      * Partially migrates the instances of sourceEntity to a new entity targetEntity. Only the values
      * of attributes [attributesNames] are migrated. The link between the instances of entity1 and entity2 is
      * kept via a new one-to-one relationship relName.
+     *
      * @param smo
      * @return
      * @throws InputParameterException
@@ -62,7 +60,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
             targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
             relation = RelationDOFactory.createRelationDO("splitRelation", firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
-            targetModel = typhonMLInterface.createRelationship(relation,targetModel);
+            targetModel = typhonMLInterface.createRelationship(relation, targetModel);
             targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 
             //TyphonQL
@@ -72,9 +70,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             //TODO Data Manipulation
 
             return targetModel;
-        }
-        else{
-            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.FIRSTNEWENTITY+", "+ParametersKeyString.SECONDNEWENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+"]");
+        } else {
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + ", " + ParametersKeyString.DATABASENAME + ", " + ParametersKeyString.DATABASETYPE + "]");
         }
     }
 

@@ -7,78 +7,77 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import typhonml.*;
-import typhonml.Attribute;
 import typhonml.Collection;
 import typhonml.Database;
 import typhonml.DocumentDB;
 import typhonml.RelationalDB;
 import typhonml.Table;
+import typhonml.*;
 
 
 @Component
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
-	Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
 
 
-	@Override
-	public Entity getEntityTypeFromName(String entityName, Model model) {
-		DataType dataType = this.getDataTypeFromEntityName(entityName, model);
-		if (dataType instanceof typhonml.Entity) {
-			return (typhonml.Entity) dataType;
-		}
-		return null;
-	}
+    @Override
+    public Entity getEntityTypeFromName(String entityName, Model model) {
+        DataType dataType = this.getDataTypeFromEntityName(entityName, model);
+        if (dataType instanceof typhonml.Entity) {
+            return (typhonml.Entity) dataType;
+        }
+        return null;
+    }
 
-	@Override
-	public boolean hasRelationship(String entityname, Model model) {
-	    DataType dataType = this.getDataTypeFromEntityName(entityname,model);
+    @Override
+    public boolean hasRelationship(String entityname, Model model) {
+        DataType dataType = this.getDataTypeFromEntityName(entityname, model);
         typhonml.Entity entity = (typhonml.Entity) dataType;
         return !entity.getRelations().isEmpty();
-	}
+    }
 
-	@Override
-	public DatabaseType getDatabaseType(String entityname, Model model) {
-		//TODO
-		Entity e = this.getEntityTypeFromName(entityname, model);
-		Database db;
+    @Override
+    public DatabaseType getDatabaseType(String entityname, Model model) {
+        //TODO
+        Entity e = this.getEntityTypeFromName(entityname, model);
+        Database db;
 //		db = e.getGenericList();
-		return null;
-	}
+        return null;
+    }
 
 
-	@Override
-	public Relation getRelationFromNameInEntity(String relationname, String entityname, Model model) {
-		Entity entity;
-		entity = this.getEntityTypeFromName(entityname, model);
-		if (entity != null) {
-			for (Relation r : entity.getRelations()) {
-				if (r.getName().equalsIgnoreCase(relationname)) {
-					return r;
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    public Relation getRelationFromNameInEntity(String relationname, String entityname, Model model) {
+        Entity entity;
+        entity = this.getEntityTypeFromName(entityname, model);
+        if (entity != null) {
+            for (Relation r : entity.getRelations()) {
+                if (r.getName().equalsIgnoreCase(relationname)) {
+                    return r;
+                }
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public Model createEntityType(Model sourceModel, EntityDO newEntity) {
-		logger.info("Create Entity type [{}] in TyphonML model", newEntity.getName());
-		Model newModel;
-		newModel = EcoreUtil.copy(sourceModel);
+    @Override
+    public Model createEntityType(Model sourceModel, EntityDO newEntity) {
+        logger.info("Create Entity type [{}] in TyphonML model", newEntity.getName());
+        Model newModel;
+        newModel = EcoreUtil.copy(sourceModel);
 
-		//ENTITY
-		typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
-		entity.setName(newEntity.getName());
-		newEntity.getAttributes().entrySet().forEach(entry -> entity.getAttributes().add(this.createAttribute(entry.getKey(), entity)));
-		newModel.getDataTypes().add(entity);
-		return newModel;
-	}
+        //ENTITY
+        typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
+        entity.setName(newEntity.getName());
+        newEntity.getAttributes().forEach((key, value) -> entity.getAttributes().add(this.createAttribute(key, entity)));
+        newModel.getDataTypes().add(entity);
+        return newModel;
+    }
 
     @Override
     public Model deleteEntityType(String entityname, Model model) {
-	    logger.info("Delete EntityDO type [{}] in TyphonML model", entityname);
+        logger.info("Delete EntityDO type [{}] in TyphonML model", entityname);
         Model newModel;
         newModel = EcoreUtil.copy(model);
 //        newModel.getDataTypes().remove(this.getDataTypeFromEntityName(entityname, newModel));
@@ -88,203 +87,203 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model renameEntity(String oldEntityName, String newEntityName, Model model) {
-	    logger.info("Renaming EntityDO type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
+        logger.info("Renaming EntityDO type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
         Model newModel;
         newModel = EcoreUtil.copy(model);
         getDataTypeFromEntityName(oldEntityName, newModel).setName(newEntityName);
         return newModel;
     }
 
-	@Override
-	public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
-		logger.info("Copying EntityDO type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));
-		copyEntity.setName(targetEntityName);
-		newModel.getDataTypes().add(copyEntity);
-		return newModel;
-	}
+    @Override
+    public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
+        logger.info("Copying EntityDO type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));
+        copyEntity.setName(targetEntityName);
+        newModel.getDataTypes().add(copyEntity);
+        return newModel;
+    }
 
 
-	@Override
-	public Model createRelationship(RelationDO relation, Model model) {
-		logger.info("Create Relationship [{}] in [{}] in TyphonML model", relation.getName(), relation.getSourceEntity().getName());
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
-		Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
-		sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality(), relation.isContainment(), targetEntity));
+    @Override
+    public Model createRelationship(RelationDO relation, Model model) {
+        logger.info("Create Relationship [{}] in [{}] in TyphonML model", relation.getName(), relation.getSourceEntity().getName());
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
+        Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
+        sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality(), relation.isContainment(), targetEntity));
 
-		return newModel;
-	}
+        return newModel;
+    }
 
-	@Override
-	public Model deleteRelationshipInEntity(String relationname, String entityname, Model model) {
-		logger.info("Deleting Relationship type [{}] in [{}] in TyphonML model", relationname, entityname);
-		Model newModel;
-		typhonml.Relation relToDelete=null;
-		newModel = EcoreUtil.copy(model);
-		typhonml.Entity e = this.getEntityTypeFromName(entityname, newModel);
-		for(typhonml.Relation relation : e.getRelations()){
-			if (relation.getName().equals(relationname)) {
-				relToDelete=relation;
-			}
-		}
-		if(relToDelete!=null)
-		EcoreUtil.delete(relToDelete);
-		return newModel;
-	}
+    @Override
+    public Model deleteRelationshipInEntity(String relationname, String entityname, Model model) {
+        logger.info("Deleting Relationship type [{}] in [{}] in TyphonML model", relationname, entityname);
+        Model newModel;
+        typhonml.Relation relToDelete = null;
+        newModel = EcoreUtil.copy(model);
+        typhonml.Entity e = this.getEntityTypeFromName(entityname, newModel);
+        for (typhonml.Relation relation : e.getRelations()) {
+            if (relation.getName().equals(relationname)) {
+                relToDelete = relation;
+            }
+        }
+        if (relToDelete != null)
+            EcoreUtil.delete(relToDelete);
+        return newModel;
+    }
 
-	@Override
-	public Model enableContainment(RelationDO relation, Model model) {
-		Relation relationML;
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
-		relationML.setIsContainment(true);
-		return newModel;
-	}
+    @Override
+    public Model enableContainment(RelationDO relation, Model model) {
+        Relation relationML;
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        relationML.setIsContainment(true);
+        return newModel;
+    }
 
-	@Override
-	public Model disableContainment(RelationDO relation, Model model) {
-		Relation relationML;
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
-		relationML.setIsContainment(false);
-		return newModel;
-	}
+    @Override
+    public Model disableContainment(RelationDO relation, Model model) {
+        Relation relationML;
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        relationML.setIsContainment(false);
+        return newModel;
+    }
 
-	@Override
-	public Model changeCardinalityInRelation(RelationDO relation, CardinalityDO cardinality, Model model) {
-		Relation relationML;
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
-		relationML.setCardinality(Cardinality.getByName(cardinality.getName()));
-		return newModel;
-	}
+    @Override
+    public Model changeCardinalityInRelation(RelationDO relation, CardinalityDO cardinality, Model model) {
+        Relation relationML;
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        relationML.setCardinality(Cardinality.getByName(cardinality.getName()));
+        return newModel;
+    }
 
-	@Override
-	public Model addAttribute(AttributeDO attribute, String entityname) {
-		return null;
-	}
+    @Override
+    public Model addAttribute(AttributeDO attribute, String entityname) {
+        return null;
+    }
 
-	@Override
-	public Model deleteAttribute(String attributename, String entityname) {
-		return null;
-	}
+    @Override
+    public Model deleteAttribute(String attributename, String entityname) {
+        return null;
+    }
 
-	@Override
-	public Model renameAttribute(String oldattributename, String newattributename, String entityname) {
-		return null;
-	}
+    @Override
+    public Model renameAttribute(String oldattributename, String newattributename, String entityname) {
+        return null;
+    }
 
-	@Override
-	public Model changeTypeAttribute(AttributeDO attribute, String entityname) {
-		return null;
-	}
+    @Override
+    public Model changeTypeAttribute(AttributeDO attribute, String entityname) {
+        return null;
+    }
 
-	@Override
-	public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
-		logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
-		Model newModel;
-		newModel = EcoreUtil.copy(targetModel);
-		Database db = this.getDatabaseFromName(dbname, newModel);
-		typhonml.Entity entityTypeToMap = this.getEntityTypeFromName(entityTypeNameToMap, newModel);
-		switch (databaseType) {
-			case DOCUMENTDB:
-				Collection collection = TyphonmlFactory.eINSTANCE.createCollection();
-				collection.setName(targetLogicalName);
-				collection.setEntity(entityTypeToMap);
-				DocumentDB documentDB = (DocumentDB) db;
-				documentDB.getCollections().add(collection);
-				break;
-			case RELATIONALDB:
-				Table table = TyphonmlFactory.eINSTANCE.createTable();
-				table.setName(targetLogicalName);
-				table.setEntity(entityTypeToMap);
-				RelationalDB relationalDB = (RelationalDB)db;
-				relationalDB.getTables().add(table);
-				table.setDb(relationalDB);
-				break;
-			case COLUMNDB:
-				//TODO
-				break;
-			case GRAPHDB:
-				//TODO
-				break;
-			case KEYVALUE:
-				//TODO
-				break;
-		}
-		return newModel;
-	}
+    @Override
+    public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
+        logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
+        Model newModel;
+        newModel = EcoreUtil.copy(targetModel);
+        Database db = this.getDatabaseFromName(dbname, newModel);
+        typhonml.Entity entityTypeToMap = this.getEntityTypeFromName(entityTypeNameToMap, newModel);
+        switch (databaseType) {
+            case DOCUMENTDB:
+                Collection collection = TyphonmlFactory.eINSTANCE.createCollection();
+                collection.setName(targetLogicalName);
+                collection.setEntity(entityTypeToMap);
+                DocumentDB documentDB = (DocumentDB) db;
+                documentDB.getCollections().add(collection);
+                break;
+            case RELATIONALDB:
+                Table table = TyphonmlFactory.eINSTANCE.createTable();
+                table.setName(targetLogicalName);
+                table.setEntity(entityTypeToMap);
+                RelationalDB relationalDB = (RelationalDB) db;
+                relationalDB.getTables().add(table);
+                table.setDb(relationalDB);
+                break;
+            case COLUMNDB:
+                //TODO
+                break;
+            case GRAPHDB:
+                //TODO
+                break;
+            case KEYVALUE:
+                //TODO
+                break;
+        }
+        return newModel;
+    }
 
-	@Override
-	public Database getDatabaseFromName(String dbname, Model model) {
-		for (Database db : model.getDatabases()) {
-			if (db.getName().equals(dbname)) {
-				return db;
-			}
-		}
-		return null;
-	}
+    @Override
+    public Database getDatabaseFromName(String dbname, Model model) {
+        for (Database db : model.getDatabases()) {
+            if (db.getName().equals(dbname)) {
+                return db;
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException {
-		if (this.getDatabaseFromName(databasename, targetModel) == null) {
+    @Override
+    public Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException {
+        if (this.getDatabaseFromName(databasename, targetModel) == null) {
 
-			logger.info("Creating a Database of type [{}] with name [{}] in TyphonML", dbtype.toString(), databasename);
-			Model newModel;
-			newModel = EcoreUtil.copy(targetModel);
-			Database db = null;
+            logger.info("Creating a Database of type [{}] with name [{}] in TyphonML", dbtype.toString(), databasename);
+            Model newModel;
+            newModel = EcoreUtil.copy(targetModel);
+            Database db = null;
 
-			switch (dbtype) {
-				case DOCUMENTDB:
-					db = TyphonmlFactory.eINSTANCE.createDocumentDB();
-					break;
-				case RELATIONALDB:
-					db = TyphonmlFactory.eINSTANCE.createRelationalDB();
-					break;
-				case COLUMNDB:
-					db = TyphonmlFactory.eINSTANCE.createColumnDB();
-					break;
-				case GRAPHDB:
-					db = TyphonmlFactory.eINSTANCE.createGraphDB();
-					break;
-				case KEYVALUE:
-					db = TyphonmlFactory.eINSTANCE.createKeyValueDB();
-					break;
-			}
-			if (db == null) {
-				throw new InputParameterException("Error creating database. Verify that database type is [DOCUMENTDB, RELATIONALDB, COLUMNBD, GRAPHDB, KEYVALUEDB]");
-			}
-			db.setName(databasename);
-			newModel.getDatabases().add(db);
-			return newModel;
-		}
-		return targetModel;
-	}
+            switch (dbtype) {
+                case DOCUMENTDB:
+                    db = TyphonmlFactory.eINSTANCE.createDocumentDB();
+                    break;
+                case RELATIONALDB:
+                    db = TyphonmlFactory.eINSTANCE.createRelationalDB();
+                    break;
+                case COLUMNDB:
+                    db = TyphonmlFactory.eINSTANCE.createColumnDB();
+                    break;
+                case GRAPHDB:
+                    db = TyphonmlFactory.eINSTANCE.createGraphDB();
+                    break;
+                case KEYVALUE:
+                    db = TyphonmlFactory.eINSTANCE.createKeyValueDB();
+                    break;
+            }
+            if (db == null) {
+                throw new InputParameterException("Error creating database. Verify that database type is [DOCUMENTDB, RELATIONALDB, COLUMNBD, GRAPHDB, KEYVALUEDB]");
+            }
+            db.setName(databasename);
+            newModel.getDatabases().add(db);
+            return newModel;
+        }
+        return targetModel;
+    }
 
-	@Override
-	public String getDatabaseName(String sourceEntityName, Model model) {
-		return null;
-	}
+    @Override
+    public String getDatabaseName(String sourceEntityName, Model model) {
+        return null;
+    }
 
-	@Override
-	public Model deleteEntityMappings(String entityname, Model model) {
-		logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityname);
-		Model newModel;
-		newModel = EcoreUtil.copy(model);
-		typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
-		//TODO GenericList has been deleted from TyphonML. Adapt to getTable, get Collection, etc...
+    @Override
+    public Model deleteEntityMappings(String entityname, Model model) {
+        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityname);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
+        //TODO GenericList has been deleted from TyphonML. Adapt to getTable, get Collection, etc...
 //		EcoreUtil.remove(entity.getGenericList());
-		return newModel;
-	}
+        return newModel;
+    }
 
-	private DataType getDataTypeFromEntityName(String entityname, Model model) {
+    private DataType getDataTypeFromEntityName(String entityname, Model model) {
         for (DataType datatype : model.getDataTypes()) {
             if (datatype instanceof typhonml.Entity) {
                 if (datatype.getName().equalsIgnoreCase(entityname)) {
@@ -295,21 +294,21 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return null;
     }
 
-	private Relation createRelation(String name, CardinalityDO cardinality, boolean isContainment, Entity targetType) {
-		Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
-		relation.setName(name);
-		relation.setIsContainment(isContainment);
-		relation.setCardinality(Cardinality.getByName(cardinality.getName()));
-		relation.setType(targetType);
-		return relation;
-	}
+    private Relation createRelation(String name, CardinalityDO cardinality, boolean isContainment, Entity targetType) {
+        Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
+        relation.setName(name);
+        relation.setIsContainment(isContainment);
+        relation.setCardinality(Cardinality.getByName(cardinality.getName()));
+        relation.setType(targetType);
+        return relation;
+    }
 
     private Attribute createAttribute(String name, DataType type) {
-		//TODO Handling of dataTypes
-		Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
-		attribute.setName(name);
-		attribute.setType(type);
-		return attribute;
-	}
+        //TODO Handling of dataTypes
+        Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
+        attribute.setName(name);
+        attribute.setType(type);
+        return attribute;
+    }
 
 }

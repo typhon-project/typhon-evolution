@@ -1,14 +1,11 @@
 package com.typhon.evolutiontool.handlers.EntityHandlers;
 
-import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
 public class EntityMergeHandler extends BaseHandler {

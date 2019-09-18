@@ -1,13 +1,14 @@
 package com.typhon.evolutiontool.handlers.EntityHandlers;
 
-import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
+import com.typhon.evolutiontool.entities.DatabaseType;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import typhonml.Model;
 
@@ -28,7 +29,7 @@ public class EntityAddHandler extends BaseHandler {
         Model targetModel;
 
         // Verify ParametersKeyString
-        if(this.containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY,ParametersKeyString.DATABASENAME,ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))){
+        if (this.containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))) {
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
@@ -43,11 +44,10 @@ public class EntityAddHandler extends BaseHandler {
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);
-            typhonQLInterface.createEntityType(newEntity,targetModel);
+            typhonQLInterface.createEntityType(newEntity, targetModel);
             return targetModel;
-        }
-        else
-            throw new InputParameterException("Missing parameters. Needed ["+ParametersKeyString.ENTITY+", "+ParametersKeyString.DATABASENAME+", "+ParametersKeyString.DATABASETYPE+", "+ ParametersKeyString.TARGETLOGICALNAME+"]");
+        } else
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.DATABASENAME + ", " + ParametersKeyString.DATABASETYPE + ", " + ParametersKeyString.TARGETLOGICALNAME + "]");
 
     }
 

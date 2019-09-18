@@ -1,19 +1,16 @@
 package com.typhon.evolutiontool.handlers.RelationHandlers;
 
-import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import typhonml.Model;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class RelationAddHandler extends BaseHandler {
 
@@ -28,13 +25,13 @@ public class RelationAddHandler extends BaseHandler {
         String targetmodelid;
         Model targetModel;
 
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION))) {
+        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
             targetModel = typhonMLInterface.createRelationship(relation, model);
-            typhonQLInterface.createRelationshipType(relation,targetModel);
+            typhonQLInterface.createRelationshipType(relation, targetModel);
             return targetModel;
-        }else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION+"]");
+        } else {
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
 
     }

@@ -153,11 +153,14 @@ public class ChangeOperatorsTest extends InitialTest {
         DisableBidirectionalRelation disableBidirectionalRelation = (DisableBidirectionalRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(disableBidirectionalRelation);
 
+        RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+        RelationDO oppositeRelation = relation.getOpposite();
+
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationOppositeChangeOperator_final.xmi");
 
-        RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-        assertNull(relation.getOpposite());
+        assertNull(typhonMLInterface.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), targetModel).getOpposite());
+        assertNull(typhonMLInterface.getRelationFromNameInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel));
     }
 
 }

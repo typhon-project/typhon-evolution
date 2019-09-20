@@ -6,8 +6,8 @@ import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.entities.RelationDOImpl;
 import typhonml.Model;
-import typhonml.impl.RelationImpl;
 
 import java.util.Arrays;
 
@@ -23,13 +23,13 @@ public class RelationEnableOppositeHandler extends BaseHandler {
 
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            oppositeRelation = new RelationDOJsonImpl(
+            oppositeRelation = new RelationDOImpl(
                     smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString(),
                     relation.getTargetEntity(),
                     relation.getSourceEntity(),
                     relation,
                     false,
-                    reverseCardinality(((RelationImpl) smo.getInputParameter().get(ParametersKeyString.RELATION)).getCardinality().getValue())
+                    reverseCardinality(relation.getCardinality().getValue())
             );
 
             targetModel = typhonMLInterface.createRelationship(oppositeRelation, model);

@@ -9,7 +9,6 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import typhonml.Model;
-import typhonml.impl.RelationImpl;
 
 import java.util.Collections;
 
@@ -26,7 +25,6 @@ public class RelationDisableOppositeHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
             oppositeRelation = relation.getOpposite();
-//            oppositeRelation = ((RelationImpl) smo.getInputParameter().get(ParametersKeyString.RELATION));
 
             targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), model);
             targetModel = typhonMLInterface.disableOpposite(relation, targetModel);

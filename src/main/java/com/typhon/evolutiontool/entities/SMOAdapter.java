@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.*;
+import typhonml.impl.EnableBidirectionalRelationImpl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +31,16 @@ public class SMOAdapter implements SMO {
     }
 
     private void initializeTyphonObjectAttribute() {
-        if(changeOperator instanceof RemoveEntity || changeOperator instanceof RenameEntity || changeOperator instanceof AddEntity || changeOperator instanceof MigrateEntity)
+        if(changeOperator instanceof RemoveEntity
+                || changeOperator instanceof RenameEntity
+                || changeOperator instanceof AddEntity
+                || changeOperator instanceof MigrateEntity)
             typhonMLObject = TyphonMLObject.ENTITY;
-        if(changeOperator instanceof AddRelation || changeOperator instanceof RemoveRelation)
+        if(changeOperator instanceof AddRelation
+                || changeOperator instanceof RemoveRelation
+                || changeOperator instanceof EnableBidirectionalRelation
+                || changeOperator instanceof DisableBidirectionalRelation)
             typhonMLObject = TyphonMLObject.RELATION;
-
     }
 
     private void initializeEvolutionOperatorAttribute() {
@@ -46,6 +52,10 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ADD;
         if(changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
+        if(changeOperator instanceof EnableBidirectionalRelation)
+            evolutionOperator = EvolutionOperator.ENABLEOPPOSITE;
+        if(changeOperator instanceof DisableBidirectionalRelation)
+            evolutionOperator = EvolutionOperator.DISABLEOPPOSITE;
     }
 
     private void initializeInputParameterAttribute() {
@@ -75,6 +85,14 @@ public class SMOAdapter implements SMO {
             //TODO by TyphonML
 //            inputParameter.put(ParametersKeyString.ENTITYNAME),((RemoveRelation) changeOperator).getRelationToRemove().getSourceEntity().getName();
             inputParameter.put(ParametersKeyString.RELATIONNAME, ((RemoveRelation) changeOperator).getRelationToRemove().getName());
+        }
+        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
+            inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
+            //TODO by TyphonML: missing relationname parameter
+//            inputParameter.put(ParametersKeyString.RELATIONNAME), ((EnableBidirectionalRelation) changeOperator).getRelationName());
+        }
+        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
+            inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
         }
     }
 
@@ -109,7 +127,7 @@ public class SMOAdapter implements SMO {
 
     @Override
     public EntityDO getEntityDOFromInputParameter(String parameterkey) {
-        //Because AddEntity Operator exends Enity in TyphonML meta model.
+        //Because AddEntity Operator extends Entity in TyphonML meta model.
         if(changeOperator instanceof AddEntity)
             return EntityDOFactory.createEntityDOFromEntityML((AddEntity)changeOperator);
         return null;
@@ -117,8 +135,17 @@ public class SMOAdapter implements SMO {
 
     @Override
     public RelationDO getRelationDOFromInputParameter(String parameterkey) {
-        if(this.getTyphonObject()==TyphonMLObject.RELATION && this.getEvolutionOperator()==EvolutionOperator.ADD)
-            return RelationDOFactory.createRelationDOFromRelationML((AddRelation) changeOperator);
+        if (this.getTyphonObject() == TyphonMLObject.RELATION) {
+            if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
+                return RelationDOFactory.createRelationDOFromRelationML((AddRelation) changeOperator);
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
+                return RelationDOFactory.createRelationDOFromRelationML(((EnableBidirectionalRelation) changeOperator).getRelation());
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.DISABLEOPPOSITE) {
+                return RelationDOFactory.createRelationDOFromRelationML(((DisableBidirectionalRelation) changeOperator).getRelation());
+            }
+        }
         return null;
     }
 

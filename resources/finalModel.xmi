@@ -4,7 +4,9 @@
     <collections entity="//@dataTypes.1" name="orderCollection"/>
     <collections entity="//@dataTypes.0" name="userCollection"/>
   </databases>
-  <databases xsi:type="typhonml:RelationalDB" name="MySQL"/>
+  <databases xsi:type="typhonml:RelationalDB" name="MySQL">
+    <tables name="clientsTable" db="//@databases.1"/>
+  </databases>
   <dataTypes xsi:type="typhonml:Entity" name="User" genericList="//@databases.0/@collections.1">
     <attributes name="name" type="//@dataTypes.0"/>
     <attributes name="surname" type="//@dataTypes.0"/>

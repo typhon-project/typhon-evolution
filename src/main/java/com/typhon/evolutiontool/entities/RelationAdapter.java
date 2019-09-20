@@ -1,6 +1,7 @@
 package com.typhon.evolutiontool.entities;
 
 import com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Entity;
 import typhonml.Relation;
 
 public class RelationAdapter implements RelationDO {
@@ -18,7 +19,7 @@ public class RelationAdapter implements RelationDO {
 
     @Override
     public EntityDO getSourceEntity() {
-        return null;
+        return EntityDOFactory.createEntityDOFromEntityML((Entity) relation.eContainer());
     }
 
     @Override

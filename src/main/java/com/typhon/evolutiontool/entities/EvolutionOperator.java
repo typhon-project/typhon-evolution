@@ -20,5 +20,7 @@ public enum EvolutionOperator {
     @JsonAlias("splithorizontal")
     SPLITHORIZONTAL,
     ENABLECONTAINMENT,
-    DISABLECONTAINMENT;
+    DISABLECONTAINMENT,
+    ENABLEOPPOSITE,
+    DISABLEOPPOSITE;
 }

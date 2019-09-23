@@ -23,14 +23,14 @@ public class RelationRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATIONTORENAME, ParametersKeyString.NEWRELATIONNAME))) {
-            Relation relation = (Relation) smo.getInputParameter().get(ParametersKeyString.RELATIONTORENAME);
-            String newRelationName = smo.getInputParameter().get(ParametersKeyString.NEWRELATIONNAME).toString();
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
+            Relation relation = (Relation) smo.getInputParameter().get(ParametersKeyString.RELATION);
+            String newRelationName = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
             Model targetModel = typhonMLInterface.renameRelation(relation.getName(), ((Entity) relation.eContainer()).getName(), newRelationName, model);
             typhonQLInterface.renameRelation(relation.getName(), newRelationName, model);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATIONTORENAME + ", " + ParametersKeyString.NEWRELATIONNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");
         }
     }
 

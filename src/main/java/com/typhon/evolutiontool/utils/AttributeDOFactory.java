@@ -1,13 +1,15 @@
 package com.typhon.evolutiontool.utils;
 
 import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.AttributeDOAdapter;
-import typhonml.AddAttribute;
+import com.typhon.evolutiontool.entities.AttributeDOImpl;
 import typhonml.Attribute;
 
 public class AttributeDOFactory {
 
-    public static AttributeDO createAttributeDOFromAttributeML(Attribute attribute) {
-        return new AttributeDOAdapter(attribute);
+    private AttributeDOFactory() {
+    }
+
+    public static AttributeDO buildInstance(Attribute attribute) {
+        return new AttributeDOImpl(attribute.getName(), attribute.getType().getName());
     }
 }

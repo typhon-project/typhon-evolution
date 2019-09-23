@@ -13,8 +13,10 @@ public class RelationDOFactory {
     }
 
     public static RelationDO buildInstance(Relation relation) {
-        EntityDO sourceEntityDO = EntityDOFactory.createEntityDOFromEntityML((Entity) relation.eContainer());
-        EntityDO targetEntityDO = EntityDOFactory.createEntityDOFromEntityML(relation.getType());
+        Entity sourceEntity = (Entity) relation.eContainer();
+        EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
+        Entity targetEntity = relation.getType();
+        EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;
         RelationDO oppositeRelationDO = null;
         if (relation.getOpposite() != null) {
             oppositeRelationDO = buildInstance(relation.getOpposite());

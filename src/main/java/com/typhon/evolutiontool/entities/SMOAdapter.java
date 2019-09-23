@@ -59,7 +59,7 @@ public class SMOAdapter implements SMO {
     private void initializeInputParameterAttribute() {
         inputParameter = new HashMap<>();
         if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.ADD) {
-            inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.createEntityDOFromEntityML((Entity) changeOperator));
+            inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.buildInstance((Entity) changeOperator));
             //TODO Add other parameters
         }
         if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.REMOVE)
@@ -127,7 +127,7 @@ public class SMOAdapter implements SMO {
     public EntityDO getEntityDOFromInputParameter(String parameterkey) {
         //Because AddEntity Operator extends Entity in TyphonML meta model.
         if (changeOperator instanceof AddEntity)
-            return EntityDOFactory.createEntityDOFromEntityML((AddEntity) changeOperator);
+            return EntityDOFactory.buildInstance((AddEntity) changeOperator);
         return null;
     }
 
@@ -150,7 +150,7 @@ public class SMOAdapter implements SMO {
     @Override
     public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
         if (this.getTyphonObject() == TyphonMLObject.ATTRIBUTE && this.getEvolutionOperator() == EvolutionOperator.ADD) {
-            return AttributeDOFactory.createAttributeDOFromAttributeML((AddAttribute) changeOperator);
+            return AttributeDOFactory.buildInstance((AddAttribute) changeOperator);
         }
         return null;
     }

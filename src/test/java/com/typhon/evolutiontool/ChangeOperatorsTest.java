@@ -177,4 +177,18 @@ public class ChangeOperatorsTest extends InitialTest {
         assertEquals(renamedRelation.getName(), renameRelation.getNewRelationName());
     }
 
+    @Test
+    public void testchangeRelationCardinalityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeCardinalityRelationChangeOperator.xmi");
+        ChangeRelationCardinality changeRelationCardinality = (ChangeRelationCardinality) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeRelationCardinality);
+
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeCardinalityRelationChangeOperator_final.xmi");
+
+        Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(changeRelationCardinality.getRelation().getName(), ((Entity) changeRelationCardinality.getRelation().eContainer()).getName(), targetModel);
+        assertNotNull(updatedRelation);
+        assertEquals(updatedRelation.getCardinality(), changeRelationCardinality.getNewCardinality());
+    }
+
 }

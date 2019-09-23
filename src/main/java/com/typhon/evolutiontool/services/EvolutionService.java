@@ -11,8 +11,6 @@ public interface EvolutionService {
 
     Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
-    Model changeCardinality(SMO smo, Model model) throws InputParameterException;
-
     Model addAttribute(SMO smo, Model model) throws InputParameterException;
 
     String removeAttribute(SMO smo, Model model);

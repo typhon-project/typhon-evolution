@@ -1,6 +1,9 @@
 package com.typhon.evolutiontool.services;
 
-import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.AttributeDO;
+import com.typhon.evolutiontool.entities.EvolutionOperator;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.EntityHandlers.*;
@@ -70,6 +73,7 @@ public class EvolutionServiceImpl implements EvolutionService {
         relationHandlers.put(EvolutionOperator.ENABLEOPPOSITE, new RelationEnableOppositeHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.DISABLEOPPOSITE, new RelationDisableOppositeHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.RENAME, new RelationRenameHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.CHANGECARDINALITY, new RelationChangeCardinalityHandler(tdl, tml, tql));
     }
 
     @Override
@@ -91,21 +95,6 @@ public class EvolutionServiceImpl implements EvolutionService {
 
         String err_msg = String.format("No operation found for [%s] - [%s]", smo.getTyphonObject(), smo.getEvolutionOperator());
         throw new EvolutionOperationNotSupported(err_msg);
-    }
-
-    @Override
-    public Model changeCardinality(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation;
-        CardinalityDO cardinality;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            cardinality = CardinalityDO.getByName(smo.getInputParameter().get(ParametersKeyString.CARDINALITY).toString());
-            targetModel = typhonMLInterface.changeCardinalityInRelation(relation, cardinality, model);
-            typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getSourceEntity().getName(), cardinality, targetModel);
-            return targetModel;
-        } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.CARDINALITY + "]");
-        }
     }
 
     @Override

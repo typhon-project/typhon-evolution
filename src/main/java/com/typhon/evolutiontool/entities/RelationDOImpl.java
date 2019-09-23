@@ -1,9 +1,5 @@
 package com.typhon.evolutiontool.entities;
 
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-
 public class RelationDOImpl implements RelationDO {
 
     private String relationName;

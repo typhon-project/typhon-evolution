@@ -28,4 +28,6 @@ public interface ParametersKeyString {
     String SECONDNEWENTITY = "secondnewentity";
     String CARDINALITY = "cardinality";
     String ATTRIBUTE = "attribute";
+    String RELATIONTORENAME = "relationToRename";
+    String NEWRELATIONNAME = "newRelationName";
 }

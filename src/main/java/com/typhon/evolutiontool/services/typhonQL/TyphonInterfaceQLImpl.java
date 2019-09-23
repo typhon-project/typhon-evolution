@@ -147,6 +147,13 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     }
 
     @Override
+    public void renameRelation(String relationName, String newRelationName, Model model) {
+        logger.info("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model [{}]", relationName, newRelationName, model);
+        String tql = "TQL DDL RENAME RELATION "+ relationName +" TO "+ newRelationName;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
     public void deleteEntityStructure(String entityname, Model model) {
         String tql = "TQLDDL DELETE ENTITY " + entityname + " on TyphonML [" + model + "]";
         logger.info("Delete entity [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, model);

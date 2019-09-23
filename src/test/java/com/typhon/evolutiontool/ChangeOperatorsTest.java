@@ -163,4 +163,18 @@ public class ChangeOperatorsTest extends InitialTest {
         assertNull(typhonMLInterface.getRelationFromNameInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel));
     }
 
+    @Test
+    public void testRenameRelationChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/renameRelationChangeOperator.xmi");
+        RenameRelation renameRelation = (RenameRelation) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameRelation);
+
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameRelationChangeOperator_final.xmi");
+
+        Relation renamedRelation = typhonMLInterface.getRelationFromNameInEntity(renameRelation.getNewRelationName(), ((Entity) renameRelation.getRelationToRename().eContainer()).getName(), targetModel);
+        assertNotNull(renamedRelation);
+        assertEquals(renamedRelation.getName(), renameRelation.getNewRelationName());
+    }
+
 }

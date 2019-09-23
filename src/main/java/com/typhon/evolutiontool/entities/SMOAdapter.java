@@ -37,14 +37,15 @@ public class SMOAdapter implements SMO {
         if (changeOperator instanceof AddRelation
                 || changeOperator instanceof RemoveRelation
                 || changeOperator instanceof EnableBidirectionalRelation
-                || changeOperator instanceof DisableBidirectionalRelation)
+                || changeOperator instanceof DisableBidirectionalRelation
+                || changeOperator instanceof RenameRelation)
             typhonMLObject = TyphonMLObject.RELATION;
     }
 
     private void initializeEvolutionOperatorAttribute() {
         if (changeOperator instanceof RemoveEntity || changeOperator instanceof RemoveRelation)
             evolutionOperator = EvolutionOperator.REMOVE;
-        if (changeOperator instanceof RenameEntity)
+        if (changeOperator instanceof RenameEntity || changeOperator instanceof RenameRelation)
             evolutionOperator = EvolutionOperator.RENAME;
         if (changeOperator instanceof AddEntity || changeOperator instanceof AddRelation)
             evolutionOperator = EvolutionOperator.ADD;
@@ -91,6 +92,10 @@ public class SMOAdapter implements SMO {
         }
         if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
             inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
+        }
+        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.RENAME) {
+            inputParameter.put(ParametersKeyString.RELATIONTORENAME, ((RenameRelation) changeOperator).getRelationToRename());
+            inputParameter.put(ParametersKeyString.NEWRELATIONNAME, ((RenameRelation) changeOperator).getNewRelationName());
         }
     }
 

@@ -69,6 +69,7 @@ public class EvolutionServiceImpl implements EvolutionService {
         relationHandlers.put(EvolutionOperator.DISABLECONTAINMENT, new RelationDisableContainmentHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.ENABLEOPPOSITE, new RelationEnableOppositeHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.DISABLEOPPOSITE, new RelationDisableOppositeHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.RENAME, new RelationRenameHandler(tdl, tml, tql));
     }
 
     @Override

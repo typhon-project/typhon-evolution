@@ -56,4 +56,6 @@ public interface TyphonQLInterface {
     void changeCardinalityInRelation(String relationname, String entityname, CardinalityDO cardinality, Model model);
 
     void addAttribute(AttributeDO attributeDO, String entityname, Model model);
+
+    void renameRelation(String relationName, String newRelationName, Model model);
 }

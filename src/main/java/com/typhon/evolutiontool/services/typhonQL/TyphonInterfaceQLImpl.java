@@ -30,8 +30,8 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     public String createEntityType(EntityDO newEntity, Model model) {
         //TODO Handling of Identifier, index, etc...
         String tql;
-        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(),model);
-        tql="TQLDDL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey()+" "+entry.getValue()).collect(Collectors.joining(","))+"}";
+        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(), model);
+        tql = "TQLDDL CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey() + " " + entry.getValue()).collect(Collectors.joining(",")) + "}";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
         return tql;
     }
@@ -40,8 +40,8 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     public String createEntityType(typhonml.Entity newEntity, Model model) {
         //TODO Handling of Identifier, index, etc...
         String tql;
-        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(),model);
-        tql="TQLDDL CREATE ENTITY "+newEntity.getName()+" {"+newEntity.getAttributes().stream().map(attribute -> attribute.getName()+" "+attribute.getType()).collect(Collectors.joining(","))+"}";
+        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(), model);
+        tql = "TQLDDL CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().stream().map(attribute -> attribute.getName() + " " + attribute.getType()).collect(Collectors.joining(",")) + "}";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
         return tql;
     }
@@ -49,7 +49,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     @Override
     public void renameEntity(String oldEntityName, String newEntityName, Model model) {
         logger.info("Rename EntityDO [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, model);
-        String tql = "TQL DDL RENAME ENTITY "+ oldEntityName +" TO "+ newEntityName;
+        String tql = "TQL DDL RENAME ENTITY " + oldEntityName + " TO " + newEntityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
 
     }
@@ -61,6 +61,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     /**
      * Retrieve all entity data, all attributes of entity @param entityId using the model provided.
+     *
      * @param entityId
      * @param model
      * @return
@@ -77,7 +78,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select "+attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
+        return getTyphonQLConnection(model).query("from ? e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
     }
 
     @Override
@@ -97,24 +98,24 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readRelationship(RelationDO relation, Model model) {
-        return getTyphonQLConnection(model).query("from ? s , ? t select s, t where s.?==? " , relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(),relation.getTargetEntity().getIdentifier());
+        return getTyphonQLConnection(model).query("from ? s , ? t select s, t where s.?==? ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
     }
 
     @Override
     public void deleteRelationship(RelationDO relation, boolean datadelete, Model model) {
         this.deleteForeignKey(relation.getSourceEntity(), relation.getTargetEntity());
-        if(datadelete){
+        if (datadelete) {
             //For nosql document db
             //this.deleteAttributes(relation.getSourceEntity().getName(), Arrays.asList(relation.getName()), model);
             // for relational?
-            getTyphonQLConnection(model).delete(this.readRelationship(relation,model));
+            getTyphonQLConnection(model).delete(this.readRelationship(relation, model));
         }
     }
 
     @Override
     public void deleteRelationshipInEntity(String relationname, String entityname, Model model) {
         logger.info("Delete Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationname, entityname, model);
-        String tql = "TQL DDL DELETE RELATION "+ relationname +" IN "+ entityname;
+        String tql = "TQL DDL DELETE RELATION " + relationname + " IN " + entityname;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -135,7 +136,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     @Override
     public void changeCardinalityInRelation(String relationname, String entityname, CardinalityDO cardinality, Model model) {
         logger.info("Change cardinality of Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationname, entityname, model);
-        String tql = "dummy disable containment TQL DDL";
+        String tql = "TQL DDL dummy change relation cardinality";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -143,6 +144,13 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
         logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
         String tql = "dummy add attribute";
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
+    public void renameRelation(String relationName, String newRelationName, Model model) {
+        logger.info("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model [{}]", relationName, newRelationName, model);
+        String tql = "TQL DDL RENAME RELATION " + relationName + " TO " + newRelationName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -155,6 +163,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     /**
      * Delete attributes structure and data of given attribute name list in the given entityname .
+     *
      * @param entityname
      * @param attributes
      * @param model
@@ -166,7 +175,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
         getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityname, attributes, model));
 
         //Delete Structure
-        String tql = "TQLDDL DELETE ATTRIBUTES " + entityname +", "+ attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(","))+ " on TyphonML [" + model + "]";
+        String tql = "TQLDDL DELETE ATTRIBUTES " + entityname + ", " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")) + " on TyphonML [" + model + "]";
         logger.info("Delete attributes [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, model);
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
@@ -178,13 +187,14 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     /**
      * Depending on the underlying databases. Creates foreign key (for relational) or changes the way the data must be inserted (for NoSQL). See detailed action plan appendix.
+     *
      * @param relation
      * @param model
      */
     @Override
     public void createRelationshipType(RelationDO relation, Model model) {
         String tql;
-        logger.info("Create relationship [{}] via TyphonQL DDL query on TyphonML model [{}] ", relation.getName(),model);
+        logger.info("Create relationship [{}] via TyphonQL DDL query on TyphonML model [{}] ", relation.getName(), model);
         tql = "TQLDDL CREATE RELATIONSHIP " + relation;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }

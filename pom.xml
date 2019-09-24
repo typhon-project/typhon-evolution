@@ -124,12 +124,11 @@
 		    <version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		
-<dependency>
+		<dependency>
 		  <groupId>org.eclipse</groupId>
 		  <artifactId>ocl</artifactId>
 		  <version>3.4.0-v20140524-1358</version>
 		</dependency>
-
 
 	</dependencies>
 

@@ -6,5 +6,5 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface Handler {
-    public Model handle(SMO smo, Model model) throws InputParameterException;
+    Model handle(SMO smo, Model model) throws InputParameterException;
 }

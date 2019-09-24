@@ -1,6 +1,7 @@
 package com.typhon.evolutiontool.entities;
 
 public interface RelationDO {
+
     String getName();
 
     EntityDO getSourceEntity();

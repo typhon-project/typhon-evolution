@@ -186,6 +186,32 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public Model enableOpposite(RelationDO relation, RelationDO oppositeRelation, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        Relation oppositeRelationML = this.getRelationFromNameInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), newModel);
+        relationML.setOpposite(oppositeRelationML);
+        return newModel;
+    }
+
+    @Override
+    public Model disableOpposite(RelationDO relation, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        relationML.setOpposite(null);
+        return newModel;
+    }
+
+    @Override
+    public Model renameRelation(String relationName, String entityName, String newRelationName, Model model) {
+        logger.info("Renaming Relation [{} in {} entity] to [{}] in TyphonML model", relationName, entityName, newRelationName);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        getRelationFromNameInEntity(relationName, entityName, newModel).setName(newRelationName);
+        return newModel;
+    }
+
+    @Override
     public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
         logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
         Model newModel;

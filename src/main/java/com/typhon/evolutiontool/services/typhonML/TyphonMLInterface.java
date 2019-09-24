@@ -68,4 +68,10 @@ public interface TyphonMLInterface {
     Model renameAttribute(String oldattributename, String newattributename, String entityname);
 
     Model changeTypeAttribute(AttributeDO attribute, String entityname);
+
+    Model enableOpposite(RelationDO relation, RelationDO oppositeRelation, Model model);
+
+    Model disableOpposite(RelationDO relation, Model model);
+
+    Model renameRelation(String relationName, String entityName, String newRelationName, Model model);
 }

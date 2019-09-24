@@ -6,8 +6,7 @@ import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import com.typhon.evolutiontool.utils.RelationDOFactory;
-import com.typhon.evolutiontool.utils.WorkingSetFactory;
+import com.typhon.evolutiontool.entities.RelationDOImpl;
 import typhonml.Model;
 
 import java.util.Arrays;
@@ -18,25 +17,25 @@ public class EntitySplitVerticalHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-
     /**
      * Partially migrates the instances of sourceEntity to a new entity targetEntity. Only the values
      * of attributes [attributesNames] are migrated. The link between the instances of entity1 and entity2 is
      * kept via a new one-to-one relationship relName.
      *
-     * @param smo
-     * @return
-     * @throws InputParameterException
+     * @param smo the change operator to apply
+     * @return the updated model, after the change operator has been applied
+     * @throws InputParameterException when a mandatory parameter is missing
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        String databasetype, databasename, sourceEntityId;
+        String databasetype, databasename;
+//        String sourceEntityId;
         RelationDO relation;
         EntityDO sourceEntity, firstNewEntity, secondNewEntity;
-        WorkingSet dataSource, dataTarget;
+//        WorkingSet dataSource, dataTarget;
         Model targetModel;
 
-        dataTarget = WorkingSetFactory.createEmptyWorkingSet();
+//        dataTarget = WorkingSetFactory.createEmptyWorkingSet();
 
 
         if (containParameters(smo, Arrays.asList(
@@ -59,7 +58,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             //TyphonML
             targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
             targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
-            relation = RelationDOFactory.createRelationDO("splitRelation", firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
+            relation = new RelationDOImpl("splitRelation", firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
             targetModel = typhonMLInterface.createRelationship(relation, targetModel);
             targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 

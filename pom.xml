@@ -23,46 +23,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<tycho-version>1.3.0</tycho-version>
 	</properties>
 	
 	<repositories>
-		<repository>
-		<id>internal</id>
-		<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
-		</repository>
 		
-		<repository>
-			<id>epsilon</id>
-			<url>http://download.eclipse.org/epsilon/updates//</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>kepler</id>
-			<url>http://download.eclipse.org/releases/2018-12</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>xtext</id>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.16.0/</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>mwe</id>
-			<url>http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.1/</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
-		</repository>
 		<repository>
 			<id>emf</id>
 			<url>http://download.eclipse.org/modeling/emf/emf/builds/release</url>
@@ -71,25 +36,19 @@
 	        </snapshots>
 			<layout>p2</layout>
 		</repository>
-		<repository>
-			<id>xpand</id>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/releases/xpand/</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-		    <id>eclipse-releases</id>
-		    <url>https://repo.eclipse.org/content/groups/releases</url>
-		</repository>
+		
 		<repository>
 			<id>ocl</id>
-			<url>https://download.eclipse.org/ocl/</url>
+			<url>https://download.eclipse.org/modeling/mdt/ocl/updates/</url>
 			<snapshots>
 	            <updatePolicy>always</updatePolicy>
 	        </snapshots>
 			<layout>p2</layout>
+		</repository>
+		
+		<repository>
+		<id>internal</id>
+		<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
 		</repository>
 		
 	</repositories>
@@ -165,20 +124,23 @@
 		    <version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/org.eclipse.emf/org.eclipse.emf.ecore -->
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>org.eclipse.emf.ecore</artifactId>
-			<version>2.15.0</version>
+<dependency>
+		  <groupId>org.eclipse</groupId>
+		  <artifactId>ocl</artifactId>
+		  <version>3.4.0-v20140524-1358</version>
 		</dependency>
-		
-		
-		
-		
+
+
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

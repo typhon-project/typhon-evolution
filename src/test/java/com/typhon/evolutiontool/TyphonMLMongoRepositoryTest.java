@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.DBCollection;
 import com.typhon.evolutiontool.dao.TyphonMongoRepository;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import org.junit.After;
@@ -9,11 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
@@ -32,13 +28,14 @@ public class TyphonMLMongoRepositoryTest {
     MongoTemplate mongoTemplate;
     @Autowired
     TyphonMongoRepository typhonMongoRepository;
-    String collectionName;
-    ObjectMapper mapper = new ObjectMapper();
-    TyphonMLSchema schema;
+
+    private String collectionName;
+    private ObjectMapper mapper = new ObjectMapper();
+    private TyphonMLSchema schema;
 
     @Before
     public void initializeMongo() throws IOException {
-        collectionName="TyphonML";
+        collectionName = "TyphonML";
         schema = mapper.readerFor(TyphonMLSchema.class).readValue(new File("src/main/resources/test/TyphonML_V2.json"));
         mongoTemplate.save(schema);
     }
@@ -61,5 +58,4 @@ public class TyphonMLMongoRepositoryTest {
         TyphonMLSchema savedSchema = typhonMongoRepository.save(schema);
         assertNotNull(typhonMongoRepository.findByVersion(savedSchema.getVersion()));
     }
-
 }

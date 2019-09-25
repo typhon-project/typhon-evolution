@@ -1,7 +1,9 @@
 package com.typhon.evolutiontool;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.SMODto;
+import com.typhon.evolutiontool.entities.SMOJsonImpl;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 
@@ -12,10 +14,10 @@ import static junit.framework.TestCase.assertEquals;
 
 public class SmoToDtoUnitTest {
 
+    private String CREATE_ENTITY_FILE_PATH = "src/main/resources/test/CreateEntitySmoValid.json";
+
     private ObjectMapper mapper = new ObjectMapper();
     private ModelMapper modelMapper = new ModelMapper();
-    private String createEntityFilePath = "src/main/resources/test/CreateEntitySmoValid.json";
-    private File smoJsonFile;
 
 
 //    @Test
@@ -31,7 +33,7 @@ public class SmoToDtoUnitTest {
 
     @Test
     public void DtoToSMO() throws IOException {
-        SMODto smoDto = mapper.readerFor(SMODto.class).readValue(new File(createEntityFilePath));
+        SMODto smoDto = mapper.readerFor(SMODto.class).readValue(new File(CREATE_ENTITY_FILE_PATH));
         SMO smo = modelMapper.map(smoDto, SMOJsonImpl.class);
         assertEquals(smo.getEvolutionOperator(), smoDto.getEvolutionOperator());
         assertEquals(smo.getTyphonObject(), smoDto.getTyphonObject());

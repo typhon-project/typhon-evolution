@@ -222,6 +222,8 @@ public class ChangeOperatorsTest extends InitialTest {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/renameAttributeChangeOperator.xmi");
         RenameAttribute renameAttribute = (RenameAttribute) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameAttribute);
+        // Work around to succeed the test:
+//        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameAttributeChangeOperator_final.xmi");

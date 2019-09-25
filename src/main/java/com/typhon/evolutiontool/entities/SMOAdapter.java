@@ -101,9 +101,7 @@ public class SMOAdapter implements SMO {
         //RELATION
         if (typhonMLObject == TyphonMLObject.RELATION) {
             if (evolutionOperator == EvolutionOperator.REMOVE) {
-                //TODO by TyphonML
-//            inputParameter.put(ParametersKeyString.ENTITYNAME),((RemoveRelation) changeOperator).getRelationToRemove().getSourceEntity().getName();
-                inputParameter.put(ParametersKeyString.RELATIONNAME, ((RemoveRelation) changeOperator).getRelationToRemove().getName());
+                inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());

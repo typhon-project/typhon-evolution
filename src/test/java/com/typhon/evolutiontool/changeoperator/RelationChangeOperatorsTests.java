@@ -30,14 +30,15 @@ public class RelationChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testRemoveRelationship() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
-        RemoveRelation removeRelation = TyphonmlFactory.eINSTANCE.createRemoveRelation();
-        removeRelation.setRelationToRemove(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
-        //TODO by TyphonML Missing sourceEntity info in AddRelation ChangeOperator.
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/removeRelationChangeOperator.xmi");
+        RemoveRelation removeRelation = (RemoveRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
-        assertNotNull(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", sourceModel));
+
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
-        assertNull(typhonMLInterface.getRelationFromNameInEntity("paidWith", "Order", targetModel));
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeRelationChangeOperator_final.xmi");
+
+        Relation removedRelation = typhonMLInterface.getRelationFromNameInEntity(removeRelation.getRelationToRemove().getName(), ((Entity) removeRelation.getRelationToRemove().eContainer()).getName(), targetModel);
+        assertNull(removedRelation);
     }
 
     @Test

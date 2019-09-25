@@ -1,15 +1,18 @@
 package com.typhon.evolutiontool.handlers.relation;
 
 import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.Model;
+import typhonml.Relation;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class RelationRemoveHandler extends BaseHandler {
 
@@ -19,19 +22,15 @@ public class RelationRemoveHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-
-        String relationname;
-        String entityname;
-        Model targetModel;
-
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATIONNAME, ParametersKeyString.ENTITYNAME))) {
-            relationname = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
-            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
-            targetModel = typhonMLInterface.deleteRelationshipInEntity(relationname, entityname, model);
-            typhonQLInterface.deleteRelationshipInEntity(relationname, entityname, targetModel);
+        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION));
+            String entityName = relationDO.getSourceEntity().getName();
+            Model targetModel = typhonMLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, model);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+            typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATIONNAME + ", " + ParametersKeyString.ENTITYNAME + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
     }
 

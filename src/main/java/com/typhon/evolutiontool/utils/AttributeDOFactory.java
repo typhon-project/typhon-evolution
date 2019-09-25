@@ -10,6 +10,6 @@ public class AttributeDOFactory {
     }
 
     public static AttributeDO buildInstance(Attribute attribute) {
-        return new AttributeDOImpl(attribute.getName(), attribute.getType().getName());
+        return new AttributeDOImpl(attribute.getName(), attribute.getImportedNamespace(), attribute.getType().getName(), attribute.getType().getImportedNamespace());
     }
 }

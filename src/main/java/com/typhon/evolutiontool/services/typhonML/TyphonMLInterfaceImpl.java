@@ -20,7 +20,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
 
-
     @Override
     public Entity getEntityTypeFromName(String entityName, Model model) {
         DataType dataType = this.getDataTypeFromEntityName(entityName, model);
@@ -166,23 +165,60 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model addAttribute(AttributeDO attribute, String entityname) {
-        return null;
+    public Model addAttribute(AttributeDO attributeDO, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        typhonml.Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
+        attribute.setName(attributeDO.getName());
+        attribute.setImportedNamespace(attributeDO.getImportedNamespace());
+        attribute.setType(getAttributeDataTypeFromDataTypeName(attributeDO.getDataTypeName(), newModel));
+        entity.getAttributes().add(attribute);
+        return newModel;
     }
 
     @Override
-    public Model deleteAttribute(String attributename, String entityname) {
-        return null;
+    public Model deleteAttribute(AttributeDO attributeDO, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(attributeDO.getName())) {
+                    entity.getAttributes().remove((attribute));
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
-    public Model renameAttribute(String oldattributename, String newattributename, String entityname) {
-        return null;
+    public Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(oldAttributeName)) {
+                    attribute.setName(newAttributeName);
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
-    public Model changeTypeAttribute(AttributeDO attribute, String entityname) {
-        return null;
+    public Model changeTypeAttribute(AttributeDO attributeDO, String entityName, String dataTypeName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(attributeDO.getName())) {
+                    attribute.setType(getAttributeDataTypeFromDataTypeName(dataTypeName, newModel));
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
@@ -313,6 +349,17 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         for (DataType datatype : model.getDataTypes()) {
             if (datatype instanceof typhonml.Entity) {
                 if (datatype.getName().equalsIgnoreCase(entityname)) {
+                    return datatype;
+                }
+            }
+        }
+        return null;
+    }
+
+    private DataType getAttributeDataTypeFromDataTypeName(String dataTypeName, Model model) {
+        for (DataType datatype : model.getDataTypes()) {
+            if (datatype.getName().equalsIgnoreCase(dataTypeName)) {
+                if (datatype instanceof typhonml.PrimitiveDataType || datatype instanceof CustomDataType) {
                     return datatype;
                 }
             }

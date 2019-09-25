@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.handlers.RelationHandlers;
+package com.typhon.evolutiontool.handlers.relation;
 
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;

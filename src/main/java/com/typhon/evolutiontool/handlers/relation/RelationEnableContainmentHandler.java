@@ -1,5 +1,6 @@
-package com.typhon.evolutiontool.handlers.RelationHandlers;
+package com.typhon.evolutiontool.handlers.relation;
 
+import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
@@ -12,29 +13,27 @@ import typhonml.Model;
 
 import java.util.Collections;
 
-public class RelationDisableOppositeHandler extends BaseHandler {
+public class RelationEnableContainmentHandler extends BaseHandler {
 
-    public RelationDisableOppositeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+    public RelationEnableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation, oppositeRelation;
+        RelationDO relation;
         Model targetModel;
 
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            oppositeRelation = relation.getOpposite();
-
-            targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), model);
-            targetModel = typhonMLInterface.disableOpposite(relation, targetModel);
-
-            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
-            //TODO: complete the QL necessary operations
-
+            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName(), model) == DatabaseType.RELATIONALDB) {
+                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
+            }
+            targetModel = typhonMLInterface.enableContainment(relation, model);
+            typhonQLInterface.enableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
     }
+
 }

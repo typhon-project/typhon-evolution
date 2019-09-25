@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.handlers.RelationHandlers;
+package com.typhon.evolutiontool.handlers.relation;
 
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
@@ -12,26 +12,29 @@ import typhonml.Model;
 
 import java.util.Collections;
 
-public class RelationDisableContainmentHandler extends BaseHandler {
+public class RelationDisableOppositeHandler extends BaseHandler {
 
-    public RelationDisableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+    public RelationDisableOppositeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-
-        RelationDO relation;
+        RelationDO relation, oppositeRelation;
         Model targetModel;
 
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            targetModel = typhonMLInterface.disableContainment(relation, model);
-            typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
+            oppositeRelation = relation.getOpposite();
+
+            targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), model);
+            targetModel = typhonMLInterface.disableOpposite(relation, targetModel);
+
+            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
+            //TODO: complete the QL necessary operations
+
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + "]");
         }
-
     }
-
 }

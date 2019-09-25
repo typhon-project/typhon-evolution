@@ -17,7 +17,6 @@ public interface ParametersKeyString {
     String ENTITYNAME = "entityname";
     String SOURCEENTITYNAME = "sourceentityname";
     String TARGETENTITYNAME = "targetentityname";
-    String ATTRIBUTENAME = "attributename";
     String ATTRIBUTEVALUE = "attributevalue";
     String RELATION = "relation";
     String ATTRIBUTES = "attributes";
@@ -28,4 +27,8 @@ public interface ParametersKeyString {
     String SECONDNEWENTITY = "secondnewentity";
     String CARDINALITY = "cardinality";
     String ATTRIBUTE = "attribute";
+    String ATTRIBUTENAME = "attributename";
+    String ATTRIBUTETYPE = "attributetype";
+    String OLDATTRIBUTENAME = "oldattributename";
+    String NEWATTRIBUTENAME = "newattributename";
 }

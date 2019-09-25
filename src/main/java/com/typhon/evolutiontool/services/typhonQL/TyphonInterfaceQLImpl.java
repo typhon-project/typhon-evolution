@@ -143,7 +143,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     @Override
     public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
         logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
-        String tql = "dummy add attribute";
+        String tql = "TQL DDL ADD ATTRIBUTE " + attributeDO.getName() + " IN " + entityname;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -151,6 +151,20 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     public void renameRelation(String relationName, String newRelationName, Model model) {
         logger.info("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model [{}]", relationName, newRelationName, model);
         String tql = "TQL DDL RENAME RELATION " + relationName + " TO " + newRelationName;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
+    public void renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model) {
+        logger.info("Rename attribute [from '{}' to '{}'] in entity [{}]  via TyphonQL on TyphonML model [{}]", oldAttributeName, newAttributeName, entityName, model);
+        String tql = "TQL DDL RENAME ATTRIBUTE " + oldAttributeName + " TO " + newAttributeName + " IN " + entityName;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
+    public void changeTypeAttribute(AttributeDO attribute, String entityName, Model model) {
+        logger.info("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model [{}]", attribute.getName(), attribute.getDataTypeName(), entityName, model);
+        String tql = "TQL DDL UPDATE ATTRIBUTE " + attribute.getName() + " SET TYPE TO " + attribute.getDataTypeName() + " IN " + entityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 

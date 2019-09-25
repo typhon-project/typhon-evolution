@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.handlers.RelationHandlers;
+package com.typhon.evolutiontool.handlers.relation;
 
 import com.typhon.evolutiontool.entities.CardinalityDO;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
@@ -11,7 +11,6 @@ import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import org.springframework.stereotype.Component;
 import typhonml.Cardinality;
-import typhonml.Entity;
 import typhonml.Model;
 import typhonml.Relation;
 

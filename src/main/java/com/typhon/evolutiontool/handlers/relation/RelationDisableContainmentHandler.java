@@ -1,6 +1,5 @@
-package com.typhon.evolutiontool.handlers.RelationHandlers;
+package com.typhon.evolutiontool.handlers.relation;
 
-import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
@@ -13,27 +12,26 @@ import typhonml.Model;
 
 import java.util.Collections;
 
-public class RelationEnableContainmentHandler extends BaseHandler {
+public class RelationDisableContainmentHandler extends BaseHandler {
 
-    public RelationEnableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+    public RelationDisableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
+
         RelationDO relation;
         Model targetModel;
 
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
             relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName(), model) == DatabaseType.RELATIONALDB) {
-                throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
-            }
-            targetModel = typhonMLInterface.enableContainment(relation, model);
-            typhonQLInterface.enableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
+            targetModel = typhonMLInterface.disableContainment(relation, model);
+            typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
+
     }
 
 }

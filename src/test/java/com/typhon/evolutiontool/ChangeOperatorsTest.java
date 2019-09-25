@@ -124,12 +124,6 @@ public class ChangeOperatorsTest extends InitialTest {
     }
 
     @Test
-    public void testAddAttributeChangeOperator() {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        AddAttribute addAttribute = TyphonmlFactory.eINSTANCE.createAddAttribute();
-    }
-
-    @Test
     public void testEnableRelationOppositionChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/enableRelationOppositeChangeOperator.xmi");
         EnableBidirectionalRelation enableBidirectionalRelation = (EnableBidirectionalRelation) sourceModel.getChangeOperators().get(0);
@@ -178,7 +172,7 @@ public class ChangeOperatorsTest extends InitialTest {
     }
 
     @Test
-    public void testchangeRelationCardinalityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+    public void testChangeRelationCardinalityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeCardinalityRelationChangeOperator.xmi");
         ChangeRelationCardinality changeRelationCardinality = (ChangeRelationCardinality) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeRelationCardinality);
@@ -191,4 +185,55 @@ public class ChangeOperatorsTest extends InitialTest {
         assertEquals(updatedRelation.getCardinality(), changeRelationCardinality.getNewCardinality());
     }
 
+    @Test
+    public void testAddAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addAttributeChangeOperator.xmi");
+        AddAttribute addAttribute = (AddAttribute) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addAttribute);
+        // Work around to succeed the test:
+//        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
+
+        targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/addAttributeChangeOperator_final.xmi");
+
+        Entity updatedEntity = typhonMLInterface.getEntityTypeFromName(String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME)), targetModel);
+        Attribute addedAttribute = updatedEntity.getAttributes()
+                .stream()
+                .filter(attr -> smo.getInputParameter().get(ParametersKeyString.ATTRIBUTENAME).equals(attr.getName()))
+                .findAny()
+                .orElse(null);
+        assertNotNull(addedAttribute);
+    }
+
+    @Test
+    public void testDeleteAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/deleteAttributeChangeOperator.xmi");
+        RemoveAttribute removeAttribute = (RemoveAttribute) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeAttribute);
+
+        targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/deleteAttributeChangeOperator_final.xmi");
+    }
+
+    @Test
+    public void testRenameAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/renameAttributeChangeOperator.xmi");
+        RenameAttribute renameAttribute = (RenameAttribute) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameAttribute);
+
+        targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameAttributeChangeOperator_final.xmi");
+    }
+
+    @Test
+    public void testChangeTypeAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeTypeAttributeChangeOperator.xmi");
+        ChangeAttributeType changeAttributeType = (ChangeAttributeType) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeAttributeType);
+        // Work around to succeed the test:
+//        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
+
+        targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeTypeAttributeChangeOperator_final.xmi");
+    }
 }

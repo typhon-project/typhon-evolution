@@ -125,15 +125,15 @@ public class SMOAdapter implements SMO {
         //ATTRIBUTE
         if (typhonMLObject == TyphonMLObject.ATTRIBUTE) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-            inputParameter.put(ParametersKeyString.ATTRIBUTENAME, ((AddAttribute) changeOperator).getName());
-            inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((AddAttribute) changeOperator).getType());
-            //TODO by TyphonML: missing entityname parameter
-//            inputParameter.put(ParametersKeyString.ENTITYNAME, ((AddAttribute) changeOperator).getEntityName());
+                inputParameter.put(ParametersKeyString.ATTRIBUTENAME, ((AddAttribute) changeOperator).getName());
+                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((AddAttribute) changeOperator).getType());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((AddAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
-                //TODO by TyphonML: missing entityname parameter
-//            inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveAttribute) changeOperator).getEntityName());
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
                 //TODO by TyphonML: missing entityname, old attribute name and new attribute name parameters
@@ -142,10 +142,10 @@ public class SMOAdapter implements SMO {
 //            inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
-            inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
-            inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
-            //TODO by TyphonML: missing entityname parameter
-//            inputParameter.put(ParametersKeyString.ENTITYNAME, ((ChangeAttributeType) changeOperator).getEntityName());
+                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
+                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((ChangeAttributeType) changeOperator).getEntityName());
             }
         }
     }

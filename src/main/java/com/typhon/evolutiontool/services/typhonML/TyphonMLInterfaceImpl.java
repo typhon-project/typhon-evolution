@@ -14,6 +14,8 @@ import typhonml.RelationalDB;
 import typhonml.Table;
 import typhonml.*;
 
+import java.util.List;
+
 
 @Component
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
@@ -177,7 +179,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model deleteAttribute(AttributeDO attributeDO, String entityName, Model model) {
+    public Model removeAttribute(AttributeDO attributeDO, String entityName, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityTypeFromName(entityName, newModel);
         if (entity.getAttributes() != null) {
@@ -244,6 +246,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         Model newModel;
         newModel = EcoreUtil.copy(model);
         getRelationFromNameInEntity(relationName, entityName, newModel).setName(newRelationName);
+        return newModel;
+    }
+
+    @Override
+    public Model removeCurrentChangeOperator(Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        List<ChangeOperator> changeOperators = newModel.getChangeOperators();
+        if (changeOperators != null && changeOperators.get(0) != null) {
+            changeOperators.remove(changeOperators.get(0));
+        }
         return newModel;
     }
 

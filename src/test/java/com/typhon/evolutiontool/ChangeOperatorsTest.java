@@ -206,13 +206,15 @@ public class ChangeOperatorsTest extends InitialTest {
     }
 
     @Test
-    public void testDeleteAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/deleteAttributeChangeOperator.xmi");
+    public void testRemoveAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/removeAttributeChangeOperator.xmi");
         RemoveAttribute removeAttribute = (RemoveAttribute) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeAttribute);
+        // Work around to succeed the test:
+//        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, "src/test/resources/deleteAttributeChangeOperator_final.xmi");
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeAttributeChangeOperator.xmi_final.xmi");
     }
 
     @Test

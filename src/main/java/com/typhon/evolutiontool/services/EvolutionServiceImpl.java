@@ -7,7 +7,7 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.Handler;
 import com.typhon.evolutiontool.handlers.attribute.AttributeAddHandler;
 import com.typhon.evolutiontool.handlers.attribute.AttributeChangeTypeHandler;
-import com.typhon.evolutiontool.handlers.attribute.AttributeDeleteHandler;
+import com.typhon.evolutiontool.handlers.attribute.AttributeRemoveHandler;
 import com.typhon.evolutiontool.handlers.attribute.AttributeRenameHandler;
 import com.typhon.evolutiontool.handlers.entity.*;
 import com.typhon.evolutiontool.handlers.relation.*;
@@ -75,7 +75,7 @@ public class EvolutionServiceImpl implements EvolutionService {
 
         attributeHandlers = new EnumMap<>(EvolutionOperator.class);
         attributeHandlers.put(EvolutionOperator.ADD, new AttributeAddHandler(tdl, tml, tql));
-        attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeDeleteHandler(tdl, tml, tql));
+        attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeRemoveHandler(tdl, tml, tql));
         attributeHandlers.put(EvolutionOperator.RENAME, new AttributeRenameHandler(tdl, tml, tql));
         attributeHandlers.put(EvolutionOperator.CHANGETYPE, new AttributeChangeTypeHandler(tdl, tml, tql));
     }

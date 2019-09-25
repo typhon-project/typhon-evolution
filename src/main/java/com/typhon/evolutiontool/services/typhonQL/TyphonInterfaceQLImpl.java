@@ -183,7 +183,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
      * @param model
      */
     @Override
-    public void deleteAttributes(String entityname, List<String> attributes, Model model) {
+    public void removeAttributes(String entityname, List<String> attributes, Model model) {
         //TODO Separate deletion of data and structure.
         // Delete data
         getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityname, attributes, model));

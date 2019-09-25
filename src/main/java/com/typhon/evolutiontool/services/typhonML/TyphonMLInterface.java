@@ -61,7 +61,7 @@ public interface TyphonMLInterface {
 
     Model addAttribute(AttributeDO attributeDO, String entityName, Model model);
 
-    Model deleteAttribute(AttributeDO attributeDO, String entityName, Model model);
+    Model removeAttribute(AttributeDO attributeDO, String entityName, Model model);
 
     Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 
@@ -72,4 +72,6 @@ public interface TyphonMLInterface {
     Model disableOpposite(RelationDO relation, Model model);
 
     Model renameRelation(String relationName, String entityName, String newRelationName, Model model);
+
+    Model removeCurrentChangeOperator(Model model);
 }

@@ -16,10 +16,10 @@ import typhonml.Model;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Component("attributedelete")
-public class AttributeDeleteHandler extends BaseHandler {
+@Component("attributeremove")
+public class AttributeRemoveHandler extends BaseHandler {
 
-    public AttributeDeleteHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+    public AttributeRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
@@ -28,8 +28,9 @@ public class AttributeDeleteHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.ENTITYNAME))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
             String entityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
-            Model targetModel = typhonMLInterface.deleteAttribute(attributeDO, entityName, model);
-            typhonQLInterface.deleteAttributes(entityName, Collections.singletonList(attributeDO.getName()), targetModel);
+            Model targetModel = typhonMLInterface.removeAttribute(attributeDO, entityName, model);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
+            typhonQLInterface.removeAttributes(entityName, Collections.singletonList(attributeDO.getName()), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ATTRIBUTE + ", " + ParametersKeyString.ENTITYNAME + "]");

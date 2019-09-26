@@ -16,16 +16,15 @@ import static org.junit.Assert.*;
 public class RelationChangeOperatorsTests extends InitialTest {
 
     @Test
-    public void testCreateRelationshipChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        AddRelation addRelation = TyphonmlFactory.eINSTANCE.createAddRelation();
-        addRelation.setName("ADDEDRELATION");
-        addRelation.setType(typhonMLInterface.getEntityTypeFromName("Order", sourceModel));
-        addRelation.setIsContainment(false);
-        //TODO by TyphonML Missing sourceEntity info in AddRelation ChnageOperator.
+    public void testAddRelationChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addRelationChangeOperator.xmi");
+        AddRelation addRelation = (AddRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
+
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
-        assertNotNull(typhonMLInterface.getRelationFromNameInEntity("ADDEDRELATION", "User", targetModel));
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/addRelationChangeOperator_final.xmi");
+
+        assertNull(null);
     }
 
     @Test
@@ -39,6 +38,32 @@ public class RelationChangeOperatorsTests extends InitialTest {
 
         Relation removedRelation = typhonMLInterface.getRelationFromNameInEntity(removeRelation.getRelationToRemove().getName(), ((Entity) removeRelation.getRelationToRemove().eContainer()).getName(), targetModel);
         assertNull(removedRelation);
+    }
+
+    @Test
+    public void testEnableRelationContainmentChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/enableRelationContainmentChangeOperator.xmi");
+        EnableRelationContainment enableRelationContainment = (EnableRelationContainment) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(enableRelationContainment);
+
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationContainmentChangeOperator_final.xmi");
+
+        Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(enableRelationContainment.getRelation().getName(), ((Entity) enableRelationContainment.getRelation().eContainer()).getName(), targetModel);
+        assertNotEquals(enableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
+    }
+
+    @Test
+    public void testDisableRelationContainmentChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/disableRelationContainmentChangeOperator.xmi");
+        DisableRelationContainment disableRelationContainment = (DisableRelationContainment) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(disableRelationContainment);
+
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationContainmentChangeOperator_final.xmi");
+
+        Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(disableRelationContainment.getRelation().getName(), ((Entity) disableRelationContainment.getRelation().eContainer()).getName(), targetModel);
+        assertNotEquals(disableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
     }
 
     @Test

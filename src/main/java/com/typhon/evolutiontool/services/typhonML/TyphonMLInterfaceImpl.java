@@ -138,20 +138,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model enableContainment(RelationDO relation, Model model) {
-        Relation relationML;
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
         relationML.setIsContainment(true);
         return newModel;
     }
 
     @Override
     public Model disableContainment(RelationDO relation, Model model) {
-        Relation relationML;
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
         relationML.setIsContainment(false);
         return newModel;
     }

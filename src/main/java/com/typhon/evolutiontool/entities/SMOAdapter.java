@@ -37,6 +37,8 @@ public class SMOAdapter implements SMO {
         }
         if (changeOperator instanceof AddRelation
                 || changeOperator instanceof RemoveRelation
+                || changeOperator instanceof EnableRelationContainment
+                || changeOperator instanceof DisableRelationContainment
                 || changeOperator instanceof EnableBidirectionalRelation
                 || changeOperator instanceof DisableBidirectionalRelation
                 || changeOperator instanceof RenameRelation
@@ -60,6 +62,10 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ADD;
         if (changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
+        if (changeOperator instanceof EnableRelationContainment)
+            evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
+        if (changeOperator instanceof DisableRelationContainment)
+            evolutionOperator = EvolutionOperator.DISABLECONTAINMENT;
         if (changeOperator instanceof EnableBidirectionalRelation)
             evolutionOperator = EvolutionOperator.ENABLEOPPOSITE;
         if (changeOperator instanceof DisableBidirectionalRelation)
@@ -85,10 +91,6 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
                 inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
             }
-            if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.ADD) {
-                //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
-                inputParameter.put(ParametersKeyString.RELATION, changeOperator);
-            }
             if (evolutionOperator == EvolutionOperator.MIGRATE) {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((MigrateEntity) changeOperator).getEntity().getName());
                 inputParameter.put(ParametersKeyString.DATABASENAME, ((MigrateEntity) changeOperator).getNewDatabase().getName());
@@ -100,8 +102,18 @@ public class SMOAdapter implements SMO {
 
         //RELATION
         if (typhonMLObject == TyphonMLObject.RELATION) {
+            if (evolutionOperator == EvolutionOperator.ADD) {
+                //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
+                inputParameter.put(ParametersKeyString.RELATION, changeOperator);
+            }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
+            }
+            if (evolutionOperator == EvolutionOperator.ENABLECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((EnableRelationContainment) changeOperator).getRelation());
+            }
+            if (evolutionOperator == EvolutionOperator.DISABLECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
@@ -190,6 +202,12 @@ public class SMOAdapter implements SMO {
         if (this.getTyphonObject() == TyphonMLObject.RELATION) {
             if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
                 return RelationDOFactory.buildInstance((AddRelation) changeOperator);
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT) {
+                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation());
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT) {
+                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation());
             }
             if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
                 return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation());

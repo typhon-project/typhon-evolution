@@ -20,20 +20,16 @@ public class RelationEnableContainmentHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation;
-        Model targetModel;
-
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
             if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName(), model) == DatabaseType.RELATIONALDB) {
                 throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
             }
-            targetModel = typhonMLInterface.enableContainment(relation, model);
+            Model targetModel = typhonMLInterface.enableContainment(relation, model);
             typhonQLInterface.enableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
     }
-
 }

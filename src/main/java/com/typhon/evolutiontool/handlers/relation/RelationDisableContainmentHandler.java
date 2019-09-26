@@ -19,19 +19,13 @@ public class RelationDisableContainmentHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-
-        RelationDO relation;
-        Model targetModel;
-
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            targetModel = typhonMLInterface.disableContainment(relation, model);
+            RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            Model targetModel = typhonMLInterface.disableContainment(relation, model);
             typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
-
     }
-
 }

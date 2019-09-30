@@ -18,22 +18,15 @@ public class RelationAddHandler extends BaseHandler {
         super(tdl, tml, tql);
     }
 
-
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation;
-        String targetmodelid;
-        Model targetModel;
-
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            targetModel = typhonMLInterface.createRelationship(relation, model);
-            typhonQLInterface.createRelationshipType(relation, targetModel);
+            RelationDO relationDO = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            Model targetModel = typhonMLInterface.createRelationship(relationDO, model);
+            typhonQLInterface.createRelationshipType(relationDO, targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
-
     }
-
 }

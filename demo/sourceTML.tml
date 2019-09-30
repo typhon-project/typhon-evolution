@@ -1,0 +1,35 @@
+datatype String
+datatype int
+datatype Date
+
+entity Review {
+	id : String
+	date : Date
+	product -> Product[1]
+}
+
+entity Product {
+	id : String
+	name : String
+	description : String
+
+	review :-> Review."Review.product"[0..*]
+}
+
+relationaldb RelationalDatabase {
+	tables {
+		table {
+			ProductDB : Product
+			index productIndex {
+				attributes ('Product.id')
+			}
+			idSpec ('Product.name')
+		}
+	}
+}
+
+documentdb DocumentDatabase {
+	collections {
+		ReviewDB : Review
+	}
+}

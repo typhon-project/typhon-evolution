@@ -89,9 +89,13 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     @Override
     public Model renameEntity(String oldEntityName, String newEntityName, Model model) {
         logger.info("Renaming EntityDO type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        getDataTypeFromEntityName(oldEntityName, newModel).setName(newEntityName);
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = (Entity) getDataTypeFromEntityName(oldEntityName, newModel);
+        if (entity != null) {
+            entity.setName(newEntityName);
+        } else {
+            logger.warn("The entity type to rename ('{}') has not been found", oldEntityName);
+        }
         return newModel;
     }
 

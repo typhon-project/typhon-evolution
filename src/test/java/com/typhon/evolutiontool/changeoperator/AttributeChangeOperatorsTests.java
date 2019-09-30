@@ -43,7 +43,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
 //        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeAttributeChangeOperator.xmi_final.xmi");
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeAttributeChangeOperator_final.xmi");
     }
 
     @Test

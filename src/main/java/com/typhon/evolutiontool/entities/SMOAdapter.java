@@ -85,8 +85,9 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.buildInstance((Entity) changeOperator));
                 //TODO Add other parameters
             }
-            if (evolutionOperator == EvolutionOperator.REMOVE)
+            if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
+            }
             if (evolutionOperator == EvolutionOperator.RENAME) {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
                 inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());

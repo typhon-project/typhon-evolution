@@ -25,6 +25,7 @@ public class EntityRenameHandler extends BaseHandler {
             String oldEntityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
             String newEntityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME));
             Model targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
             typhonQLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
         } else {

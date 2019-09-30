@@ -47,16 +47,12 @@ public class EntityChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testRenameEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        RenameEntity renameEntity = TyphonmlFactory.eINSTANCE.createRenameEntity();
-        renameEntity.setEntityToRename(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
-        renameEntity.setNewEntityName("CUSTOMER");
-
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/renameEntityChangeOperator.xmi");
+        RenameEntity renameEntity = (RenameEntity) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameEntity);
+
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        assertNotNull(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
-        assertNull(typhonMLInterface.getEntityTypeFromName("User", targetModel));
-        assertNotNull(typhonMLInterface.getEntityTypeFromName("CUSTOMER", targetModel));
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameEntityChangeOperator_final.xmi");
     }
 
 //    @Test

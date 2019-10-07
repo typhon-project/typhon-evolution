@@ -29,28 +29,18 @@
 	<repositories>
 		
 		<repository>
-			<id>emf</id>
-			<url>http://download.eclipse.org/modeling/emf/emf/builds/release</url>
-			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
-			<layout>p2</layout>
+			<id>internal</id>
+			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
 		</repository>
-		
+
 		<repository>
 			<id>ocl</id>
-			<url>https://download.eclipse.org/modeling/mdt/ocl/updates/</url>
+			<url>https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.5.0/</url>
 			<snapshots>
-	            <updatePolicy>always</updatePolicy>
-	        </snapshots>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
 			<layout>p2</layout>
 		</repository>
-		
-		<repository>
-		<id>internal</id>
-		<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
-		</repository>
-		
 	</repositories>
 
 	<dependencies>
@@ -81,6 +71,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -122,12 +113,6 @@
 		    <groupId>it.univaq.disim.typhonml</groupId>
 		    <artifactId>it.univaq.disim.typhonml.xtext</artifactId>
 		    <version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>org.eclipse</groupId>
-		  <artifactId>ocl</artifactId>
-		  <version>3.4.0-v20140524-1358</version>
 		</dependency>
 
 	</dependencies>

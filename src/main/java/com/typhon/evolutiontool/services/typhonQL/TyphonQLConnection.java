@@ -3,6 +3,7 @@ package com.typhon.evolutiontool.services.typhonQL;
 import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import com.typhon.evolutiontool.entities.WorkingSet;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -17,7 +18,8 @@ public interface TyphonQLConnection {
 
     //Taken from D4.2
     static TyphonQLConnection newEngine(TyphonMLSchema schema) {
-        return new TyphonQLConnectionImpl(schema);}
+            return new TyphonQLConnectionImpl(schema);
+    }
 
     WorkingSet query(String queryString, String ...params);
     WorkingSet query(String queryString, Map<String,Object> params);

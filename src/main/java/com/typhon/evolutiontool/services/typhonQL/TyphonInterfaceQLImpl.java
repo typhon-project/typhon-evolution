@@ -56,7 +56,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readAllEntityData(EntityDO entity, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e", entity.getName());
+        return getTyphonQLConnection(model).query("from %s e select e", entity.getName());
     }
 
     /**
@@ -68,17 +68,17 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
      */
     @Override
     public WorkingSet readAllEntityData(String entityId, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e", entityId);
+        return getTyphonQLConnection(model).query("from %s e select e", entityId);
     }
 
     @Override
     public WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e where ? = ?", sourceEntityName, attributeName, attributeValue);
+        return getTyphonQLConnection(model).query("from %s e select e where %s = %s", sourceEntityName, attributeName, attributeValue);
     }
 
     @Override
     public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
+        return getTyphonQLConnection(model).query("from %s e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readRelationship(RelationDO relation, Model model) {
-        return getTyphonQLConnection(model).query("from ? s , ? t select s, t where s.?==? ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
+        return getTyphonQLConnection(model).query("from %s s , %s t select s, t where s.%s==%s ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
     }
 
     @Override

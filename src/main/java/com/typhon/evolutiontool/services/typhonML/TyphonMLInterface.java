@@ -3,10 +3,8 @@ package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import typhonml.*;
 import typhonml.Database;
-import typhonml.Entity;
-import typhonml.Model;
-import typhonml.Relation;
 
 /**
  * Interface to access TyphonML.
@@ -61,17 +59,19 @@ public interface TyphonMLInterface {
 
     Model changeCardinalityInRelation(RelationDO relationName, CardinalityDO cardinality, Model model);
 
-    Model addAttribute(AttributeDO attribute, String entityname);
+    Model addAttribute(AttributeDO attributeDO, String entityName, Model model);
 
-    Model deleteAttribute(String attributename, String entityname);
+    Model removeAttribute(AttributeDO attributeDO, String entityName, Model model);
 
-    Model renameAttribute(String oldattributename, String newattributename, String entityname);
+    Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 
-    Model changeTypeAttribute(AttributeDO attribute, String entityname);
+    Model changeTypeAttribute(AttributeDO attributeDO, String entityName, String dataTypeName, Model model);
 
     Model enableOpposite(RelationDO relation, RelationDO oppositeRelation, Model model);
 
     Model disableOpposite(RelationDO relation, Model model);
 
     Model renameRelation(String relationName, String entityName, String newRelationName, Model model);
+
+    Model removeCurrentChangeOperator(Model model);
 }

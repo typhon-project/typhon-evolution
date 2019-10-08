@@ -8,7 +8,7 @@ public interface SMO {
 
     EvolutionOperator getEvolutionOperator();
 
-    Map<String,Object> getInputParameter();
+    Map<String, Object> getInputParameter();
 
     boolean inputParametersContainsExpected(List<String> expectedInputParams);
 

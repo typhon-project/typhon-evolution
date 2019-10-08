@@ -13,19 +13,19 @@ import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Before;
 import typhonml.Model;
 
-
 public class InitialTest {
+
+    static final String SOURCE_MODEL_PATH = "resources/generated_demo.xmi";
+    static final String FINAL_MODEL_PATH = "resources/finalModel.xmi";
 
     protected TyphonDLInterface typhonDLInterface = new TyphonDLInterfaceImpl();
     protected TyphonQLInterface typhonQLInterface = new TyphonInterfaceQLImpl();
     protected TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
     protected EvolutionServiceImpl evolutionService = new EvolutionServiceImpl(typhonQLInterface, typhonMLInterface, typhonDLInterface);
-    protected ObjectMapper mapper = new ObjectMapper();
-    protected SMO smo;
+
+    ObjectMapper mapper = new ObjectMapper();
+    SMO smo;
     protected static Model sourceModel, targetModel;
-    //    protected static final String sourcemodelpath = "resources/baseModel.xmi";
-    protected static final String sourcemodelpath = "resources/generated_demo.xmi";
-    protected static final String finalModelPath = "resources/finalModel.xmi";
 
     @Before
     public void setUp() {

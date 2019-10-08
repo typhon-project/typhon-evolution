@@ -13,18 +13,22 @@ public class RelationDOFactory {
     }
 
     public static RelationDO buildInstance(Relation relation) {
-        Entity sourceEntity = (Entity) relation.eContainer();
-        EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
-        Entity targetEntity = relation.getType();
-        EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;
-        RelationDO oppositeRelationDO = null;
-        if (relation.getOpposite() != null) {
-            oppositeRelationDO = buildInstance(relation.getOpposite());
+        if (relation != null) {
+            Entity sourceEntity = (Entity) relation.eContainer();
+            EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
+            Entity targetEntity = relation.getType();
+            EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;
+            RelationDO oppositeRelationDO = null;
+            if (relation.getOpposite() != null) {
+                oppositeRelationDO = buildInstance(relation.getOpposite());
+            }
+            boolean isContainment = relation.getIsContainment() != null ? relation.getIsContainment() : false;
+            CardinalityDO cardinalityDO = null;
+            if (relation.getCardinality() != null) {
+                cardinalityDO = CardinalityDO.get(relation.getCardinality().getValue());
+            }
+            return new RelationDOImpl(relation.getName(), sourceEntityDO, targetEntityDO, oppositeRelationDO, isContainment, cardinalityDO);
         }
-        CardinalityDO cardinalityDO = null;
-        if (relation.getCardinality() != null) {
-            cardinalityDO = CardinalityDO.get(relation.getCardinality().getValue());
-        }
-        return new RelationDOImpl(relation.getName(), sourceEntityDO, targetEntityDO, oppositeRelationDO, relation.getIsContainment(), cardinalityDO);
+        return null;
     }
 }

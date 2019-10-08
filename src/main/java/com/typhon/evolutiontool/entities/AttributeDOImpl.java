@@ -3,13 +3,16 @@ package com.typhon.evolutiontool.entities;
 public class AttributeDOImpl implements AttributeDO {
 
     private String name;
-    private String datatypeName;
+    private String importedNamespace;
+    private String dataTypeName;
+    private String dataTypeImportedNamespace;
 
-    public AttributeDOImpl(String name, String datatypeName) {
+    public AttributeDOImpl(String name, String importedNamespace, String dataTypeName, String dataTypeImportedNamespace) {
         this.name = name;
-        this.datatypeName = datatypeName;
+        this.importedNamespace = importedNamespace;
+        this.dataTypeName = dataTypeName;
+        this.dataTypeImportedNamespace = dataTypeImportedNamespace;
     }
-
 
     @Override
     public String getName() {
@@ -17,7 +20,17 @@ public class AttributeDOImpl implements AttributeDO {
     }
 
     @Override
-    public String getDataTypeString() {
-        return datatypeName;
+    public String getImportedNamespace() {
+        return importedNamespace;
+    }
+
+    @Override
+    public String getDataTypeName() {
+        return dataTypeName;
+    }
+
+    @Override
+    public String getDataTypeImportedNamespace() {
+        return dataTypeImportedNamespace;
     }
 }

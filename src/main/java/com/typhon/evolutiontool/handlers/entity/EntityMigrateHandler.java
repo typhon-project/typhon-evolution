@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.handlers.EntityHandlers;
+package com.typhon.evolutiontool.handlers.entity;
 
 import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.ParametersKeyString;

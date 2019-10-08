@@ -25,6 +25,13 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>internal</id>
+			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,6 +88,13 @@
 			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
 			<version>2.15.0</version>
 		</dependency>
+
+		<!-- Typhon ML dependencies -->
+<!--		<dependency>-->
+<!--			<groupId>it.univaq.disim.typhonml</groupId>-->
+<!--			<artifactId>it.univaq.disim.typhonml</artifactId>-->
+<!--			<version>0.1.1-SNAPSHOT</version>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>

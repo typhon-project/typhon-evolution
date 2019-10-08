@@ -93,11 +93,8 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
             }
             if (evolutionOperator == EvolutionOperator.MIGRATE) {
-                inputParameter.put(ParametersKeyString.ENTITYNAME, ((MigrateEntity) changeOperator).getEntity().getName());
-                inputParameter.put(ParametersKeyString.DATABASENAME, ((MigrateEntity) changeOperator).getNewDatabase().getName());
-                //TODO by TyphonML
-//            inputParameter.put(ParametersKeyString.DATABASETYPE,((MigrateEntity)changeOperator).getNewDatabase().getType());
-//            inputParameter.put(ParametersKeyString.TARGETLOGICALNAME, ((MigrateEntity) changeOperator).getTargetLogicalName());
+                inputParameter.put(ParametersKeyString.ENTITY, ((MigrateEntity) changeOperator).getEntity());
+                inputParameter.put(ParametersKeyString.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
             }
         }
 
@@ -202,19 +199,19 @@ public class SMOAdapter implements SMO {
     public RelationDO getRelationDOFromInputParameter(String parameterkey) {
         if (this.getTyphonObject() == TyphonMLObject.RELATION) {
             if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
-                return RelationDOFactory.buildInstance((AddRelation) changeOperator);
+                return RelationDOFactory.buildInstance((AddRelation) changeOperator, false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation(), false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation(), false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation(), false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.DISABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation(), false);
             }
         }
         return null;

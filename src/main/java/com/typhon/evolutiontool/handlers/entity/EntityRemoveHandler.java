@@ -34,9 +34,9 @@ public class EntityRemoveHandler extends BaseHandler {
             typhonQLInterface.deleteAllEntityData(entityname, model);
             //Delete structures
             typhonQLInterface.deleteEntityStructure(entityname, model);
-            targetModel = typhonMLInterface.deleteEntityType(entityname, model);
-            typhonMLInterface.deleteEntityMappings(entityname, model);
-            //TODO Delete table mapping in TyphonML.
+
+            targetModel = typhonMLInterface.deleteEntityMappings(entityname, model);
+            targetModel = typhonMLInterface.deleteEntityType(entityname, targetModel);
 
             return targetModel;
         } else {

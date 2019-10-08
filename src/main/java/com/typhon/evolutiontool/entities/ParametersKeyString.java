@@ -8,6 +8,7 @@ public interface ParametersKeyString {
     String TARGETMODEL = "targetmodel";
 
     String SOURCEMODEL = "sourcemodel";
+    String DATABASE = "database";
     String DATABASENAME = "databasename";
     String DATABASETYPE = "databasetype";
     String ENTITY = "entity";

@@ -1,0 +1,157 @@
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@7e8ceb06]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@37f84b17]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@1122aae4]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@75ee0fd7]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@633fd019]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@5fe2bc5c]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@3f4d9298]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@54a28d82]
+TQL DDL RENAME RELATION orders TO newOrdersName
+TQL DDL RENAME RELATION orders TO newOrdersName
+TQL DDL RENAME RELATION orders TO newOrdersName
+TQL DDL RENAME RELATION orders TO newOrdersName
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@5a2a7a64]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@2c4d78b5]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@7ec8925c]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@6d9d32f8]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@3802cb36]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@2aa96b4e]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@6c1267da]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@5a2a7a64]
+TQL DDL RENAME RELATION orders TO newOrdersName
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQL DDL dummy change relation cardinality
+TQL DDL DELETE RELATION product IN Review
+TQL DDL RENAME ENTITY Product TO Item
+from CreditCard e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY CreditCard on TyphonML [typhonml.impl.ModelImpl@1918e6de]

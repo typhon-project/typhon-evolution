@@ -12,15 +12,15 @@ public class RelationDOFactory {
     private RelationDOFactory() {
     }
 
-    public static RelationDO buildInstance(Relation relation) {
+    public static RelationDO buildInstance(Relation relation, boolean isOppositeRelationInitialized) {
         if (relation != null) {
             Entity sourceEntity = (Entity) relation.eContainer();
             EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
             Entity targetEntity = relation.getType();
             EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;
             RelationDO oppositeRelationDO = null;
-            if (relation.getOpposite() != null) {
-                oppositeRelationDO = buildInstance(relation.getOpposite());
+            if (relation.getOpposite() != null && !isOppositeRelationInitialized) {
+                oppositeRelationDO = buildInstance(relation.getOpposite(), true);
             }
             boolean isContainment = relation.getIsContainment() != null ? relation.getIsContainment() : false;
             CardinalityDO cardinalityDO = null;

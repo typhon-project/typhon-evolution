@@ -283,13 +283,25 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                 table.setDb(relationalDB);
                 break;
             case COLUMNDB:
-                //TODO
+                Column column = TyphonmlFactory.eINSTANCE.createColumn();
+                column.setName(targetLogicalName);
+                column.setEntity(entityTypeToMap);
+                ColumnDB columnDB = (ColumnDB) db;
+                columnDB.getColumns().add(column);
                 break;
             case GRAPHDB:
-                //TODO
+                GraphNode graphNode = TyphonmlFactory.eINSTANCE.createGraphNode();
+                graphNode.setName(targetLogicalName);
+                graphNode.setEntity(entityTypeToMap);
+                GraphDB graphDB = (GraphDB) db;
+                graphDB.getNodes().add(graphNode);
                 break;
             case KEYVALUE:
-                //TODO
+                KeyValueElement keyValueElement = TyphonmlFactory.eINSTANCE.createKeyValueElement();
+                keyValueElement.setName(targetLogicalName);
+                keyValueElement.setEntity(entityTypeToMap);
+                KeyValueDB keyValueDB = (KeyValueDB) db;
+                keyValueDB.getElements().add(keyValueElement);
                 break;
         }
         return newModel;
@@ -347,13 +359,29 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model deleteEntityMappings(String entityname, Model model) {
-        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityname);
+    public Model deleteEntityMappings(String entityName, Model model) {
+        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityName);
         Model newModel;
         newModel = EcoreUtil.copy(model);
-        typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
-        //TODO GenericList has been deleted from TyphonML. Adapt to getTable, get Collection, etc...
-//		EcoreUtil.remove(entity.getGenericList());
+        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
+        if (entity != null) {
+//            if (entity.getTables() != null) {
+//                removeEntityFromTables(entity);
+//            }
+//            if (entity.getCollections() != null) {
+//                removeEntityFromCollections(entity);
+//            }
+//            if (entity.getGraphNodes() != null) {
+//                removeEntityFromGraphNodes(entity);
+//            }
+//            if (entity.getColumns() != null) {
+//                removeEntityFromColumns(entity);
+//            }
+//            if (entity.getKeyValueElements() != null) {
+//                removeEntityFromKeyValueElements(entity);
+//            }
+		    EcoreUtil.remove(entity.getGenericList());
+        }
         return newModel;
     }
 
@@ -395,5 +423,60 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         attribute.setType(type);
         return attribute;
     }
+
+//    private void removeEntityFromTables(Entity entity) {
+//        List<Table> tables = entity.getTables();
+//        if (tables != null) {
+//            for (Table table : tables) {
+//                if (table.getEntity() != null && table.getEntity().getName().equals(entity.getName())) {
+//                    tables.remove(table);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromCollections(Entity entity) {
+//        List<Collection> collections = entity.getCollections();
+//        if (collections != null) {
+//            for (Collection collection : collections) {
+//                if (collection.getEntity() != null && collection.getEntity().getName().equals(entity.getName())) {
+//                    collections.remove(collection);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromGraphNodes(Entity entity) {
+//        List<GraphNode> graphNodes = entity.getGraphNodes();
+//        if (graphNodes != null) {
+//            for (GraphNode graphNode : graphNodes) {
+//                if (graphNode.getEntity() != null && graphNode.getEntity().getName().equals(entity.getName())) {
+//                    graphNodes.remove(graphNode);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromColumns(Entity entity) {
+//        List<Column> columns = entity.getColumns();
+//        if (columns != null) {
+//            for (Column column : columns) {
+//                if (column.getEntity() != null && column.getEntity().getName().equals(entity.getName())) {
+//                    columns.remove(column);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromKeyValueElements(Entity entity) {
+//        List<KeyValueElement> keyValueElements = entity.getKeyValueElements();
+//        if (keyValueElements != null) {
+//            for (KeyValueElement keyValueElement : keyValueElements) {
+//                if (keyValueElement.getEntity() != null && keyValueElement.getEntity().getName().equals(entity.getName())) {
+//                    keyValueElements.remove(keyValueElement);
+//                }
+//            }
+//        }
+//    }
 
 }

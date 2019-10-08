@@ -30,7 +30,9 @@ public class EntityDOFactory {
             Map<String, Object> attributes = new HashMap<>();
             if (entityAttributes != null) {
                 for (Attribute attribute : entityAttributes) {
-                    attributes.put(attribute.getName(), attribute.getType());
+                    if (attribute != null) {
+                        attributes.put(attribute.getName(), attribute.getType());
+                    }
                 }
             }
             return new EntityDOImpl(entity.getName(), entity.getImportedNamespace(), relationsDO, null, attributes);

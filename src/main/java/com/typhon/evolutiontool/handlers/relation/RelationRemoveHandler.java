@@ -23,7 +23,7 @@ public class RelationRemoveHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION));
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             String entityName = relationDO.getSourceEntity().getName();
             Model targetModel = typhonMLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);

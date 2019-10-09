@@ -58,7 +58,7 @@ public class EvolutionServiceImpl implements EvolutionService {
         entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityNewMigrateHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(tdl, tml, tql));

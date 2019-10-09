@@ -25,7 +25,32 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>epsilon</id>
+			<url>http://download.eclipse.org/epsilon/updates//</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+
+		<!--<repository>-->
+			<!--<id>internal</id>-->
+			<!--<url>http://archiva.clmsuk.com:8090/repository/internal/</url>-->
+		<!--</repository>-->
+
+	</repositories>
+
+
 	<dependencies>
+		<!--<dependency>-->
+			<!--<groupId>it.univaq.disim.typhonml</groupId>-->
+			<!--<artifactId>it.univaq.disim.typhonml</artifactId>-->
+			<!--<version>0.1.1-SNAPSHOT</version>-->
+		<!--</dependency>-->
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -34,6 +59,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,7 +107,11 @@
 			<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
 			<version>2.15.0</version>
 		</dependency>
+
+
 	</dependencies>
+
+
 
 	<build>
 		<plugins>

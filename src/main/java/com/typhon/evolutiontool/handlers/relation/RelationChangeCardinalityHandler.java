@@ -28,7 +28,7 @@ public class RelationChangeCardinalityHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
             Relation relation = (Relation) smo.getInputParameter().get(ParametersKeyString.RELATION);
             Cardinality cardinality = (Cardinality) smo.getInputParameter().get(ParametersKeyString.CARDINALITY);
-            Model targetModel = typhonMLInterface.changeCardinalityInRelation(RelationDOFactory.buildInstance(relation), CardinalityDO.get(cardinality.getValue()), model);
+            Model targetModel = typhonMLInterface.changeCardinalityInRelation(RelationDOFactory.buildInstance(relation, false), CardinalityDO.get(cardinality.getValue()), model);
             typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getType().getName(), CardinalityDO.get(cardinality.getValue()), targetModel);
             return targetModel;
         } else {

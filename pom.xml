@@ -29,13 +29,17 @@
 	<repositories>
 		
 		<repository>
-			<id>internal</id>
-			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
-		</repository>
-
-		<repository>
 			<id>ocl</id>
 			<url>https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.5.0/</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+			<layout>p2</layout>
+		</repository>
+		
+		<repository>
+			<id>typhonML</id>
+			<url>/home/jeromefink/Documents/unamur/Typhon/typhonml/it.univaq.disim.typhonml.parent/releng/it.univaq.disim.typhonml.update/target/repository</url>
 			<snapshots>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>

@@ -45,9 +45,7 @@
 			</snapshots>
 			<layout>p2</layout>
 		</repository>
-	</repositories>
 
-	<repositories>
 		<repository>
 			<id>epsilon</id>
 			<url>http://download.eclipse.org/epsilon/updates//</url>

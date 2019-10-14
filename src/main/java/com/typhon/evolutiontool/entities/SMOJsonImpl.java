@@ -20,16 +20,15 @@ public class SMOJsonImpl implements SMO {
     private EvolutionOperator evolutionOperator;
     @JsonProperty("parameters")
     @JsonDeserialize(keyUsing = MyKeyDeserializer.class)
-    private Map<String,Object> inputParameter;
+    private Map<String, Object> inputParameter;
 
     public SMOJsonImpl(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {
-        this.typhonObject=typhonObject;
-        this.evolutionOperator=evolutionOperator;
+        this.typhonObject = typhonObject;
+        this.evolutionOperator = evolutionOperator;
     }
 
     public SMOJsonImpl() {
     }
-
 
 
     @Override
@@ -44,7 +43,7 @@ public class SMOJsonImpl implements SMO {
     }
 
     @Override
-    public Map<String,Object> getInputParameter() {
+    public Map<String, Object> getInputParameter() {
         return inputParameter;
     }
 
@@ -94,10 +93,6 @@ public class SMOJsonImpl implements SMO {
 
     @Override
     public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
-        if (this.getInputParameter().containsKey(parameterkey)) {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.convertValue(this.getInputParameter().get(parameterkey), AttributeJsonImpl.class);
-        }
         return null;
     }
 

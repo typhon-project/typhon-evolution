@@ -32,77 +32,129 @@ public class SMOAdapter implements SMO {
         if (changeOperator instanceof RemoveEntity
                 || changeOperator instanceof RenameEntity
                 || changeOperator instanceof AddEntity
-                || changeOperator instanceof MigrateEntity)
+                || changeOperator instanceof MigrateEntity) {
             typhonMLObject = TyphonMLObject.ENTITY;
+        }
         if (changeOperator instanceof AddRelation
                 || changeOperator instanceof RemoveRelation
+                || changeOperator instanceof EnableRelationContainment
+                || changeOperator instanceof DisableRelationContainment
                 || changeOperator instanceof EnableBidirectionalRelation
                 || changeOperator instanceof DisableBidirectionalRelation
                 || changeOperator instanceof RenameRelation
-                || changeOperator instanceof ChangeRelationCardinality)
+                || changeOperator instanceof ChangeRelationCardinality) {
             typhonMLObject = TyphonMLObject.RELATION;
+        }
+        if (changeOperator instanceof AddAttribute
+                || changeOperator instanceof RemoveAttribute
+                || changeOperator instanceof RenameAttribute
+                || changeOperator instanceof ChangeAttributeType) {
+            typhonMLObject = TyphonMLObject.ATTRIBUTE;
+        }
     }
 
     private void initializeEvolutionOperatorAttribute() {
-        if (changeOperator instanceof RemoveEntity || changeOperator instanceof RemoveRelation)
+        if (changeOperator instanceof RemoveEntity || changeOperator instanceof RemoveRelation || changeOperator instanceof RemoveAttribute)
             evolutionOperator = EvolutionOperator.REMOVE;
-        if (changeOperator instanceof RenameEntity || changeOperator instanceof RenameRelation)
+        if (changeOperator instanceof RenameEntity || changeOperator instanceof RenameRelation || changeOperator instanceof RenameAttribute)
             evolutionOperator = EvolutionOperator.RENAME;
-        if (changeOperator instanceof AddEntity || changeOperator instanceof AddRelation)
+        if (changeOperator instanceof AddEntity || changeOperator instanceof AddRelation || changeOperator instanceof AddAttribute)
             evolutionOperator = EvolutionOperator.ADD;
         if (changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
+        if (changeOperator instanceof EnableRelationContainment)
+            evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
+        if (changeOperator instanceof DisableRelationContainment)
+            evolutionOperator = EvolutionOperator.DISABLECONTAINMENT;
         if (changeOperator instanceof EnableBidirectionalRelation)
             evolutionOperator = EvolutionOperator.ENABLEOPPOSITE;
         if (changeOperator instanceof DisableBidirectionalRelation)
             evolutionOperator = EvolutionOperator.DISABLEOPPOSITE;
         if (changeOperator instanceof ChangeRelationCardinality)
             evolutionOperator = EvolutionOperator.CHANGECARDINALITY;
+        if (changeOperator instanceof ChangeAttributeType)
+            evolutionOperator = EvolutionOperator.CHANGETYPE;
     }
 
     private void initializeInputParameterAttribute() {
         inputParameter = new HashMap<>();
-        if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.ADD) {
-            inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.buildInstance((Entity) changeOperator));
-            //TODO Add other parameters
+
+        //ENTITY
+        if (typhonMLObject == TyphonMLObject.ENTITY) {
+            if (evolutionOperator == EvolutionOperator.ADD) {
+                inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.buildInstance((Entity) changeOperator));
+                //TODO Add other parameters
+            }
+            if (evolutionOperator == EvolutionOperator.REMOVE) {
+                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
+            }
+            if (evolutionOperator == EvolutionOperator.RENAME) {
+                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
+                inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
+            }
+            if (evolutionOperator == EvolutionOperator.MIGRATE) {
+                inputParameter.put(ParametersKeyString.ENTITY, ((MigrateEntity) changeOperator).getEntity());
+                inputParameter.put(ParametersKeyString.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
+            }
         }
-        if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.REMOVE)
-            inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
-        if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.RENAME) {
-            inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
-            inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
-        }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.ADD) {
-            //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
-            inputParameter.put(ParametersKeyString.RELATION, changeOperator);
-        }
-        if (typhonMLObject == TyphonMLObject.ENTITY && evolutionOperator == EvolutionOperator.MIGRATE) {
-            inputParameter.put(ParametersKeyString.ENTITYNAME, ((MigrateEntity) changeOperator).getEntity().getName());
-            inputParameter.put(ParametersKeyString.DATABASENAME, ((MigrateEntity) changeOperator).getNewDatabase().getName());
-            //TODO by TyphonML
-//            inputParameter.put(ParametersKeyString.DATABASETYPE,((MigrateEntity)changeOperator).getNewDatabase().getType());
-//            inputParameter.put(ParametersKeyString.TARGETLOGICALNAME, ((MigrateEntity) changeOperator).getTargetLogicalName());
-        }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.REMOVE) {
-            //TODO by TyphonML
-//            inputParameter.put(ParametersKeyString.ENTITYNAME),((RemoveRelation) changeOperator).getRelationToRemove().getSourceEntity().getName();
-            inputParameter.put(ParametersKeyString.RELATIONNAME, ((RemoveRelation) changeOperator).getRelationToRemove().getName());
-        }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
-            inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
-            //TODO by TyphonML: missing relationname parameter
+
+        //RELATION
+        if (typhonMLObject == TyphonMLObject.RELATION) {
+            if (evolutionOperator == EvolutionOperator.ADD) {
+                //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
+                inputParameter.put(ParametersKeyString.RELATION, changeOperator);
+            }
+            if (evolutionOperator == EvolutionOperator.REMOVE) {
+                inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
+            }
+            if (evolutionOperator == EvolutionOperator.ENABLECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((EnableRelationContainment) changeOperator).getRelation());
+            }
+            if (evolutionOperator == EvolutionOperator.DISABLECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
+            }
+            if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
+                inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
+                //TODO by TyphonML: missing relationname parameter
 //            inputParameter.put(ParametersKeyString.RELATIONNAME), ((EnableBidirectionalRelation) changeOperator).getRelationName());
+            }
+            if (evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
+                inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
+            }
+            if (evolutionOperator == EvolutionOperator.RENAME) {
+                inputParameter.put(ParametersKeyString.RELATION, ((RenameRelation) changeOperator).getRelationToRename());
+                inputParameter.put(ParametersKeyString.RELATIONNAME, ((RenameRelation) changeOperator).getNewRelationName());
+            }
+            if (evolutionOperator == EvolutionOperator.CHANGECARDINALITY) {
+                inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
+                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality());
+            }
         }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
-            inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
-        }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.RENAME) {
-            inputParameter.put(ParametersKeyString.RELATION, ((RenameRelation) changeOperator).getRelationToRename());
-            inputParameter.put(ParametersKeyString.RELATIONNAME, ((RenameRelation) changeOperator).getNewRelationName());
-        }
-        if (typhonMLObject == TyphonMLObject.RELATION && evolutionOperator == EvolutionOperator.CHANGECARDINALITY) {
-            inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
-            inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality());
+        //ATTRIBUTE
+        if (typhonMLObject == TyphonMLObject.ATTRIBUTE) {
+            if (evolutionOperator == EvolutionOperator.ADD) {
+                inputParameter.put(ParametersKeyString.ATTRIBUTENAME, ((AddAttribute) changeOperator).getName());
+                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((AddAttribute) changeOperator).getType());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((AddAttribute) changeOperator).getEntityName());
+            }
+            if (evolutionOperator == EvolutionOperator.REMOVE) {
+                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveAttribute) changeOperator).getEntityName());
+            }
+            if (evolutionOperator == EvolutionOperator.RENAME) {
+                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RenameAttribute) changeOperator).getAttributeToRename());
+                inputParameter.put(ParametersKeyString.NEWATTRIBUTENAME, ((RenameAttribute) changeOperator).getNewName());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameAttribute) changeOperator).getEntityName());
+            }
+            if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
+                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
+                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
+                //TODO by TyphonML: missing entityname parameter
+//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((ChangeAttributeType) changeOperator).getEntityName());
+            }
         }
     }
 
@@ -147,13 +199,19 @@ public class SMOAdapter implements SMO {
     public RelationDO getRelationDOFromInputParameter(String parameterkey) {
         if (this.getTyphonObject() == TyphonMLObject.RELATION) {
             if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
-                return RelationDOFactory.buildInstance((AddRelation) changeOperator);
+                return RelationDOFactory.buildInstance((AddRelation) changeOperator, false);
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT) {
+                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation(), false);
+            }
+            if (this.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT) {
+                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation(), false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation(), false);
             }
             if (this.getEvolutionOperator() == EvolutionOperator.DISABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation());
+                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation(), false);
             }
         }
         return null;

@@ -33,7 +33,7 @@ public interface TyphonQLInterface {
 
     void deleteEntityStructure(String entityname, Model model);
 
-    void deleteAttributes(String entityname, List<String> attributes, Model model);
+    void removeAttributes(String entityname, List<String> attributes, Model model);
 
     void deleteWorkingSetData(WorkingSet dataToDelete, Model model);
 
@@ -58,4 +58,8 @@ public interface TyphonQLInterface {
     void addAttribute(AttributeDO attributeDO, String entityname, Model model);
 
     void renameRelation(String relationName, String newRelationName, Model model);
+
+    void renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
+
+    void changeTypeAttribute(AttributeDO attribute, String entityName, Model model);
 }

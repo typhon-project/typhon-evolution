@@ -1,14 +1,16 @@
 package com.typhon.evolutiontool.services;
 
-import com.typhon.evolutiontool.entities.AttributeDO;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
-import com.typhon.evolutiontool.handlers.EntityHandlers.*;
 import com.typhon.evolutiontool.handlers.Handler;
-import com.typhon.evolutiontool.handlers.RelationHandlers.*;
+import com.typhon.evolutiontool.handlers.attribute.AttributeAddHandler;
+import com.typhon.evolutiontool.handlers.attribute.AttributeChangeTypeHandler;
+import com.typhon.evolutiontool.handlers.attribute.AttributeRemoveHandler;
+import com.typhon.evolutiontool.handlers.attribute.AttributeRenameHandler;
+import com.typhon.evolutiontool.handlers.entity.*;
+import com.typhon.evolutiontool.handlers.relation.*;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import typhonml.Model;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class EvolutionServiceImpl implements EvolutionService {
 
     private Map<EvolutionOperator, Handler> entityHandlers;
     private Map<EvolutionOperator, Handler> relationHandlers;
+    private Map<EvolutionOperator, Handler> attributeHandlers;
 
 
     @Autowired
@@ -52,20 +54,16 @@ public class EvolutionServiceImpl implements EvolutionService {
         this.typhonMLInterface = tml;
         this.typhonQLInterface = tql;
 
-
         entityHandlers = new EnumMap<>(EvolutionOperator.class);
-
         entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityNewMigrateHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(tdl, tml, tql));
         entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(tdl, tml, tql));
 
-
         relationHandlers = new EnumMap<>(EvolutionOperator.class);
-
         relationHandlers.put(EvolutionOperator.ADD, new RelationAddHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.REMOVE, new RelationRemoveHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.ENABLECONTAINMENT, new RelationEnableContainmentHandler(tdl, tml, tql));
@@ -74,57 +72,39 @@ public class EvolutionServiceImpl implements EvolutionService {
         relationHandlers.put(EvolutionOperator.DISABLEOPPOSITE, new RelationDisableOppositeHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.RENAME, new RelationRenameHandler(tdl, tml, tql));
         relationHandlers.put(EvolutionOperator.CHANGECARDINALITY, new RelationChangeCardinalityHandler(tdl, tml, tql));
+
+        attributeHandlers = new EnumMap<>(EvolutionOperator.class);
+        attributeHandlers.put(EvolutionOperator.ADD, new AttributeAddHandler(tdl, tml, tql));
+        attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeRemoveHandler(tdl, tml, tql));
+        attributeHandlers.put(EvolutionOperator.RENAME, new AttributeRenameHandler(tdl, tml, tql));
+        attributeHandlers.put(EvolutionOperator.CHANGETYPE, new AttributeChangeTypeHandler(tdl, tml, tql));
     }
 
     @Override
     public Model evolveEntity(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
         Handler operation = entityHandlers.get(smo.getEvolutionOperator());
-        return execute_handlers(operation, smo, model);
+        return executeHandlers(operation, smo, model);
     }
 
     @Override
     public Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
         Handler operation = relationHandlers.get(smo.getEvolutionOperator());
-        return execute_handlers(operation, smo, model);
+        return executeHandlers(operation, smo, model);
     }
 
-    private Model execute_handlers(Handler handler, SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+    @Override
+    public Model evolveAttribute(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+        Handler operation = attributeHandlers.get(smo.getEvolutionOperator());
+        return executeHandlers(operation, smo, model);
+    }
+
+    private Model executeHandlers(Handler handler, SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
         if (handler != null) {
             return handler.handle(smo, model);
         }
 
         String err_msg = String.format("No operation found for [%s] - [%s]", smo.getTyphonObject(), smo.getEvolutionOperator());
         throw new EvolutionOperationNotSupported(err_msg);
-    }
-
-    @Override
-    public Model addAttribute(SMO smo, Model model) throws InputParameterException {
-        AttributeDO attributeDO;
-        String entityname;
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.ATTRIBUTE))) {
-            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
-            attributeDO = smo.getAttributeDOFromInputParameter(ParametersKeyString.ATTRIBUTE);
-            targetModel = typhonMLInterface.addAttribute(attributeDO, entityname);
-            typhonQLInterface.addAttribute(attributeDO, entityname, targetModel);
-            return targetModel;
-        } else {
-            throw new InputParameterException("Missing parameter. ");
-        }
-    }
-
-    @Override
-    public String removeAttribute(SMO smo, Model model) {
-        return null;
-    }
-
-    @Override
-    public String renameAttribute(SMO smo, Model model) {
-        return null;
-    }
-
-    @Override
-    public String changeTypeAttribute(SMO smo, Model model) {
-        return null;
     }
 
     @Override

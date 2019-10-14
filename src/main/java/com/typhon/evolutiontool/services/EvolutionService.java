@@ -11,13 +11,7 @@ public interface EvolutionService {
 
     Model evolveRelation(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
-    Model addAttribute(SMO smo, Model model) throws InputParameterException;
-
-    String removeAttribute(SMO smo, Model model);
-
-    String renameAttribute(SMO smo, Model model);
-
-    String changeTypeAttribute(SMO smo, Model model);
+    Model evolveAttribute(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
     String addIdentifier(SMO smo, Model model);
 

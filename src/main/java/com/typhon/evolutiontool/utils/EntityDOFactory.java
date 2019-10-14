@@ -17,21 +17,26 @@ public class EntityDOFactory {
     }
 
     public static EntityDO buildInstance(Entity entity) {
-        // Not useful and StackOverflowError
+        if (entity != null) {
+            // Not useful and StackOverflowError
 //        List<Relation> relations = entity.getRelations();
-        List<RelationDO> relationsDO = new ArrayList<>();
+            List<RelationDO> relationsDO = new ArrayList<>();
 //        if (relations != null) {
 //            for (Relation relation : relations) {
 //                relationsDO.add(RelationDOFactory.buildInstance(relation));
 //            }
 //        }
-        List<Attribute> entityAttributes = entity.getAttributes();
-        Map<String, Object> attributes = new HashMap<>();
-        if (entityAttributes != null) {
-            for (Attribute attribute : entityAttributes) {
-                attributes.put(attribute.getName(), attribute.getType());
+            List<Attribute> entityAttributes = entity.getAttributes();
+            Map<String, Object> attributes = new HashMap<>();
+            if (entityAttributes != null) {
+                for (Attribute attribute : entityAttributes) {
+                    if (attribute != null) {
+                        attributes.put(attribute.getName(), attribute.getType());
+                    }
+                }
             }
+            return new EntityDOImpl(entity.getName(), entity.getImportedNamespace(), relationsDO, null, attributes);
         }
-        return new EntityDOImpl(entity.getName(), entity.getImportedNamespace(), relationsDO, null, attributes);
+        return null;
     }
 }

@@ -56,7 +56,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readAllEntityData(EntityDO entity, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e", entity.getName());
+        return getTyphonQLConnection(model).query("from %s e select e", entity.getName());
     }
 
     /**
@@ -68,17 +68,17 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
      */
     @Override
     public WorkingSet readAllEntityData(String entityId, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e", entityId);
+        return getTyphonQLConnection(model).query("from %s e select e", entityId);
     }
 
     @Override
     public WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select e where ? = ?", sourceEntityName, attributeName, attributeValue);
+        return getTyphonQLConnection(model).query("from %s e select e where %s = %s", sourceEntityName, attributeName, attributeValue);
     }
 
     @Override
     public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model) {
-        return getTyphonQLConnection(model).query("from ? e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
+        return getTyphonQLConnection(model).query("from %s e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readRelationship(RelationDO relation, Model model) {
-        return getTyphonQLConnection(model).query("from ? s , ? t select s, t where s.?==? ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
+        return getTyphonQLConnection(model).query("from %s s , %s t select s, t where s.%s==%s ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     @Override
     public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
         logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
-        String tql = "dummy add attribute";
+        String tql = "TQL DDL ADD ATTRIBUTE " + attributeDO.getName() + " IN " + entityname;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -151,6 +151,20 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
     public void renameRelation(String relationName, String newRelationName, Model model) {
         logger.info("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model [{}]", relationName, newRelationName, model);
         String tql = "TQL DDL RENAME RELATION " + relationName + " TO " + newRelationName;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
+    public void renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model) {
+        logger.info("Rename attribute [from '{}' to '{}'] in entity [{}]  via TyphonQL on TyphonML model [{}]", oldAttributeName, newAttributeName, entityName, model);
+        String tql = "TQL DDL RENAME ATTRIBUTE " + oldAttributeName + " TO " + newAttributeName + " IN " + entityName;
+        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
+    }
+
+    @Override
+    public void changeTypeAttribute(AttributeDO attribute, String entityName, Model model) {
+        logger.info("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model [{}]", attribute.getName(), attribute.getDataTypeName(), entityName, model);
+        String tql = "TQL DDL UPDATE ATTRIBUTE " + attribute.getName() + " SET TYPE TO " + attribute.getDataTypeName() + " IN " + entityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -169,7 +183,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
      * @param model
      */
     @Override
-    public void deleteAttributes(String entityname, List<String> attributes, Model model) {
+    public void removeAttributes(String entityname, List<String> attributes, Model model) {
         //TODO Separate deletion of data and structure.
         // Delete data
         getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityname, attributes, model));

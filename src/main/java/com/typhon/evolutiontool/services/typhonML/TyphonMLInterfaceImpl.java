@@ -14,12 +14,13 @@ import typhonml.RelationalDB;
 import typhonml.Table;
 import typhonml.*;
 
+import java.util.List;
+
 
 @Component
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
-
 
     @Override
     public Entity getEntityTypeFromName(String entityName, Model model) {
@@ -88,9 +89,13 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     @Override
     public Model renameEntity(String oldEntityName, String newEntityName, Model model) {
         logger.info("Renaming EntityDO type [{}] to [{}] in TyphonML model", oldEntityName, newEntityName);
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        getDataTypeFromEntityName(oldEntityName, newModel).setName(newEntityName);
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = (Entity) getDataTypeFromEntityName(oldEntityName, newModel);
+        if (entity != null) {
+            entity.setName(newEntityName);
+        } else {
+            logger.warn("The entity type to rename ('{}') has not been found", oldEntityName);
+        }
         return newModel;
     }
 
@@ -137,20 +142,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Model enableContainment(RelationDO relation, Model model) {
-        Relation relationML;
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
         relationML.setIsContainment(true);
         return newModel;
     }
 
     @Override
     public Model disableContainment(RelationDO relation, Model model) {
-        Relation relationML;
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
+        Model newModel = EcoreUtil.copy(model);
+        Relation relationML = this.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), newModel);
         relationML.setIsContainment(false);
         return newModel;
     }
@@ -166,23 +167,60 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model addAttribute(AttributeDO attribute, String entityname) {
-        return null;
+    public Model addAttribute(AttributeDO attributeDO, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        typhonml.Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
+        attribute.setName(attributeDO.getName());
+        attribute.setImportedNamespace(attributeDO.getImportedNamespace());
+        attribute.setType(getAttributeDataTypeFromDataTypeName(attributeDO.getDataTypeName(), newModel));
+        entity.getAttributes().add(attribute);
+        return newModel;
     }
 
     @Override
-    public Model deleteAttribute(String attributename, String entityname) {
-        return null;
+    public Model removeAttribute(AttributeDO attributeDO, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(attributeDO.getName())) {
+                    entity.getAttributes().remove((attribute));
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
-    public Model renameAttribute(String oldattributename, String newattributename, String entityname) {
-        return null;
+    public Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(oldAttributeName)) {
+                    attribute.setName(newAttributeName);
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
-    public Model changeTypeAttribute(AttributeDO attribute, String entityname) {
-        return null;
+    public Model changeTypeAttribute(AttributeDO attributeDO, String entityName, String dataTypeName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity entity = getEntityTypeFromName(entityName, newModel);
+        if (entity.getAttributes() != null) {
+            for (Attribute attribute : entity.getAttributes()) {
+                if (attribute.getName().equals(attributeDO.getName())) {
+                    attribute.setType(getAttributeDataTypeFromDataTypeName(dataTypeName, newModel));
+                    break;
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
@@ -212,6 +250,16 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public Model removeCurrentChangeOperator(Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        List<ChangeOperator> changeOperators = newModel.getChangeOperators();
+        if (changeOperators != null && changeOperators.get(0) != null) {
+            changeOperators.remove(changeOperators.get(0));
+        }
+        return newModel;
+    }
+
+    @Override
     public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
         logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
         Model newModel;
@@ -235,13 +283,25 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                 table.setDb(relationalDB);
                 break;
             case COLUMNDB:
-                //TODO
+                Column column = TyphonmlFactory.eINSTANCE.createColumn();
+                column.setName(targetLogicalName);
+                column.setEntity(entityTypeToMap);
+                ColumnDB columnDB = (ColumnDB) db;
+                columnDB.getColumns().add(column);
                 break;
             case GRAPHDB:
-                //TODO
+                GraphNode graphNode = TyphonmlFactory.eINSTANCE.createGraphNode();
+                graphNode.setName(targetLogicalName);
+                graphNode.setEntity(entityTypeToMap);
+                GraphDB graphDB = (GraphDB) db;
+                graphDB.getNodes().add(graphNode);
                 break;
             case KEYVALUE:
-                //TODO
+                KeyValueElement keyValueElement = TyphonmlFactory.eINSTANCE.createKeyValueElement();
+                keyValueElement.setName(targetLogicalName);
+                keyValueElement.setEntity(entityTypeToMap);
+                KeyValueDB keyValueDB = (KeyValueDB) db;
+                keyValueDB.getElements().add(keyValueElement);
                 break;
         }
         return newModel;
@@ -299,13 +359,29 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model deleteEntityMappings(String entityname, Model model) {
-        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityname);
+    public Model deleteEntityMappings(String entityName, Model model) {
+        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityName);
         Model newModel;
         newModel = EcoreUtil.copy(model);
-        typhonml.Entity entity = this.getEntityTypeFromName(entityname, newModel);
-        //TODO GenericList has been deleted from TyphonML. Adapt to getTable, get Collection, etc...
-//		EcoreUtil.remove(entity.getGenericList());
+        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
+        if (entity != null) {
+//            if (entity.getTables() != null) {
+//                removeEntityFromTables(entity);
+//            }
+//            if (entity.getCollections() != null) {
+//                removeEntityFromCollections(entity);
+//            }
+//            if (entity.getGraphNodes() != null) {
+//                removeEntityFromGraphNodes(entity);
+//            }
+//            if (entity.getColumns() != null) {
+//                removeEntityFromColumns(entity);
+//            }
+//            if (entity.getKeyValueElements() != null) {
+//                removeEntityFromKeyValueElements(entity);
+//            }
+		    EcoreUtil.remove(entity.getGenericList());
+        }
         return newModel;
     }
 
@@ -313,6 +389,17 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         for (DataType datatype : model.getDataTypes()) {
             if (datatype instanceof typhonml.Entity) {
                 if (datatype.getName().equalsIgnoreCase(entityname)) {
+                    return datatype;
+                }
+            }
+        }
+        return null;
+    }
+
+    private DataType getAttributeDataTypeFromDataTypeName(String dataTypeName, Model model) {
+        for (DataType datatype : model.getDataTypes()) {
+            if (datatype.getName().equalsIgnoreCase(dataTypeName)) {
+                if (datatype instanceof typhonml.PrimitiveDataType || datatype instanceof CustomDataType) {
                     return datatype;
                 }
             }
@@ -336,5 +423,60 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         attribute.setType(type);
         return attribute;
     }
+
+//    private void removeEntityFromTables(Entity entity) {
+//        List<Table> tables = entity.getTables();
+//        if (tables != null) {
+//            for (Table table : tables) {
+//                if (table.getEntity() != null && table.getEntity().getName().equals(entity.getName())) {
+//                    tables.remove(table);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromCollections(Entity entity) {
+//        List<Collection> collections = entity.getCollections();
+//        if (collections != null) {
+//            for (Collection collection : collections) {
+//                if (collection.getEntity() != null && collection.getEntity().getName().equals(entity.getName())) {
+//                    collections.remove(collection);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromGraphNodes(Entity entity) {
+//        List<GraphNode> graphNodes = entity.getGraphNodes();
+//        if (graphNodes != null) {
+//            for (GraphNode graphNode : graphNodes) {
+//                if (graphNode.getEntity() != null && graphNode.getEntity().getName().equals(entity.getName())) {
+//                    graphNodes.remove(graphNode);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromColumns(Entity entity) {
+//        List<Column> columns = entity.getColumns();
+//        if (columns != null) {
+//            for (Column column : columns) {
+//                if (column.getEntity() != null && column.getEntity().getName().equals(entity.getName())) {
+//                    columns.remove(column);
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeEntityFromKeyValueElements(Entity entity) {
+//        List<KeyValueElement> keyValueElements = entity.getKeyValueElements();
+//        if (keyValueElements != null) {
+//            for (KeyValueElement keyValueElement : keyValueElements) {
+//                if (keyValueElement.getEntity() != null && keyValueElement.getEntity().getName().equals(entity.getName())) {
+//                    keyValueElements.remove(keyValueElement);
+//                }
+//            }
+//        }
+//    }
 
 }

@@ -101,8 +101,8 @@ public class SMOAdapter implements SMO {
         //RELATION
         if (typhonMLObject == TyphonMLObject.RELATION) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                //TODO by TyphonML : either add sourceEntity in Relation, or sourceentity in the operator.
                 inputParameter.put(ParametersKeyString.RELATION, changeOperator);
+                inputParameter.put(ParametersKeyString.ENTITY, ((AddRelation) changeOperator).getOwnerEntity());
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
@@ -134,9 +134,9 @@ public class SMOAdapter implements SMO {
         if (typhonMLObject == TyphonMLObject.ATTRIBUTE) {
             if (evolutionOperator == EvolutionOperator.ADD) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTENAME, ((AddAttribute) changeOperator).getName());
+                inputParameter.put(ParametersKeyString.ATTRIBUTEIMPORTEDNAMESPACE, ((AddAttribute) changeOperator).getImportedNamespace());
                 inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((AddAttribute) changeOperator).getType());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((AddAttribute) changeOperator).getEntityName());
+                inputParameter.put(ParametersKeyString.ENTITY, ((AddAttribute) changeOperator).getOwnerEntity());
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());

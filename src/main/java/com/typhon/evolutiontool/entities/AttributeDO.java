@@ -6,8 +6,6 @@ public interface AttributeDO {
 
     String getImportedNamespace();
 
-    String getDataTypeName();
-
-    String getDataTypeImportedNamespace();
+    DataTypeDO getDataTypeDO();
 
 }

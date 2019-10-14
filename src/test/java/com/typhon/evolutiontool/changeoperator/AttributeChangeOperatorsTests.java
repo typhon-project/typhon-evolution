@@ -19,8 +19,6 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addAttributeChangeOperator.xmi");
         AddAttribute addAttribute = (AddAttribute) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addAttribute);
-        // Work around to succeed the test:
-//        smo.getInputParameter().put(ParametersKeyString.ENTITYNAME, "CreditCard");
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addAttributeChangeOperator_final.xmi");

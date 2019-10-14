@@ -16,7 +16,7 @@ import typhonml.Model;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Component("attributeremove")
+@Component
 public class AttributeRemoveHandler extends BaseHandler {
 
     public AttributeRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

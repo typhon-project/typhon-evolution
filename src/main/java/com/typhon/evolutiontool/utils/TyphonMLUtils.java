@@ -24,12 +24,14 @@ public class TyphonMLUtils {
      * Method needed before use TyphonML classes. It register all the needed resources.
      */
     public static void typhonMLPackageRegistering() {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+//        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("tml", new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(XtextResourceSet.class));
         resourceSet.getPackageRegistry().put(TyphonmlPackage.eINSTANCE.getNsURI(), TyphonmlPackage.eINSTANCE);
     }
 
     /**
      * Used to load model from path. It will load as Ecore Resource
+     *
      * @param modelPath
      * @return
      */
@@ -42,6 +44,7 @@ public class TyphonMLUtils {
 
     /**
      * Used to load model from path. It will load as typhonml.Model
+     *
      * @param modelPath
      * @return
      */

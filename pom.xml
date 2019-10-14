@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
@@ -23,34 +23,47 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<tycho-version>1.3.0</tycho-version>
 	</properties>
 
 	<repositories>
+
+<!--		<repository>-->
+<!--			<id>ocl</id>-->
+<!--			<url>https://download.eclipse.org/modeling/mdt/ocl/updates/releases/6.5.0/</url>-->
+<!--			<snapshots>-->
+<!--				<updatePolicy>always</updatePolicy>-->
+<!--			</snapshots>-->
+<!--			<layout>p2</layout>-->
+<!--		</repository>-->
+
 		<repository>
-			<id>epsilon</id>
-			<url>http://download.eclipse.org/epsilon/updates//</url>
+			<id>typhonML</id>
+			<url>C:\Projets\Typhon\EvolutionTool\workspace\typhonml\it.univaq.disim.typhonml.parent\releng\it.univaq.disim.typhonml.update\target\repository</url>
 			<snapshots>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 			<layout>p2</layout>
 		</repository>
 
+<!--		<repository>-->
+<!--			<id>epsilon</id>-->
+<!--			<url>http://download.eclipse.org/epsilon/updates//</url>-->
+<!--			<snapshots>-->
+<!--				<updatePolicy>always</updatePolicy>-->
+<!--			</snapshots>-->
+<!--			<layout>p2</layout>-->
+<!--		</repository>-->
+
 		<!--<repository>-->
-			<!--<id>internal</id>-->
-			<!--<url>http://archiva.clmsuk.com:8090/repository/internal/</url>-->
+		<!--<id>internal</id>-->
+		<!--<url>http://archiva.clmsuk.com:8090/repository/internal/</url>-->
 		<!--</repository>-->
 
 	</repositories>
 
 
 	<dependencies>
-		<!--<dependency>-->
-			<!--<groupId>it.univaq.disim.typhonml</groupId>-->
-			<!--<artifactId>it.univaq.disim.typhonml</artifactId>-->
-			<!--<version>0.1.1-SNAPSHOT</version>-->
-		<!--</dependency>-->
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -79,6 +92,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,12 +109,7 @@
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.emf/org.eclipse.emf.ecore -->
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>org.eclipse.emf.ecore</artifactId>
-			<version>2.15.0</version>
-		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.eclipse.emf/org.eclipse.emf.ecore.xmi -->
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
@@ -108,13 +117,34 @@
 			<version>2.15.0</version>
 		</dependency>
 
-
+		<!-- https://mvnrepository.com/artifact/org.eclipse.xtext/org.eclipse.xtext.xbase.lib -->
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext</artifactId>
+			<version>2.18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>it.univaq.disim.typhonml</groupId>
+			<artifactId>it.univaq.disim.typhonml</artifactId>
+			<version>0.1.1-SNAPSHOT</version>
+		</dependency>
+<!--        <dependency>-->
+<!--            <groupId>it.univaq.disim.typhonml</groupId>-->
+<!--            <artifactId>it.univaq.disim.typhonml.feature</artifactId>-->
+<!--            <version>1.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 	</dependencies>
 
 
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

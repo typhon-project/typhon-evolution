@@ -1,5 +1,8 @@
 package com.typhon.evolutiontool.handlers;
 
+import com.typhon.evolutiontool.entities.DatabaseType;
+import com.typhon.evolutiontool.entities.DocumentDB;
+import com.typhon.evolutiontool.entities.RelationalDB;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -11,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import typhonml.Model;
+import typhonml.*;
 
 import java.util.List;
 
@@ -37,5 +40,26 @@ public class BaseHandler implements Handler{
     protected boolean containParameters(SMO smo, List<String> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
+    }
+
+    protected DatabaseType getDatabaseType(Database database) {
+        if (database != null) {
+            if (database instanceof RelationalDB) {
+                return DatabaseType.RELATIONALDB;
+            }
+            if (database instanceof DocumentDB) {
+                return DatabaseType.DOCUMENTDB;
+            }
+            if (database instanceof ColumnDB) {
+                return DatabaseType.COLUMNDB;
+            }
+            if (database instanceof GraphDB) {
+                return DatabaseType.GRAPHDB;
+            }
+            if (database instanceof KeyValueDB) {
+                return DatabaseType.KEYVALUE;
+            }
+        }
+        return null;
     }
 }

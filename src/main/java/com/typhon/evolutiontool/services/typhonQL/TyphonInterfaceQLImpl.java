@@ -163,8 +163,8 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public void changeTypeAttribute(AttributeDO attribute, String entityName, Model model) {
-        logger.info("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model [{}]", attribute.getName(), attribute.getDataTypeName(), entityName, model);
-        String tql = "TQL DDL UPDATE ATTRIBUTE " + attribute.getName() + " SET TYPE TO " + attribute.getDataTypeName() + " IN " + entityName;
+        logger.info("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model [{}]", attribute.getName(), attribute.getDataTypeDO().getName(), entityName, model);
+        String tql = "TQL DDL UPDATE ATTRIBUTE " + attribute.getName() + " SET TYPE TO " + attribute.getDataTypeDO().getName() + " IN " + entityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 

@@ -15,7 +15,7 @@ import typhonml.Model;
 
 import java.util.Arrays;
 
-@Component("attributerename")
+@Component
 public class AttributeRenameHandler extends BaseHandler {
 
     public AttributeRenameHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

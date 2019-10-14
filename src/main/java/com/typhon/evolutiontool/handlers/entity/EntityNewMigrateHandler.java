@@ -1,7 +1,5 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.DocumentDB;
-import com.typhon.evolutiontool.entities.RelationalDB;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -10,7 +8,8 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
 import typhonml.Database;
-import typhonml.*;
+import typhonml.Entity;
+import typhonml.Model;
 
 import java.util.Arrays;
 
@@ -52,27 +51,6 @@ public class EntityNewMigrateHandler extends BaseHandler {
             throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.DATABASE + "]");
         }
 
-    }
-
-    private DatabaseType getDatabaseType(Database database) {
-        if (database != null) {
-            if (database instanceof RelationalDB) {
-                return DatabaseType.RELATIONALDB;
-            }
-            if (database instanceof DocumentDB) {
-                return DatabaseType.DOCUMENTDB;
-            }
-            if (database instanceof ColumnDB) {
-                return DatabaseType.COLUMNDB;
-            }
-            if (database instanceof GraphDB) {
-                return DatabaseType.GRAPHDB;
-            }
-            if (database instanceof KeyValueDB) {
-                return DatabaseType.KEYVALUE;
-            }
-        }
-        return null;
     }
 
 }

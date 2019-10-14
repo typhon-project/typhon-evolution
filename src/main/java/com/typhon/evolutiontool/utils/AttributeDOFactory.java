@@ -11,7 +11,7 @@ public class AttributeDOFactory {
 
     public static AttributeDO buildInstance(Attribute attribute) {
         if (attribute != null) {
-            return new AttributeDOImpl(attribute.getName(), attribute.getImportedNamespace(), attribute.getType().getName(), attribute.getType().getImportedNamespace());
+            return new AttributeDOImpl(attribute.getName(), attribute.getImportedNamespace(), DataTypeDOFactory.buildInstance(attribute.getType()));
         }
         return null;
     }

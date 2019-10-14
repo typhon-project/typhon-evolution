@@ -32,4 +32,5 @@ public interface ParametersKeyString {
     String ATTRIBUTETYPE = "attributetype";
     String OLDATTRIBUTENAME = "oldattributename";
     String NEWATTRIBUTENAME = "newattributename";
+    String ATTRIBUTEIMPORTEDNAMESPACE = "attributeImportedNamespace";
 }

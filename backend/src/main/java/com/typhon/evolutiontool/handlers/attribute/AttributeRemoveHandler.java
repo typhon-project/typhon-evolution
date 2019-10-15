@@ -9,14 +9,13 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.AttributeDOFactory;
-import org.springframework.stereotype.Component;
 import typhonml.Attribute;
 import typhonml.Model;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-@Component
+
 public class AttributeRemoveHandler extends BaseHandler {
 
     public AttributeRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

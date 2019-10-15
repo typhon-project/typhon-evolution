@@ -2,7 +2,6 @@ package com.typhon.evolutiontool.entities;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.springframework.data.annotation.Id;
 
 import java.util.Objects;
 
@@ -18,7 +17,6 @@ public abstract class Database {
 
     private Database type;
 
-    @Id
     private String name;
 
     public Database getType() {

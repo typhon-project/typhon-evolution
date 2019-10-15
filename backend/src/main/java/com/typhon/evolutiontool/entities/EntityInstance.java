@@ -1,8 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +10,6 @@ Implementation of EntityDO data contained in WorkingSet. Following D4.2
  */
 public class EntityInstance {
 
-    @Id
     @JsonProperty("name")
     private Object id;
     @JsonProperty("attributes")

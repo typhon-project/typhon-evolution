@@ -1,13 +1,10 @@
 package com.typhon.evolutiontool.entities;
 
-import org.springframework.data.annotation.Id;
-
 import java.util.List;
 import java.util.Objects;
 
 public class TyphonMLSchema {
 
-    @Id
     private String version;
     private List<Database> databases;
     private List<EntityDO> entities;

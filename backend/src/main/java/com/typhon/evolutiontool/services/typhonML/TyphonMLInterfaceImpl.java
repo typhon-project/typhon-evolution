@@ -3,21 +3,18 @@ package com.typhon.evolutiontool.services.typhonML;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import typhonml.*;
 import typhonml.Collection;
 import typhonml.Database;
 import typhonml.DocumentDB;
 import typhonml.RelationalDB;
 import typhonml.Table;
-import typhonml.*;
 
 import java.util.List;
 
 
-@Component
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);

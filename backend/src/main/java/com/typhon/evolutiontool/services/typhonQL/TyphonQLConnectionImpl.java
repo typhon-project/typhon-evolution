@@ -5,16 +5,13 @@ import com.typhon.evolutiontool.entities.TyphonMLSchema;
 import com.typhon.evolutiontool.entities.WorkingSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Map;
 
 import static java.util.stream.Collectors.joining;

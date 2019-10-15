@@ -1,10 +1,7 @@
 package com.typhon.evolutiontool.entities;
 
-import org.springframework.data.annotation.Id;
-
 public class Table {
 
-    @Id
     private String name;
     private String entity;
 

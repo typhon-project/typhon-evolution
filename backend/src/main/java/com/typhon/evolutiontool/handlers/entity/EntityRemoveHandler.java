@@ -7,12 +7,10 @@ import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import org.springframework.stereotype.Component;
 import typhonml.Model;
 
 import java.util.Collections;
 
-@Component("entityremove")
 public class EntityRemoveHandler extends BaseHandler {
 
     public EntityRemoveHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

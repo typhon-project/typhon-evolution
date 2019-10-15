@@ -8,14 +8,12 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.DataTypeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
-import org.springframework.stereotype.Component;
 import typhonml.DataType;
 import typhonml.Entity;
 import typhonml.Model;
 
 import java.util.Arrays;
 
-@Component
 public class AttributeAddHandler extends BaseHandler {
 
     public AttributeAddHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

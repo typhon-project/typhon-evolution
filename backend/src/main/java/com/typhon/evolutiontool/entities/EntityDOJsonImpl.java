@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Objects;
 
 public class EntityDOJsonImpl implements EntityDO {
 
-    @Id
     @JsonProperty("name")
     private String name;
     @JsonProperty("attributes")

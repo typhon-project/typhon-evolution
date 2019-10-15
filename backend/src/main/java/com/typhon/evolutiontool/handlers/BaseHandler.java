@@ -4,7 +4,6 @@ import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.DocumentDB;
 import com.typhon.evolutiontool.entities.RelationalDB;
 import com.typhon.evolutiontool.entities.SMO;
-import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -12,8 +11,6 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import typhonml.*;
 
 import java.util.List;

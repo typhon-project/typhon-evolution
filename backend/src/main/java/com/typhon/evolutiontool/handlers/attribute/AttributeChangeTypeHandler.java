@@ -10,14 +10,12 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.AttributeDOFactory;
-import org.springframework.stereotype.Component;
 import typhonml.Attribute;
 import typhonml.DataType;
 import typhonml.Model;
 
 import java.util.Arrays;
 
-@Component
 public class AttributeChangeTypeHandler extends BaseHandler {
 
     public AttributeChangeTypeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

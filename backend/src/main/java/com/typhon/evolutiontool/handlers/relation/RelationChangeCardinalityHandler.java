@@ -9,14 +9,12 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
-import org.springframework.stereotype.Component;
 import typhonml.Cardinality;
 import typhonml.Model;
 import typhonml.Relation;
 
 import java.util.Arrays;
 
-@Component("relationrechangecardinality")
 public class RelationChangeCardinalityHandler extends BaseHandler {
 
     public RelationChangeCardinalityHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

@@ -1,10 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
-import org.springframework.data.annotation.Id;
-
 public class Collection {
-
-    @Id
     private String name;
     private String entity;
 

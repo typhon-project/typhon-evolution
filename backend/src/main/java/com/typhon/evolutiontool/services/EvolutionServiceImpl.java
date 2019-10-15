@@ -16,8 +16,6 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import typhonml.Model;
 
 import java.util.EnumMap;
@@ -31,7 +29,6 @@ import java.util.Map;
      2. Execute the structure and data change operations of the SMO operator by calling the TyphonQLInterface object implementation
      3. Modify the TyphonML module that the operator is executed an that the current running TyphonML model can be changed.
  */
-@Service
 public class EvolutionServiceImpl implements EvolutionService {
 
     private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
@@ -48,7 +45,6 @@ public class EvolutionServiceImpl implements EvolutionService {
     private Map<EvolutionOperator, Handler> attributeHandlers;
 
 
-    @Autowired
     public EvolutionServiceImpl(TyphonQLInterface tql, TyphonMLInterface tml, TyphonDLInterface tdl) {
         this.typhonDLInterface = tdl;
         this.typhonMLInterface = tml;

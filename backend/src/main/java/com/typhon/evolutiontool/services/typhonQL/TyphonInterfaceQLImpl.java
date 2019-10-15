@@ -3,13 +3,11 @@ package com.typhon.evolutiontool.services.typhonQL;
 import com.typhon.evolutiontool.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import typhonml.Model;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     Logger logger = LoggerFactory.getLogger(TyphonInterfaceQLImpl.class);

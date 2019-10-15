@@ -1,0 +1,8 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "REMOVE",
+  "parameters":
+  {
+    "entityname": "User"
+  }
+}

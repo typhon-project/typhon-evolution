@@ -9,6 +9,7 @@
 	<modules>
 		<module>backend</module>
 		<module>rest-api</module>
+		<module>query-evolution</module>
 	</modules>
 
 	<properties>
@@ -18,6 +19,16 @@
 	</properties>
 
 	<repositories>
+		<repository>
+            <id>eclipse-release</id>
+            <url>http://download.eclipse.org/releases/2019-09/</url>
+            <layout>p2</layout>
+        </repository>
+        <repository>
+            <id>eclipse-epsilon</id>
+            <url>http://download.eclipse.org/epsilon/updates/</url>
+            <layout>p2</layout>
+        </repository>
 		<repository>
 			<id>usethesource-rascalmpl-unstable</id>
 			<layout>p2</layout>
@@ -34,9 +45,9 @@
 			<url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
 		</repository>
 		<repository>
-			<id>typhonML</id>
+			<id>ML</id>
 			<layout>p2</layout>
-			<url>https://typhon.swat.engineering/composite/</url>
+			<url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
 		</repository>
 	</repositories>
 

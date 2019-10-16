@@ -170,10 +170,10 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     public Model addAttribute(AttributeDO attributeDO, String entityName, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityTypeFromName(entityName, newModel);
-        typhonml.Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
+        Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(attributeDO.getName());
         attribute.setImportedNamespace(attributeDO.getImportedNamespace());
-        attribute.setType(getAttributeDataTypeFromDataTypeName(attributeDO.getDataTypeName(), newModel));
+        attribute.setType(getAttributeDataTypeFromDataTypeName(attributeDO.getDataTypeDO().getName(), newModel));
         entity.getAttributes().add(attribute);
         return newModel;
     }
@@ -365,22 +365,22 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         newModel = EcoreUtil.copy(model);
         typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
         if (entity != null) {
-//            if (entity.getTables() != null) {
-//                removeEntityFromTables(entity);
-//            }
-//            if (entity.getCollections() != null) {
-//                removeEntityFromCollections(entity);
-//            }
-//            if (entity.getGraphNodes() != null) {
-//                removeEntityFromGraphNodes(entity);
-//            }
-//            if (entity.getColumns() != null) {
-//                removeEntityFromColumns(entity);
-//            }
-//            if (entity.getKeyValueElements() != null) {
-//                removeEntityFromKeyValueElements(entity);
-//            }
-		    EcoreUtil.remove(entity.getGenericList());
+            if (entity.getTables() != null) {
+                removeEntityFromTables(entity);
+            }
+            if (entity.getCollections() != null) {
+                removeEntityFromCollections(entity);
+            }
+            if (entity.getGraphNodes() != null) {
+                removeEntityFromGraphNodes(entity);
+            }
+            if (entity.getColumns() != null) {
+                removeEntityFromColumns(entity);
+            }
+            if (entity.getKeyValueElements() != null) {
+                removeEntityFromKeyValueElements(entity);
+            }
+//		    EcoreUtil.remove(entity.getGenericList());
         }
         return newModel;
     }
@@ -424,59 +424,59 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return attribute;
     }
 
-//    private void removeEntityFromTables(Entity entity) {
-//        List<Table> tables = entity.getTables();
-//        if (tables != null) {
-//            for (Table table : tables) {
-//                if (table.getEntity() != null && table.getEntity().getName().equals(entity.getName())) {
-//                    tables.remove(table);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void removeEntityFromCollections(Entity entity) {
-//        List<Collection> collections = entity.getCollections();
-//        if (collections != null) {
-//            for (Collection collection : collections) {
-//                if (collection.getEntity() != null && collection.getEntity().getName().equals(entity.getName())) {
-//                    collections.remove(collection);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void removeEntityFromGraphNodes(Entity entity) {
-//        List<GraphNode> graphNodes = entity.getGraphNodes();
-//        if (graphNodes != null) {
-//            for (GraphNode graphNode : graphNodes) {
-//                if (graphNode.getEntity() != null && graphNode.getEntity().getName().equals(entity.getName())) {
-//                    graphNodes.remove(graphNode);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void removeEntityFromColumns(Entity entity) {
-//        List<Column> columns = entity.getColumns();
-//        if (columns != null) {
-//            for (Column column : columns) {
-//                if (column.getEntity() != null && column.getEntity().getName().equals(entity.getName())) {
-//                    columns.remove(column);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void removeEntityFromKeyValueElements(Entity entity) {
-//        List<KeyValueElement> keyValueElements = entity.getKeyValueElements();
-//        if (keyValueElements != null) {
-//            for (KeyValueElement keyValueElement : keyValueElements) {
-//                if (keyValueElement.getEntity() != null && keyValueElement.getEntity().getName().equals(entity.getName())) {
-//                    keyValueElements.remove(keyValueElement);
-//                }
-//            }
-//        }
-//    }
+    private void removeEntityFromTables(Entity entity) {
+        List<Table> tables = entity.getTables();
+        if (tables != null) {
+            for (Table table : tables) {
+                if (table.getEntity() != null && table.getEntity().getName().equals(entity.getName())) {
+                    tables.remove(table);
+                }
+            }
+        }
+    }
+
+    private void removeEntityFromCollections(Entity entity) {
+        List<Collection> collections = entity.getCollections();
+        if (collections != null) {
+            for (Collection collection : collections) {
+                if (collection.getEntity() != null && collection.getEntity().getName().equals(entity.getName())) {
+                    collections.remove(collection);
+                }
+            }
+        }
+    }
+
+    private void removeEntityFromGraphNodes(Entity entity) {
+        List<GraphNode> graphNodes = entity.getGraphNodes();
+        if (graphNodes != null) {
+            for (GraphNode graphNode : graphNodes) {
+                if (graphNode.getEntity() != null && graphNode.getEntity().getName().equals(entity.getName())) {
+                    graphNodes.remove(graphNode);
+                }
+            }
+        }
+    }
+
+    private void removeEntityFromColumns(Entity entity) {
+        List<Column> columns = entity.getColumns();
+        if (columns != null) {
+            for (Column column : columns) {
+                if (column.getEntity() != null && column.getEntity().getName().equals(entity.getName())) {
+                    columns.remove(column);
+                }
+            }
+        }
+    }
+
+    private void removeEntityFromKeyValueElements(Entity entity) {
+        List<KeyValueElement> keyValueElements = entity.getKeyValueElements();
+        if (keyValueElements != null) {
+            for (KeyValueElement keyValueElement : keyValueElements) {
+                if (keyValueElement.getEntity() != null && keyValueElement.getEntity().getName().equals(entity.getName())) {
+                    keyValueElements.remove(keyValueElement);
+                }
+            }
+        }
+    }
 
 }

@@ -1,20 +1,24 @@
 package com.typhon.evolutiontool.entities;
 
-public class AttributeDOImpl implements AttributeDO {
+public class DataTypeDOImpl implements DataTypeDO {
 
     private String name;
     private String importedNamespace;
-    private DataTypeDO dataTypeDO;
 
-    public AttributeDOImpl(String name, String importedNamespace, DataTypeDO dataTypeDO) {
+    public DataTypeDOImpl(String name, String importedNamespace) {
         this.name = name;
         this.importedNamespace = importedNamespace;
-        this.dataTypeDO = dataTypeDO;
     }
+
 
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -23,7 +27,8 @@ public class AttributeDOImpl implements AttributeDO {
     }
 
     @Override
-    public DataTypeDO getDataTypeDO() {
-        return this.dataTypeDO;
+    public void setImportedNamespace(String importedNamespace) {
+        this.importedNamespace = importedNamespace;
+
     }
 }

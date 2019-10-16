@@ -17,7 +17,7 @@ import typhonml.Model;
 
 import java.util.Arrays;
 
-@Component("attributechangetype")
+@Component
 public class AttributeChangeTypeHandler extends BaseHandler {
 
     public AttributeChangeTypeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

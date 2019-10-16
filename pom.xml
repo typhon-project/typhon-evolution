@@ -29,9 +29,14 @@
 			<url>https://update.rascal-mpl.org/libs/</url>
 		</repository>
 		<repository>
-			<id>typhonml</id>
+			<id>typhonQL</id>
 			<layout>p2</layout>
-			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
+			<url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
+		</repository>
+		<repository>
+			<id>typhonML</id>
+			<layout>p2</layout>
+			<url>http://typhon.clmsuk.com:8082</url>
 		</repository>
 	</repositories>
 

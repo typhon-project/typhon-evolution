@@ -11,6 +11,7 @@
 	</parent>
 
     <artifactId>be.unamur.typhonevo.backend</artifactId>
+    <packaging>eclipse-plugin</packaging>
 
 
     <name>typhonevo-backend</name>

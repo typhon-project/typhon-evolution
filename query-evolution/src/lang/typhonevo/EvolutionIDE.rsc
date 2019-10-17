@@ -11,16 +11,16 @@ private str languageName = "TyphonQL";
 private str extQL = "qevo";
 
 
-public EvolutionScript parser(str x, loc l){
-	return parse(#EvolutionScript, x, l);
+public EvoSyntax parser(str x, loc l){
+	return parse(#EvoSyntax, x, l);
 }
 
 
-public void evalQuery(EvolutionScript x, loc selection) {
+public void evalQuery(EvoSyntax x, loc selection) {
 	text("bleh");
 }
 
-public void testString(EvolutionScript x, loc selection) {
+public void testString(EvoSyntax x, loc selection) {
 	text("Test display string");
 }
 

@@ -11,7 +11,10 @@
 	</parent>
 
     <artifactId>be.unamur.typhonevo.backend</artifactId>
-    <packaging>eclipse-plugin</packaging>
+    
+    <properties>
+		<tycho-version>1.4.0</tycho-version>
+	</properties>
 
 
     <name>typhonevo-backend</name>
@@ -46,12 +49,23 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-maven-plugin</artifactId>
-                <version>${tycho-version}</version>
-                <extensions>true</extensions>
-            </plugin>
+        
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+				</configuration>
+			</plugin>
+
         </plugins>
     </build>
 

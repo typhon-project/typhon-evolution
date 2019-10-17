@@ -1,6 +1,6 @@
 module lang::typhonevo::EvoAbstractSyntax
 
-import lang::typhonql::Query;
+extend lang::typhonql::Query;
 
-
-syntax EvolutionScript = {Query ";"}+;
+syntax EvoSyntax 
+	= evosyntax: {Query ";"}* queries;

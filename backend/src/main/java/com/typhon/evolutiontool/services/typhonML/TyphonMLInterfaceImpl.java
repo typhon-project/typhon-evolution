@@ -13,6 +13,7 @@ import typhonml.RelationalDB;
 import typhonml.Table;
 
 import java.util.List;
+import org.eclipse.emf.ecore.util.*;
 
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {

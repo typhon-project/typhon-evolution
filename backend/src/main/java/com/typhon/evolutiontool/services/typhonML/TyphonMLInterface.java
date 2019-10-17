@@ -1,9 +1,9 @@
-package com.typhon.evolutiontool.services.typhonML;
+package main.java.com.typhon.evolutiontool.services.typhonML;
 
 
-import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.InputParameterException;
-import it.univaq.disim.typhonml;
+import main.java.com.typhon.evolutiontool.entities.*;
+import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
+import typhonml;
 
 /**
  * Interface to access TyphonML.

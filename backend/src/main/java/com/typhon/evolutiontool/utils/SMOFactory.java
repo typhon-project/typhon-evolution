@@ -1,7 +1,7 @@
-package com.typhon.evolutiontool.utils;
+package main.java.com.typhon.evolutiontool.utils;
 
 
-import com.typhon.evolutiontool.entities.SMOAdapter;
+import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
 import typhonml.ChangeOperator;
 
 public class SMOFactory {

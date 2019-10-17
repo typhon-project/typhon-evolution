@@ -1,7 +1,7 @@
-package com.typhon.evolutiontool.services.typhonQL;
+package main.java.com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.TyphonMLSchema;
-import com.typhon.evolutiontool.entities.WorkingSet;
+import main.java.com.typhon.evolutiontool.entities.TyphonMLSchema;
+import main.java.com.typhon.evolutiontool.entities.WorkingSet;
 
 import java.io.IOException;
 import java.util.Map;

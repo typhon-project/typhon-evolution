@@ -1,8 +1,8 @@
-package com.typhon.evolutiontool.services.typhonML;
+package main.java.com.typhon.evolutiontool.services.typhonML;
 
-import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.InputParameterException;
-import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import main.java.com.typhon.evolutiontool.entities.*;
+import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
+import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.*;

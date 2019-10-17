@@ -1,9 +1,10 @@
-package com.typhon.evolutiontool.services.typhonQL;
+package main.java.com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.*;
+import main.java.com.typhon.evolutiontool.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
+import typhonql;
 
 import java.util.List;
 import java.util.stream.Collectors;

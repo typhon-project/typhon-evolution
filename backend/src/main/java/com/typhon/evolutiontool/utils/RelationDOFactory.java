@@ -1,9 +1,9 @@
-package com.typhon.evolutiontool.utils;
+package main.java.com.typhon.evolutiontool.utils;
 
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.RelationDOImpl;
+import main.java.com.typhon.evolutiontool.entities.CardinalityDO;
+import main.java.com.typhon.evolutiontool.entities.EntityDO;
+import main.java.com.typhon.evolutiontool.entities.RelationDO;
+import main.java.com.typhon.evolutiontool.entities.RelationDOImpl;
 import typhonml.Entity;
 import typhonml.Relation;
 

@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.entities;
+package main.java.com.typhon.evolutiontool.entities;
 
 import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;

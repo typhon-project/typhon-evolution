@@ -1,6 +1,6 @@
-package com.typhon.evolutiontool.services.typhonQL;
+package main.java.com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.*;
+import main.java.com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
 import java.util.List;

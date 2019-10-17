@@ -1,4 +1,4 @@
-package com.typhon.evolutiontool.entities;
+package main.java.com.typhon.evolutiontool.entities;
 
 import java.util.HashMap;
 import java.util.List;

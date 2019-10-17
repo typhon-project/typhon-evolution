@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.unamur.typhonevo</groupId>
 	<artifactId>typhonevo</artifactId>
-	<version>0.1.0.qualifier</version>
+	<version>0.1.0.SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>

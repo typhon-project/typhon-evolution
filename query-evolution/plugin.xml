@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         point="rascal_eclipse.rascalIDE">
+         point="rascal_eclipse.rascalLibrary">
    </extension>
  
 </plugin>

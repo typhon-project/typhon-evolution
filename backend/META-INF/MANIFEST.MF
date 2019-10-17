@@ -3,5 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: typhon-evo
 Bundle-SymbolicName: typhon-evo;singleton:=true
 Bundle-Version: 0.1.0.qualifier
-Require-Bundle: it.univaq.disim.typhonml;bundle-version="0.1.1"
+Require-Bundle: it.univaq.disim.typhonml;bundle-version="0.1.1",
+ typhonql;bundle-version="0.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

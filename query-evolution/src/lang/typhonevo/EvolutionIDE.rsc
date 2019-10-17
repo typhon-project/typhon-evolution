@@ -5,22 +5,22 @@ import Prelude;
 import util::IDE; 
 import util::ValueUI;
 
-import lang::typhonql::Query;
+import lang::typhonevo::EvoAbstractSyntax;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";
 
 
-public Query parser(str x, loc l){
-	return parse(#Query, x, l);
+public EvolutionScript parser(str x, loc l){
+	return parse(#EvolutionScript, x, l);
 }
 
 
-public void evalQuery(Query x, loc selection) {
+public void evalQuery(EvolutionScript x, loc selection) {
 	text("bleh");
 }
 
-public void testString(Query x, loc selection) {
+public void testString(EvolutionScript x, loc selection) {
 	text("Test display string");
 }
 

@@ -1,2 +1,1 @@
-from Product p select p where p.id == "1230"
-
+from Product p select p where p.id == "1230";

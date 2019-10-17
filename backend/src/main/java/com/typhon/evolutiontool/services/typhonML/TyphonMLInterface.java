@@ -3,8 +3,7 @@ package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
-import typhonml.*;
-import typhonml.Database;
+import it.univaq.disim.typhonml;
 
 /**
  * Interface to access TyphonML.

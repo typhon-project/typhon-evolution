@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: typhon-evo
-Bundle-SymbolicName: typhon-evo;singleton:=true
+Bundle-Name: be.unamur.typhonevo.backend
+Bundle-SymbolicName: be.unamur.typhonevo.backend;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: it.univaq.disim.typhonml;bundle-version="0.1.1",
  typhonql;bundle-version="0.1.0"

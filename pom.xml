@@ -64,11 +64,15 @@
             <version>2.10.0</version>
         </dependency>
         
-        <dependency>
-		  <groupId>org.robolectric</groupId>
+        <!-- https://mvnrepository.com/artifact/org.junit/org.junit -->
+		<!-- https://mvnrepository.com/artifact/org.junit/org.junit -->
+		<dependency>
+		  <groupId>junit</groupId>
 		  <artifactId>junit</artifactId>
-		  <version>4.3.1</version>
+		  <version>4.12</version>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>

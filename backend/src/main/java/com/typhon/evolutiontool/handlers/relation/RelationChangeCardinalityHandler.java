@@ -2,6 +2,7 @@ package main.java.com.typhon.evolutiontool.handlers.relation;
 
 import main.java.com.typhon.evolutiontool.entities.CardinalityDO;
 import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
+import main.java.com.typhon.evolutiontool.entities.RelationDO;
 import main.java.com.typhon.evolutiontool.entities.SMO;
 import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
 import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
@@ -24,10 +25,10 @@ public class RelationChangeCardinalityHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
-            Relation relation = (Relation) smo.getInputParameter().get(ParametersKeyString.RELATION);
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             Cardinality cardinality = (Cardinality) smo.getInputParameter().get(ParametersKeyString.CARDINALITY);
-            Model targetModel = typhonMLInterface.changeCardinalityInRelation(RelationDOFactory.buildInstance(relation, false), CardinalityDO.get(cardinality.getValue()), model);
-            typhonQLInterface.changeCardinalityInRelation(relation.getName(), relation.getType().getName(), CardinalityDO.get(cardinality.getValue()), targetModel);
+            Model targetModel = typhonMLInterface.changeCardinalityInRelation(relationDO, CardinalityDO.get(cardinality.getValue()), model);
+            typhonQLInterface.changeCardinalityInRelation(relationDO.getName(), relationDO.getSourceEntity().getName(), CardinalityDO.get(cardinality.getValue()), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");

@@ -17,7 +17,9 @@ public EvoSyntax parser(str x, loc l){
 
 
 public void evalQuery(EvoSyntax x, loc selection) {
-	text("bleh");
+	m = implode(#EvoSyntax, x);
+	println(m);
+	text(m);
 }
 
 public void testString(EvoSyntax x, loc selection) {

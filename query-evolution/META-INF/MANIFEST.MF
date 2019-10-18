@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PicoPlugin
-Bundle-SymbolicName: PicoPlugin;singleton:=true
+Bundle-Name: QueryEvolution
+Bundle-SymbolicName: QueryEvolution;singleton:=true
 Bundle-Version: 1.0.0
 Require-Bundle: rascal_eclipse,
  typhonql;bundle-version="0.1.0",
- typhonql-ide;bundle-version="0.1.0"
+ typhonql-ide;bundle-version="0.1.0",
+ it.univaq.disim.typhonml;bundle-version="0.1.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

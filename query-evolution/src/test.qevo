@@ -1,5 +1,7 @@
+Entity Add test,
+Entity Add missing,
+Entity Rename test to test
 
-
-from Product p select p where p.id == "1230";
-from Product p select p where p.id == "1230";
+from Product p select p where p.id == "1230",
+from Product p select p where p.id == "1230",
 from Person p select p.name

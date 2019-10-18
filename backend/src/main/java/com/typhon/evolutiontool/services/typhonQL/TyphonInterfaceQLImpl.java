@@ -1,13 +1,15 @@
 package main.java.com.typhon.evolutiontool.services.typhonQL;
 
+
 import main.java.com.typhon.evolutiontool.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
-import typhonql;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 

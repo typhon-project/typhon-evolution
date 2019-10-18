@@ -2,6 +2,7 @@ module lang::typhonql::Query
 
 extend lang::typhonql::Expr;
 
+
 syntax Query 
   = from: "from" {Binding ","}+ bindings "select" {Result ","}+ selected Where? where GroupBy? groupBy OrderBy? orderBy;
 

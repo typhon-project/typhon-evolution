@@ -1,13 +1,13 @@
 package main.java.com.typhon.evolutiontool.entities;
-
-import com.typhon.evolutiontool.utils.AttributeDOFactory;
-import com.typhon.evolutiontool.utils.EntityDOFactory;
-import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import main.java.com.typhon.evolutiontool.utils.AttributeDOFactory;
+import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
+import main.java.com.typhon.evolutiontool.utils.RelationDOFactory;
 
 
 /**

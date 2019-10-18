@@ -1,7 +1,6 @@
 package main.java.com.typhon.evolutiontool.utils;
 
 import main.java.com.typhon.evolutiontool.entities.SMO;
-import it.univaq.disim.typhon.TyphonMLStandaloneSetup;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;

@@ -18,12 +18,11 @@ public EvoSyntax parser(str x, loc l){
 
 public void evalQuery(EvoSyntax x, loc selection) {
 	m = implode(#EvoSyntax, x);
-	println(m);
 	text(m);
 }
 
 public void testString(EvoSyntax x, loc selection) {
-	text("Test display string");
+	text(["Test display string"]);
 }
 
 public set[Contribution] languageContrib = {

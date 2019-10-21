@@ -1,8 +1,9 @@
 module lang::typhonevo::EvoAbstractSyntax
 
 extend lang::typhonql::Query;
+extend lang::std::Id;
 
-lexical EvoID = [a-z][a-z0-9]* !>> [a-z0-9];
+//layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
 
 start syntax EvoSyntax 
 	= evosyntax: {ChangeOperator ","}+ operators {Query ","}* queries;
@@ -12,10 +13,12 @@ syntax ChangeOperator
 	= changeoperator: Object obj Operation op;
 	
 syntax Object
-	= entity: "Entity";
+	= entity: "Entity"
+	| relation: "Relation"
+	;
 	
 
 syntax Operation
-	= add: "Add" EvoID name
-	| rename: "Rename" EvoID oldName "to" EvoID newName
+	= add: "Add" EId name
+	| rename: "Rename" EId oldName "to" EId newName
 	;

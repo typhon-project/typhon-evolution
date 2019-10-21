@@ -1,6 +1,5 @@
 Entity Add test,
-Entity Add missing,
-Entity Rename test to test
+Entity Rename Product to Produit
 
 from Product p select p where p.id == "1230",
 from Product p select p where p.id == "1230",

@@ -6,6 +6,7 @@ import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Entity;
 import typhonml.Model;
 import typhonml.Relation;
+import typhonml.Database;
 
 /**
  * Interface to access TyphonML.

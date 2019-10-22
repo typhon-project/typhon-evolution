@@ -8,6 +8,8 @@ import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
 import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 import typhonml.Model;
 
 import java.util.List;
@@ -51,5 +53,37 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade{
     public void setEvolutionService(EvolutionService evolutionService) {
         this.evolutionService = evolutionService;
     }
+
+	@Override
+	public String evolve(String initialModelPath, String finalModelPath) {
+		 Model model;
+	        
+	        logger.info("Registering TyphonML Package needed resources ");
+	        TyphonMLUtils.typhonMLPackageRegistering();
+	        model = TyphonMLUtils.loadModelTyphonML(initialModelPath);
+	        if (model == null) {
+	            logger.error("FAILED to load initial model [{}]",initialModelPath);
+	            return ("FAILED to load initial model");
+	        }
+
+	        try {
+//	            evolutionToolFacade.executeSMO(Arrays.asList(smo),"resources/baseModel.xmi","resources/baseModel.xmi");
+	            model= this.executeChangeOperators(model);
+	         // Saving last model
+		        logger.info("Saving last TyphonML model to  [" + finalModelPath + "]");
+		        TyphonMLUtils.saveModel(model,finalModelPath);
+	            return "Change Operators inside TyphonML model in ["+initialModelPath+"] executed and new TyphonML model saved in ["+finalModelPath+"]";
+	        } catch (InputParameterException exception) {
+	            logger.error("Missing input parameters");
+	            return ("FAILED "+exception.getMessage());
+	        } catch (EvolutionOperationNotSupported exception){
+	            logger.error("The operation required is not yet supported");
+	            return ("FAILED "+exception.getMessage());
+	        }
+
+	        
+
+		
+	}
 }
 

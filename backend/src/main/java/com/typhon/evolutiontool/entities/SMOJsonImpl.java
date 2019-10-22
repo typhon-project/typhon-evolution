@@ -3,7 +3,9 @@ package main.java.com.typhon.evolutiontool.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.typhon.evolutiontool.utils.MyKeyDeserializer;
+
+import main.java.com.typhon.evolutiontool.utils.MyKeyDeserializer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

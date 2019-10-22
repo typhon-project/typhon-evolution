@@ -19,7 +19,7 @@ public EvoSyntax parser(str x, loc l){
 
 public void evalQuery(EvoSyntax x, loc selection) {
 	evolved = test_modif(x);
-	text(evolved);
+	text("<evolved>");
 }
 
 public void testString(EvoSyntax x, loc selection) {

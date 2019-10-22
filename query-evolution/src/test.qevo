@@ -1,4 +1,5 @@
-Entity Add test,
+Entity Add Bazinga,
+Entity Add Test,
 Entity Rename Product to Produit
 
 from Product p select p where p.id == "1230",

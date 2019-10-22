@@ -6,6 +6,7 @@ import util::IDE;
 import util::ValueUI;
 
 import lang::typhonevo::EvoAbstractSyntax;
+import lang::typhonevo::EvoCompiler;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";
@@ -17,12 +18,12 @@ public EvoSyntax parser(str x, loc l){
 
 
 public void evalQuery(EvoSyntax x, loc selection) {
-	m = implode(#EvoSyntax, x);
-	text(m);
+	evolved = test_modif(x);
+	text(evolved);
 }
 
 public void testString(EvoSyntax x, loc selection) {
-	text(["Test display string"]);
+	text(extract_op(x));
 }
 
 public set[Contribution] languageContrib = {

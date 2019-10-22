@@ -3,8 +3,6 @@ module lang::typhonevo::EvoAbstractSyntax
 extend lang::typhonql::Query;
 extend lang::std::Id;
 
-//layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
-
 start syntax EvoSyntax 
 	= evosyntax: {ChangeOperator ","}+ operators {Query ","}* queries;
 	

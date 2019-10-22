@@ -7,6 +7,7 @@ import util::ValueUI;
 
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EvoCompiler;
+import lang::typhonevo::BridgeML;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";
@@ -23,7 +24,7 @@ public void evalQuery(EvoSyntax x, loc selection) {
 }
 
 public void testString(EvoSyntax x, loc selection) {
-	text(extract_op(x));
+	text(HelloBridge());
 }
 
 public set[Contribution] languageContrib = {

@@ -1,8 +1,6 @@
 package main.java.com.typhon.evolutiontool.handlers;
 
 import main.java.com.typhon.evolutiontool.entities.DatabaseType;
-import main.java.com.typhon.evolutiontool.entities.DocumentDB;
-import main.java.com.typhon.evolutiontool.entities.RelationalDB;
 import main.java.com.typhon.evolutiontool.entities.SMO;
 import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
 import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;

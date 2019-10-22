@@ -23,7 +23,7 @@ public class RelationDisableOppositeHandler extends BaseHandler {
         Model targetModel;
 
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
             oppositeRelation = relation.getOpposite();
 
             targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), model);

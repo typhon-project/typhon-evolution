@@ -5,8 +5,33 @@ Bundle-SymbolicName: be.unamur.typhonevo.backend;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: typhonql,
  it.univaq.disim.typhonml;bundle-version="0.1.0",
- org.eclipse.emf.codegen.ecore;bundle-version="2.19.0",
+ org.eclipse.emf.codegen.ecore;bundle-version="2.18.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.16.0",
- org.eclipse.xtext;bundle-version="2.19.0"
+ org.eclipse.xtext;bundle-version="2.18.0",
+ org.slf4j.api;bundle-version="1.7.2",
+ org.junit;bundle-version="4.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: main.java.com.typhon.evolutiontool.services
+Export-Package: main.java.com.typhon.evolutiontool.dummy,
+ main.java.com.typhon.evolutiontool.entities,
+ main.java.com.typhon.evolutiontool.exceptions,
+ main.java.com.typhon.evolutiontool.handlers,
+ main.java.com.typhon.evolutiontool.handlers.attribute,
+ main.java.com.typhon.evolutiontool.handlers.entity,
+ main.java.com.typhon.evolutiontool.handlers.relation,
+ main.java.com.typhon.evolutiontool.services;
+  uses:="main.java.com.typhon.evolutiontool.services.typhonML,
+   main.java.com.typhon.evolutiontool.services.typhonQL,
+   main.java.com.typhon.evolutiontool.handlers,
+   main.java.com.typhon.evolutiontool.entities,
+   main.java.com.typhon.evolutiontool.services.typhonDL,
+   typhonml",
+ main.java.com.typhon.evolutiontool.services.typhonDL,
+ main.java.com.typhon.evolutiontool.services.typhonML,
+ main.java.com.typhon.evolutiontool.services.typhonQL,
+ main.java.com.typhon.evolutiontool.utils,
+ main.resources,
+ main.resources.templates,
+ main.resources.test,
+ main.resources.test.old,
+ test
+Automatic-Module-Name: be.unamur.typhonevo.backend

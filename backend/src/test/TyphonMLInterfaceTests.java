@@ -1,25 +1,17 @@
 package test;
 
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-import main.java.com.typhon.evolutiontool.entities.EntityDOJsonImpl;
-import main.java.com.typhon.evolutiontool.entities.EvolutionOperator;
-import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
-import main.java.com.typhon.evolutiontool.entities.RelationDO;
-import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
-import main.java.com.typhon.evolutiontool.entities.SMOJsonImpl;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLObject;
-import main.java.com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
-import main.java.com.typhon.evolutiontool.utils.SMOFactory;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import typhonml.Model;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import main.java.com.typhon.evolutiontool.entities.EntityDO;
+import main.java.com.typhon.evolutiontool.entities.EntityDOImpl;
+import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+import typhonml.Model;
 
 public class TyphonMLInterfaceTests {
 
@@ -35,7 +27,7 @@ public class TyphonMLInterfaceTests {
 
     @Test
     public void testCreateEntityTyphonML() {
-        EntityDO entity = new EntityDOJsonImpl("fakeEntity");
+        EntityDO entity = new EntityDOImpl("fakeEntity", null, null, null, null);
         targetModel = typhonMLInterface.createEntityType(sourceModel, entity);
         assertNotNull(targetModel);
         assertEquals(entity.getName(), targetModel.getDataTypes().get(0).getName());
@@ -43,7 +35,7 @@ public class TyphonMLInterfaceTests {
 
     @Test
     public void testCreateEntityWithAttributesTyphonML() {
-        EntityDO entity = new EntityDOJsonImpl("fakeEntity");
+        EntityDO entity = new EntityDOImpl("fakeEntity", null, null, null, null);
         entity.addAttribute("attr1", "string");
         entity.addAttribute("attr2", "number");
         targetModel = typhonMLInterface.createEntityType(sourceModel, entity);

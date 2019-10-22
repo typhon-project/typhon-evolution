@@ -1,15 +1,19 @@
 package main.java.com.typhon.evolutiontool.handlers.entity;
 
-import main.java.com.typhon.evolutiontool.entities.*;
+import java.util.Arrays;
+
+import main.java.com.typhon.evolutiontool.entities.CardinalityDO;
+import main.java.com.typhon.evolutiontool.entities.EntityDO;
+import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
+import main.java.com.typhon.evolutiontool.entities.RelationDO;
+import main.java.com.typhon.evolutiontool.entities.RelationDOImpl;
+import main.java.com.typhon.evolutiontool.entities.SMO;
 import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
 import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import main.java.com.typhon.evolutiontool.entities.RelationDOImpl;
 import typhonml.Model;
-
-import java.util.Arrays;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
 
@@ -44,9 +48,9 @@ public class EntitySplitVerticalHandler extends BaseHandler {
                 ParametersKeyString.SECONDNEWENTITY,
                 ParametersKeyString.DATABASENAME,
                 ParametersKeyString.DATABASETYPE))) {
-            sourceEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.ENTITY);
-            firstNewEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.FIRSTNEWENTITY);
-            secondNewEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.SECONDNEWENTITY);
+            sourceEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.ENTITY);;
+            firstNewEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY);
+            secondNewEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY);
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
 

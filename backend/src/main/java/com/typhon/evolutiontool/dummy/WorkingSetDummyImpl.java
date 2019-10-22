@@ -1,26 +1,26 @@
 package main.java.com.typhon.evolutiontool.dummy;
 
-import main.java.com.typhon.evolutiontool.entities.EntityInstance;
 import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.Entity;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class WorkingSetDummyImpl implements WorkingSet {
 
-    public LinkedHashMap<String, List<EntityInstance>> rows;
+    public LinkedHashMap<String, List<Entity>> rows;
 
     public WorkingSetDummyImpl() {
         rows = new LinkedHashMap<>();
     }
 
     @Override
-    public void setEntityRows(String entity, List<EntityInstance> entities) {
+    public void setEntityRows(String entity, List<Entity> entities) {
         rows.put(entity, entities);
     }
 
     @Override
-    public List<EntityInstance> getEntityInstanceRows(String entityname) {
+    public List<Entity> getEntityInstanceRows(String entityname) {
         return rows.get(entityname);
     }
 
@@ -30,12 +30,12 @@ public class WorkingSetDummyImpl implements WorkingSet {
     }
 
     @Override
-    public LinkedHashMap<String, List<EntityInstance>> getRows() {
+    public LinkedHashMap<String, List<Entity>> getRows() {
         return rows;
     }
 
     @Override
-    public void setRows(LinkedHashMap<String, List<EntityInstance>> rows) {
+    public void setRows(LinkedHashMap<String, List<Entity>> rows) {
         this.rows = rows;
     }
 

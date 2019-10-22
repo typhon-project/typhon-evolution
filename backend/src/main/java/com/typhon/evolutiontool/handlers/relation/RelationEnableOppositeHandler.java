@@ -6,7 +6,6 @@ import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import main.java.com.typhon.evolutiontool.entities.RelationDOImpl;
 import typhonml.Model;
 
 import java.util.Arrays;
@@ -22,7 +21,7 @@ public class RelationEnableOppositeHandler extends BaseHandler {
         Model targetModel;
 
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
             oppositeRelation = new RelationDOImpl(
                     smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString(),
                     relation.getTargetEntity(),

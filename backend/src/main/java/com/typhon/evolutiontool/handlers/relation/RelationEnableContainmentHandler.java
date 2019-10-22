@@ -21,7 +21,7 @@ public class RelationEnableContainmentHandler extends BaseHandler {
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            RelationDO relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
             if (typhonMLInterface.getDatabaseType(relation.getSourceEntity().getName(), model) == DatabaseType.RELATIONALDB) {
                 throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
             }

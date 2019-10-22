@@ -1,7 +1,7 @@
 package main.java.com.typhon.evolutiontool.services.typhonQL;
 
-import main.java.com.typhon.evolutiontool.entities.TyphonMLSchema;
 import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.Model;
 
 import java.io.IOException;
 import java.util.Map;
@@ -17,7 +17,7 @@ public interface TyphonQLConnection {
     String executeTyphonQLDDL(String tqlDDL);
 
     //Taken from D4.2
-    static TyphonQLConnection newEngine(TyphonMLSchema schema) {
+    static TyphonQLConnection newEngine(Model schema) {
             return new TyphonQLConnectionImpl(schema);
     }
 

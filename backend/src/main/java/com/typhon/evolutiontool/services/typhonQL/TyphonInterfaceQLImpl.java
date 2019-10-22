@@ -1,21 +1,23 @@
 package main.java.com.typhon.evolutiontool.services.typhonQL;
 
 
-import main.java.com.typhon.evolutiontool.entities.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import typhonml.Model;
-
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import main.java.com.typhon.evolutiontool.entities.AttributeDO;
+import main.java.com.typhon.evolutiontool.entities.CardinalityDO;
+import main.java.com.typhon.evolutiontool.entities.EntityDO;
+import main.java.com.typhon.evolutiontool.entities.RelationDO;
+import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.Model;
 
 
 public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     Logger logger = LoggerFactory.getLogger(TyphonInterfaceQLImpl.class);
-    private TyphonQLConnection typhonQLConnection;
-
 
     public TyphonInterfaceQLImpl() {
 
@@ -24,7 +26,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     private TyphonQLConnection getTyphonQLConnection(Model model) {
         //TODO Model vs TyphonMLSchema specif?
-        return TyphonQLConnection.newEngine(new TyphonMLSchema(model.toString()));
+        return TyphonQLConnection.newEngine(model);
     }
 
     @Override

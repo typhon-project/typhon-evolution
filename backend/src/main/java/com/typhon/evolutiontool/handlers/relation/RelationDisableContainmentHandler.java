@@ -20,7 +20,7 @@ public class RelationDisableContainmentHandler extends BaseHandler {
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
+            RelationDO relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
             Model targetModel = typhonMLInterface.disableContainment(relation, model);
             typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;

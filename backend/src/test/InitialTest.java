@@ -1,7 +1,5 @@
 package test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import main.java.com.typhon.evolutiontool.entities.SMO;
 import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -25,7 +23,6 @@ public class InitialTest {
     protected TyphonMLInterface typhonMLInterface = new TyphonMLInterfaceImpl();
     protected EvolutionServiceImpl evolutionService = new EvolutionServiceImpl(typhonQLInterface, typhonMLInterface, typhonDLInterface);
 
-    ObjectMapper mapper = new ObjectMapper();
     SMO smo;
     protected static Model sourceModel, targetModel;
 

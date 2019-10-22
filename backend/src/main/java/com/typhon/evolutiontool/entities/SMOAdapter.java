@@ -1,13 +1,27 @@
 package main.java.com.typhon.evolutiontool.entities;
-import typhonml.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.com.typhon.evolutiontool.utils.AttributeDOFactory;
 import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
-import main.java.com.typhon.evolutiontool.utils.RelationDOFactory;
+import typhonml.AddAttribute;
+import typhonml.AddEntity;
+import typhonml.AddRelation;
+import typhonml.ChangeAttributeType;
+import typhonml.ChangeOperator;
+import typhonml.ChangeRelationCardinality;
+import typhonml.DisableBidirectionalRelation;
+import typhonml.DisableRelationContainment;
+import typhonml.EnableBidirectionalRelation;
+import typhonml.EnableRelationContainment;
+import typhonml.Entity;
+import typhonml.MigrateEntity;
+import typhonml.RemoveAttribute;
+import typhonml.RemoveEntity;
+import typhonml.RemoveRelation;
+import typhonml.RenameAttribute;
+import typhonml.RenameEntity;
+import typhonml.RenameRelation;
 
 
 /**
@@ -184,49 +198,5 @@ public class SMOAdapter implements SMO {
                 return false;
         }
         return true;
-    }
-
-
-    @Override
-    public EntityDO getEntityDOFromInputParameter(String parameterkey) {
-        //Because AddEntity Operator extends Entity in TyphonML meta model.
-        if (changeOperator instanceof AddEntity)
-            return EntityDOFactory.buildInstance((AddEntity) changeOperator);
-        return null;
-    }
-
-    @Override
-    public RelationDO getRelationDOFromInputParameter(String parameterkey) {
-        if (this.getTyphonObject() == TyphonMLObject.RELATION) {
-            if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
-                return RelationDOFactory.buildInstance((AddRelation) changeOperator, false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.DISABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation(), false);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
-        if (this.getTyphonObject() == TyphonMLObject.ATTRIBUTE && this.getEvolutionOperator() == EvolutionOperator.ADD) {
-            return AttributeDOFactory.buildInstance((AddAttribute) changeOperator);
-        }
-        return null;
-    }
-
-    @Override
-    public <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass) {
-        return null;
     }
 }

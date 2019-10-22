@@ -26,11 +26,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testCreateEntity() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
-        targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateEntitySmoValidTyphonML.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
+//        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
     /**
@@ -38,11 +38,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testRemoveEntity() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
-        targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RemoveEntitySmoValidTyphonML.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
+//        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
 
@@ -51,11 +51,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testRenameEntity() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RenameEntitySmo.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
-        targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/RenameEntitySmo.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
+//        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
 
@@ -64,11 +64,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testSplitHorizontal() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/SplitHorizontalSmo.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
-        targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/SplitHorizontalSmo.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
+//        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
     /**
@@ -76,11 +76,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testMigrateEntity() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/MigrateEntitySmo.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
-        targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/MigrateEntitySmo.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML(SOURCE_MODEL_PATH);
+//        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
     /**
@@ -88,11 +88,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testDeleteRelationship() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/DeleteRelationSmo.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
-        targetModel = evolutionService.evolveRelation(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/DeleteRelationSmo.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
+//        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
     /**
@@ -100,11 +100,11 @@ public class IntegrationTests extends InitialTest {
      */
     @Test
     public void testCreateRelation() throws IOException, InputParameterException, EvolutionOperationNotSupported {
-        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateRelationSmo.json"));
-
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
-        targetModel = evolutionService.evolveRelation(smo, sourceModel);
-        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
+//        smo = mapper.readerFor(SMOJsonImpl.class).readValue(new File("src/main/resources/test/CreateRelationSmo.json"));
+//
+//        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/complexModelWithChangeOperators.xmi");
+//        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+//        TyphonMLUtils.saveModel(targetModel, FINAL_MODEL_PATH);
     }
 
     @Test

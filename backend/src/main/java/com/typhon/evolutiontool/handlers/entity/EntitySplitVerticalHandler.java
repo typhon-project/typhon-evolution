@@ -13,6 +13,8 @@ import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Entity;
 import typhonml.Model;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
@@ -48,9 +50,9 @@ public class EntitySplitVerticalHandler extends BaseHandler {
                 ParametersKeyString.SECONDNEWENTITY,
                 ParametersKeyString.DATABASENAME,
                 ParametersKeyString.DATABASETYPE))) {
-            sourceEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.ENTITY);;
-            firstNewEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY);
-            secondNewEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY);
+            sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
+            firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY));
+            secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY));
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
 

@@ -11,6 +11,8 @@ import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Entity;
 import typhonml.Model;
 
 public class EntityAddHandler extends BaseHandler {
@@ -38,7 +40,7 @@ public class EntityAddHandler extends BaseHandler {
             }
             //Executing evolution operations
 //            newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
-            newEntity = (EntityDO) smo.getInputParameter().get(ParametersKeyString.ENTITY);
+            newEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);

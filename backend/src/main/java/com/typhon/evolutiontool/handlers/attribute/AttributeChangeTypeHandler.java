@@ -1,7 +1,8 @@
 package main.java.com.typhon.evolutiontool.handlers.attribute;
 
+import java.util.Arrays;
+
 import main.java.com.typhon.evolutiontool.entities.AttributeDO;
-import main.java.com.typhon.evolutiontool.entities.AttributeDOImpl;
 import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
 import main.java.com.typhon.evolutiontool.entities.SMO;
 import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -13,8 +14,6 @@ import main.java.com.typhon.evolutiontool.utils.AttributeDOFactory;
 import typhonml.Attribute;
 import typhonml.DataType;
 import typhonml.Model;
-
-import java.util.Arrays;
 
 public class AttributeChangeTypeHandler extends BaseHandler {
 

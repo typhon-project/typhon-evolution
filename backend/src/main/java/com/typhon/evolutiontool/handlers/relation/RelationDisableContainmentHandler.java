@@ -1,5 +1,7 @@
 package main.java.com.typhon.evolutiontool.handlers.relation;
 
+import java.util.Collections;
+
 import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
 import main.java.com.typhon.evolutiontool.entities.RelationDO;
 import main.java.com.typhon.evolutiontool.entities.SMO;
@@ -8,9 +10,9 @@ import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
 import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import main.java.com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.Model;
-
-import java.util.Collections;
+import typhonml.Relation;
 
 public class RelationDisableContainmentHandler extends BaseHandler {
 
@@ -20,7 +22,7 @@ public class RelationDisableContainmentHandler extends BaseHandler {
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
+            RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             Model targetModel = typhonMLInterface.disableContainment(relation, model);
             typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;

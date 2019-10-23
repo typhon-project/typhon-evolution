@@ -1,19 +1,15 @@
 package com.typhon.evolutiontool.test;
 
-
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-
+import org.junit.Assert;
+import org.junit.Test;
 import typhonml.ChangeOperator;
+
+import java.util.List;
 
 public class ChangeOperatorsTests extends InitialTest {
 
@@ -24,12 +20,12 @@ public class ChangeOperatorsTests extends InitialTest {
         ChangeOperator changeOperator;
         changeOperator = changeOperatorList.get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeOperator);
-        assertEquals(TyphonMLObject.ENTITY, smo.getTyphonObject());
-        assertEquals(EvolutionOperator.REMOVE, smo.getEvolutionOperator());
+        Assert.assertEquals(TyphonMLObject.ENTITY, smo.getTyphonObject());
+        Assert.assertEquals(EvolutionOperator.REMOVE, smo.getEvolutionOperator());
 
         changeOperator = changeOperatorList.get(1);
         SMOAdapter smo2 = SMOFactory.createSMOAdapterFromChangeOperator(changeOperator);
-        assertEquals(TyphonMLObject.ENTITY, smo2.getTyphonObject());
-        assertEquals(EvolutionOperator.RENAME, smo2.getEvolutionOperator());
+        Assert.assertEquals(TyphonMLObject.ENTITY, smo2.getTyphonObject());
+        Assert.assertEquals(EvolutionOperator.RENAME, smo2.getEvolutionOperator());
     }
 }

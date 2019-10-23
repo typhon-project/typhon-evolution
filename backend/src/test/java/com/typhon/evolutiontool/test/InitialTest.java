@@ -1,7 +1,5 @@
 package com.typhon.evolutiontool.test;
 
-import org.junit.Before;
-
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -11,7 +9,7 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-
+import org.junit.Before;
 import typhonml.Model;
 
 public class InitialTest {

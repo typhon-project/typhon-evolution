@@ -152,20 +152,14 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RenameAttribute) changeOperator).getAttributeToRename());
                 inputParameter.put(ParametersKeyString.NEWATTRIBUTENAME, ((RenameAttribute) changeOperator).getNewName());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
                 inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((ChangeAttributeType) changeOperator).getEntityName());
             }
         }
     }

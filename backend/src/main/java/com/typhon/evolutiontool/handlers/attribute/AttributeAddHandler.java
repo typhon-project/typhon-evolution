@@ -27,7 +27,7 @@ public class AttributeAddHandler extends BaseHandler {
             String attributeName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ATTRIBUTENAME));
             String attributeImportedNamespace = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ATTRIBUTEIMPORTEDNAMESPACE));
             DataTypeDO dataTypeDO = DataTypeDOFactory.buildInstance((DataType) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTETYPE));
-            AttributeDO attributeDO = new AttributeDOImpl(attributeName, attributeImportedNamespace, dataTypeDO);
+            AttributeDO attributeDO = new AttributeDOImpl(attributeName, attributeImportedNamespace, dataTypeDO, entityDO);
             Model targetModel = typhonMLInterface.addAttribute(attributeDO, entityDO.getName(), model);
             typhonQLInterface.addAttribute(attributeDO, entityDO.getName(), targetModel);
             return targetModel;

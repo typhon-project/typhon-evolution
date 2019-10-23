@@ -12,7 +12,6 @@ import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import typhonml.Attribute;
 import typhonml.Model;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -24,9 +23,9 @@ public class AttributeRemoveHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.ENTITYNAME))) {
+        if (containParameters(smo, Collections.singletonList(ParametersKeyString.ATTRIBUTE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
-            String entityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
+            String entityName = attributeDO.getEntity().getName();
             Model targetModel = typhonMLInterface.removeAttribute(attributeDO, entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
             typhonQLInterface.removeAttributes(entityName, Collections.singletonList(attributeDO.getName()), targetModel);

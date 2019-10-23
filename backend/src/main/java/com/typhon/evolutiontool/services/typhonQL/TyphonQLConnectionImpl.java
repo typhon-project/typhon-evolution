@@ -80,6 +80,9 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
     private void writeToFile(String query) {
         byte[] strToBytes = query.concat("\n").getBytes();
         try {
+            if (!Files.exists(outPath)) {
+                Files.createFile(outPath);
+            }
             Files.write(outPath, strToBytes, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();

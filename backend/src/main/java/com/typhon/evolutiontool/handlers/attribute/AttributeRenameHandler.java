@@ -22,15 +22,15 @@ public class AttributeRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.NEWATTRIBUTENAME, ParametersKeyString.ENTITYNAME))) {
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.NEWATTRIBUTENAME))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
             String newAttributeName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.NEWATTRIBUTENAME));
-            String entityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
+            String entityName = attributeDO.getEntity().getName();
             Model targetModel = typhonMLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, model);
             typhonQLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ATTRIBUTE + ", " + ParametersKeyString.NEWATTRIBUTENAME + ", " + ParametersKeyString.ENTITYNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.NEWATTRIBUTENAME + ", " + ParametersKeyString.ENTITYNAME + "]");
         }
     }
 

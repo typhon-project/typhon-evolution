@@ -23,15 +23,15 @@ public class AttributeChangeTypeHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.ATTRIBUTE, ParametersKeyString.ATTRIBUTETYPE))) {
-            String entityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.ATTRIBUTETYPE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
+            String entityName = attributeDO.getEntity().getName();
             String dataTypeName = ((DataType) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTETYPE)).getName();
             Model targetModel = typhonMLInterface.changeTypeAttribute(attributeDO, entityName, dataTypeName, model);
             typhonQLInterface.changeTypeAttribute(attributeDO, entityName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITYNAME + ", " + ParametersKeyString.ATTRIBUTENAME + ", " + ParametersKeyString.ATTRIBUTETYPE + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ATTRIBUTENAME + ", " + ParametersKeyString.ATTRIBUTETYPE + "]");
         }
     }
 }

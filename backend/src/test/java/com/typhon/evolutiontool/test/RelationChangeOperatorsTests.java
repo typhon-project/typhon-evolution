@@ -1,12 +1,5 @@
 package com.typhon.evolutiontool.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMOAdapter;
@@ -14,18 +7,9 @@ import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-
-import typhonml.AddRelation;
-import typhonml.Cardinality;
-import typhonml.ChangeRelationCardinality;
-import typhonml.DisableBidirectionalRelation;
-import typhonml.DisableRelationContainment;
-import typhonml.EnableBidirectionalRelation;
-import typhonml.EnableRelationContainment;
-import typhonml.Entity;
-import typhonml.Relation;
-import typhonml.RemoveRelation;
-import typhonml.RenameRelation;
+import org.junit.Assert;
+import org.junit.Test;
+import typhonml.*;
 
 public class RelationChangeOperatorsTests extends InitialTest {
 
@@ -38,7 +22,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addRelationChangeOperator_final.xmi");
 
-        assertNull(null);
+        Assert.assertNull(null);
     }
 
     @Test
@@ -51,7 +35,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeRelationChangeOperator_final.xmi");
 
         Relation removedRelation = typhonMLInterface.getRelationFromNameInEntity(removeRelation.getRelationToRemove().getName(), ((Entity) removeRelation.getRelationToRemove().eContainer()).getName(), targetModel);
-        assertNull(removedRelation);
+        Assert.assertNull(removedRelation);
     }
 
     @Test
@@ -64,7 +48,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationContainmentChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(enableRelationContainment.getRelation().getName(), ((Entity) enableRelationContainment.getRelation().eContainer()).getName(), targetModel);
-        assertNotEquals(enableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
+        Assert.assertNotEquals(enableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
     }
 
     @Test
@@ -77,7 +61,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationContainmentChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(disableRelationContainment.getRelation().getName(), ((Entity) disableRelationContainment.getRelation().eContainer()).getName(), targetModel);
-        assertNotEquals(disableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
+        Assert.assertNotEquals(disableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
     }
 
     @Test
@@ -93,9 +77,9 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationOppositeChangeOperator_final.xmi");
 
         Relation newOppositeRelation = typhonMLInterface.getRelationFromNameInEntity("newOppositeRelation", "CreditCard", targetModel);
-        assertNotNull(newOppositeRelation);
-        assertEquals(newOppositeRelation.getName(), "newOppositeRelation");
-        assertEquals(newOppositeRelation.getCardinality().getValue(), Cardinality.ONE_MANY.getValue());
+        Assert.assertNotNull(newOppositeRelation);
+        Assert.assertEquals(newOppositeRelation.getName(), "newOppositeRelation");
+        Assert.assertEquals(newOppositeRelation.getCardinality().getValue(), Cardinality.ONE_MANY.getValue());
     }
 
     @Test
@@ -110,8 +94,8 @@ public class RelationChangeOperatorsTests extends InitialTest {
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationOppositeChangeOperator_final.xmi");
 
-        assertNull(typhonMLInterface.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), targetModel).getOpposite());
-        assertNull(typhonMLInterface.getRelationFromNameInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel));
+        Assert.assertNull(typhonMLInterface.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), targetModel).getOpposite());
+        Assert.assertNull(typhonMLInterface.getRelationFromNameInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel));
     }
 
     @Test
@@ -124,8 +108,8 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameRelationChangeOperator_final.xmi");
 
         Relation renamedRelation = typhonMLInterface.getRelationFromNameInEntity(renameRelation.getNewRelationName(), ((Entity) renameRelation.getRelationToRename().eContainer()).getName(), targetModel);
-        assertNotNull(renamedRelation);
-        assertEquals(renamedRelation.getName(), renameRelation.getNewRelationName());
+        Assert.assertNotNull(renamedRelation);
+        Assert.assertEquals(renamedRelation.getName(), renameRelation.getNewRelationName());
     }
 
     @Test
@@ -138,7 +122,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeCardinalityRelationChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(changeRelationCardinality.getRelation().getName(), ((Entity) changeRelationCardinality.getRelation().eContainer()).getName(), targetModel);
-        assertNotNull(updatedRelation);
-        assertEquals(updatedRelation.getCardinality(), changeRelationCardinality.getNewCardinality());
+        Assert.assertNotNull(updatedRelation);
+        Assert.assertEquals(updatedRelation.getCardinality(), changeRelationCardinality.getNewCardinality());
     }
 }

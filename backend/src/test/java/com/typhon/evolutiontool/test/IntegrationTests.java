@@ -1,14 +1,5 @@
 package com.typhon.evolutiontool.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
@@ -16,9 +7,14 @@ import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-
+import org.junit.Test;
 import typhonml.ChangeOperator;
 import typhonml.Model;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class IntegrationTests extends InitialTest {
 

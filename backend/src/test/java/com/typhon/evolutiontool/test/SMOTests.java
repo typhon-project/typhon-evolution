@@ -1,15 +1,14 @@
 package com.typhon.evolutiontool.test;
 
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.SMO;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.SMO;
 
 public class SMOTests {
 

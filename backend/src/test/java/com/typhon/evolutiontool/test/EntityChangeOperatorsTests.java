@@ -1,25 +1,17 @@
 package com.typhon.evolutiontool.test;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import org.junit.Assert;
+import org.junit.Test;
+import typhonml.*;
 
-import typhonml.AddEntity;
-import typhonml.Attribute;
-import typhonml.MigrateEntity;
-import typhonml.RemoveEntity;
-import typhonml.RenameEntity;
-import typhonml.TyphonmlFactory;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class EntityChangeOperatorsTests extends InitialTest {
 
@@ -80,9 +72,9 @@ public class EntityChangeOperatorsTests extends InitialTest {
         migrateEntity.setEntity(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
         migrateEntity.setNewDatabase(typhonMLInterface.getDatabaseFromName("MongoDB", sourceModel));
 
-        assertNotEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
+        Assert.assertNotEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        assertEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
+        Assert.assertEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
     }
 }

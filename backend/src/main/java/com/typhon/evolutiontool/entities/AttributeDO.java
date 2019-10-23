@@ -8,4 +8,6 @@ public interface AttributeDO {
 
     DataTypeDO getDataTypeDO();
 
+    EntityDO getEntity();
+
 }

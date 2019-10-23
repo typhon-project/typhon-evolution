@@ -1,9 +1,0 @@
-{
-  "version": "TyphonDL_Current",
-  "runningdb": [
-    {
-      "databasetype": "relationaldb",
-      "databasename": "MySQL"
-    }
-  ]
-}

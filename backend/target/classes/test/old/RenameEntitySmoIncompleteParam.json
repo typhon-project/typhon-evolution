@@ -1,9 +1,0 @@
-{
-  "typhonobject": "ENTITY",
-  "operator": "RENAME",
-  "parameters":
-  {
-    "targetmodel": "TyphonML_V2",
-    "oldEntityName" : "Professor"
-  }
-}

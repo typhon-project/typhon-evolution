@@ -13,7 +13,6 @@ EvoSyntax test_modif(EvoSyntax x){
 	for ( ChangeOperator op <- operators){
 		println(op);
 		for (Query q <- queries){
-			println(q);
 			transform(q, op);
 		}
 	};

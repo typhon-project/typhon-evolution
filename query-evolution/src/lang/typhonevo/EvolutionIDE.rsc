@@ -24,7 +24,8 @@ public void evalQuery(EvoSyntax x, loc selection) {
 }
 
 public void testString(EvoSyntax x, loc selection) {
-	text(HelloBridge());
+	t = HelloBridge();	
+	text(t);
 }
 
 public set[Contribution] languageContrib = {

@@ -1,4 +1,7 @@
 /target/
+/backend/target/
+/query-evolution/target/
+/rest-api/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###

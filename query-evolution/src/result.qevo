@@ -1,0 +1,8 @@
+Entity Add Bazinga,
+Entity Add Test,
+Entity Rename Product to Produit,
+Entity Rename Produit to Nothing
+
+from Nothing p select p where p.id == "1230",
+from Nothing p select p where p.id == "1230",
+from Person p select p.name

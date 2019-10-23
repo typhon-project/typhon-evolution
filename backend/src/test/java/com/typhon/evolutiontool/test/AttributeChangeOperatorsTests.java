@@ -1,13 +1,16 @@
-package test;
+package com.typhon.evolutiontool.test;
 
-import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
-import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
-import main.java.com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.utils.SMOFactory;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
-import test.InitialTest;
+
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMOAdapter;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.SMOFactory;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
 import typhonml.AddAttribute;
 import typhonml.Attribute;
 import typhonml.ChangeAttributeType;
@@ -15,13 +18,11 @@ import typhonml.Entity;
 import typhonml.RemoveAttribute;
 import typhonml.RenameAttribute;
 
-import static org.junit.Assert.assertNotNull;
-
 public class AttributeChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testAddAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addAttributeChangeOperator.xmi");
+        sourceModel = TyphonMLUtils.loadModelTyphonML("test/resources/addAttributeChangeOperator.xmi");
         AddAttribute addAttribute = (AddAttribute) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addAttribute);
 

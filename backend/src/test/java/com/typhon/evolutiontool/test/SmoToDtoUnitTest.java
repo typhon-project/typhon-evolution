@@ -1,18 +1,4 @@
-package test;
-
-//import com.fasterxml.jackson.databind.ObjectMapper;
-
-import main.java.com.typhon.evolutiontool.entities.SMO;
-//import main.java.com.typhon.evolutiontool.entities.SMODto;
-import main.java.com.typhon.evolutiontool.entities.SMOJsonImpl;
-
-import org.junit.Test;
-//import org.modelmapper.ModelMapper;
-
-import java.io.File;
-import java.io.IOException;
-
-import static junit.framework.TestCase.assertEquals;
+package com.typhon.evolutiontool.test;
 
 public class SmoToDtoUnitTest {
 

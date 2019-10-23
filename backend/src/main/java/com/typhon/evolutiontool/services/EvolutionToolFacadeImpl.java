@@ -1,11 +1,11 @@
-package main.java.com.typhon.evolutiontool.services;
+package com.typhon.evolutiontool.services;
 
 
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLObject;
-import main.java.com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

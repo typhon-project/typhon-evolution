@@ -1,24 +1,15 @@
-package test;
-
-//import com.fasterxml.jackson.databind.ObjectMapper;
-
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-//import main.java.com.typhon.evolutiontool.entities.EntityDOJsonImpl;
-import main.java.com.typhon.evolutiontool.entities.EvolutionOperator;
-import main.java.com.typhon.evolutiontool.entities.SMO;
-//import main.java.com.typhon.evolutiontool.entities.SMODto;
-import main.java.com.typhon.evolutiontool.entities.SMOJsonImpl;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLObject;
-import org.junit.Before;
-import org.junit.Test;
+package com.typhon.evolutiontool.test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static junit.framework.TestCase.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.SMO;
 
 public class SMOTests {
 

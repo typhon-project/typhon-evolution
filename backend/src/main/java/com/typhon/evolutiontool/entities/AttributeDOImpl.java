@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 public class AttributeDOImpl implements AttributeDO {
 

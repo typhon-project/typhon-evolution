@@ -1,7 +1,7 @@
-package main.java.com.typhon.evolutiontool.dummy;
+package com.typhon.evolutiontool.dummy;
 
-import main.java.com.typhon.evolutiontool.entities.EntityInstance;
-import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.EntityInstance;
+import com.typhon.evolutiontool.entities.WorkingSet;
 
 import java.util.LinkedHashMap;
 import java.util.List;

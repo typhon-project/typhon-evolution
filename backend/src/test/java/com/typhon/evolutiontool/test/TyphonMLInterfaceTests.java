@@ -1,4 +1,4 @@
-package test;
+package com.typhon.evolutiontool.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,11 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-import main.java.com.typhon.evolutiontool.entities.EntityDOImpl;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.EntityDOImpl;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
 import typhonml.Model;
 
 public class TyphonMLInterfaceTests {

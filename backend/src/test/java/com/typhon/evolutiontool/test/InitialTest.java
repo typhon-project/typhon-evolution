@@ -1,16 +1,17 @@
-package test;
-
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+package com.typhon.evolutiontool.test;
 
 import org.junit.Before;
+
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
 import typhonml.Model;
 
 public class InitialTest {

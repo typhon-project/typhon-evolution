@@ -1,18 +1,19 @@
-package test;
+package com.typhon.evolutiontool.test;
 
 
-import org.junit.Test;
-
-import main.java.com.typhon.evolutiontool.entities.EvolutionOperator;
-import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLObject;
-import main.java.com.typhon.evolutiontool.utils.SMOFactory;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
-import typhonml.ChangeOperator;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import com.typhon.evolutiontool.entities.EvolutionOperator;
+import com.typhon.evolutiontool.entities.SMOAdapter;
+import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.utils.SMOFactory;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
+import typhonml.ChangeOperator;
 
 public class ChangeOperatorsTests extends InitialTest {
 

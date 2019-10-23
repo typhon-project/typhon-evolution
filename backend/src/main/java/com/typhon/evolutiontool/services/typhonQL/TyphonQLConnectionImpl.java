@@ -1,7 +1,7 @@
-package main.java.com.typhon.evolutiontool.services.typhonQL;
+package com.typhon.evolutiontool.services.typhonQL;
 
-import main.java.com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
-import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
+import com.typhon.evolutiontool.entities.WorkingSet;
 import typhonml.Model;
 
 import org.slf4j.Logger;

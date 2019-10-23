@@ -1,7 +1,7 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
-import main.java.com.typhon.evolutiontool.entities.AttributeDO;
-import main.java.com.typhon.evolutiontool.entities.AttributeDOImpl;
+import com.typhon.evolutiontool.entities.AttributeDO;
+import com.typhon.evolutiontool.entities.AttributeDOImpl;
 import typhonml.Attribute;
 
 public class AttributeDOFactory {

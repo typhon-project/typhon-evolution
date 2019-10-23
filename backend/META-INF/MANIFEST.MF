@@ -11,27 +11,4 @@ Require-Bundle: typhonql,
  org.slf4j.api;bundle-version="1.7.2",
  org.junit;bundle-version="4.12.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: main.java.com.typhon.evolutiontool.dummy,
- main.java.com.typhon.evolutiontool.entities,
- main.java.com.typhon.evolutiontool.exceptions,
- main.java.com.typhon.evolutiontool.handlers,
- main.java.com.typhon.evolutiontool.handlers.attribute,
- main.java.com.typhon.evolutiontool.handlers.entity,
- main.java.com.typhon.evolutiontool.handlers.relation,
- main.java.com.typhon.evolutiontool.services;
-  uses:="main.java.com.typhon.evolutiontool.services.typhonML,
-   main.java.com.typhon.evolutiontool.services.typhonQL,
-   main.java.com.typhon.evolutiontool.handlers,
-   main.java.com.typhon.evolutiontool.entities,
-   main.java.com.typhon.evolutiontool.services.typhonDL,
-   typhonml",
- main.java.com.typhon.evolutiontool.services.typhonDL,
- main.java.com.typhon.evolutiontool.services.typhonML,
- main.java.com.typhon.evolutiontool.services.typhonQL,
- main.java.com.typhon.evolutiontool.utils,
- main.resources,
- main.resources.templates,
- main.resources.test,
- main.resources.test.old,
- test
 Automatic-Module-Name: be.unamur.typhonevo.backend

@@ -1,9 +1,8 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
 import typhonml.AddAttribute;
 import typhonml.AddEntity;
 import typhonml.AddRelation;
@@ -14,7 +13,6 @@ import typhonml.DisableBidirectionalRelation;
 import typhonml.DisableRelationContainment;
 import typhonml.EnableBidirectionalRelation;
 import typhonml.EnableRelationContainment;
-import typhonml.Entity;
 import typhonml.MigrateEntity;
 import typhonml.RemoveAttribute;
 import typhonml.RemoveEntity;

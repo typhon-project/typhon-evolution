@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.services.typhonQL;
+package com.typhon.evolutiontool.services.typhonQL;
 
 
 import java.util.List;
@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.java.com.typhon.evolutiontool.entities.AttributeDO;
-import main.java.com.typhon.evolutiontool.entities.CardinalityDO;
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-import main.java.com.typhon.evolutiontool.entities.RelationDO;
-import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.AttributeDO;
+import com.typhon.evolutiontool.entities.CardinalityDO;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.WorkingSet;
 import typhonml.Model;
 
 

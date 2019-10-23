@@ -1,16 +1,16 @@
-package main.java.com.typhon.evolutiontool.handlers.attribute;
+package com.typhon.evolutiontool.handlers.attribute;
 
 import java.util.Arrays;
 
-import main.java.com.typhon.evolutiontool.entities.AttributeDO;
-import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import main.java.com.typhon.evolutiontool.utils.AttributeDOFactory;
+import com.typhon.evolutiontool.entities.AttributeDO;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import typhonml.Attribute;
 import typhonml.DataType;
 import typhonml.Model;

@@ -1,23 +1,24 @@
-package test;
+package com.typhon.evolutiontool.test;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import main.java.com.typhon.evolutiontool.entities.EvolutionOperator;
-import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
-import main.java.com.typhon.evolutiontool.entities.SMOJsonImpl;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLObject;
-import main.java.com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.utils.SMOFactory;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
-import typhonml.ChangeOperator;
-import typhonml.Model;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.typhon.evolutiontool.entities.EvolutionOperator;
+import com.typhon.evolutiontool.entities.SMOAdapter;
+import com.typhon.evolutiontool.entities.TyphonMLObject;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.SMOFactory;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
+import typhonml.ChangeOperator;
+import typhonml.Model;
 
 public class IntegrationTests extends InitialTest {
 

@@ -1,6 +1,6 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
-import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.WorkingSet;
 
 public class WorkingSetHandler {
 

@@ -1,12 +1,12 @@
-package main.java.com.typhon.evolutiontool.handlers;
+package com.typhon.evolutiontool.handlers;
 
-import main.java.com.typhon.evolutiontool.entities.DatabaseType;
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.entities.DatabaseType;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.*;

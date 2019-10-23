@@ -1,16 +1,31 @@
-package test;
+package com.typhon.evolutiontool.test;
 
-import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
-import main.java.com.typhon.evolutiontool.entities.RelationDO;
-import main.java.com.typhon.evolutiontool.entities.SMOAdapter;
-import main.java.com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.utils.SMOFactory;
-import main.java.com.typhon.evolutiontool.utils.TyphonMLUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
-import typhonml.*;
 
-import static org.junit.Assert.*;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.SMOAdapter;
+import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.SMOFactory;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+
+import typhonml.AddRelation;
+import typhonml.Cardinality;
+import typhonml.ChangeRelationCardinality;
+import typhonml.DisableBidirectionalRelation;
+import typhonml.DisableRelationContainment;
+import typhonml.EnableBidirectionalRelation;
+import typhonml.EnableRelationContainment;
+import typhonml.Entity;
+import typhonml.Relation;
+import typhonml.RemoveRelation;
+import typhonml.RenameRelation;
 
 public class RelationChangeOperatorsTests extends InitialTest {
 

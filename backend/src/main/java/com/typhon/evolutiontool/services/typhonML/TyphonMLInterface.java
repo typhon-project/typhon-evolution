@@ -1,8 +1,8 @@
-package main.java.com.typhon.evolutiontool.services.typhonML;
+package com.typhon.evolutiontool.services.typhonML;
 
 
-import main.java.com.typhon.evolutiontool.entities.*;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Entity;
 import typhonml.Model;
 import typhonml.Relation;

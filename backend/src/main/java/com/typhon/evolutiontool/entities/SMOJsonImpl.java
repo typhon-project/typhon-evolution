@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

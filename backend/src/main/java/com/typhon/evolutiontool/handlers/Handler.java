@@ -1,7 +1,7 @@
-package main.java.com.typhon.evolutiontool.handlers;
+package com.typhon.evolutiontool.handlers;
 
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface Handler {

@@ -14,7 +14,6 @@ import typhonml.Relation;
 
 import java.util.Arrays;
 
-
 public class RelationRenameHandler extends BaseHandler {
 
     public RelationRenameHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {

@@ -12,7 +12,7 @@
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:Entity" name="User" ="//@databases.0/@tables.0">
+  <dataTypes xsi:type="typhonml:Entity" name="User">
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="name" type="//@dataTypes.1"/>
     <relations name="creditCards" type="//@dataTypes.3" cardinality="zero_many" isContainment="true"/>

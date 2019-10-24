@@ -45,3 +45,4 @@ TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
 TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
 TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
 TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@2fb3536e
+TQL DDL RENAME RELATION paymentsDetails TO creditCards

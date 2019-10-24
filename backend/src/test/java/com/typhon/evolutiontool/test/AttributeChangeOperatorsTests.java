@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.test;
 
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -25,7 +24,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         Entity updatedEntity = typhonMLInterface.getEntityTypeFromName(addAttribute.getOwnerEntity().getName(), targetModel);
         Attribute addedAttribute = updatedEntity.getAttributes()
                 .stream()
-                .filter(attr -> smo.getInputParameter().get(ParametersKeyString.ATTRIBUTENAME).equals(attr.getName()))
+                .filter(attr -> addAttribute.getName().equals(attr.getName()))
                 .findAny()
                 .orElse(null);
         Assert.assertNotNull(addedAttribute);

@@ -15,12 +15,13 @@
   <dataTypes xsi:type="typhonml:Entity" name="User">
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="name" type="//@dataTypes.1"/>
-    <relations name="paymentsDetails" type="//@dataTypes.3" cardinality="one_many" isContainment="true"/>
+    <relations name="paymentsDetails" type="//@dataTypes.3" cardinality="zero_many" isContainment="true"/>
   </dataTypes>
   <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
+    <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:ChangeRelationCardinality" relation="//@dataTypes.2/@relations.0" newCardinality="one_many"/>
+  <changeOperators xsi:type="typhonml:AddRelation" name="user" type="//@dataTypes.2" cardinality="one" opposite="//@dataTypes.2/@relations.0" isContainment="false" ownerEntity="//@dataTypes.3"/>
 </typhonml:Model>

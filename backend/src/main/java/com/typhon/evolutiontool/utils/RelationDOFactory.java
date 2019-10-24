@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.entities.CardinalityDO;
 import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.RelationDOImpl;
+import typhonml.AddRelation;
 import typhonml.Entity;
 import typhonml.Relation;
 
@@ -14,7 +15,12 @@ public class RelationDOFactory {
 
     public static RelationDO buildInstance(Relation relation, boolean isOppositeRelationInitialized) {
         if (relation != null) {
-            Entity sourceEntity = (Entity) relation.eContainer();
+            Entity sourceEntity = null;
+            if (relation instanceof AddRelation) {
+                sourceEntity = ((AddRelation) relation).getOwnerEntity();
+            } else if (relation.eContainer() instanceof Entity) {
+                sourceEntity = (Entity) relation.eContainer();
+            }
             EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
             Entity targetEntity = relation.getType();
             EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;

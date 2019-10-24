@@ -18,14 +18,13 @@ public class EntityDOFactory {
 
     public static EntityDO buildInstance(Entity entity) {
         if (entity != null) {
-            // Not useful and StackOverflowError
-//        List<Relation> relations = entity.getRelations();
+//            List<Relation> relations = entity.getRelations();
             List<RelationDO> relationsDO = new ArrayList<>();
-//        if (relations != null) {
-//            for (Relation relation : relations) {
-//                relationsDO.add(RelationDOFactory.buildInstance(relation));
+//            if (relations != null) {
+//                for (Relation relation : relations) {
+//                    relationsDO.add(RelationDOFactory.buildInstance(relation, false));
+//                }
 //            }
-//        }
             List<Attribute> entityAttributes = entity.getAttributes();
             Map<String, Object> attributes = new HashMap<>();
             if (entityAttributes != null) {

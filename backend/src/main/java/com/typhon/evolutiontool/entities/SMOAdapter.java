@@ -138,7 +138,7 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.CHANGECARDINALITY) {
                 inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
-                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality());
+                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality().getValue());
             }
         }
         //ATTRIBUTE

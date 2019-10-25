@@ -1,15 +1,17 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 public class AttributeDOImpl implements AttributeDO {
 
     private String name;
     private String importedNamespace;
     private DataTypeDO dataTypeDO;
+    private EntityDO entityDO;
 
-    public AttributeDOImpl(String name, String importedNamespace, DataTypeDO dataTypeDO) {
+    public AttributeDOImpl(String name, String importedNamespace, DataTypeDO dataTypeDO, EntityDO entityDO) {
         this.name = name;
         this.importedNamespace = importedNamespace;
         this.dataTypeDO = dataTypeDO;
+        this.entityDO = entityDO;
     }
 
     @Override
@@ -25,5 +27,10 @@ public class AttributeDOImpl implements AttributeDO {
     @Override
     public DataTypeDO getDataTypeDO() {
         return this.dataTypeDO;
+    }
+
+    @Override
+    public EntityDO getEntity() {
+        return this.entityDO;
     }
 }

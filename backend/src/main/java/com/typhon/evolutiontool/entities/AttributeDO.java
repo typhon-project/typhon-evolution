@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 public interface AttributeDO {
 
@@ -7,5 +7,7 @@ public interface AttributeDO {
     String getImportedNamespace();
 
     DataTypeDO getDataTypeDO();
+
+    EntityDO getEntity();
 
 }

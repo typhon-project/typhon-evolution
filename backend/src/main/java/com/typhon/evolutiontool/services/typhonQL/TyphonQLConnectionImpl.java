@@ -1,8 +1,9 @@
-package main.java.com.typhon.evolutiontool.services.typhonQL;
+package com.typhon.evolutiontool.services.typhonQL;
 
-import main.java.com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
-import main.java.com.typhon.evolutiontool.entities.TyphonMLSchema;
-import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
+import com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.Model;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +21,10 @@ import static java.util.stream.Collectors.joining;
 public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     Logger logger = LoggerFactory.getLogger(TyphonQLConnectionImpl.class);
-    private TyphonMLSchema schema;
+    private Model schema;
     private Path outPath;
 
-    public TyphonQLConnectionImpl(TyphonMLSchema schema) {
+    public TyphonQLConnectionImpl(Model schema) {
         this.schema = schema;
         //TODO Remove this
         outPath = Paths.get("resources/TyphonQL_queries.txt");
@@ -31,7 +32,7 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
     @Override
     public String executeTyphonQLDDL(String tqlDDL) {
-        logger.info("Executing TyphonQL DDL [{}] \n on TyphonML [{}]", tqlDDL, this.schema.getVersion());
+        logger.info("Executing TyphonQL DDL [{}] \n on TyphonML", tqlDDL);
         //TODO remove this
         writeToFile(tqlDDL);
         return tqlDDL;
@@ -79,17 +80,20 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
     private void writeToFile(String query) {
         byte[] strToBytes = query.concat("\n").getBytes();
         try {
+            if (!Files.exists(outPath)) {
+                Files.createFile(outPath);
+            }
             Files.write(outPath, strToBytes, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public TyphonMLSchema getSchema() {
+    public Model getSchema() {
         return schema;
     }
 
-    public void setSchema(TyphonMLSchema schema) {
+    public void setSchema(Model schema) {
         this.schema = schema;
     }
 }

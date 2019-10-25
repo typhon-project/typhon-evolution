@@ -1,15 +1,16 @@
-package main.java.com.typhon.evolutiontool.handlers.relation;
+package com.typhon.evolutiontool.handlers.relation;
 
-import main.java.com.typhon.evolutiontool.entities.*;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import main.java.com.typhon.evolutiontool.entities.RelationDOImpl;
+import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.Model;
+import typhonml.Relation;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class RelationEnableOppositeHandler extends BaseHandler {
 
@@ -18,29 +19,26 @@ public class RelationEnableOppositeHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        RelationDO relation, oppositeRelation;
-        Model targetModel;
-
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
-            relation = smo.getRelationDOFromInputParameter(ParametersKeyString.RELATION);
-            oppositeRelation = new RelationDOImpl(
-                    smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString(),
-                    relation.getTargetEntity(),
-                    relation.getSourceEntity(),
-                    relation,
+        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+            RelationDO oppositeRelation = new RelationDOImpl(
+                    relationDO.getName().concat("_opposite"),
+                    relationDO.getTargetEntity(),
+                    relationDO.getSourceEntity(),
+                    relationDO,
                     false,
-                    reverseCardinality(relation.getCardinality().getValue())
+                    reverseCardinality(relationDO.getCardinality().getValue())
             );
 
-            targetModel = typhonMLInterface.createRelationship(oppositeRelation, model);
-            targetModel = typhonMLInterface.enableOpposite(relation, oppositeRelation, targetModel);
+            Model targetModel = typhonMLInterface.createRelationship(oppositeRelation, model);
+            targetModel = typhonMLInterface.enableOpposite(relationDO, oppositeRelation, targetModel);
 
             typhonQLInterface.createRelationshipType(oppositeRelation, targetModel);
             //TODO: complete the QL necessary operations
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
     }
 

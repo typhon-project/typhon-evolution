@@ -1,8 +1,8 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-import main.java.com.typhon.evolutiontool.entities.EntityDOImpl;
-import main.java.com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.EntityDOImpl;
+import com.typhon.evolutiontool.entities.RelationDO;
 import typhonml.Attribute;
 import typhonml.Entity;
 
@@ -18,14 +18,13 @@ public class EntityDOFactory {
 
     public static EntityDO buildInstance(Entity entity) {
         if (entity != null) {
-            // Not useful and StackOverflowError
-//        List<Relation> relations = entity.getRelations();
+//            List<Relation> relations = entity.getRelations();
             List<RelationDO> relationsDO = new ArrayList<>();
-//        if (relations != null) {
-//            for (Relation relation : relations) {
-//                relationsDO.add(RelationDOFactory.buildInstance(relation));
+//            if (relations != null) {
+//                for (Relation relation : relations) {
+//                    relationsDO.add(RelationDOFactory.buildInstance(relation, false));
+//                }
 //            }
-//        }
             List<Attribute> entityAttributes = entity.getAttributes();
             Map<String, Object> attributes = new HashMap<>();
             if (entityAttributes != null) {

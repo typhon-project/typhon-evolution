@@ -1,7 +1,7 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
-import main.java.com.typhon.evolutiontool.entities.DataTypeDO;
-import main.java.com.typhon.evolutiontool.entities.DataTypeDOImpl;
+import com.typhon.evolutiontool.entities.DataTypeDO;
+import com.typhon.evolutiontool.entities.DataTypeDOImpl;
 import typhonml.DataType;
 
 public class DataTypeDOFactory {

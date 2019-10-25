@@ -1,0 +1,130 @@
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@2c35e847]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@4fb3ee4e]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@f5acb9d]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@f5acb9d]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@614ca7df]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@71c8becc]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@4fb3ee4e]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@2fb3536e
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+dummy enable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
+TQL DDL DELETE RELATION newOppositeRelation IN CreditCard
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE ENTITY Comment {id typhonml.impl.PrimitiveDataTypeImpl@32ee6fee (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+TQL DDL RENAME ENTITY CreditCard TO PaymentCard
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+dummy enable containment TQL DDL
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3116c353]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3116c353]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@352ff4da]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@352ff4da]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQL DDL DELETE RELATION newOppositeRelation IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@5824a83d
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@6c284af
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]

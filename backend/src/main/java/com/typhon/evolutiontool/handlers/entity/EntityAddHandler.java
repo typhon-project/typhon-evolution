@@ -1,18 +1,19 @@
-package main.java.com.typhon.evolutiontool.handlers.entity;
-
-import main.java.com.typhon.evolutiontool.entities.DatabaseType;
-import main.java.com.typhon.evolutiontool.entities.EntityDO;
-import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
-import main.java.com.typhon.evolutiontool.entities.SMO;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
-import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
-import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-
-import typhonml.Model;
+package com.typhon.evolutiontool.handlers.entity;
 
 import java.util.Arrays;
+
+import com.typhon.evolutiontool.entities.DatabaseType;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.handlers.BaseHandler;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Entity;
+import typhonml.Model;
 
 public class EntityAddHandler extends BaseHandler {
 
@@ -39,7 +40,7 @@ public class EntityAddHandler extends BaseHandler {
             }
             //Executing evolution operations
 //            newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
-            newEntity = smo.getEntityDOFromInputParameter(ParametersKeyString.ENTITY);
+            newEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
             targetModel = typhonMLInterface.createEntityType(model, newEntity);
             targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);

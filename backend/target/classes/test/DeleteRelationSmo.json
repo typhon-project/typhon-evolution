@@ -1,9 +1,0 @@
-{
-  "typhonobject": "RELATION",
-  "operator": "ADD",
-  "parameters":
-  {
-    "relationname": "product",
-    "entityname": "review"
-  }
-}

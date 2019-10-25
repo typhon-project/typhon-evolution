@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ASCII"?>
+<typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
+    <tables name="UserDB" entity="//@dataTypes.2">
+      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.1"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.1"/>
+    </tables>
+    <tables name="CreditCardDB" entity="//@dataTypes.3">
+      <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
+      <idSpec attributes="//@dataTypes.3/@attributes.1"/>
+    </tables>
+  </databases>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
+  <dataTypes xsi:type="typhonml:Entity" name="User">
+    <attributes name="id" type="//@dataTypes.1"/>
+    <attributes name="name" type="//@dataTypes.1"/>
+    <relations name="paymentsDetails" type="//@dataTypes.3" cardinality="zero_many" opposite="//@dataTypes.3/@relations.0" isContainment="true"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
+    <attributes name="id" type="//@dataTypes.1"/>
+    <attributes name="number" type="//@dataTypes.1"/>
+    <attributes name="expiryDate" type="//@dataTypes.0"/>
+    <relations name="newOppositeRelation" type="//@dataTypes.2" cardinality="one_many" isContainment="false"/>
+  </dataTypes>
+  <changeOperators xsi:type="typhonml:DisableBidirectionalRelation" relation="//@dataTypes.2/@relations.0"/>
+</typhonml:Model>

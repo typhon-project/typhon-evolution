@@ -1,9 +1,5 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.typhon.evolutiontool.utils.MyKeyDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,12 +10,8 @@ public class SMOJsonImpl implements SMO {
 
     Logger logger = LoggerFactory.getLogger(SMOJsonImpl.class);
 
-    @JsonProperty("typhonobject")
     private TyphonMLObject typhonObject;
-    @JsonProperty("operator")
     private EvolutionOperator evolutionOperator;
-    @JsonProperty("parameters")
-    @JsonDeserialize(keyUsing = MyKeyDeserializer.class)
     private Map<String, Object> inputParameter;
 
     public SMOJsonImpl(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {
@@ -64,36 +56,6 @@ public class SMOJsonImpl implements SMO {
                 return false;
         }
         return true;
-    }
-
-    @Override
-    public <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass) {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.convertValue(this.getInputParameter().get(key), pojoclass);
-    }
-
-    @Override
-    public EntityDO getEntityDOFromInputParameter(String parameterkey) {
-        if (this.getInputParameter().containsKey(parameterkey)) {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.convertValue(this.getInputParameter().get(parameterkey), EntityDOJsonImpl.class);
-        }
-        return null;
-    }
-
-    @Override
-    public RelationDO getRelationDOFromInputParameter(String parameterkey) {
-        if (this.getInputParameter().containsKey(parameterkey)) {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.convertValue(this.getInputParameter().get(parameterkey), RelationDOJsonImpl.class);
-
-        }
-        return null;
-    }
-
-    @Override
-    public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
-        return null;
     }
 
 }

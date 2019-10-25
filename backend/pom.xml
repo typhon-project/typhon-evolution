@@ -1,73 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    
-    <parent>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
 		<groupId>be.unamur.typhonevo</groupId>
 		<artifactId>typhonevo</artifactId>
-		<version>0.1.0.SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-    <artifactId>be.unamur.typhonevo.backend</artifactId>
-    
-    <properties>
-		<tycho-version>1.4.0</tycho-version>
+	<artifactId>be.unamur.typhonevo.backend</artifactId>
+	<name>typhonevo-backend</name>
+	<packaging>eclipse-plugin</packaging>
+
+	<properties>
+		<tycho.version>1.4.0</tycho.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id>eclipse_public_p2</id> -->
+<!-- 			<url>http://download.eclipse.org/releases/latest</url> -->
+<!-- 			<layout>p2</layout> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
 
-    <name>typhonevo-backend</name>
-    
-    <dependencies>
+	<dependencies>
 		<dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
-		<dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.12</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.10.0</version>
 		</dependency>
-		
 		<dependency>
-		  <groupId>org.slf4j</groupId>
-		  <artifactId>slf4j-api</artifactId>
-		  <version>2.0.0-alpha1</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.10.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.0-alpha1</version>
+		</dependency>
+		<dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>0.7.4</version>
+        </dependency>
 	</dependencies>
-    
 
-    <build>
-        <plugins>
-        
+
+	<build>
+		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho.version}</version>
 				<configuration>
-					<resolver>p2</resolver>
-					<pomDependencies>consider</pomDependencies>
+					<includeAllDependencies>true</includeAllDependencies>
 				</configuration>
 			</plugin>
-
-        </plugins>
-    </build>
-
+		</plugins>
+	</build>
 
 </project>

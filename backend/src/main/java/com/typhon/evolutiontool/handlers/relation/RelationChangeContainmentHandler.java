@@ -1,6 +1,5 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
@@ -10,8 +9,10 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
+import typhonml.Database;
 import typhonml.Model;
 import typhonml.Relation;
+import typhonml.RelationalDB;
 
 import java.util.Arrays;
 
@@ -25,7 +26,8 @@ public class RelationChangeContainmentHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.NEWCONTAINMENT))) {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             Boolean newContainment = (Boolean) smo.getInputParameter().get(ParametersKeyString.NEWCONTAINMENT);
-            if (typhonMLInterface.getDatabaseType(relationDO.getSourceEntity().getName(), model) == DatabaseType.RELATIONALDB) {
+            Database database = typhonMLInterface.getEntityDatabase(relationDO.getSourceEntity().getName(), model);
+            if (database instanceof RelationalDB) {
                 throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
             }
             Model targetModel = model;

@@ -24,6 +24,7 @@ public class EntityRemoveHandler extends BaseHandler {
 
         if (containParameters(smo, Collections.singletonList(ParametersKeyString.ENTITYNAME))) {
             entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityname, model);
             //If the entity is involved in a relationship. Abort
             if (typhonMLInterface.hasRelationship(entityname, model)) {
                 throw new InputParameterException("Cannot delete an entity involved in a relationship. Remove the relationships first.");
@@ -33,7 +34,7 @@ public class EntityRemoveHandler extends BaseHandler {
             //Delete structures
             typhonQLInterface.deleteEntityStructure(entityname, model);
 
-            targetModel = typhonMLInterface.deleteEntityMappings(entityname, model);
+            targetModel = typhonMLInterface.deleteEntityMappings(entityname, sourceEntityNameInDatabase, model);
             targetModel = typhonMLInterface.deleteEntityType(entityname, targetModel);
 
             return targetModel;

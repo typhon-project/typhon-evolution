@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="UserDB" entity="//@dataTypes.2">
-      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.1"/>
-    </tables>
     <tables name="CreditCardDB" entity="//@dataTypes.3">
       <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
       <idSpec attributes="//@dataTypes.3/@attributes.1"/>
     </tables>
+  </databases>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="UserDB" entity="//@dataTypes.2"/>
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>

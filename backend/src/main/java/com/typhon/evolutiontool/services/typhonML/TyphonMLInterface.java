@@ -8,6 +8,8 @@ import typhonml.Model;
 import typhonml.Relation;
 import typhonml.Database;
 
+import javax.xml.crypto.Data;
+
 /**
  * Interface to access TyphonML.
  * Changes the current model or querying the model.
@@ -29,7 +31,9 @@ public interface TyphonMLInterface {
      */
     boolean hasRelationship(String entityname, Model model);
 
-    DatabaseType getDatabaseType(String entityname, Model model);
+    Database getEntityDatabase(String entityName, Model model);
+
+    String getEntityNameInDatabase(String entityName, Model model);
 
     Relation getRelationFromNameInEntity(String relationname, String entityname, Model model);
 
@@ -47,9 +51,7 @@ public interface TyphonMLInterface {
 
     Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
 
-    String getDatabaseName(String sourceEntityName, Model model);
-
-    Model deleteEntityMappings(String entityName, Model model);
+    Model deleteEntityMappings(String entityName, String entityNameInDatabase, Model model);
 
     Model createRelationship(RelationDO relation, Model model);
 

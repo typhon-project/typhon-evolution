@@ -6,7 +6,6 @@ import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import typhonml.*;
 
@@ -67,14 +66,11 @@ public class EntityChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testMigrateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        MigrateEntity migrateEntity = TyphonmlFactory.eINSTANCE.createMigrateEntity();
-        migrateEntity.setEntity(typhonMLInterface.getEntityTypeFromName("User", sourceModel));
-        migrateEntity.setNewDatabase(typhonMLInterface.getDatabaseFromName("MongoDB", sourceModel));
-
-        Assert.assertNotEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/migrateEntityChangeOperator.xmi");
+        MigrateEntity migrateEntity = (MigrateEntity) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
+
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        Assert.assertEquals("MongoDB", typhonMLInterface.getDatabaseName("User", targetModel));
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/migrateEntityChangeOperator_final.xmi");
     }
 }

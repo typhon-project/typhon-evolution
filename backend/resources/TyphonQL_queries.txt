@@ -128,3 +128,7 @@ from Comment e select e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
+TQL DDL RENAME ENTITY CreditCard TO PaymentCard
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@fa49800]

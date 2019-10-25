@@ -11,29 +11,39 @@ EvoSyntax test_modif(EvoSyntax x){
 	
 	for ( ChangeOperator op <- operators){		
 		x = visit(x){
-			case Query q => transform(q, op)
+			case EvoQuery q => transform(q, op)
 		};
 	};
 	
 	return x;
 }
 
-Query transform(Query q, ChangeOperator op){
+EvoQuery transform(EvoQuery evoq, ChangeOperator op){
+	// Ignoring the query with annotation
+	
+	switch(evoq){
+		case (EvoQuery)`<Annotation annot>  <Query query>`:{
+			return evoq;
+		}
+	};
 	
 	switch(op){
 		case (ChangeOperator) `Entity  <Operation operation>`: {
-			q = evolve_entity(q, operation);
+			evoq = evolve_entity(evoq, operation);
 		}
 	};
 	
-	return q;
+	return evoq;
 }
 
 
-Query evolve_entity(Query q, Operation op){
+EvoQuery evolve_entity(EvoQuery q, Operation op){
 	switch(op){
 		case (Operation) `Rename  <EId old_id> to <EId new_id>`:{
-		 		return entity_rename(q, old_id, new_id);
+		 	return entity_rename(q, old_id, new_id);
+		}
+		case (Operation) `Remove  <EId entity>`: {
+			return entity_remove(q, entity);
 		}
 	};
 	
@@ -41,7 +51,7 @@ Query evolve_entity(Query q, Operation op){
 }
 
 
-Query entity_rename(Query q, EId old_name, EId new_name){
+EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	
 	req = visit(q){
 		case old_name => new_name
@@ -49,6 +59,27 @@ Query entity_rename(Query q, EId old_name, EId new_name){
 	
 	return req;
 }
+
+EvoQuery entity_remove(EvoQuery q, EId name){
+	
+	Query query;
+	matched = false;
+	
+	visit(q){
+		case Query qu:{
+			query = qu;
+		}
+		case name :{
+			matched = true;
+		}
+	}
+	
+	if(matched){
+		return parse(#EvoQuery, "#@ Entity <name> removed. That query is broken @# <query>");
+	}
+	return q;
+}
+
 
 
 list[ChangeOperator] extract_op(EvoSyntax x) {

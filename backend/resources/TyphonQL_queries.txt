@@ -47,3 +47,6 @@ TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
 TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@2fb3536e
 TQL DDL RENAME RELATION paymentsDetails TO creditCards
 TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+dummy enable containment TQL DDL

@@ -5,6 +5,7 @@ import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Assert;
@@ -62,6 +63,20 @@ public class RelationChangeOperatorsTests extends InitialTest {
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(disableRelationContainment.getRelation().getName(), ((Entity) disableRelationContainment.getRelation().eContainer()).getName(), targetModel);
         Assert.assertNotEquals(disableRelationContainment.getRelation().getIsContainment(), updatedRelation.getIsContainment());
+    }
+
+    @Test
+    public void testChangeRelationContainmentChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeRelationContainmentChangeOperator.xmi");
+        ChangeRelationContainement changeRelationContainement = (ChangeRelationContainement) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeRelationContainement);
+
+        targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeRelationContainmentChangeOperator_final.xmi");
+
+        RelationDO relationDO = RelationDOFactory.buildInstance(changeRelationContainement.getRelation(), false);
+        Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(relationDO.getName(), relationDO.getSourceEntity().getName(), targetModel);
+        Assert.assertNotEquals(relationDO.isContainment(), updatedRelation.getIsContainment());
     }
 
     @Test

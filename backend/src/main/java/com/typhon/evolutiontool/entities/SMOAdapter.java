@@ -3,23 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import typhonml.AddAttribute;
-import typhonml.AddEntity;
-import typhonml.AddRelation;
-import typhonml.ChangeAttributeType;
-import typhonml.ChangeOperator;
-import typhonml.ChangeRelationCardinality;
-import typhonml.DisableBidirectionalRelation;
-import typhonml.DisableRelationContainment;
-import typhonml.EnableBidirectionalRelation;
-import typhonml.EnableRelationContainment;
-import typhonml.MigrateEntity;
-import typhonml.RemoveAttribute;
-import typhonml.RemoveEntity;
-import typhonml.RemoveRelation;
-import typhonml.RenameAttribute;
-import typhonml.RenameEntity;
-import typhonml.RenameRelation;
+import typhonml.*;
 
 
 /**
@@ -51,6 +35,7 @@ public class SMOAdapter implements SMO {
                 || changeOperator instanceof RemoveRelation
                 || changeOperator instanceof EnableRelationContainment
                 || changeOperator instanceof DisableRelationContainment
+                || changeOperator instanceof ChangeRelationContainement
                 || changeOperator instanceof EnableBidirectionalRelation
                 || changeOperator instanceof DisableBidirectionalRelation
                 || changeOperator instanceof RenameRelation
@@ -78,6 +63,8 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
         if (changeOperator instanceof DisableRelationContainment)
             evolutionOperator = EvolutionOperator.DISABLECONTAINMENT;
+        if (changeOperator instanceof ChangeRelationContainement)
+            evolutionOperator = EvolutionOperator.CHANGECONTAINMENT;
         if (changeOperator instanceof EnableBidirectionalRelation)
             evolutionOperator = EvolutionOperator.ENABLEOPPOSITE;
         if (changeOperator instanceof DisableBidirectionalRelation)
@@ -123,6 +110,10 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.DISABLECONTAINMENT) {
                 inputParameter.put(ParametersKeyString.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
+            }
+            if (evolutionOperator == EvolutionOperator.CHANGECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationContainement) changeOperator).getRelation());
+                inputParameter.put(ParametersKeyString.NEWCONTAINMENT, ((ChangeRelationContainement) changeOperator).getNewContainment());
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());

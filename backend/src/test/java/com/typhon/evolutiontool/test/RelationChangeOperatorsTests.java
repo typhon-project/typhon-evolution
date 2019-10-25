@@ -85,15 +85,13 @@ public class RelationChangeOperatorsTests extends InitialTest {
         EnableBidirectionalRelation enableBidirectionalRelation = (EnableBidirectionalRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(enableBidirectionalRelation);
 
-        // Actually not working because missing parameter "relationname"
-        // Work around to succeed the test:
-//        smo.getInputParameter().put(ParametersKeyString.RELATIONNAME, "newOppositeRelation");
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationOppositeChangeOperator_final.xmi");
 
-        Relation newOppositeRelation = typhonMLInterface.getRelationFromNameInEntity("newOppositeRelation", "CreditCard", targetModel);
+        String newOppositeRelationName = enableBidirectionalRelation.getRelation().getName().concat("_opposite");
+        Relation newOppositeRelation = typhonMLInterface.getRelationFromNameInEntity(newOppositeRelationName, "CreditCard", targetModel);
         Assert.assertNotNull(newOppositeRelation);
-        Assert.assertEquals(newOppositeRelation.getName(), "newOppositeRelation");
+        Assert.assertEquals(newOppositeRelation.getName(), newOppositeRelationName);
         Assert.assertEquals(newOppositeRelation.getCardinality().getValue(), Cardinality.ONE_MANY.getValue());
     }
 
@@ -103,7 +101,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         DisableBidirectionalRelation disableBidirectionalRelation = (DisableBidirectionalRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(disableBidirectionalRelation);
 
-        RelationDO relation = (RelationDO) smo.getInputParameter().get(ParametersKeyString.RELATION);
+        RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
         RelationDO oppositeRelation = relation.getOpposite();
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);

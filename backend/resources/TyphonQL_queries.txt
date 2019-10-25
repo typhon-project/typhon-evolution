@@ -50,3 +50,5 @@ TQL DDL dummy change relation cardinality
 dummy enable containment TQL DDL
 dummy disable containment TQL DDL
 dummy enable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
+TQL DDL DELETE RELATION newOppositeRelation IN CreditCard

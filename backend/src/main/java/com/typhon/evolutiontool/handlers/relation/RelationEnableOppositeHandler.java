@@ -1,12 +1,6 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import java.util.Arrays;
-
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.RelationDOImpl;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -16,6 +10,8 @@ import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.Model;
 import typhonml.Relation;
 
+import java.util.Collections;
+
 public class RelationEnableOppositeHandler extends BaseHandler {
 
     public RelationEnableOppositeHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
@@ -23,10 +19,10 @@ public class RelationEnableOppositeHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
-        	RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             RelationDO oppositeRelation = new RelationDOImpl(
-                    smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString(),
+                    relationDO.getName().concat("_opposite"),
                     relationDO.getTargetEntity(),
                     relationDO.getSourceEntity(),
                     relationDO,
@@ -42,7 +38,7 @@ public class RelationEnableOppositeHandler extends BaseHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
         }
     }
 

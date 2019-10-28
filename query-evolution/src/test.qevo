@@ -4,3 +4,8 @@ Entity Remove Person,
 Entity Rename Person to Nothing
 
 // Enter your queries here
+from Product p select p where p.id == "1230",
+from Product p select p where p.id == "30",
+from Person p select p.name,
+from Product p, Person per select p where p.id == per.buy,
+from Product p, Review r select r where p.id == r.reviewed_product

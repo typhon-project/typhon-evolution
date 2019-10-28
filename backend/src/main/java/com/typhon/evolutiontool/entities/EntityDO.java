@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
+import java.util.List;
 import java.util.Map;
 
 public interface EntityDO {
@@ -13,4 +14,6 @@ public interface EntityDO {
     String getIdentifier();
 
     Map<String, Object> getAttributes();
+
+    List<RelationDO> getRelations();
 }

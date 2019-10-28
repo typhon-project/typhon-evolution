@@ -132,3 +132,126 @@ TQL DDL RENAME ENTITY CreditCard TO PaymentCard
 from Comment e select e
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@fa49800]
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@463fd068 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@463fd068 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@209da20d
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@6caf0677
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@11d8ae8b
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@4ef782af
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@11d8ae8b
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@51c693d
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@4f80542f
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@231f98ef
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48aca48b
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48bb62
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@58d75e99]
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3646a422]
+TQL DDL RENAME ENTITY CreditCard TO PaymentCard
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@58d75e99]
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3646a422]
+TQL DDL RENAME ENTITY CreditCard TO PaymentCard
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
+from CreditCard e select e.creationDate
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
+TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
+TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
+TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48aca48b
+dummy enable containment TQL DDL
+TQL DDL RENAME RELATION paymentsDetails TO creditCards
+TQL DDL DELETE RELATION user IN CreditCard
+TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48bb62
+TQL DDL dummy change relation cardinality
+dummy enable containment TQL DDL
+dummy disable containment TQL DDL
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@662b4c69 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@662b4c69 (name: String, importedNamespace: null)}
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@2d710f1a (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@2d710f1a (name: String, importedNamespace: null)}
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@47e2e487]
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@45099dd3]
+TQL DDL RENAME ENTITY CreditCard TO PaymentCard

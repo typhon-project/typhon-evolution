@@ -21,7 +21,15 @@
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="Comment">
+    <attributes name="name" type="//@dataTypes.1"/>
+    <attributes name="id" type="//@dataTypes.1"/>
     <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:AddRelation" name="user" type="//@dataTypes.2" cardinality="one" isContainment="false" ownerEntity="//@dataTypes.3"/>
+  <changeOperators xsi:type="typhonml:AddEntity" name="Comment">
+    <attributes name="id" type="//@dataTypes.1"/>
+    <attributes name="name" type="//@dataTypes.1"/>
+    <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
+  </changeOperators>
 </typhonml:Model>

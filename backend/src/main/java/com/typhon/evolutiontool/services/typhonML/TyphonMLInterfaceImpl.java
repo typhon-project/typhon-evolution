@@ -169,6 +169,19 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public DataType getDataTypeFromName(String dataTypeName, Model model) {
+        List<DataType> dataTypes = model.getDataTypes();
+        if (dataTypes != null) {
+            for (DataType dataType : dataTypes) {
+                if (dataType.getName().equals(dataTypeName)) {
+                    return dataType;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Model createEntityType(Model sourceModel, EntityDO newEntity) {
         logger.info("Create Entity type [{}] in TyphonML model", newEntity.getName());
         Model newModel;
@@ -177,7 +190,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //ENTITY
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
-        newEntity.getAttributes().forEach((key, value) -> entity.getAttributes().add(this.createAttribute(key, entity)));
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, (DataType) type, newModel)));
+        newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         newModel.getDataTypes().add(entity);
         return newModel;
     }
@@ -223,8 +237,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         Model newModel;
         newModel = EcoreUtil.copy(model);
         Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
-        Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
-        sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality(), relation.isContainment(), targetEntity));
+        sourceEntity.getRelations().add(this.createRelation(relation, newModel));
 
         return newModel;
     }
@@ -236,9 +249,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         typhonml.Relation relToDelete = null;
         newModel = EcoreUtil.copy(model);
         typhonml.Entity e = this.getEntityTypeFromName(entityname, newModel);
-        for (typhonml.Relation relation : e.getRelations()) {
-            if (relation.getName().equals(relationname)) {
-                relToDelete = relation;
+        if (e != null && e.getRelations() != null) {
+            for (typhonml.Relation relation : e.getRelations()) {
+                if (relation.getName().equals(relationname)) {
+                    relToDelete = relation;
+                }
             }
         }
         if (relToDelete != null)
@@ -551,20 +566,20 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return null;
     }
 
-    private Relation createRelation(String name, CardinalityDO cardinality, boolean isContainment, Entity targetType) {
+    private Relation createRelation(RelationDO relationDO, Model model) {
         Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
-        relation.setName(name);
-        relation.setIsContainment(isContainment);
-        relation.setCardinality(Cardinality.getByName(cardinality.getName()));
-        relation.setType(targetType);
+        relation.setName(relationDO.getName());
+        relation.setIsContainment(relationDO.isContainment());
+        relation.setCardinality(Cardinality.getByName(relationDO.getCardinality().getName()));
+        relation.setType((Entity) getDataTypeFromName(relationDO.getTypeName(), model));
         return relation;
     }
 
-    private Attribute createAttribute(String name, DataType type) {
+    private Attribute createAttribute(String name, DataType type, Model targetModel) {
         //TODO Handling of dataTypes
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
-        attribute.setType(type);
+        attribute.setType(getDataTypeFromName(type.getName(), targetModel));
         return attribute;
     }
 }

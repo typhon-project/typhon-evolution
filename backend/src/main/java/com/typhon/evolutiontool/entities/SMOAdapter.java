@@ -1,9 +1,10 @@
 package com.typhon.evolutiontool.entities;
+
+import typhonml.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import typhonml.*;
 
 
 /**
@@ -82,7 +83,6 @@ public class SMOAdapter implements SMO {
         if (typhonMLObject == TyphonMLObject.ENTITY) {
             if (evolutionOperator == EvolutionOperator.ADD) {
                 inputParameter.put(ParametersKeyString.ENTITY, changeOperator);
-                //TODO Add other parameters
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
@@ -117,8 +117,6 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
-                //TODO by TyphonML: missing relationname parameter
-//            inputParameter.put(ParametersKeyString.RELATIONNAME), ((EnableBidirectionalRelation) changeOperator).getRelationName());
             }
             if (evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());

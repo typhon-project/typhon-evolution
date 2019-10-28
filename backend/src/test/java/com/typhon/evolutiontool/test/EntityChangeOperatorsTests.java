@@ -7,10 +7,10 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Test;
-import typhonml.*;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import typhonml.AddEntity;
+import typhonml.MigrateEntity;
+import typhonml.RemoveEntity;
+import typhonml.RenameEntity;
 
 public class EntityChangeOperatorsTests extends InitialTest {
 
@@ -46,21 +46,13 @@ public class EntityChangeOperatorsTests extends InitialTest {
 
 
     @Test
-    public void testCreateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("resources/generated_demo.xmi");
-        //Change Operator create entity
-        AddEntity addEntity = TyphonmlFactory.eINSTANCE.createAddEntity();
-        addEntity.setName("NEWENTITY");
-        Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
-        attribute.setName("attribute");
-        attribute.setType(addEntity);
-        addEntity.getAttributes().add(attribute);
-        //TODO by TyphonML Missing other required parameters in AddEntity ChangeOperator (databasename, targetlogicalname, etc...)
-        sourceModel.getChangeOperators().add(addEntity);
-
+    public void testAddEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addEntityChangeOperator.xmi");
+        AddEntity addEntity = (AddEntity) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addEntity);
+
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        assertNotNull(typhonMLInterface.getEntityTypeFromName("NEWENTITY", targetModel));
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/addEntityChangeOperator_final.xmi");
     }
 
 //    @Test

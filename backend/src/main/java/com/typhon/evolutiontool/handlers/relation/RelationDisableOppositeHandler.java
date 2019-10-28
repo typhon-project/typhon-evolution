@@ -25,10 +25,10 @@ public class RelationDisableOppositeHandler extends BaseHandler {
         	RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
         	RelationDO oppositeRelation = relation.getOpposite();
 
-        	Model targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), model);
-            targetModel = typhonMLInterface.disableOpposite(relation, targetModel);
+//        	Model targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity() != null ? oppositeRelation.getSourceEntity().getName() : null, model);
+            Model targetModel = typhonMLInterface.disableOpposite(relation, model);
 
-            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
+//            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
             //TODO: complete the QL necessary operations
 
             return targetModel;

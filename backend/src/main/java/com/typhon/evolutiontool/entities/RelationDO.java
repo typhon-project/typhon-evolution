@@ -4,6 +4,8 @@ public interface RelationDO {
 
     String getName();
 
+    String getTypeName();
+
     EntityDO getSourceEntity();
 
     EntityDO getTargetEntity();

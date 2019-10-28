@@ -26,7 +26,7 @@ public class EntityMigrateHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.DATABASE))) {
-            EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
+            EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
             Database database = (Database) smo.getInputParameter().get(ParametersKeyString.DATABASE);
             String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityDO.getName(), model);
             DatabaseType targetDatabaseType = getDatabaseType(database);

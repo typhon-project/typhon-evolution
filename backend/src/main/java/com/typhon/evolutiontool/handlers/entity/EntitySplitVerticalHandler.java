@@ -50,9 +50,9 @@ public class EntitySplitVerticalHandler extends BaseHandler {
                 ParametersKeyString.SECONDNEWENTITY,
                 ParametersKeyString.DATABASENAME,
                 ParametersKeyString.DATABASETYPE))) {
-            sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
-            firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY));
-            secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY));
+            sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
+            firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY), false);
+            secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY), false);
             databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
             databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
 
@@ -64,7 +64,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             //TyphonML
             targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
             targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
-            relation = new RelationDOImpl("splitRelation", firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
+            relation = new RelationDOImpl("splitRelation", firstNewEntity.getName(), firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
             targetModel = typhonMLInterface.createRelationship(relation, targetModel);
             targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 

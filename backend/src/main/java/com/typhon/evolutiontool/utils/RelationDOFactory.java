@@ -13,7 +13,7 @@ public class RelationDOFactory {
     private RelationDOFactory() {
     }
 
-    public static RelationDO buildInstance(Relation relation, boolean isOppositeRelationInitialized) {
+    public static RelationDO buildInstance(Relation relation, boolean initialized) {
         if (relation != null) {
             Entity sourceEntity = null;
             if (relation instanceof AddRelation) {
@@ -21,19 +21,24 @@ public class RelationDOFactory {
             } else if (relation.eContainer() instanceof Entity) {
                 sourceEntity = (Entity) relation.eContainer();
             }
-            EntityDO sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity) : null;
-            Entity targetEntity = relation.getType();
-            EntityDO targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity) : null;
+            EntityDO sourceEntityDO = null;
+            EntityDO targetEntityDO = null;
             RelationDO oppositeRelationDO = null;
-            if (relation.getOpposite() != null && !isOppositeRelationInitialized) {
-                oppositeRelationDO = buildInstance(relation.getOpposite(), true);
+            if (!initialized) {
+                sourceEntityDO = sourceEntity != null ? EntityDOFactory.buildInstance(sourceEntity, true) : null;
+                Entity targetEntity = relation.getType();
+                targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity, true) : null;
+                oppositeRelationDO = null;
+                if (relation.getOpposite() != null) {
+                    oppositeRelationDO = buildInstance(relation.getOpposite(), true);
+                }
             }
             boolean isContainment = relation.getIsContainment() != null ? relation.getIsContainment() : false;
             CardinalityDO cardinalityDO = null;
             if (relation.getCardinality() != null) {
                 cardinalityDO = CardinalityDO.get(relation.getCardinality().getValue());
             }
-            return new RelationDOImpl(relation.getName(), sourceEntityDO, targetEntityDO, oppositeRelationDO, isContainment, cardinalityDO);
+            return new RelationDOImpl(relation.getName(), relation.getType().getName(), sourceEntityDO, targetEntityDO, oppositeRelationDO, isContainment, cardinalityDO);
         }
         return null;
     }

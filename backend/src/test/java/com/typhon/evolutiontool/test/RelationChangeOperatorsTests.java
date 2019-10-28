@@ -21,6 +21,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addRelation);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addRelationChangeOperator_final.xmi");
 
         Assert.assertNull(null);
@@ -33,6 +34,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeRelation);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeRelationChangeOperator_final.xmi");
 
         Relation removedRelation = typhonMLInterface.getRelationFromNameInEntity(removeRelation.getRelationToRemove().getName(), ((Entity) removeRelation.getRelationToRemove().eContainer()).getName(), targetModel);
@@ -46,6 +48,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(enableRelationContainment);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationContainmentChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(enableRelationContainment.getRelation().getName(), ((Entity) enableRelationContainment.getRelation().eContainer()).getName(), targetModel);
@@ -59,6 +62,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(disableRelationContainment);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationContainmentChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(disableRelationContainment.getRelation().getName(), ((Entity) disableRelationContainment.getRelation().eContainer()).getName(), targetModel);
@@ -72,6 +76,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeRelationContainement);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeRelationContainmentChangeOperator_final.xmi");
 
         RelationDO relationDO = RelationDOFactory.buildInstance(changeRelationContainement.getRelation(), false);
@@ -86,6 +91,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(enableBidirectionalRelation);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/enableRelationOppositeChangeOperator_final.xmi");
 
         String newOppositeRelationName = enableBidirectionalRelation.getRelation().getName().concat("_opposite");
@@ -105,6 +111,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
 //        RelationDO oppositeRelation = relation.getOpposite();
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/disableRelationOppositeChangeOperator_final.xmi");
 
         Assert.assertNull(typhonMLInterface.getRelationFromNameInEntity(relation.getName(), relation.getSourceEntity().getName(), targetModel).getOpposite());
@@ -118,6 +125,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameRelation);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameRelationChangeOperator_final.xmi");
 
         Relation renamedRelation = typhonMLInterface.getRelationFromNameInEntity(renameRelation.getNewRelationName(), ((Entity) renameRelation.getRelationToRename().eContainer()).getName(), targetModel);
@@ -132,6 +140,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeRelationCardinality);
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeCardinalityRelationChangeOperator_final.xmi");
 
         Relation updatedRelation = typhonMLInterface.getRelationFromNameInEntity(changeRelationCardinality.getRelation().getName(), ((Entity) changeRelationCardinality.getRelation().eContainer()).getName(), targetModel);

@@ -1,21 +1,17 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import java.util.Arrays;
-
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.RelationDOImpl;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
+
+import java.util.Arrays;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
 
@@ -34,49 +30,43 @@ public class EntitySplitVerticalHandler extends BaseHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        String databasetype, databasename;
-//        String sourceEntityId;
-        RelationDO relation;
-        EntityDO sourceEntity, firstNewEntity, secondNewEntity;
-//        WorkingSet dataSource, dataTarget;
-        Model targetModel;
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.FIRSTNEWENTITY, ParametersKeyString.SECONDNEWENTITY))) {
+            EntityDO sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
+            EntityDO firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY), false);
+            EntityDO secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY), false);
+            String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(sourceEntity.getName(), model);
 
-//        dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-
-
-        if (containParameters(smo, Arrays.asList(
-                ParametersKeyString.ENTITY,
-                ParametersKeyString.FIRSTNEWENTITY,
-                ParametersKeyString.SECONDNEWENTITY,
-                ParametersKeyString.DATABASENAME,
-                ParametersKeyString.DATABASETYPE))) {
-            sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
-            firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY), false);
-            secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY), false);
-            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
-            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-
+            //Database will stay the same
+//            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+//            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
             //TyphonDL
-            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
-                typhonDLInterface.createDatabase(databasetype, databasename);
-            }
+//            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
+//                typhonDLInterface.createDatabase(databasetype, databasename);
+//            }
 
             //TyphonML
-            targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
+            Model targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
             targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
-            relation = new RelationDOImpl("splitRelation", firstNewEntity.getName(), firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
-            targetModel = typhonMLInterface.createRelationship(relation, targetModel);
+            RelationDO relationDO = new RelationDOImpl("splitRelation", secondNewEntity.getName(), firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
+            targetModel = typhonMLInterface.createRelationship(relationDO, targetModel);
+            Database sourceDatabase = typhonMLInterface.getEntityDatabase(sourceEntity.getName(), targetModel);
+            DatabaseType sourceDatabaseType = getDatabaseType(sourceDatabase);
+            targetModel = typhonMLInterface.deleteEntityMappings(sourceEntity.getName(), sourceEntityNameInDatabase, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), firstNewEntity.getName(), firstNewEntity.getName(), targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), secondNewEntity.getName(), secondNewEntity.getName(), targetModel);
             targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
 
             //TyphonQL
-            typhonQLInterface.createEntityType(firstNewEntity, targetModel);
-            typhonQLInterface.createEntityType(secondNewEntity, targetModel);
-            typhonQLInterface.createRelationshipType(relation, targetModel);
             //TODO Data Manipulation
+            //1. retrieve all data from sourceEntity for the firstNewEntity attributes
+            //2. retrieve all data from sourceEntity for the secondNewEntity attributes
+//            typhonQLInterface.createEntityType(firstNewEntity, targetModel);
+//            typhonQLInterface.createEntityType(secondNewEntity, targetModel);
+//            typhonQLInterface.createRelationshipType(relationDO, targetModel);
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + ", " + ParametersKeyString.DATABASENAME + ", " + ParametersKeyString.DATABASETYPE + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + "]");
         }
     }
 

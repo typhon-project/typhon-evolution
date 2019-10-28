@@ -29,7 +29,8 @@ public class SMOAdapter implements SMO {
         if (changeOperator instanceof RemoveEntity
                 || changeOperator instanceof RenameEntity
                 || changeOperator instanceof AddEntity
-                || changeOperator instanceof MigrateEntity) {
+                || changeOperator instanceof MigrateEntity
+                || changeOperator instanceof SplitEntity) {
             typhonMLObject = TyphonMLObject.ENTITY;
         }
         if (changeOperator instanceof AddRelation
@@ -60,6 +61,10 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ADD;
         if (changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
+        if (changeOperator instanceof SplitEntity)
+            evolutionOperator = EvolutionOperator.SPLITVERTICAL;
+//        if (changeOperator instanceof SplitEntity)
+//            evolutionOperator = EvolutionOperator.SPLITHORIZONTAL;
         if (changeOperator instanceof EnableRelationContainment)
             evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
         if (changeOperator instanceof DisableRelationContainment)
@@ -94,6 +99,16 @@ public class SMOAdapter implements SMO {
             if (evolutionOperator == EvolutionOperator.MIGRATE) {
                 inputParameter.put(ParametersKeyString.ENTITY, ((MigrateEntity) changeOperator).getEntity());
                 inputParameter.put(ParametersKeyString.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
+            }
+            if (evolutionOperator == EvolutionOperator.SPLITVERTICAL) {
+                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+            }
+            if (evolutionOperator == EvolutionOperator.SPLITHORIZONTAL) {
+                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
             }
         }
 

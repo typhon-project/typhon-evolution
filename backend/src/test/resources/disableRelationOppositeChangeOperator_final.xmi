@@ -21,6 +21,7 @@
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
+    <relations name="newOppositeRelation" type="//@dataTypes.2" cardinality="one_many" isContainment="false"/>
   </dataTypes>
   <changeOperators xsi:type="typhonml:DisableBidirectionalRelation" relation="//@dataTypes.2/@relations.0"/>
 </typhonml:Model>

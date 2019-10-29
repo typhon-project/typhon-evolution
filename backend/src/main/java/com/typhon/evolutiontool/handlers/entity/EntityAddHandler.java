@@ -1,8 +1,5 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import java.util.Arrays;
-
-import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.ParametersKeyString;
 import com.typhon.evolutiontool.entities.SMO;
@@ -15,6 +12,8 @@ import com.typhon.evolutiontool.utils.EntityDOFactory;
 import typhonml.Entity;
 import typhonml.Model;
 
+import java.util.Collections;
+
 public class EntityAddHandler extends BaseHandler {
 
     public EntityAddHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
@@ -23,31 +22,21 @@ public class EntityAddHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        EntityDO newEntity;
-        String databasetype, databasename, logicalname;
-        DatabaseType dbtype;
-        Model targetModel;
-
-        // Verify ParametersKeyString
-        if (this.containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))) {
-            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
-            dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
-            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-            logicalname = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
+        if (this.containParameters(smo, Collections.singletonList(ParametersKeyString.ENTITY))) {
             // Verify that an instance of the underlying database is running in the TyphonDL.
-            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
-                typhonDLInterface.createDatabase(databasetype, databasename);
-            }
+//            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
+//                typhonDLInterface.createDatabase(databasetype, databasename);
+//            }
             //Executing evolution operations
 //            newEntity = smo.getPOJOFromInputParameter(ParametersKeyString.ENTITY, EntityDOJsonImpl.class);
-            newEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY));
-            targetModel = typhonMLInterface.createEntityType(model, newEntity);
-            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, newEntity.getName(), targetModel);
-            typhonQLInterface.createEntityType(newEntity, targetModel);
+            EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
+            Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
+//            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
+//            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, entityDO.getName(), targetModel);
+            typhonQLInterface.createEntityType(entityDO, targetModel);
             return targetModel;
         } else
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.DATABASENAME + ", " + ParametersKeyString.DATABASETYPE + ", " + ParametersKeyString.TARGETLOGICALNAME + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.ENTITY + "]");
 
     }
 

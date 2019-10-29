@@ -20,7 +20,7 @@ public class AttributeDOFactory {
             } else if (attribute.eContainer() instanceof Entity) {
                 entity = (Entity) attribute.eContainer();
             }
-            EntityDO entityDO = entity != null ? EntityDOFactory.buildInstance(entity) : null;
+            EntityDO entityDO = entity != null ? EntityDOFactory.buildInstance(entity, false) : null;
             return new AttributeDOImpl(attribute.getName(), attribute.getImportedNamespace(), DataTypeDOFactory.buildInstance(attribute.getType()), entityDO);
         }
         return null;

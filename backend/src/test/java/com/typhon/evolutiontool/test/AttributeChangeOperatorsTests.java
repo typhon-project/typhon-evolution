@@ -19,6 +19,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addAttribute);
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addAttributeChangeOperator_final.xmi");
 
         Entity updatedEntity = typhonMLInterface.getEntityTypeFromName(addAttribute.getOwnerEntity().getName(), targetModel);
@@ -37,6 +38,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(removeAttribute);
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/removeAttributeChangeOperator_final.xmi");
     }
 
@@ -47,6 +49,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(renameAttribute);
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/renameAttributeChangeOperator_final.xmi");
     }
 
@@ -57,6 +60,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeAttributeType);
 
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeTypeAttributeChangeOperator_final.xmi");
     }
 }

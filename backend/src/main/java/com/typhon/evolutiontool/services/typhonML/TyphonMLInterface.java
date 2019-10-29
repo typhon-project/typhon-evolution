@@ -3,10 +3,7 @@ package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
-import typhonml.Entity;
-import typhonml.Model;
-import typhonml.Relation;
-import typhonml.Database;
+import typhonml.*;
 
 import javax.xml.crypto.Data;
 
@@ -36,6 +33,8 @@ public interface TyphonMLInterface {
     String getEntityNameInDatabase(String entityName, Model model);
 
     Relation getRelationFromNameInEntity(String relationname, String entityname, Model model);
+
+    DataType getDataTypeFromName(String dataTypeName, Model model);
 
     Model createEntityType(Model sourceModel, EntityDO newEntity);
 

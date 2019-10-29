@@ -53,6 +53,7 @@ public class EntityDOImpl implements EntityDO {
         return namespace;
     }
 
+    @Override
     public List<RelationDO> getRelations() {
         return relations;
     }

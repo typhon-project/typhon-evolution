@@ -23,6 +23,7 @@ public class RelationEnableOppositeHandler extends BaseHandler {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
             RelationDO oppositeRelation = new RelationDOImpl(
                     relationDO.getName().concat("_opposite"),
+                    relationDO.getSourceEntity().getName(),
                     relationDO.getTargetEntity(),
                     relationDO.getSourceEntity(),
                     relationDO,

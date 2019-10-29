@@ -22,5 +22,5 @@
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:AddRelation" name="user" type="//@dataTypes.2" cardinality="one" isContainment="false" opposite="//@dataTypes.2/@relations.0" ownerEntity="//@dataTypes.3"/>
+  <changeOperators xsi:type="typhonml:AddRelation" name="user" type="//@dataTypes.2" cardinality="one" isContainment="false" ownerEntity="//@dataTypes.3"/>
 </typhonml:Model>

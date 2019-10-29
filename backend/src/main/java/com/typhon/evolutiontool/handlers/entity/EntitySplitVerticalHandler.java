@@ -1,19 +1,16 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
-import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import com.typhon.evolutiontool.utils.EntityDOFactory;
-import typhonml.Database;
-import typhonml.Entity;
 import typhonml.Model;
 
 import java.util.Arrays;
 
-public class EntitySplitVerticalHandler extends BaseHandler {
+public class EntitySplitVerticalHandler extends EntitySplitHandler {
 
     public EntitySplitVerticalHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
@@ -31,30 +28,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.FIRSTNEWENTITY, ParametersKeyString.SECONDNEWENTITY))) {
-            EntityDO sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
-            EntityDO firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY), false);
-            EntityDO secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY), false);
-            String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(sourceEntity.getName(), model);
-
-            //Database will stay the same
-//            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
-//            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
-            //TyphonDL
-//            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
-//                typhonDLInterface.createDatabase(databasetype, databasename);
-//            }
-
             //TyphonML
-            Model targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);
-            targetModel = typhonMLInterface.createEntityType(targetModel, secondNewEntity);
-            RelationDO relationDO = new RelationDOImpl("splitRelation", secondNewEntity.getName(), firstNewEntity, secondNewEntity, null, false, CardinalityDO.ONE);
-            targetModel = typhonMLInterface.createRelationship(relationDO, targetModel);
-            Database sourceDatabase = typhonMLInterface.getEntityDatabase(sourceEntity.getName(), targetModel);
-            DatabaseType sourceDatabaseType = getDatabaseType(sourceDatabase);
-            targetModel = typhonMLInterface.deleteEntityMappings(sourceEntity.getName(), sourceEntityNameInDatabase, targetModel);
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), firstNewEntity.getName(), firstNewEntity.getName(), targetModel);
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), secondNewEntity.getName(), secondNewEntity.getName(), targetModel);
-            targetModel = typhonMLInterface.deleteEntityType(sourceEntity.getName(), targetModel);
+            Model targetModel = splitEntity(smo, model);
 
             //TyphonQL
             //TODO Data Manipulation

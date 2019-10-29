@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -21,8 +21,8 @@ public class RelationDisableOppositeHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-        	RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
+        	RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
         	RelationDO oppositeRelation = relation.getOpposite();
 
 //        	Model targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity() != null ? oppositeRelation.getSourceEntity().getName() : null, model);
@@ -33,7 +33,7 @@ public class RelationDisableOppositeHandler extends BaseHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + "]");
         }
     }
 }

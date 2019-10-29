@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -22,15 +22,15 @@ public class RelationRemoveHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             String entityName = relationDO.getSourceEntity().getName();
             Model targetModel = typhonMLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
             typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");
         }
     }
 

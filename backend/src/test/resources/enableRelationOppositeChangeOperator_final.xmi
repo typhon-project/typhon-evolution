@@ -23,5 +23,4 @@
     <attributes name="expiryDate" type="//@dataTypes.0"/>
     <relations name="paymentsDetails_opposite" type="//@dataTypes.2" cardinality="one_many" isContainment="false"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:EnableBidirectionalRelation" relation="//@dataTypes.2/@relations.0"/>
 </typhonml:Model>

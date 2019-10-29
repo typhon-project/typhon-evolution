@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.test;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
@@ -107,7 +107,7 @@ public class RelationChangeOperatorsTests extends InitialTest {
         DisableBidirectionalRelation disableBidirectionalRelation = (DisableBidirectionalRelation) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(disableBidirectionalRelation);
 
-        RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
 //        RelationDO oppositeRelation = relation.getOpposite();
 
         targetModel = evolutionService.evolveRelation(smo, sourceModel);

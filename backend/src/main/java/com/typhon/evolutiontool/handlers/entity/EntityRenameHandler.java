@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -19,15 +19,15 @@ public class EntityRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.NEWENTITYNAME))) {
-            String oldEntityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.ENTITYNAME));
-            String newEntityName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.NEWENTITYNAME));
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY_NAME, ChangeOperatorParameter.NEW_ENTITY_NAME))) {
+            String oldEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.ENTITY_NAME));
+            String newEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_NAME));
             Model targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
             typhonQLInterface.renameEntity(oldEntityName, newEntityName, model);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITYNAME + ", " + ParametersKeyString.NEWENTITYNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + "]");
         }
     }
 }

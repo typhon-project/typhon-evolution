@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.handlers.attribute;
 
 import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -22,14 +22,14 @@ public class AttributeAddHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.ATTRIBUTE))) {
-            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
+            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
 
             Model targetModel = typhonMLInterface.addAttribute(attributeDO, attributeDO.getEntity().getName(), model);
             typhonQLInterface.addAttribute(attributeDO, attributeDO.getEntity().getName(), targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.ATTRIBUTE + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.ATTRIBUTE + "]");
         }
     }
 }

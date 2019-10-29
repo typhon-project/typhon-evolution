@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,11 @@ public class EntityDOImpl implements EntityDO {
     private List<RelationDO> relations;
     private String entityIdentifier;
     private Map<String, Object> attributes;
+
+    public EntityDOImpl() {
+        this.relations = new ArrayList<>();
+        this.attributes = new HashMap<>();
+    }
 
     public EntityDOImpl(String name, String namespace, List<RelationDO> relations, String entityIdentifier, Map<String, Object> attributes) {
         this.name = name;

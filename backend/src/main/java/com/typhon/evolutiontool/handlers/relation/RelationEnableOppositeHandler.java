@@ -19,8 +19,8 @@ public class RelationEnableOppositeHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             RelationDO oppositeRelation = new RelationDOImpl(
                     relationDO.getName().concat("_opposite"),
                     relationDO.getSourceEntity().getName(),
@@ -39,7 +39,7 @@ public class RelationEnableOppositeHandler extends BaseHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");
         }
     }
 

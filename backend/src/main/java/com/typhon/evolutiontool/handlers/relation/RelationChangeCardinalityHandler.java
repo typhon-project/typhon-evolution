@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.handlers.relation;
 
 import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -23,14 +23,14 @@ public class RelationChangeCardinalityHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.CARDINALITY))) {
-            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
-            int cardinalityValue = (Integer) smo.getInputParameter().get(ParametersKeyString.CARDINALITY);
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.RELATION, ChangeOperatorParameter.CARDINALITY))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
+            int cardinalityValue = (Integer) smo.getInputParameter().get(ChangeOperatorParameter.CARDINALITY);
             Model targetModel = typhonMLInterface.changeCardinalityInRelation(relationDO, CardinalityDO.get(cardinalityValue), model);
             typhonQLInterface.changeCardinalityInRelation(relationDO.getName(), relationDO.getSourceEntity().getName(), CardinalityDO.get(cardinalityValue), targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + ", " + ChangeOperatorParameter.RELATION_NAME + "]");
         }
     }
 

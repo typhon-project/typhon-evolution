@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.handlers;
 
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.DatabaseType;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -32,7 +33,7 @@ public class BaseHandler implements Handler{
         return null;
     }
 
-    protected boolean containParameters(SMO smo, List<String> parameters) {
+    protected boolean containParameters(SMO smo, List<ChangeOperatorParameter> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
     }

@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.handlers.attribute;
 
 import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -22,15 +22,15 @@ public class AttributeRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ATTRIBUTE, ParametersKeyString.NEWATTRIBUTENAME))) {
-            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
-            String newAttributeName = String.valueOf(smo.getInputParameter().get(ParametersKeyString.NEWATTRIBUTENAME));
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ATTRIBUTE, ChangeOperatorParameter.NEW_ATTRIBUTE_NAME))) {
+            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
+            String newAttributeName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ATTRIBUTE_NAME));
             String entityName = attributeDO.getEntity().getName();
             Model targetModel = typhonMLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, model);
             typhonQLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.NEWATTRIBUTENAME + ", " + ParametersKeyString.ENTITYNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.NEW_ATTRIBUTE_NAME + ", " + ChangeOperatorParameter.ENTITY_NAME + "]");
         }
     }
 

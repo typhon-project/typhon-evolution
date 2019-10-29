@@ -76,4 +76,15 @@ public class EntityChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/splitHorizontalEntityChangeOperator_final.xmi");
     }
+
+    @Test
+    public void testMergeEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/mergeEntityChangeOperator.xmi");
+        MergeEntity mergeEntity = (MergeEntity) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(mergeEntity);
+
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/mergeEntityChangeOperator_final.xmi");
+    }
 }

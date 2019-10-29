@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.services;
 
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
@@ -160,7 +161,7 @@ public class EvolutionServiceImpl implements EvolutionService {
     }
 
 
-    public boolean containParameters(SMO smo, List<String> parameters) {
+    public boolean containParameters(SMO smo, List<ChangeOperatorParameter> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator", smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
     }

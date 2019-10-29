@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface SMO {
-	
+
     TyphonMLObject getTyphonObject();
 
     EvolutionOperator getEvolutionOperator();
 
-    Map<String, Object> getInputParameter();
+    Map<ChangeOperatorParameter, Object> getInputParameter();
 
-    boolean inputParametersContainsExpected(List<String> expectedInputParams);
-    
+    boolean inputParametersContainsExpected(List<ChangeOperatorParameter> expectedInputParams);
+
 }

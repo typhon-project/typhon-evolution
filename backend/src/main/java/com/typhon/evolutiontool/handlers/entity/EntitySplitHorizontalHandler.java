@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -24,13 +24,13 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.FIRSTNEWENTITY, ParametersKeyString.SECONDNEWENTITY, ParametersKeyString.ATTRIBUTENAME, ParametersKeyString.ATTRIBUTEVALUE))) {
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.FIRST_NEW_ENTITY, ChangeOperatorParameter.SECOND_NEW_ENTITY, ChangeOperatorParameter.ATTRIBUTE_NAME, ChangeOperatorParameter.ATTRIBUTE_VALUE))) {
             //TyphonML
             Model targetModel = splitEntity(smo, model);
 
             //TyphonQL
-//            String attributeName = smo.getInputParameter().get(ParametersKeyString.ATTRIBUTENAME).toString();
-//            String attributeValue = smo.getInputParameter().get(ParametersKeyString.ATTRIBUTEVALUE).toString();
+//            String attributeName = smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTENAME).toString();
+//            String attributeValue = smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTEVALUE).toString();
 //            WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
 //            WorkingSet dataSource = typhonQLInterface.readEntityDataEqualAttributeValue(sourceEntityName, attributeName, attributeValue, model);
 //            dataTarget.setEntityRows(targetEntityName, dataSource.getEntityInstanceRows(sourceEntityName));
@@ -39,7 +39,7 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + ", " + ParametersKeyString.ATTRIBUTENAME + ", " + ParametersKeyString.ATTRIBUTEVALUE + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.FIRST_NEW_ENTITY + ", " + ChangeOperatorParameter.SECOND_NEW_ENTITY + ", " + ChangeOperatorParameter.ATTRIBUTE_NAME + ", " + ChangeOperatorParameter.ATTRIBUTE_VALUE + "]");
         }
 
     }

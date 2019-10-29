@@ -1,7 +1,7 @@
 package com.typhon.evolutiontool.handlers.attribute;
 
 import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -23,15 +23,15 @@ public class AttributeRemoveHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.ATTRIBUTE))) {
-            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ParametersKeyString.ATTRIBUTE));
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
+            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String entityName = attributeDO.getEntity().getName();
             Model targetModel = typhonMLInterface.removeAttribute(attributeDO, entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
             typhonQLInterface.removeAttributes(entityName, Collections.singletonList(attributeDO.getName()), targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ATTRIBUTE + ", " + ParametersKeyString.ENTITYNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ATTRIBUTE + ", " + ChangeOperatorParameter.ENTITY_NAME + "]");
         }
     }
 

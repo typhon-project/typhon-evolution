@@ -1,18 +1,13 @@
 package com.typhon.evolutiontool.entities;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 
 public class SMOJsonImpl implements SMO {
 
-    Logger logger = LoggerFactory.getLogger(SMOJsonImpl.class);
-
     private TyphonMLObject typhonObject;
     private EvolutionOperator evolutionOperator;
-    private Map<String, Object> inputParameter;
+    private Map<ChangeOperatorParameter, Object> inputParameter;
 
     public SMOJsonImpl(TyphonMLObject typhonObject, EvolutionOperator evolutionOperator) {
         this.typhonObject = typhonObject;
@@ -35,7 +30,7 @@ public class SMOJsonImpl implements SMO {
     }
 
     @Override
-    public Map<String, Object> getInputParameter() {
+    public Map<ChangeOperatorParameter, Object> getInputParameter() {
         return inputParameter;
     }
 
@@ -49,10 +44,9 @@ public class SMOJsonImpl implements SMO {
     }
 
     @Override
-    public boolean inputParametersContainsExpected(List<String> expectedInputParams) {
-        for (String expected :
-                expectedInputParams) {
-            if (!this.inputParameter.containsKey(expected))
+    public boolean inputParametersContainsExpected(List<ChangeOperatorParameter> expectedInputParams) {
+        for (ChangeOperatorParameter expected : expectedInputParams) {
+            if (!this.getInputParameter().containsKey(expected))
                 return false;
         }
         return true;

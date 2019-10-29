@@ -21,9 +21,9 @@ public abstract class EntitySplitHandler extends BaseHandler {
     public abstract Model handle(SMO smo, Model model) throws InputParameterException;
 
     Model splitEntity(SMO smo, Model model) {
-        EntityDO sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
-        EntityDO firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.FIRSTNEWENTITY), false);
-        EntityDO secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.SECONDNEWENTITY), false);
+        EntityDO sourceEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.ENTITY), false);
+        EntityDO firstNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.FIRST_NEW_ENTITY), false);
+        EntityDO secondNewEntity = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.SECOND_NEW_ENTITY), false);
         String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(sourceEntity.getName(), model);
 
         Model targetModel = typhonMLInterface.createEntityType(model, firstNewEntity);

@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -27,7 +27,7 @@ public class EntitySplitVerticalHandler extends EntitySplitHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.FIRSTNEWENTITY, ParametersKeyString.SECONDNEWENTITY))) {
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.FIRST_NEW_ENTITY, ChangeOperatorParameter.SECOND_NEW_ENTITY))) {
             //TyphonML
             Model targetModel = splitEntity(smo, model);
 
@@ -41,7 +41,7 @@ public class EntitySplitVerticalHandler extends EntitySplitHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.FIRST_NEW_ENTITY + ", " + ChangeOperatorParameter.SECOND_NEW_ENTITY + "]");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -22,14 +22,14 @@ public class RelationRenameHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.RELATION, ParametersKeyString.RELATIONNAME))) {
-            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
-            String newRelationName = smo.getInputParameter().get(ParametersKeyString.RELATIONNAME).toString();
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.RELATION, ChangeOperatorParameter.RELATION_NAME))) {
+            RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
+            String newRelationName = smo.getInputParameter().get(ChangeOperatorParameter.RELATION_NAME).toString();
             Model targetModel = typhonMLInterface.renameRelation(relationDO.getName(), relationDO.getSourceEntity().getName(), newRelationName, model);
             typhonQLInterface.renameRelation(relationDO.getName(), newRelationName, targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.RELATION + ", " + ParametersKeyString.RELATIONNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + ", " + ChangeOperatorParameter.RELATION_NAME + "]");
         }
     }
 

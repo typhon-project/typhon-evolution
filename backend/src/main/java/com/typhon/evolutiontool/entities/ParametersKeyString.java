@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 public interface ParametersKeyString {
     //Mandatory in all SMO
@@ -33,4 +33,5 @@ public interface ParametersKeyString {
     String OLDATTRIBUTENAME = "oldattributename";
     String NEWATTRIBUTENAME = "newattributename";
     String ATTRIBUTEIMPORTEDNAMESPACE = "attributeImportedNamespace";
+    String NEWCONTAINMENT = "newContainment";
 }

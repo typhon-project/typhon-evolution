@@ -1,11 +1,11 @@
-package main.java.com.typhon.evolutiontool.services.typhonML;
+package com.typhon.evolutiontool.services.typhonML;
 
 
-import main.java.com.typhon.evolutiontool.entities.*;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import typhonml.Entity;
-import typhonml.Model;
-import typhonml.Relation;
+import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import typhonml.*;
+
+import javax.xml.crypto.Data;
 
 /**
  * Interface to access TyphonML.
@@ -28,9 +28,13 @@ public interface TyphonMLInterface {
      */
     boolean hasRelationship(String entityname, Model model);
 
-    DatabaseType getDatabaseType(String entityname, Model model);
+    Database getEntityDatabase(String entityName, Model model);
+
+    String getEntityNameInDatabase(String entityName, Model model);
 
     Relation getRelationFromNameInEntity(String relationname, String entityname, Model model);
+
+    DataType getDataTypeFromName(String dataTypeName, Model model);
 
     Model createEntityType(Model sourceModel, EntityDO newEntity);
 
@@ -46,9 +50,7 @@ public interface TyphonMLInterface {
 
     Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
 
-    String getDatabaseName(String sourceEntityName, Model model);
-
-    Model deleteEntityMappings(String entityName, Model model);
+    Model deleteEntityMappings(String entityName, String entityNameInDatabase, Model model);
 
     Model createRelationship(RelationDO relation, Model model);
 

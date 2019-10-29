@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
+    <tables name="firstNewEntity" db="//@databases.0" entity="//@dataTypes.2"/>
+    <tables name="secondNewEntity" db="//@databases.0" entity="//@dataTypes.3"/>
+  </databases>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
+  <dataTypes xsi:type="typhonml:Entity" name="firstNewEntity">
+    <attributes name="id" type="//@dataTypes.1"/>
+    <attributes name="creationDate" type="//@dataTypes.0"/>
+    <relations name="splitRelation" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="secondNewEntity">
+    <attributes name="firstName" type="//@dataTypes.1"/>
+    <attributes name="lastName" type="//@dataTypes.1"/>
+    <attributes name="id" type="//@dataTypes.1"/>
+  </dataTypes>
+</typhonml:Model>

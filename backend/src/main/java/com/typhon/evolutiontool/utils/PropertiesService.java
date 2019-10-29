@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
 import java.util.Properties;
 

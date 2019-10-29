@@ -1,9 +1,0 @@
-{
-  "typhonobject": "ENTITY",
-  "operator": "RENAME",
-  "parameters":
-  {
-    "oldentityname": "User",
-    "newentityname": "Customer"
-  }
-}

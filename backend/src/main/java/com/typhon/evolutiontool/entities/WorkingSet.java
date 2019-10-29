@@ -1,7 +1,8 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+
 
 /**
  * Return type of TyphonQL query. Defined in deliverable D4.2

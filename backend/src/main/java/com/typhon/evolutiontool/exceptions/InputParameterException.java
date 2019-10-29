@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.exceptions;
+package com.typhon.evolutiontool.exceptions;
 
 public class InputParameterException extends Exception{
 

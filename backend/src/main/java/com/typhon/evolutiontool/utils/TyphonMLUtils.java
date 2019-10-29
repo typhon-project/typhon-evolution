@@ -1,12 +1,11 @@
-package main.java.com.typhon.evolutiontool.utils;
+package com.typhon.evolutiontool.utils;
 
-import main.java.com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.SMO;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.xtext.resource.XtextResourceSet;
 import typhonml.ChangeOperator;
 import typhonml.Model;
 import typhonml.TyphonmlPackage;
@@ -26,7 +25,7 @@ public class TyphonMLUtils {
      */
     public static void typhonMLPackageRegistering() {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("tml", new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(XtextResourceSet.class));
+        //Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("tml", new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(XtextResourceSet.class));
         resourceSet.getPackageRegistry().put(TyphonmlPackage.eINSTANCE.getNsURI(), TyphonmlPackage.eINSTANCE);
     }
 

@@ -1,18 +1,12 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/*
-Implementation of EntityDO data contained in WorkingSet. Following D4.2
- */
 public class EntityInstance {
-
-    @JsonProperty("name")
-    private Object id;
-    @JsonProperty("attributes")
+	
+	private Object id;
     private Map<String,Object> attributes;
 
     public EntityInstance() {
@@ -71,4 +65,5 @@ public class EntityInstance {
     public void setAttributes(Map<String,Object> attributes) {
         this.attributes = attributes;
     }
+
 }

@@ -1,13 +1,10 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
+
 import typhonml.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import main.java.com.typhon.evolutiontool.utils.AttributeDOFactory;
-import main.java.com.typhon.evolutiontool.utils.EntityDOFactory;
-import main.java.com.typhon.evolutiontool.utils.RelationDOFactory;
 
 
 /**
@@ -32,13 +29,15 @@ public class SMOAdapter implements SMO {
         if (changeOperator instanceof RemoveEntity
                 || changeOperator instanceof RenameEntity
                 || changeOperator instanceof AddEntity
-                || changeOperator instanceof MigrateEntity) {
+                || changeOperator instanceof MigrateEntity
+                || changeOperator instanceof SplitEntity) {
             typhonMLObject = TyphonMLObject.ENTITY;
         }
         if (changeOperator instanceof AddRelation
                 || changeOperator instanceof RemoveRelation
                 || changeOperator instanceof EnableRelationContainment
                 || changeOperator instanceof DisableRelationContainment
+                || changeOperator instanceof ChangeRelationContainement
                 || changeOperator instanceof EnableBidirectionalRelation
                 || changeOperator instanceof DisableBidirectionalRelation
                 || changeOperator instanceof RenameRelation
@@ -62,10 +61,16 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ADD;
         if (changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
+        if (changeOperator instanceof SplitEntity)
+            evolutionOperator = EvolutionOperator.SPLITVERTICAL;
+//        if (changeOperator instanceof SplitEntity)
+//            evolutionOperator = EvolutionOperator.SPLITHORIZONTAL;
         if (changeOperator instanceof EnableRelationContainment)
             evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
         if (changeOperator instanceof DisableRelationContainment)
             evolutionOperator = EvolutionOperator.DISABLECONTAINMENT;
+        if (changeOperator instanceof ChangeRelationContainement)
+            evolutionOperator = EvolutionOperator.CHANGECONTAINMENT;
         if (changeOperator instanceof EnableBidirectionalRelation)
             evolutionOperator = EvolutionOperator.ENABLEOPPOSITE;
         if (changeOperator instanceof DisableBidirectionalRelation)
@@ -82,8 +87,7 @@ public class SMOAdapter implements SMO {
         //ENTITY
         if (typhonMLObject == TyphonMLObject.ENTITY) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                inputParameter.put(ParametersKeyString.ENTITY, EntityDOFactory.buildInstance((Entity) changeOperator));
-                //TODO Add other parameters
+                inputParameter.put(ParametersKeyString.ENTITY, changeOperator);
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
@@ -96,13 +100,22 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ParametersKeyString.ENTITY, ((MigrateEntity) changeOperator).getEntity());
                 inputParameter.put(ParametersKeyString.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
             }
+            if (evolutionOperator == EvolutionOperator.SPLITVERTICAL) {
+                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+            }
+            if (evolutionOperator == EvolutionOperator.SPLITHORIZONTAL) {
+                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+            }
         }
 
         //RELATION
         if (typhonMLObject == TyphonMLObject.RELATION) {
             if (evolutionOperator == EvolutionOperator.ADD) {
                 inputParameter.put(ParametersKeyString.RELATION, changeOperator);
-                inputParameter.put(ParametersKeyString.ENTITY, ((AddRelation) changeOperator).getOwnerEntity());
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
@@ -113,10 +126,12 @@ public class SMOAdapter implements SMO {
             if (evolutionOperator == EvolutionOperator.DISABLECONTAINMENT) {
                 inputParameter.put(ParametersKeyString.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
             }
+            if (evolutionOperator == EvolutionOperator.CHANGECONTAINMENT) {
+                inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationContainement) changeOperator).getRelation());
+                inputParameter.put(ParametersKeyString.NEWCONTAINMENT, ((ChangeRelationContainement) changeOperator).getNewContainment());
+            }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
-                //TODO by TyphonML: missing relationname parameter
-//            inputParameter.put(ParametersKeyString.RELATIONNAME), ((EnableBidirectionalRelation) changeOperator).getRelationName());
             }
             if (evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
                 inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
@@ -127,33 +142,24 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.CHANGECARDINALITY) {
                 inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
-                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality());
+                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality().getValue());
             }
         }
         //ATTRIBUTE
         if (typhonMLObject == TyphonMLObject.ATTRIBUTE) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                inputParameter.put(ParametersKeyString.ATTRIBUTENAME, ((AddAttribute) changeOperator).getName());
-                inputParameter.put(ParametersKeyString.ATTRIBUTEIMPORTEDNAMESPACE, ((AddAttribute) changeOperator).getImportedNamespace());
-                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((AddAttribute) changeOperator).getType());
-                inputParameter.put(ParametersKeyString.ENTITY, ((AddAttribute) changeOperator).getOwnerEntity());
+                inputParameter.put(ParametersKeyString.ATTRIBUTE, changeOperator);
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RenameAttribute) changeOperator).getAttributeToRename());
                 inputParameter.put(ParametersKeyString.NEWATTRIBUTENAME, ((RenameAttribute) changeOperator).getNewName());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameAttribute) changeOperator).getEntityName());
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
                 inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
                 inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
-                //TODO by TyphonML: missing entityname parameter
-//                inputParameter.put(ParametersKeyString.ENTITYNAME, ((ChangeAttributeType) changeOperator).getEntityName());
             }
         }
     }
@@ -184,49 +190,5 @@ public class SMOAdapter implements SMO {
                 return false;
         }
         return true;
-    }
-
-
-    @Override
-    public EntityDO getEntityDOFromInputParameter(String parameterkey) {
-        //Because AddEntity Operator extends Entity in TyphonML meta model.
-        if (changeOperator instanceof AddEntity)
-            return EntityDOFactory.buildInstance((AddEntity) changeOperator);
-        return null;
-    }
-
-    @Override
-    public RelationDO getRelationDOFromInputParameter(String parameterkey) {
-        if (this.getTyphonObject() == TyphonMLObject.RELATION) {
-            if (this.getEvolutionOperator() == EvolutionOperator.ADD) {
-                return RelationDOFactory.buildInstance((AddRelation) changeOperator, false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.ENABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((EnableRelationContainment) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.DISABLECONTAINMENT) {
-                return RelationDOFactory.buildInstance(((DisableRelationContainment) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.ENABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((EnableBidirectionalRelation) changeOperator).getRelation(), false);
-            }
-            if (this.getEvolutionOperator() == EvolutionOperator.DISABLEOPPOSITE) {
-                return RelationDOFactory.buildInstance(((DisableBidirectionalRelation) changeOperator).getRelation(), false);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public AttributeDO getAttributeDOFromInputParameter(String parameterkey) {
-        if (this.getTyphonObject() == TyphonMLObject.ATTRIBUTE && this.getEvolutionOperator() == EvolutionOperator.ADD) {
-            return AttributeDOFactory.buildInstance((AddAttribute) changeOperator);
-        }
-        return null;
-    }
-
-    @Override
-    public <T> T getPOJOFromInputParameter(String key, Class<T> pojoclass) {
-        return null;
     }
 }

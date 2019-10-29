@@ -1,19 +1,16 @@
-package main.java.com.typhon.evolutiontool.services.typhonML;
+package com.typhon.evolutiontool.services.typhonML;
 
-import main.java.com.typhon.evolutiontool.entities.*;
-import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
-import main.java.com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.services.EvolutionServiceImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import typhonml.*;
 import typhonml.Collection;
-import typhonml.Database;
-import typhonml.DocumentDB;
-import typhonml.RelationalDB;
 import typhonml.Table;
+import typhonml.*;
 
 import java.util.List;
-import org.eclipse.emf.ecore.util.*;
 
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
@@ -37,11 +34,122 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public DatabaseType getDatabaseType(String entityname, Model model) {
-        //TODO
-        Entity e = this.getEntityTypeFromName(entityname, model);
-        Database db;
-//		db = e.getGenericList();
+    public Database getEntityDatabase(String entityName, Model model) {
+        Entity entity = this.getEntityTypeFromName(entityName, model);
+        List<Database> databases = model.getDatabases();
+        if (databases != null) {
+            for (Database database : databases) {
+                if (database instanceof RelationalDB) {
+                    List<Table> tables = ((RelationalDB) database).getTables();
+                    if (tables != null) {
+                        for (Table table : tables) {
+                            if (table.getEntity().getName().equals(entity.getName())) {
+                                return database;
+                            }
+                        }
+                    }
+                }
+                if (database instanceof DocumentDB) {
+                    List<Collection> collections = ((DocumentDB) database).getCollections();
+                    if (collections != null) {
+                        for (Collection collection : collections) {
+                            if (collection.getEntity().getName().equals(entity.getName())) {
+                                return database;
+                            }
+                        }
+                    }
+                }
+                if (database instanceof GraphDB) {
+                    List<GraphNode> graphNodes = ((GraphDB) database).getNodes();
+                    if (graphNodes != null) {
+                        for (GraphNode graphNode : graphNodes) {
+                            if (graphNode.getEntity().getName().equals(entity.getName())) {
+                                return database;
+                            }
+                        }
+                    }
+                }
+                if (database instanceof ColumnDB) {
+                    List<Column> columns = ((ColumnDB) database).getColumns();
+                    if (columns != null) {
+                        for (Column column : columns) {
+                            if (column.getEntity().getName().equals(entity.getName())) {
+                                return database;
+                            }
+                        }
+                    }
+                }
+                if (database instanceof KeyValueDB) {
+                    List<KeyValueElement> keyValueElements = ((KeyValueDB) database).getElements();
+                    if (keyValueElements != null) {
+                        for (KeyValueElement keyValueElement : keyValueElements) {
+                            if (keyValueElement.getEntity().getName().equals(entity.getName())) {
+                                return database;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getEntityNameInDatabase(String entityName, Model model) {
+        Entity entity = this.getEntityTypeFromName(entityName, model);
+        Database database = getEntityDatabase(entityName, model);
+        if (database != null) {
+            if (database instanceof RelationalDB) {
+                List<Table> tables = ((RelationalDB) database).getTables();
+                if (tables != null) {
+                    for (Table table : tables) {
+                        if (table.getEntity().getName().equals(entity.getName())) {
+                            return table.getName();
+                        }
+                    }
+                }
+            }
+            if (database instanceof DocumentDB) {
+                List<Collection> collections = ((DocumentDB) database).getCollections();
+                if (collections != null) {
+                    for (Collection collection : collections) {
+                        if (collection.getEntity().getName().equals(entity.getName())) {
+                            return collection.getName();
+                        }
+                    }
+                }
+            }
+            if (database instanceof GraphDB) {
+                List<GraphNode> graphNodes = ((GraphDB) database).getNodes();
+                if (graphNodes != null) {
+                    for (GraphNode graphNode : graphNodes) {
+                        if (graphNode.getEntity().getName().equals(entity.getName())) {
+                            return graphNode.getName();
+                        }
+                    }
+                }
+            }
+            if (database instanceof ColumnDB) {
+                List<Column> columns = ((ColumnDB) database).getColumns();
+                if (columns != null) {
+                    for (Column column : columns) {
+                        if (column.getEntity().getName().equals(entity.getName())) {
+                            return column.getName();
+                        }
+                    }
+                }
+            }
+            if (database instanceof KeyValueDB) {
+                List<KeyValueElement> keyValueElements = ((KeyValueDB) database).getElements();
+                if (keyValueElements != null) {
+                    for (KeyValueElement keyValueElement : keyValueElements) {
+                        if (keyValueElement.getEntity().getName().equals(entity.getName())) {
+                            return keyValueElement.getName();
+                        }
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -61,6 +169,19 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public DataType getDataTypeFromName(String dataTypeName, Model model) {
+        List<DataType> dataTypes = model.getDataTypes();
+        if (dataTypes != null) {
+            for (DataType dataType : dataTypes) {
+                if (dataType.getName().equals(dataTypeName)) {
+                    return dataType;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Model createEntityType(Model sourceModel, EntityDO newEntity) {
         logger.info("Create Entity type [{}] in TyphonML model", newEntity.getName());
         Model newModel;
@@ -69,7 +190,8 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //ENTITY
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
-        newEntity.getAttributes().forEach((key, value) -> entity.getAttributes().add(this.createAttribute(key, entity)));
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, (DataType) type, newModel)));
+        newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         newModel.getDataTypes().add(entity);
         return newModel;
     }
@@ -115,8 +237,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         Model newModel;
         newModel = EcoreUtil.copy(model);
         Entity sourceEntity = this.getEntityTypeFromName(relation.getSourceEntity().getName(), newModel);
-        Entity targetEntity = this.getEntityTypeFromName(relation.getTargetEntity().getName(), newModel);
-        sourceEntity.getRelations().add(this.createRelation(relation.getName(), relation.getCardinality(), relation.isContainment(), targetEntity));
+        sourceEntity.getRelations().add(this.createRelation(relation, newModel));
 
         return newModel;
     }
@@ -128,9 +249,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         typhonml.Relation relToDelete = null;
         newModel = EcoreUtil.copy(model);
         typhonml.Entity e = this.getEntityTypeFromName(entityname, newModel);
-        for (typhonml.Relation relation : e.getRelations()) {
-            if (relation.getName().equals(relationname)) {
-                relToDelete = relation;
+        if (e != null && e.getRelations() != null) {
+            for (typhonml.Relation relation : e.getRelations()) {
+                if (relation.getName().equals(relationname)) {
+                    relToDelete = relation;
+                }
             }
         }
         if (relToDelete != null)
@@ -352,35 +475,73 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public String getDatabaseName(String sourceEntityName, Model model) {
-        return null;
+    public Model deleteEntityMappings(String entityName, String entityNameInDatabase, Model model) {
+        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityName);
+        Model newModel = EcoreUtil.copy(model);
+        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
+        //Remove the entity from the database containing the entity
+        removeEntityFromDatabase(entityNameInDatabase, getEntityDatabase(entityName, newModel));
+        return newModel;
     }
 
-    @Override
-    public Model deleteEntityMappings(String entityName, Model model) {
-        logger.info("Delete database mapping of entity type [{}]  in TyphonML", entityName);
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
-        if (entity != null) {
-            if (entity.getTables() != null) {
-                removeEntityFromTables(entity);
+    private void removeEntityFromDatabase(String entityNameInDatabase, Database database) {
+        if (database != null) {
+            if (database instanceof RelationalDB) {
+                List<Table> tables = ((RelationalDB) database).getTables();
+                if (tables != null) {
+                    for (Table table : tables) {
+                        if (table.getName().equals(entityNameInDatabase)) {
+                            tables.remove(table);
+                            return;
+                        }
+                    }
+                }
             }
-            if (entity.getCollections() != null) {
-                removeEntityFromCollections(entity);
+            if (database instanceof DocumentDB) {
+                List<Collection> collections = ((DocumentDB) database).getCollections();
+                if (collections != null) {
+                    for (Collection collection : collections) {
+                        if (collection.getName().equals(entityNameInDatabase)) {
+                            collections.remove(collection);
+                            return;
+                        }
+                    }
+                }
             }
-            if (entity.getGraphNodes() != null) {
-                removeEntityFromGraphNodes(entity);
+            if (database instanceof GraphDB) {
+                List<GraphNode> graphNodes = ((GraphDB) database).getNodes();
+                if (graphNodes != null) {
+                    for (GraphNode graphNode : graphNodes) {
+                        if (graphNode.getName().equals(entityNameInDatabase)) {
+                            graphNodes.remove(graphNode);
+                            return;
+                        }
+                    }
+                }
             }
-            if (entity.getColumns() != null) {
-                removeEntityFromColumns(entity);
+            if (database instanceof ColumnDB) {
+                List<Column> columns = ((ColumnDB) database).getColumns();
+                if (columns != null) {
+                    for (Column column : columns) {
+                        if (column.getName().equals(entityNameInDatabase)) {
+                            columns.remove(column);
+                            return;
+                        }
+                    }
+                }
             }
-            if (entity.getKeyValueElements() != null) {
-                removeEntityFromKeyValueElements(entity);
+            if (database instanceof KeyValueDB) {
+                List<KeyValueElement> keyValueElements = ((KeyValueDB) database).getElements();
+                if (keyValueElements != null) {
+                    for (KeyValueElement keyValueElement : keyValueElements) {
+                        if (keyValueElement.getName().equals(entityNameInDatabase)) {
+                            keyValueElements.remove(keyValueElement);
+                            return;
+                        }
+                    }
+                }
             }
-//		    EcoreUtil.remove(entity.getGenericList());
         }
-        return newModel;
     }
 
     private DataType getDataTypeFromEntityName(String entityname, Model model) {
@@ -405,76 +566,20 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return null;
     }
 
-    private Relation createRelation(String name, CardinalityDO cardinality, boolean isContainment, Entity targetType) {
+    private Relation createRelation(RelationDO relationDO, Model model) {
         Relation relation = TyphonmlFactory.eINSTANCE.createRelation();
-        relation.setName(name);
-        relation.setIsContainment(isContainment);
-        relation.setCardinality(Cardinality.getByName(cardinality.getName()));
-        relation.setType(targetType);
+        relation.setName(relationDO.getName());
+        relation.setIsContainment(relationDO.isContainment());
+        relation.setCardinality(Cardinality.getByName(relationDO.getCardinality().getName()));
+        relation.setType((Entity) getDataTypeFromName(relationDO.getTypeName(), model));
         return relation;
     }
 
-    private Attribute createAttribute(String name, DataType type) {
+    private Attribute createAttribute(String name, DataType type, Model targetModel) {
         //TODO Handling of dataTypes
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
-        attribute.setType(type);
+        attribute.setType(getDataTypeFromName(type.getName(), targetModel));
         return attribute;
     }
-
-    private void removeEntityFromTables(Entity entity) {
-        List<Table> tables = entity.getTables();
-        if (tables != null) {
-            for (Table table : tables) {
-                if (table.getEntity() != null && table.getEntity().getName().equals(entity.getName())) {
-                    tables.remove(table);
-                }
-            }
-        }
-    }
-
-    private void removeEntityFromCollections(Entity entity) {
-        List<Collection> collections = entity.getCollections();
-        if (collections != null) {
-            for (Collection collection : collections) {
-                if (collection.getEntity() != null && collection.getEntity().getName().equals(entity.getName())) {
-                    collections.remove(collection);
-                }
-            }
-        }
-    }
-
-    private void removeEntityFromGraphNodes(Entity entity) {
-        List<GraphNode> graphNodes = entity.getGraphNodes();
-        if (graphNodes != null) {
-            for (GraphNode graphNode : graphNodes) {
-                if (graphNode.getEntity() != null && graphNode.getEntity().getName().equals(entity.getName())) {
-                    graphNodes.remove(graphNode);
-                }
-            }
-        }
-    }
-
-    private void removeEntityFromColumns(Entity entity) {
-        List<Column> columns = entity.getColumns();
-        if (columns != null) {
-            for (Column column : columns) {
-                if (column.getEntity() != null && column.getEntity().getName().equals(entity.getName())) {
-                    columns.remove(column);
-                }
-            }
-        }
-    }
-
-    private void removeEntityFromKeyValueElements(Entity entity) {
-        List<KeyValueElement> keyValueElements = entity.getKeyValueElements();
-        if (keyValueElements != null) {
-            for (KeyValueElement keyValueElement : keyValueElements) {
-                if (keyValueElement.getEntity() != null && keyValueElement.getEntity().getName().equals(entity.getName())) {
-                    keyValueElements.remove(keyValueElement);
-                }
-            }
-        }
-    }
-
 }

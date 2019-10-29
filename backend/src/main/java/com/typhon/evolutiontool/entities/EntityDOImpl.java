@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.entities;
+package com.typhon.evolutiontool.entities;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +53,7 @@ public class EntityDOImpl implements EntityDO {
         return namespace;
     }
 
+    @Override
     public List<RelationDO> getRelations() {
         return relations;
     }

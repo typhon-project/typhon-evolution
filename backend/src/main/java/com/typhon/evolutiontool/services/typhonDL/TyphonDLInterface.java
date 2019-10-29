@@ -1,4 +1,4 @@
-package main.java.com.typhon.evolutiontool.services.typhonDL;
+package com.typhon.evolutiontool.services.typhonDL;
 
 public interface TyphonDLInterface {
 

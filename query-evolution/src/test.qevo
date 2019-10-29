@@ -1,6 +1,14 @@
 Entity Rename Product to Produit,
-Entity Rename Produit to Stuff,
+Entity Split vertical Produit to Produit, Stock,
 Entity Remove Person,
 Entity Rename Person to Nothing
 
 // Enter your queries here
+
+from Product p select p where p.id == "1230",
+from Product p, Stock s select p, s where p.id == "30",
+
+
+from Person p select p.name,
+from Stuff s, Person p select p, s where s.customer == p,
+from Product p, Review r select r where p.id == r.reviewed_product

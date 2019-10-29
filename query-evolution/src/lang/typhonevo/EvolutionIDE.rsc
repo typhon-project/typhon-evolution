@@ -5,6 +5,8 @@ import Prelude;
 import util::IDE; 
 import util::ValueUI;
 import IO;
+import util::FileSystem;
+import util::Prompt;
 
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EvoCompiler;
@@ -30,8 +32,9 @@ public void evalQuery(EvoSyntax x, loc selection) {
 }
 
 public void testString(EvoSyntax x, loc selection) {
-	t = createMLOperators();	
-	text(t);
+	results = [f.path | /file(f) <- crawl(project(x@\loc)), f.extension == "xmi"];
+	chosen = prompt("For which file do you want to upgrade <results>");
+	text(chosen);
 }
 
 public set[Contribution] languageContrib = {

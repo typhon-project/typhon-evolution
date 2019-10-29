@@ -28,4 +28,10 @@ syntax Operation
 	= add: "Add" EId name
 	| rename: "Rename" EId oldName "to" EId newName
 	| remove: "Remove" EId name
+	| splitVertical: "Split vertical" EId name "to" EId entity1 "," EId entity2
+	| splitHorizontal: "Split horizontal" EId name
+ 	| merge: "Merge" EId entity1 "and" EId entity2
+ 	| migrate: "Migrate" EId
 	;
+	
+

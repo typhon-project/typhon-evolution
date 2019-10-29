@@ -1,0 +1,19 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "ADD",
+  "parameters":
+  {
+    "sourcemodel" : "resources/generated_demo.xmi",
+    "targetmodel": "resources/TyphonML_V2.xmi",
+    "databasetype": "relationaldb",
+    "databasename": "MySQL",
+    "targetlogicalname": "invoiceTable",
+    "entity": {
+      "name":"Invoice",
+      "attributes": {
+        "total": "string",
+        "entrydate": "date"
+      }
+    }
+  }
+}

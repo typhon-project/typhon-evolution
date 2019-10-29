@@ -1,0 +1,65 @@
+package main.java.com.typhon.evolutiontool.handlers.entity;
+
+import main.java.com.typhon.evolutiontool.entities.DatabaseType;
+import main.java.com.typhon.evolutiontool.entities.ParametersKeyString;
+import main.java.com.typhon.evolutiontool.entities.SMO;
+import main.java.com.typhon.evolutiontool.entities.WorkingSet;
+import main.java.com.typhon.evolutiontool.exceptions.InputParameterException;
+import main.java.com.typhon.evolutiontool.handlers.BaseHandler;
+import main.java.com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import main.java.com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import main.java.com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import typhonml.Model;
+
+import java.util.Arrays;
+
+public class EntityMigrateHandler extends BaseHandler {
+
+    public EntityMigrateHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
+        super(tdl, tml, tql);
+    }
+
+
+    /**
+     * Migrates data of entity in sourceModel (read) to entity in targetModel (write).
+     * Data is then deleted from sourceModel.
+     *
+     * @param smo
+     * @return
+     * @throws InputParameterException
+     */
+    @Override
+    public Model handle(SMO smo, Model model) throws InputParameterException {
+        typhonml.Entity entity;
+        String entityname, databasetype, databasename, targetLogicalName;
+        DatabaseType dbtype;
+        WorkingSet data;
+        Model targetModel;
+
+        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITYNAME, ParametersKeyString.DATABASENAME, ParametersKeyString.DATABASETYPE, ParametersKeyString.TARGETLOGICALNAME))) {
+            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+            databasetype = smo.getInputParameter().get(ParametersKeyString.DATABASETYPE).toString();
+            dbtype = DatabaseType.valueOf(databasetype.toUpperCase());
+            databasename = smo.getInputParameter().get(ParametersKeyString.DATABASENAME).toString();
+            targetLogicalName = smo.getInputParameter().get(ParametersKeyString.TARGETLOGICALNAME).toString();
+            entity = typhonMLInterface.getEntityTypeFromName(entityname, model);
+            // Verify that an instance of the underlying database is running in the TyphonDL.
+            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
+                typhonDLInterface.createDatabase(databasetype, databasename);
+            }
+            targetModel = typhonMLInterface.deleteEntityMappings(entityname, model);
+            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, targetLogicalName, entityname, targetModel);
+            typhonQLInterface.createEntityType(entity, targetModel);
+            data = typhonQLInterface.readAllEntityData(entityname, model);
+            typhonQLInterface.writeWorkingSetData(data, targetModel);
+            typhonQLInterface.deleteWorkingSetData(data, model);
+            typhonQLInterface.deleteEntityStructure(entityname, model);
+            return targetModel;
+        } else {
+            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.FIRSTNEWENTITY + ", " + ParametersKeyString.SECONDNEWENTITY + ", " + ParametersKeyString.DATABASENAME + ", " + ParametersKeyString.DATABASETYPE + "]");
+        }
+
+    }
+
+}

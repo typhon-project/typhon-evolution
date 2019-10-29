@@ -1,0 +1,34 @@
+{
+  "client" : [
+    {
+      "name": "acl",
+      "attributes": {
+        "name": "Anthony",
+        "entrydate": "2000"
+      }
+    },
+    {
+      "name": "gobertm",
+      "attributes": {
+        "name": "Maxime",
+        "entrydate": "2010"
+      }
+    }
+  ],
+  "order" : [
+    {
+      "name":"order1",
+      "attributes": {
+        "date": "12/03/2018",
+        "totalAmount": "34"
+      }
+    },
+    {
+      "name":"order2",
+      "attributes": {
+        "date": "02/01/2019",
+        "totalAmount": "231"
+      }
+    }
+  ]
+}

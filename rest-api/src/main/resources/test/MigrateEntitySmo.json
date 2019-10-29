@@ -1,0 +1,11 @@
+{
+  "typhonobject": "ENTITY",
+  "operator": "MIGRATE",
+  "parameters":
+  {
+    "entityname" : "User",
+    "databasename": "MongoDB",
+    "databasetype": "documentdb",
+    "targetlogicalname" : "userCollection"
+  }
+}

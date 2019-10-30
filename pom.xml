@@ -6,6 +6,13 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <!-- Permitting to inherit from useful dependencies and configuration from Spring Boot dependency -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.0.RELEASE</version>
+    </parent>
+
     <modules>
         <module>backend</module>
         <module>rest-api</module>
@@ -13,8 +20,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -49,4 +56,5 @@
             <url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
         </repository>
     </repositories>
+
 </project>

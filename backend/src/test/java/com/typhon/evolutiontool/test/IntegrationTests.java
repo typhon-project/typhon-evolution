@@ -115,8 +115,8 @@ public class IntegrationTests extends InitialTest {
         assertEquals(TyphonMLObject.ENTITY, smo.getTyphonObject());
         assertEquals(EvolutionOperator.REMOVE, smo.getEvolutionOperator());
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
-        assertNotNull(typhonMLInterface.getEntityTypeFromName("Basciani", sourceModel));
-        assertNull(typhonMLInterface.getEntityTypeFromName("Basciani", targetModel));
+        assertNotNull(evolutionService.getTyphonMLInterface().getEntityTypeFromName("Basciani", sourceModel));
+        assertNull(evolutionService.getTyphonMLInterface().getEntityTypeFromName("Basciani", targetModel));
     }
 
 

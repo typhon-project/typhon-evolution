@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class TyphonMLUtils {
 
-    static ResourceSet resourceSet = new ResourceSetImpl();
+    private static ResourceSet resourceSet = new ResourceSetImpl();
 
     /**
      * Method needed before use TyphonML classes. It register all the needed resources.
@@ -27,19 +27,6 @@ public class TyphonMLUtils {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
         //Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("tml", new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(XtextResourceSet.class));
         resourceSet.getPackageRegistry().put(TyphonmlPackage.eINSTANCE.getNsURI(), TyphonmlPackage.eINSTANCE);
-    }
-
-    /**
-     * Used to load model from path. It will load as Ecore Resource
-     *
-     * @param modelPath
-     * @return
-     */
-    public static Resource loadModel(String modelPath) {
-        ResourceSet resourceSet = new ResourceSetImpl();
-        URI uri = URI.createFileURI(modelPath);
-        Resource resource = resourceSet.getResource(uri, true);
-        return resource;
     }
 
     /**

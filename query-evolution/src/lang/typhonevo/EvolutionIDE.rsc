@@ -37,11 +37,28 @@ public void testString(EvoSyntax x, loc selection) {
 	text(chosen);
 }
 
+public void getIDEid(Tree t, loc selection){
+	text(getIDEID());
+}
+
 public set[Contribution] languageContrib = {
 	popup(
 		menu("TyphonEvolution",[
 		    action("Evolve", evalQuery),
-		    action("Test", testString)
+		    action("Test", testString),
+		    action("Find ID", getIDEid)
+	    ])
+  	)
+};
+
+public void generateEvolutionScript(Tree t, loc l){
+	text("youpie");
+}
+
+public set[Contribution] xmiContrib = {
+	popup(
+		menu("TyphonEvolution",[
+		    action("Generate Script", generateEvolutionScript)
 	    ])
   	)
 };
@@ -51,5 +68,8 @@ void setEvoIDE(){
 
 	registerLanguage(languageName, extQL, parser);
 	registerContributions(languageName, languageContrib);
-
+	
+	str xmi_editor = "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart";
+	registerNonRascalContributions(xmi_editor, xmiContrib);
+	println("xmi should be registered");
 }

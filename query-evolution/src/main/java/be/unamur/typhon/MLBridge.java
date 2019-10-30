@@ -23,7 +23,9 @@ import java.util.Collections;
 import org.eclipse.emf.common.util.URI;
 import typhonml.TyphonmlPackage;
 import typhonml.Model;
-
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IEditorDescriptor;;
 
 public class MLBridge {
 	
@@ -117,5 +119,19 @@ public class MLBridge {
 		
 		throw RuntimeExceptionFactory.illegalArgument(vf.string(obj.getClass().getName()), null, null, 
 				"Cannot convert Java object to Rascal value");
+	}
+	
+	public IValue getIDEID() {
+		IEditorRegistry r = PlatformUI.getWorkbench().getEditorRegistry();
+		IEditorDescriptor[] editors = r.getEditors("complexModelWithChangeOperators.xmi");
+		
+		String all_desc = "";
+		
+		for(IEditorDescriptor ied : editors) {
+			all_desc = all_desc + "  " + ied.getId();
+		}
+		
+		
+		return prim2value(all_desc);
 	}
 }

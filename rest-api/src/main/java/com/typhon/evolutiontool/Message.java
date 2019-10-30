@@ -6,7 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "message")
 public class Message {
     private String message;
-    @Id private long id;
+    @Id
+    private long id;
 
     public Message(String message, long id) {
         this.message = message;
@@ -14,7 +15,7 @@ public class Message {
     }
 
     public Message(String message) {
-        this.message=message;
+        this.message = message;
     }
 
     public String getMessage() {

@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -22,8 +22,8 @@ public class EntityRemoveHandler extends BaseHandler {
         Model targetModel;
         String entityname;
 
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.ENTITYNAME))) {
-            entityname = smo.getInputParameter().get(ParametersKeyString.ENTITYNAME).toString();
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ENTITY_NAME))) {
+            entityname = smo.getInputParameter().get(ChangeOperatorParameter.ENTITY_NAME).toString();
             String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityname, model);
             //If the entity is involved in a relationship. Abort
             if (typhonMLInterface.hasRelationship(entityname, model)) {
@@ -39,7 +39,7 @@ public class EntityRemoveHandler extends BaseHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITYNAME + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY_NAME + "]");
         }
     }
 

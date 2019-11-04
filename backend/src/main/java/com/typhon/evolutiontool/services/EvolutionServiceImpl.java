@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.services;
 
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
@@ -12,7 +13,10 @@ import com.typhon.evolutiontool.handlers.attribute.AttributeRenameHandler;
 import com.typhon.evolutiontool.handlers.entity.*;
 import com.typhon.evolutiontool.handlers.relation.*;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
+import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
+import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,49 +36,46 @@ import java.util.Map;
 public class EvolutionServiceImpl implements EvolutionService {
 
     private Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
+
     private TyphonDLInterface typhonDLInterface;
     private TyphonQLInterface typhonQLInterface;
     private TyphonMLInterface typhonMLInterface;
-
-    Handler entityRename;
-    private Model targetModel;
-
 
     private Map<EvolutionOperator, Handler> entityHandlers;
     private Map<EvolutionOperator, Handler> relationHandlers;
     private Map<EvolutionOperator, Handler> attributeHandlers;
 
 
-    public EvolutionServiceImpl(TyphonQLInterface tql, TyphonMLInterface tml, TyphonDLInterface tdl) {
-        this.typhonDLInterface = tdl;
-        this.typhonMLInterface = tml;
-        this.typhonQLInterface = tql;
+    public EvolutionServiceImpl() {
+        this.typhonDLInterface = new TyphonDLInterfaceImpl();
+        this.typhonMLInterface = new TyphonMLInterfaceImpl();
+        this.typhonQLInterface = new TyphonInterfaceQLImpl();
 
         entityHandlers = new EnumMap<>(EvolutionOperator.class);
-        entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(tdl, tml, tql));
-        entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(tdl, tml, tql));
+        entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
 
         relationHandlers = new EnumMap<>(EvolutionOperator.class);
-        relationHandlers.put(EvolutionOperator.ADD, new RelationAddHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.REMOVE, new RelationRemoveHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.ENABLECONTAINMENT, new RelationEnableContainmentHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.DISABLECONTAINMENT, new RelationDisableContainmentHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.CHANGECONTAINMENT, new RelationChangeContainmentHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.ENABLEOPPOSITE, new RelationEnableOppositeHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.DISABLEOPPOSITE, new RelationDisableOppositeHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.RENAME, new RelationRenameHandler(tdl, tml, tql));
-        relationHandlers.put(EvolutionOperator.CHANGECARDINALITY, new RelationChangeCardinalityHandler(tdl, tml, tql));
+        relationHandlers.put(EvolutionOperator.ADD, new RelationAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.REMOVE, new RelationRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.ENABLECONTAINMENT, new RelationEnableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.DISABLECONTAINMENT, new RelationDisableContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.CHANGECONTAINMENT, new RelationChangeContainmentHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.ENABLEOPPOSITE, new RelationEnableOppositeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.DISABLEOPPOSITE, new RelationDisableOppositeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.RENAME, new RelationRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        relationHandlers.put(EvolutionOperator.CHANGECARDINALITY, new RelationChangeCardinalityHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
 
         attributeHandlers = new EnumMap<>(EvolutionOperator.class);
-        attributeHandlers.put(EvolutionOperator.ADD, new AttributeAddHandler(tdl, tml, tql));
-        attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeRemoveHandler(tdl, tml, tql));
-        attributeHandlers.put(EvolutionOperator.RENAME, new AttributeRenameHandler(tdl, tml, tql));
-        attributeHandlers.put(EvolutionOperator.CHANGETYPE, new AttributeChangeTypeHandler(tdl, tml, tql));
+        attributeHandlers.put(EvolutionOperator.ADD, new AttributeAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        attributeHandlers.put(EvolutionOperator.RENAME, new AttributeRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        attributeHandlers.put(EvolutionOperator.CHANGETYPE, new AttributeChangeTypeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
     }
 
     @Override
@@ -160,20 +161,20 @@ public class EvolutionServiceImpl implements EvolutionService {
     }
 
 
-    public boolean containParameters(SMO smo, List<String> parameters) {
+    public boolean containParameters(SMO smo, List<ChangeOperatorParameter> parameters) {
         logger.info("Verifying input parameter for [{}] - [{}] operator", smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
     }
 
-    public void setTyphonDLInterface(TyphonDLInterface typhonDLInterface) {
-        this.typhonDLInterface = typhonDLInterface;
+    public TyphonDLInterface getTyphonDLInterface() {
+        return typhonDLInterface;
     }
 
-    public void setTyphonQLInterface(TyphonQLInterface typhonQLInterface) {
-        this.typhonQLInterface = typhonQLInterface;
+    public TyphonQLInterface getTyphonQLInterface() {
+        return typhonQLInterface;
     }
 
-    public void setTyphonMLInterface(TyphonMLInterface typhonMLInterface) {
-        this.typhonMLInterface = typhonMLInterface;
+    public TyphonMLInterface getTyphonMLInterface() {
+        return typhonMLInterface;
     }
 }

@@ -2,7 +2,7 @@ package com.typhon.evolutiontool.handlers.relation;
 
 import java.util.Collections;
 
-import com.typhon.evolutiontool.entities.ParametersKeyString;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -21,13 +21,13 @@ public class RelationDisableContainmentHandler extends BaseHandler {
     }
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Collections.singletonList(ParametersKeyString.RELATION))) {
-            RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ParametersKeyString.RELATION), false);
+        if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
+            RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             Model targetModel = typhonMLInterface.disableContainment(relation, model);
             typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameter. Needed [" + ParametersKeyString.RELATION + "]");
+            throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");
         }
     }
 }

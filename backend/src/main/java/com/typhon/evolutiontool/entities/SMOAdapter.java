@@ -14,7 +14,7 @@ import java.util.Map;
 public class SMOAdapter implements SMO {
 
     private ChangeOperator changeOperator;
-    private Map<String, Object> inputParameter;
+    private Map<ChangeOperatorParameter, Object> inputParameter;
     private TyphonMLObject typhonMLObject;
     private EvolutionOperator evolutionOperator;
 
@@ -30,7 +30,8 @@ public class SMOAdapter implements SMO {
                 || changeOperator instanceof RenameEntity
                 || changeOperator instanceof AddEntity
                 || changeOperator instanceof MigrateEntity
-                || changeOperator instanceof SplitEntity) {
+                || changeOperator instanceof SplitEntity
+                || changeOperator instanceof MergeEntity) {
             typhonMLObject = TyphonMLObject.ENTITY;
         }
         if (changeOperator instanceof AddRelation
@@ -65,6 +66,8 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.SPLITVERTICAL;
 //        if (changeOperator instanceof SplitEntity)
 //            evolutionOperator = EvolutionOperator.SPLITHORIZONTAL;
+        if (changeOperator instanceof MergeEntity)
+            evolutionOperator = EvolutionOperator.MERGE;
         if (changeOperator instanceof EnableRelationContainment)
             evolutionOperator = EvolutionOperator.ENABLECONTAINMENT;
         if (changeOperator instanceof DisableRelationContainment)
@@ -87,79 +90,84 @@ public class SMOAdapter implements SMO {
         //ENTITY
         if (typhonMLObject == TyphonMLObject.ENTITY) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                inputParameter.put(ParametersKeyString.ENTITY, changeOperator);
+                inputParameter.put(ChangeOperatorParameter.ENTITY, changeOperator);
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
-                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
+                inputParameter.put(ChangeOperatorParameter.ENTITY_NAME, ((RemoveEntity) changeOperator).getEntityToRemove().getName());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
-                inputParameter.put(ParametersKeyString.ENTITYNAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
-                inputParameter.put(ParametersKeyString.NEWENTITYNAME, ((RenameEntity) changeOperator).getNewEntityName());
+                inputParameter.put(ChangeOperatorParameter.ENTITY_NAME, ((RenameEntity) changeOperator).getEntityToRename().getName());
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((RenameEntity) changeOperator).getNewEntityName());
             }
             if (evolutionOperator == EvolutionOperator.MIGRATE) {
-                inputParameter.put(ParametersKeyString.ENTITY, ((MigrateEntity) changeOperator).getEntity());
-                inputParameter.put(ParametersKeyString.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
+                inputParameter.put(ChangeOperatorParameter.ENTITY, ((MigrateEntity) changeOperator).getEntity());
+                inputParameter.put(ChangeOperatorParameter.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
             }
             if (evolutionOperator == EvolutionOperator.SPLITVERTICAL) {
-                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
-                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
-                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ChangeOperatorParameter.FIRST_NEW_ENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ChangeOperatorParameter.SECOND_NEW_ENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
             }
             if (evolutionOperator == EvolutionOperator.SPLITHORIZONTAL) {
-                inputParameter.put(ParametersKeyString.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
-                inputParameter.put(ParametersKeyString.FIRSTNEWENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
-                inputParameter.put(ParametersKeyString.SECONDNEWENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
+                inputParameter.put(ChangeOperatorParameter.FIRST_NEW_ENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
+                inputParameter.put(ChangeOperatorParameter.SECOND_NEW_ENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+            }
+            if (evolutionOperator == EvolutionOperator.MERGE) {
+                inputParameter.put(ChangeOperatorParameter.FIRST_ENTITY_TO_MERGE, ((MergeEntity) changeOperator).getFirstEntityToMerge());
+                inputParameter.put(ChangeOperatorParameter.SECOND_ENTITY_TO_MERGE, ((MergeEntity) changeOperator).getSecondEntityToMerge());
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((MergeEntity) changeOperator).getNewEntityName());
             }
         }
 
         //RELATION
         if (typhonMLObject == TyphonMLObject.RELATION) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                inputParameter.put(ParametersKeyString.RELATION, changeOperator);
+                inputParameter.put(ChangeOperatorParameter.RELATION, changeOperator);
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
-                inputParameter.put(ParametersKeyString.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((RemoveRelation) changeOperator).getRelationToRemove());
             }
             if (evolutionOperator == EvolutionOperator.ENABLECONTAINMENT) {
-                inputParameter.put(ParametersKeyString.RELATION, ((EnableRelationContainment) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((EnableRelationContainment) changeOperator).getRelation());
             }
             if (evolutionOperator == EvolutionOperator.DISABLECONTAINMENT) {
-                inputParameter.put(ParametersKeyString.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((DisableRelationContainment) changeOperator).getRelation());
             }
             if (evolutionOperator == EvolutionOperator.CHANGECONTAINMENT) {
-                inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationContainement) changeOperator).getRelation());
-                inputParameter.put(ParametersKeyString.NEWCONTAINMENT, ((ChangeRelationContainement) changeOperator).getNewContainment());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((ChangeRelationContainement) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.NEW_CONTAINMENT, ((ChangeRelationContainement) changeOperator).getNewContainment());
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
-                inputParameter.put(ParametersKeyString.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());
             }
             if (evolutionOperator == EvolutionOperator.DISABLEOPPOSITE) {
-                inputParameter.put(ParametersKeyString.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((DisableBidirectionalRelation) changeOperator).getRelation());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
-                inputParameter.put(ParametersKeyString.RELATION, ((RenameRelation) changeOperator).getRelationToRename());
-                inputParameter.put(ParametersKeyString.RELATIONNAME, ((RenameRelation) changeOperator).getNewRelationName());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((RenameRelation) changeOperator).getRelationToRename());
+                inputParameter.put(ChangeOperatorParameter.RELATION_NAME, ((RenameRelation) changeOperator).getNewRelationName());
             }
             if (evolutionOperator == EvolutionOperator.CHANGECARDINALITY) {
-                inputParameter.put(ParametersKeyString.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
-                inputParameter.put(ParametersKeyString.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality().getValue());
+                inputParameter.put(ChangeOperatorParameter.RELATION, ((ChangeRelationCardinality) changeOperator).getRelation());
+                inputParameter.put(ChangeOperatorParameter.CARDINALITY, ((ChangeRelationCardinality) changeOperator).getNewCardinality().getValue());
             }
         }
         //ATTRIBUTE
         if (typhonMLObject == TyphonMLObject.ATTRIBUTE) {
             if (evolutionOperator == EvolutionOperator.ADD) {
-                inputParameter.put(ParametersKeyString.ATTRIBUTE, changeOperator);
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, changeOperator);
             }
             if (evolutionOperator == EvolutionOperator.REMOVE) {
-                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((RemoveAttribute) changeOperator).getAttributeToRemove());
             }
             if (evolutionOperator == EvolutionOperator.RENAME) {
-                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((RenameAttribute) changeOperator).getAttributeToRename());
-                inputParameter.put(ParametersKeyString.NEWATTRIBUTENAME, ((RenameAttribute) changeOperator).getNewName());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((RenameAttribute) changeOperator).getAttributeToRename());
+                inputParameter.put(ChangeOperatorParameter.NEW_ATTRIBUTE_NAME, ((RenameAttribute) changeOperator).getNewName());
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
-                inputParameter.put(ParametersKeyString.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
-                inputParameter.put(ParametersKeyString.ATTRIBUTETYPE, ((ChangeAttributeType) changeOperator).getNewType());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeAttributeType) changeOperator).getNewType());
             }
         }
     }
@@ -177,15 +185,14 @@ public class SMOAdapter implements SMO {
 
 
     @Override
-    public Map<String, Object> getInputParameter() {
+    public Map<ChangeOperatorParameter, Object> getInputParameter() {
         return inputParameter;
     }
 
 
     @Override
-    public boolean inputParametersContainsExpected(List<String> expectedInputParams) {
-        for (String expected :
-                expectedInputParams) {
+    public boolean inputParametersContainsExpected(List<ChangeOperatorParameter> expectedInputParams) {
+        for (ChangeOperatorParameter expected : expectedInputParams) {
             if (!this.inputParameter.containsKey(expected))
                 return false;
         }

@@ -30,5 +30,4 @@
     <attributes name="name" type="//@dataTypes.1"/>
     <relations name="responses" type="//@dataTypes.4" cardinality="zero_many" isContainment="false"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:MigrateEntity" entity="//@dataTypes.4" newDatabase="//@databases.1"/>
 </typhonml:Model>

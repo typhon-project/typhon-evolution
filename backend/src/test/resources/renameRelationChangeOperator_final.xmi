@@ -22,5 +22,4 @@
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:RenameRelation" relationToRename="//@dataTypes.2/@relations.0" newRelationName="creditCards"/>
 </typhonml:Model>

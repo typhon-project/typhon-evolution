@@ -25,9 +25,9 @@ public class EntityMigrateHandler extends BaseHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ParametersKeyString.ENTITY, ParametersKeyString.DATABASE))) {
-            EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ParametersKeyString.ENTITY), false);
-            Database database = (Database) smo.getInputParameter().get(ParametersKeyString.DATABASE);
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.DATABASE))) {
+            EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.ENTITY), false);
+            Database database = (Database) smo.getInputParameter().get(ChangeOperatorParameter.DATABASE);
             String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityDO.getName(), model);
             DatabaseType targetDatabaseType = getDatabaseType(database);
             // Verify that an instance of the underlying database is running in the TyphonDL.
@@ -44,7 +44,7 @@ public class EntityMigrateHandler extends BaseHandler {
             typhonQLInterface.deleteEntityStructure(entityDO.getName(), model);
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ParametersKeyString.ENTITY + ", " + ParametersKeyString.DATABASE + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.DATABASE + "]");
         }
 
     }

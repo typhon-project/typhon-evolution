@@ -25,7 +25,8 @@ import typhonml.TyphonmlPackage;
 import typhonml.Model;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.IEditorDescriptor;;
+import org.eclipse.ui.IEditorDescriptor;
+import be.unamur.typhon.*;
 
 public class MLBridge {
 	
@@ -55,15 +56,11 @@ public class MLBridge {
 	}
 
 
-	public IValue createMLOperators() {
-		// TODO
+	public IValue get_xmi_loc(String uri) {
 		return prim2value("TO DO");
 	}
 	
-	public IValue HelloRascal() {
-		return prim2value("Hello Rascal, It is Java");
-	}
-	
+
 	/*
 	public IConstructor get_change_operator(IValue typeOfTyphonML, ISourceLocation path) {
 		//Connections.boot();

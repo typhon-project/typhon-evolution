@@ -33,8 +33,9 @@ public void evalQuery(EvoSyntax x, loc selection) {
 
 public void testString(EvoSyntax x, loc selection) {
 	results = [f.path | /file(f) <- crawl(project(x@\loc)), f.extension == "xmi"];
+	first = results[0];
 	chosen = prompt("For which file do you want to upgrade <results>");
-	text(chosen);
+	text(first);
 }
 
 public void getIDEid(Tree t, loc selection){
@@ -71,5 +72,4 @@ void setEvoIDE(){
 	
 	str xmi_editor = "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart";
 	registerNonRascalContributions(xmi_editor, xmiContrib);
-	println("xmi should be registered");
 }

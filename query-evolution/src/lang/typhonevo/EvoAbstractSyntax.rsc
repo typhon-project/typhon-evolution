@@ -16,22 +16,18 @@ syntax EvoQuery
 	;
 
 syntax ChangeOperator
-	= changeoperator: Object obj Operation op;
-	
-syntax Object
-	= entity: "Entity"
-	| relation: "Relation"
+	= entityOperator: EntityOperation op
 	;
 	
 
-syntax Operation
-	= add: "Add" EId name
-	| rename: "Rename" EId oldName "to" EId newName
-	| remove: "Remove" EId name
-	| splitVertical: "Split vertical" EId name "to" EId entity1 "," EId entity2
-	| splitHorizontal: "Split horizontal" EId name
- 	| merge: "Merge" EId entity1 "and" EId entity2
- 	| migrate: "Migrate" EId
+syntax EntityOperation
+	= add: "Entity" "Add" EId name
+	| rename: "Entity" "Rename" EId oldName "to" EId newName
+	| remove: "Entity" "Remove" EId name
+	| splitVertical: "Entity" "Split Vertical" EId name "to" EId entity1 "," EId entity2
+	| splitHorizontal: "Entity" "Split horizontal" EId name
+ 	| merge: "Entity" "Merge" EId entity1 "and" EId entity2 "to" EId new_name
+ 	| migrate: "Entity" "Migrate" EId
 	;
-	
+
 

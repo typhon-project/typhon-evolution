@@ -1,5 +1,5 @@
 Entity Rename Product to Produit,
-Entity Split vertical Produit to Produit, Stock,
+Entity Split Vertical Produit to Produit, Stock,
 Entity Remove Person,
 Entity Rename Person to Nothing
 

@@ -28,7 +28,7 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 	};
 	
 	switch(op){
-		case (ChangeOperator) `Entity  <Operation operation>`: {
+		case EntityOperation: {
 			evoq = evolve_entity(evoq, operation);
 		}
 	};
@@ -39,17 +39,25 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 
 EvoQuery evolve_entity(EvoQuery q, Operation op){
 	switch(op){
-		case (Operation) `Rename  <EId old_id> to <EId new_id>`:{
+		case (EntityOperation) `Entity Rename  <EId old_id> to <EId new_id>`:{
 		 	return entity_rename(q, old_id, new_id);
 		}
-		case (Operation) `Remove  <EId entity>`: {
+		case (EntityOperation) `Entity Remove  <EId entity>`: {
 			return entity_remove(q, entity);
 		}
+		case (EntityOperation) `Entity Split Vertical <EId name> to <EId entity1>, <EId entity2>`: {
+			return entity_split(q, name, entity1, entity2);
+		}
+		case (EntityOperation)  `Entity Merge <EId entity1> and <EId entity2> to <EId new_name>`:{
+			return entity_split(q, new_name, entity1, entity2);
+		}
+		
 	};
 	
 	return q;
 }
 
+// ENTITY
 
 EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	
@@ -77,6 +85,17 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 	if(matched){
 		return parse(#EvoQuery, "#@ Entity <name> removed. That query is broken @# <query>");
 	}
+	return q;
+}
+
+
+EvoQuery entity_split(EvoQuery q, EId old_name, EId, entity1, EId entity2){
+
+	return q;
+}
+
+EvoQuery entity_merge(EvoQuery q,  EId new_name, EId, entity1, EId entity2){
+
 	return q;
 }
 

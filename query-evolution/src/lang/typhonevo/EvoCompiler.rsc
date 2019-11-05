@@ -9,7 +9,7 @@ import lang::typhonevo::EvoAbstractSyntax;
 EvoSyntax test_modif(EvoSyntax x){
 	operators = extract_op(x);
 	
-	for ( ChangeOperator op <- operators){		
+	for ( ChangeOperator op <- operators){	
 		x = visit(x){
 			case EvoQuery q => transform(q, op)
 		};
@@ -27,8 +27,8 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 		}
 	};
 	
-	switch(op){
-		case EntityOperation: {
+	visit(op){
+		case EntityOperation operation: {
 			evoq = evolve_entity(evoq, operation);
 		}
 	};
@@ -37,18 +37,18 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 }
 
 
-EvoQuery evolve_entity(EvoQuery q, Operation op){
+EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 	switch(op){
-		case (EntityOperation) `Entity Rename  <EId old_id> to <EId new_id>`:{
+		case (EntityOperation) `rename entity  <EId old_id> as <EId new_id>`:{
 		 	return entity_rename(q, old_id, new_id);
 		}
-		case (EntityOperation) `Entity Remove  <EId entity>`: {
+		case (EntityOperation) `remove entity <EId entity>`: {
 			return entity_remove(q, entity);
 		}
-		case (EntityOperation) `Entity Split Vertical <EId name> to <EId entity1>, <EId entity2>`: {
+		case (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`: {
 			return entity_split(q, name, entity1, entity2);
 		}
-		case (EntityOperation)  `Entity Merge <EId entity1> and <EId entity2> to <EId new_name>`:{
+		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`:{
 			return entity_split(q, new_name, entity1, entity2);
 		}
 		
@@ -89,12 +89,12 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 }
 
 
-EvoQuery entity_split(EvoQuery q, EId old_name, EId, entity1, EId entity2){
+EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 
 	return q;
 }
 
-EvoQuery entity_merge(EvoQuery q,  EId new_name, EId, entity1, EId entity2){
+EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
 
 	return q;
 }

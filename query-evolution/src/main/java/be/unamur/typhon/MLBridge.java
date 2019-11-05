@@ -14,34 +14,32 @@ import io.usethesource.vallang.type.Type;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+
+import java.util.List;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import java.io.IOException;
-import java.util.Collections;
 
-import org.eclipse.emf.common.util.URI;
 import typhonml.TyphonmlPackage;
-import typhonml.Model;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IEditorDescriptor;
-import be.unamur.typhon.*;
+import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import typhonml.Model;
+import typhonml.ChangeOperator;
 
 public class MLBridge {
 	
 	private final IValueFactory vf;
 	
 	static ResourceSet resourceSet = new ResourceSetImpl();
+	
+	public MLBridge(IValueFactory vf) {
+		this.vf = vf;
+	}
 
-    /**
-     * Method needed before use TyphonML classes. It register all the needed resources.
-     */
-    public static void typhonMLPackageRegistering() {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-        //Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("tml", new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration().getInstance(XtextResourceSet.class));
-        resourceSet.getPackageRegistry().put(TyphonmlPackage.eINSTANCE.getNsURI(), TyphonmlPackage.eINSTANCE);
-    }
+
     
     public static String normalizeURI(String uri) {
 		uri = uri.replaceAll("project://", "platform:/resource/");
@@ -49,51 +47,22 @@ public class MLBridge {
 		return hasFrag ? uri.substring(0, uri.indexOf("#")) : uri;
 	}
 
-
+    public IValue load_xmi() {
+        Model sourceModel = TyphonMLUtils.loadModelTyphonML("src/complexModelWithChangeOperators.xmi");
+        List<ChangeOperator> changeOperator = sourceModel.getChangeOperators();
+        
+        
+        
+        return prim2value("Yeah");
+    }
 	
-	public MLBridge(IValueFactory vf) {
-		this.vf = vf;
-	}
-
+	
 
 	public IValue get_xmi_loc(String uri) {
 		return prim2value("TO DO");
 	}
 	
 
-	/*
-	public IConstructor get_change_operator(IValue typeOfTyphonML, ISourceLocation path) {
-		//Connections.boot();
-
-		TypeStore ts = new TypeStore(); // start afresh
-		
-		//Resource r = xtextRS.getResource(URI.createURI("file:///Users/tvdstorm/CWI/typhonql/src/newmydb4.xmi"), true);
-		final ISourceLocation mydb = vf.sourceLocation("file:///Users/tvdstorm/CWI/typhonql/src/newmydb4.xmi");
-		
-		try {
-			Resource r = loadResource(mydb);
-			typhonml.Model m = (typhonml.Model)r.getContents().get(0);
-			Type rt = tr.valueToType((IConstructor) typeOfTyphonML, ts);
-			Convert.declareRefType(ts);
-			Convert.declareMaybeType(ts);
-			return (IConstructor) Convert.obj2value(m, rt, vf, ts, mydb);
-		} catch (IOException e) {
-			throw RuntimeExceptionFactory.io(vf.string(e.getMessage()), null, null);
-		}
-	}
-	
-	private  Resource loadResource(ISourceLocation uri) throws IOException {
-		ResourceSet rs = new ResourceSetImpl();
-		java.net.URI x = uri.getURI();
-		URI bla = URI.createURI(normalizeURI(x.toString()));
-		Resource res = rs.getResource(bla, true);
-		URIResolverRegistry reg = URIResolverRegistry.getInstance();
-		res.load(reg.getInputStream(uri), Collections.emptyMap());
-		return res;
-	}
-	
-	*/
-	
 	private IValue prim2value(Object obj) {
 		assert obj != null;
 		

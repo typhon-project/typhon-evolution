@@ -7,7 +7,7 @@ extend lang::std::ASCII;
 lexical Annotation = "#@" (![@] | "@" !>> "#")* "@#";
 
 start syntax EvoSyntax 
-	= evosyntax: {ChangeOperator ","}* operators {EvoQuery ","}* queries;
+	= evosyntax: "changeOperators" "[" ChangeOperator* "]"operators {EvoQuery ","}* queries;
 	
 
 syntax EvoQuery
@@ -21,13 +21,12 @@ syntax ChangeOperator
 	
 
 syntax EntityOperation
-	= add: "Entity" "Add" EId name
-	| rename: "Entity" "Rename" EId oldName "to" EId newName
-	| remove: "Entity" "Remove" EId name
-	| splitVertical: "Entity" "Split Vertical" EId name "to" EId entity1 "," EId entity2
-	| splitHorizontal: "Entity" "Split horizontal" EId name
- 	| merge: "Entity" "Merge" EId entity1 "and" EId entity2 "to" EId new_name
- 	| migrate: "Entity" "Migrate" EId
+	= add: "add" "entity" EId name
+	| remove: "remove" "entity" EId name
+	| rename: "rename" "entity" EId oldName "as" EId newName
+	| splitEntity: "split" "entity" EId name "{" "left" EId entity1 "right" EId entity2 "}"
+ 	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name
+ 	| migrate: "migrate" "entity" EId entity "to" EId db
 	;
 
 

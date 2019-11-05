@@ -1,14 +1,15 @@
-Entity Rename Product to Produit,
-Entity Split vertical Produit to Produit, Stock,
-Entity Remove Person,
-Entity Rename Person to Nothing
+changeOperators[
+	rename entity Product as Produit
+	split entity Produit { left Produit right Stock}
+	remove entity Person
+	rename entity Person as Nothing
+]
 
-// Enter your queries here
+
+// Insert queries here
 
 from Produit p select p where p.id == "1230",
 from Produit p, Stock s select p, s where p.id == "30",
-
-
 #@ Entity Person removed. That query is broken @# from Person p select p.name,
 #@ Entity Person removed. That query is broken @# from Stuff s, Person p select p, s where s.customer == p,
 from Produit p, Review r select r where p.id == r.reviewed_product

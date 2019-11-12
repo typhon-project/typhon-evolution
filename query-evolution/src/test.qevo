@@ -3,7 +3,7 @@ changeOperators[
 	split entity Produit { left Produit right Stock}
 	remove entity Person
 	rename entity Person as Nothing
-	merge entities Product Stock as Product
+	merge entities Produit Stock as Poduct_info
 ]
 
 
@@ -15,5 +15,5 @@ from Person p select p.name,
 from Stuff s, Person p select p, s where s.customer == p,
 
 from Product p, Review r, Stock s 
-select r, s.quantity 
+select p, s.quantity 
 where p.id == r.reviewed_product, s.prod == p.id

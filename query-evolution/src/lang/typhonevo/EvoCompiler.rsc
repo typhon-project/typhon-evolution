@@ -6,7 +6,7 @@ import List;
 import lang::typhonevo::EvoAbstractSyntax;
 
 
-EvoSyntax test_modif(EvoSyntax x){
+EvoSyntax evolve(EvoSyntax x){
 	operators = extract_op(x);
 	
 	for ( ChangeOperator op <- operators){	
@@ -95,18 +95,21 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 }
 
 EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
+
+	map[EId, VId] binding = ();
 	
-	println("<q>");
-	// Check if query must be treated
-	//for(entity1 := q){
-	//	println("found <entity1>");
-	//	for(entity2 := q){
-	//		println("found <entity2>");
-	//	}
-	//}
-		
-		
+	for(/(Binding) `<EId entity> <VId bind>` := q){
+		binding[entity] = bind;
+	}
 	
+	if(entity1 in binding && entity2 in binding){
+		return parse(#EvoQuery, "#@ Merge operation not yet supported for this case @# <q>");
+	}
+	else{
+		q = entity_rename(q, entity1, new_name);
+		q = entity_rename(q, entity2, new_name);
+	}
+		
 	return q;
 }
 

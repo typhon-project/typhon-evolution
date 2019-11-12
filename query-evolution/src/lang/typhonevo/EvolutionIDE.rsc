@@ -27,7 +27,7 @@ private loc project(loc file) {
 
 
 public void evalQuery(EvoSyntax x, loc selection) {
-	evolved = test_modif(x);
+	evolved = evolve(x);
 	writeFile(project(x@\loc) + "/src/result.qevo", "<evolved>");
 }
 

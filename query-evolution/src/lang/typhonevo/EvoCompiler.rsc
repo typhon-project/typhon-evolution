@@ -49,7 +49,7 @@ EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 			return entity_split(q, name, entity1, entity2);
 		}
 		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`:{
-			return entity_split(q, new_name, entity1, entity2);
+			return entity_merge(q, new_name, entity1, entity2);
 		}
 		
 	};
@@ -95,7 +95,18 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 }
 
 EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
-
+	
+	println("<q>");
+	// Check if query must be treated
+	//for(entity1 := q){
+	//	println("found <entity1>");
+	//	for(entity2 := q){
+	//		println("found <entity2>");
+	//	}
+	//}
+		
+		
+	
 	return q;
 }
 

@@ -4,6 +4,7 @@ changeOperators[
 	remove entity Person
 	rename entity Person as Nothing
 	merge entities Produit Stock as Poduct_info
+	importedNamespace test add relation bleh to Product :-> Stock [*]
 ]
 
 

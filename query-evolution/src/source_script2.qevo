@@ -1,0 +1,19 @@
+changeOperators [ 
+	remove entity CreditCard 
+	rename entity Product as Item 
+]
+
+// Insert queries here
+
+
+from Product p select p where p.id == "1230",
+
+from Product p, Stock s select p, s where p.id == "30",
+
+from Person p select p.name,
+
+from Stuff s, Person p select p, s where s.customer == p,
+
+from Product p, Review r, Stock s 
+select p, s.quantity 
+where p.id == r.reviewed_product, s.prod == p.id

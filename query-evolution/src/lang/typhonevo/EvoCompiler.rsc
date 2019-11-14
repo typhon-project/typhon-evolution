@@ -5,6 +5,7 @@ import ParseTree;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EntityEvolution;
+import lang::typhonevo::AttributeEvolution;
 
 
 EvoSyntax evolve(EvoSyntax x){
@@ -32,6 +33,10 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 		case EntityOperation operation: {
 			evoq = evolve_entity(evoq, operation);
 		}
+		case AttributesOperations operation:{
+			evoq = evolve_attribute(evoq, operation);
+		}
+		
 	};
 	
 	return evoq;

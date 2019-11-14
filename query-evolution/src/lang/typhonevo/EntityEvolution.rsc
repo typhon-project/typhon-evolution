@@ -56,6 +56,9 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 }
 
 EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
+	
+	map[EId, VId] binding = ();
+	
 
 	return q;
 }

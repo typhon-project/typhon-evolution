@@ -11,9 +11,10 @@ import java.util.List;
 public interface TyphonQLInterface {
 
     /**
-     * Creates a new EntityDO
-     * @param newEntity
-     * @return
+     * Creates a new Entity
+     *
+     * @param newEntity the Entity to create
+     * @return the QL query
      */
     String createEntityType(EntityDO newEntity, Model model);
 
@@ -23,20 +24,40 @@ public interface TyphonQLInterface {
 
     WorkingSet readAllEntityData(EntityDO entity, Model model);
 
+    /**
+     * Retrieve the entity data using the model provided.
+     *
+     * @param entityId the identifier of the entity
+     * @param model    the model containing the information about the entity
+     * @return the WorkingSet containing the entity data
+     */
     WorkingSet readAllEntityData(String entityId, Model model);
 
     WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model);
 
     WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model);
 
-    WorkingSet deleteAllEntityData(String entityid, Model model);
+    void deleteAllEntityData(String entityid, Model model);
 
     void deleteEntityStructure(String entityname, Model model);
 
-    void removeAttributes(String entityname, List<String> attributes, Model model);
+    /**
+     * Remove the attributes and their data of a given entity.
+     *
+     * @param entityName the name of the entity
+     * @param attributes the list of attributes to remove
+     * @param model      the model containing the information about the entity and its attributes
+     */
+    void removeAttributes(String entityName, List<String> attributes, Model model);
 
     void deleteWorkingSetData(WorkingSet dataToDelete, Model model);
 
+    /**
+     * Depending on the underlying databases. Creates foreign key (for relational) or changes the way the data must be inserted (for NoSQL). See detailed action plan appendix.
+     *
+     * @param relation the foreign key relation
+     * @param model    the model containing the information about the relation
+     */
     void createRelationshipType(RelationDO relation, Model model);
 
     void writeWorkingSetData(WorkingSet workingSetData, Model model);

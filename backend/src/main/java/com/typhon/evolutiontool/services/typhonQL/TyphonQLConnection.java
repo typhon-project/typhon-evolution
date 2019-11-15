@@ -1,33 +1,34 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.entities.WorkingSet;
+import typhonml.ChangeOperator;
 import typhonml.Model;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
- * This interface represent the TyphonQL module interface. Methods specification are directly taken as specified in deliverable D4.2
+ * This interface represents the TyphonQL Engine interface. Methods specification are directly taken as specified in deliverable D4.3.
  */
 public interface TyphonQLConnection {
-    /*
-    Added by M.Gobert
-    Is supposed to compile to actual ddl command and be sent to TyphonDL module. (ex: CREATE TABLE t...)
-     */
+
     String executeTyphonQLDDL(String tqlDDL);
 
-    //Taken from D4.2
-    static TyphonQLConnection newEngine(Model schema) {
-            return new TyphonQLConnectionImpl(schema);
-    }
+    void setSchema(Model schema);
 
-    WorkingSet query(String queryString, String ...params);
-    WorkingSet query(String queryString, Map<String,Object> params);
-    WorkingSet update(WorkingSet ws);
-    WorkingSet insert(WorkingSet ws);
-    WorkingSet delete(WorkingSet ws);
+    void evolve(ChangeOperator changeOperator);
 
-    //    void registerMonitor(Event event, Monitor handler);
-    //    void removeMonitor(Event event, Monitor handler);
+    void insert(WorkingSet workingSet);
+
+    void delete(WorkingSet workingSet);
+
+    void update(WorkingSet workingSet);
+
+    void execute(String statement, Object... params);
+
+    WorkingSet query(String query, Object... params);
+
+//        void registerMonitor(Event event, Monitor handler);
+
+//        void removeMonitor(Event event, Monitor handler);
+
+//        void registerProcedure(String name, Object impl);
 
 }

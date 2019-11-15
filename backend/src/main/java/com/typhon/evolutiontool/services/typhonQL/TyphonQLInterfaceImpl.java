@@ -1,32 +1,31 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
 
+import com.typhon.evolutiontool.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import typhonml.Model;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.WorkingSet;
-import typhonml.Model;
+public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
+    private static final String FROM = "from ";
+    private static final String SELECT = "select ";
+    private static final String WHERE = "where ";
 
-public class TyphonInterfaceQLImpl implements TyphonQLInterface {
+    private Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
 
-    Logger logger = LoggerFactory.getLogger(TyphonInterfaceQLImpl.class);
-
-    public TyphonInterfaceQLImpl() {
-
+    public TyphonQLInterfaceImpl() {
     }
-
 
     private TyphonQLConnection getTyphonQLConnection(Model model) {
         //TODO Model vs TyphonMLSchema specif?
-        return TyphonQLConnection.newEngine(model);
+        TyphonQLConnection typhonQLConnection = new TyphonQLConnectionImpl();
+        typhonQLConnection.setSchema(model);
+        return typhonQLConnection;
     }
 
     @Override
@@ -59,34 +58,27 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readAllEntityData(EntityDO entity, Model model) {
-        return getTyphonQLConnection(model).query("from %s e select e", entity.getName());
+        return getTyphonQLConnection(model).query(FROM.concat("%s e ").concat(SELECT).concat("e"), entity.getName());
     }
 
-    /**
-     * Retrieve all entity data, all attributes of entity @param entityId using the model provided.
-     *
-     * @param entityId
-     * @param model
-     * @return
-     */
     @Override
     public WorkingSet readAllEntityData(String entityId, Model model) {
-        return getTyphonQLConnection(model).query("from %s e select e", entityId);
+        return getTyphonQLConnection(model).query(FROM.concat("%s e ").concat(SELECT).concat("e"), entityId);
     }
 
     @Override
     public WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model) {
-        return getTyphonQLConnection(model).query("from %s e select e where %s = %s", sourceEntityName, attributeName, attributeValue);
+        return getTyphonQLConnection(model).query(FROM.concat("%s e ").concat(SELECT).concat("e ").concat(WHERE).concat("%s = %s"), sourceEntityName, attributeName, attributeValue);
     }
 
     @Override
     public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model) {
-        return getTyphonQLConnection(model).query("from %s e select " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")), sourceEntityName);
+        return getTyphonQLConnection(model).query(FROM.concat("%s e ").concat(SELECT) + attributes.stream().map("e."::concat).collect(Collectors.joining(",")), sourceEntityName);
     }
 
     @Override
-    public WorkingSet deleteAllEntityData(String entityid, Model model) {
-        return getTyphonQLConnection(model).delete(this.readAllEntityData(entityid, model));
+    public void deleteAllEntityData(String entityid, Model model) {
+        getTyphonQLConnection(model).delete(this.readAllEntityData(entityid, model));
     }
 
     @Override
@@ -101,7 +93,7 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readRelationship(RelationDO relation, Model model) {
-        return getTyphonQLConnection(model).query("from %s s , %s t select s, t where s.%s==%s ", relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
+        return getTyphonQLConnection(model).query(FROM.concat("%s s , %s t ").concat(SELECT).concat("s, t ").concat(WHERE).concat("s.%s==%s"), relation.getSourceEntity().getName(), relation.getTargetEntity().getName(), relation.getName(), relation.getTargetEntity().getIdentifier());
     }
 
     @Override
@@ -178,22 +170,15 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
-    /**
-     * Delete attributes structure and data of given attribute name list in the given entityname .
-     *
-     * @param entityname
-     * @param attributes
-     * @param model
-     */
     @Override
-    public void removeAttributes(String entityname, List<String> attributes, Model model) {
+    public void removeAttributes(String entityName, List<String> attributes, Model model) {
         //TODO Separate deletion of data and structure.
         // Delete data
-        getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityname, attributes, model));
+        getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityName, attributes, model));
 
         //Delete Structure
-        String tql = "TQLDDL DELETE ATTRIBUTES " + entityname + ", " + attributes.stream().map(a -> "e.".concat(a)).collect(Collectors.joining(",")) + " on TyphonML [" + model + "]";
-        logger.info("Delete attributes [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, model);
+        String tql = "TQLDDL DELETE ATTRIBUTES " + entityName + ", " + attributes.stream().map("e."::concat).collect(Collectors.joining(",")) + " on TyphonML [" + model + "]";
+        logger.info("Delete attributes [{}] via TyphonQL DDL on TyphonML model [{}] ", entityName, model);
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
@@ -202,12 +187,6 @@ public class TyphonInterfaceQLImpl implements TyphonQLInterface {
         getTyphonQLConnection(model).delete(dataToDelete);
     }
 
-    /**
-     * Depending on the underlying databases. Creates foreign key (for relational) or changes the way the data must be inserted (for NoSQL). See detailed action plan appendix.
-     *
-     * @param relation
-     * @param model
-     */
     @Override
     public void createRelationshipType(RelationDO relation, Model model) {
         String tql;

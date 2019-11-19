@@ -1,6 +1,7 @@
 module lang::typhonevo::EvoAbstractSyntax
 
 extend lang::typhonql::Query;
+extend lang::typhonql::DML;
 extend lang::std::Id;
 extend lang::std::ASCII;
 
@@ -13,9 +14,13 @@ start syntax EvoSyntax
 	
 
 syntax EvoQuery
-	= annotatedQuery: Annotation an Query q
-	| query : Query
+	= annotatedQuery: Annotation an QlQuery q
+	| query : QlQuery q
 	;
+	
+syntax QlQuery
+	= Query query
+	| Statement query;
 
 syntax ChangeOperator
 	= entityOperator: EntityOperation op
@@ -23,10 +28,22 @@ syntax ChangeOperator
 	| relationOperator: RelationOperations op
 	| databaseOperator: DatabaseOperations op
 	;
+/*	
+syntax EntityOperation = Kind "entity" EId currentName Operation;
+
+lexical Kind
+	= "add"
+	| "remove"
+	;
 	
+syntax Operation
+  = "{" "}"
+  | "as" EId newName
+  ;
+ */
 
 syntax EntityOperation
-	= add: NameSpace? "add" "entity" EId name // Nothing
+	= add: NameSpace? "add" "entity" EId name "{"  "}"// Nothing
 	| remove: "remove" "entity" EId name // Done
 	| rename: "rename" "entity" EId oldName "as" EId newName // Done
 	| splitEntity: "split" "entity" EId name "{" "left" EId entity1 "right" EId entity2 "}" //TODO (waiting for new syntax)

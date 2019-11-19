@@ -46,8 +46,7 @@ public set[Contribution] languageContrib = {
 	popup(
 		menu("TyphonEvolution",[
 		    action("Evolve", evalQuery),
-		    action("Test", testString),
-		    action("Find ID", getIDEid)
+		    action("getIDE", getIDEid)
 	    ])
   	)
 };

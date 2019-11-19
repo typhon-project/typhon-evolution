@@ -25,13 +25,13 @@ EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 	return q;
 }
 
+default EvoQuery evolve(EvoQuery q, EntitOperation op) = q;
+
 EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	
-	req = visit(q){
+	return visit(q){
 		case old_name => new_name
 	};
-	
-	return req;
 }
 
 
@@ -59,6 +59,16 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 	
 	map[EId, VId] binding = ();
 	
+	for(/(Binding) `<EId entity> <VId bind>` := q){
+		binding[entity] = bind;
+	}
+	
+	// Change the bindings
+	
+	// Change the attributes call
+	
+	// Add join condition
+	
 
 	return q;
 }
@@ -72,14 +82,23 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
 	}
 	
 	if(entity1 in binding && entity2 in binding){
-		replace = binding[entity2];
+		old_alias = binding[entity2];
+		del_binding = (Binding) `<EId entity2> <VId old_alias>`;
 		
+		
+		// alter Results and Where
 		q = visit(q){
-			case replace => binding[entity1]
-				
+			case old_alias => binding[entity1]
+			case (Query) `from <{Binding ","}+ before>, <Binding del_binding>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
+				=> (Query) `from <{Binding ","}+ before>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
 		}
+		
+		q = entity_rename(q, entity1, new_name);
+		
+		// Clear where clause
+
 	
-		return parse(#EvoQuery, "#@ Merge operation not yet supported for this case @# <q>");
+		return q;
 	}
 	else{
 		q = entity_rename(q, entity1, new_name);

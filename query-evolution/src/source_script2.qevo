@@ -1,6 +1,7 @@
 changeOperators [ 
-	remove entity CreditCard 
 	rename entity Product as Item 
+	//rename attribute prod as product_id
+	merge entities Item Stock as Product_info
 ]
 
 // Insert queries here
@@ -12,7 +13,7 @@ from Product p, Stock s select p, s where p.id == "30",
 
 from Person p select p.name,
 
-from Stuff s, Person p select p, s where s.customer == p,
+from Product s, Person p select p, s where s.customer == p,
 
 from Product p, Review r, Stock s 
 select p, s.quantity 

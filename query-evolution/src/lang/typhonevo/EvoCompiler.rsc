@@ -20,15 +20,16 @@ EvoSyntax evolve(EvoSyntax x){
 	return x;
 }
 
+EvoQuery transform(q:(EvoQuery)`<Annotation _>  <Query _>`, _) = q;
+
 EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 	// Ignoring the query with annotation
 	
-	switch(evoq){
-		case (EvoQuery)`<Annotation annot>  <Query query>`:{
-			return evoq;
-		}
-	};
+	if ((EvoQuery)`<Annotation annot>  <Query query>` := evoq) {
+		return evoq;
+	}
 	
+	// TODO remove this (pattern match in signature
 	visit(op){
 		case EntityOperation operation: {
 			evoq = evolve_entity(evoq, operation);
@@ -42,15 +43,6 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 	return evoq;
 }
 
+list[ChangeOperator] extract_op(EvoSyntax x) = [ c | /ChangeOperator c := x];
 
-
-list[ChangeOperator] extract_op(EvoSyntax x) {
-	l = [];
-
-	visit(x){
-		case ChangeOperator c: l = l + [c];
-	};
-	
-	return l;
-}
 

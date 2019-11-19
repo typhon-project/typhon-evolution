@@ -10,7 +10,6 @@ import util::Prompt;
 
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EvoCompiler;
-import lang::typhonevo::BridgeML;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";

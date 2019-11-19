@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="typhonevo_feature"
+      label="typhonevo IDE"
+      version="0.1.0.201911191449">
+
+   <description url="http://www.example.com/description">
+      Typhon Evolution
+   </description>
+
+   <copyright>
+      ?
+   </copyright>
+
+
+   <plugin
+         id="QueryEvolution"
+         download-size="20"
+         install-size="46"
+         version="0.1.0.201911191449"
+         unpack="false"/>
+
+
+</feature>

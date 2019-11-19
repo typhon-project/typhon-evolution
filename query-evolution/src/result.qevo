@@ -2,7 +2,6 @@ changeOperators [
 	rename entity Product as Item 
 	//rename attribute prod as product_id
 	merge entities Item Stock as Product_info
-	
 ]
 
 // Insert queries here
@@ -17,6 +16,3 @@ from Person p select p.name,
 from Product_info s, Person p select p, s where s.customer == p,
 
 from Product_info p, Stock p select p, p.quantity where p.id == r.reviewed_product, p.prod == p.id  
-
-
-// RESULTS

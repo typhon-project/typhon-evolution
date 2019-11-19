@@ -10,24 +10,9 @@
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-    <artifactId>queryevolution</artifactId>
-    <packaging>eclipse-plugin</packaging>
+    <artifactId>typhonevo_feature</artifactId>
+    <packaging>eclipse-feature</packaging>
     
-    <build>
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-	</build>
-
-
-    <dependencies>
-    </dependencies>
-
  
 </project>
+

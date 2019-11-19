@@ -6,54 +6,60 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!-- Permitting to inherit from useful dependencies and configuration from Spring Boot dependency -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
-    </parent>
-
     <modules>
-        <module>backend</module>
-        <module>rest-api</module>
+        <!-- <module>backend</module>  cannot build until ml get a p2 repo-->
         <module>query-evolution</module>
+        <module>evolution-feature</module>
+        <module>evolution-updatesite</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tycho.version>1.4.0</tycho.version>
     </properties>
+    
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<!-- 
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+				</configuration>
+			</plugin>
+			-->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
     <repositories>
-        <repository>
-            <id>eclipse-release</id>
-            <url>http://download.eclipse.org/releases/2019-09/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>eclipse-epsilon</id>
-            <url>http://download.eclipse.org/epsilon/updates/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>usethesource-rascalmpl-unstable</id>
-            <layout>p2</layout>
-            <url>https://update.rascal-mpl.org/unstable/</url>
-        </repository>
-        <repository>
-            <id>rascalmpl-libs</id>
-            <layout>p2</layout>
-            <url>https://update.rascal-mpl.org/libs/</url>
-        </repository>
         <repository>
             <id>typhonQL</id>
             <layout>p2</layout>
             <url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
         </repository>
         <repository>
-            <id>ML</id>
+            <id>neon</id>
             <layout>p2</layout>
-            <url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
+            <url>http://nexus.usethesource.io/content/repositories/eclipse-oxygen/</url>
         </repository>
     </repositories>
 

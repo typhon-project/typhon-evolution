@@ -25,7 +25,7 @@ EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 	return q;
 }
 
-default EvoQuery evolve(EvoQuery q, EntitOperation op) = q;
+default EvoQuery evolve(EvoQuery q, EntityOperation op) = q;
 
 EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	

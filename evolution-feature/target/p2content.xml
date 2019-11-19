@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <units size='2'>
-  <unit id='typhonevo_feature.feature.group' version='0.1.0.201911191449' singleton='false'>
-    <update id='typhonevo_feature.feature.group' range='[0.0.0,0.1.0.201911191449)' severity='0'/>
+  <unit id='typhonevo_feature.feature.group' version='0.1.0.201911191525' singleton='false'>
+    <update id='typhonevo_feature.feature.group' range='[0.0.0,0.1.0.201911191525)' severity='0'/>
     <properties size='7'>
       <property name='org.eclipse.equinox.p2.name' value='typhonevo IDE'/>
       <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
@@ -12,11 +12,11 @@
       <property name='maven-version' value='0.1.0-SNAPSHOT'/>
     </properties>
     <provides size='1'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.group' version='0.1.0.201911191449'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.group' version='0.1.0.201911191525'/>
     </provides>
     <requires size='2'>
-      <required namespace='org.eclipse.equinox.p2.iu' name='QueryEvolution' range='[0.1.0.201911191449,0.1.0.201911191449]'/>
-      <required namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' range='[0.1.0.201911191449,0.1.0.201911191449]'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='queryevolution' range='[0.1.0.201911191525,0.1.0.201911191525]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' range='[0.1.0.201911191525,0.1.0.201911191525]'>
         <filter>
           (org.eclipse.update.install.features=true)
         </filter>
@@ -27,7 +27,7 @@
       ?
     </copyright>
   </unit>
-  <unit id='typhonevo_feature.feature.jar' version='0.1.0.201911191449'>
+  <unit id='typhonevo_feature.feature.jar' version='0.1.0.201911191525'>
     <properties size='6'>
       <property name='org.eclipse.equinox.p2.name' value='typhonevo IDE'/>
       <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
@@ -37,15 +37,15 @@
       <property name='maven-version' value='0.1.0-SNAPSHOT'/>
     </properties>
     <provides size='3'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' version='0.1.0.201911191449'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' version='0.1.0.201911191525'/>
       <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-      <provided namespace='org.eclipse.update.feature' name='typhonevo_feature' version='0.1.0.201911191449'/>
+      <provided namespace='org.eclipse.update.feature' name='typhonevo_feature' version='0.1.0.201911191525'/>
     </provides>
     <filter>
       (org.eclipse.update.install.features=true)
     </filter>
     <artifacts size='1'>
-      <artifact classifier='org.eclipse.update.feature' id='typhonevo_feature' version='0.1.0.201911191449'/>
+      <artifact classifier='org.eclipse.update.feature' id='typhonevo_feature' version='0.1.0.201911191525'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>

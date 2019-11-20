@@ -27,7 +27,10 @@ public class EntitySplitVerticalHandler extends EntitySplitHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.FIRST_NEW_ENTITY, ChangeOperatorParameter.SECOND_NEW_ENTITY))) {
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.NEW_ENTITY_NAME, ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES, ChangeOperatorParameter.NEW_ENTITY_RELATIONS))) {
+            //The list of attributes and relations to move from entity 1 to the new entity
+//            NEW_ENTITY_ATTRIBUTES
+//            NEW_ENTITY_RELATIONS
             //TyphonML
             Model targetModel = splitEntity(smo, model);
 
@@ -41,7 +44,7 @@ public class EntitySplitVerticalHandler extends EntitySplitHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.FIRST_NEW_ENTITY + ", " + ChangeOperatorParameter.SECOND_NEW_ENTITY + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES + ", " + ChangeOperatorParameter.NEW_ENTITY_RELATIONS + "]");
         }
     }
 

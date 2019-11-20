@@ -24,7 +24,7 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
      */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.FIRST_NEW_ENTITY, ChangeOperatorParameter.SECOND_NEW_ENTITY, ChangeOperatorParameter.ATTRIBUTE_NAME, ChangeOperatorParameter.ATTRIBUTE_VALUE))) {
+        if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.NEW_ENTITY_NAME, ChangeOperatorParameter.ENTITY_SPLIT_ATTRIBUTE, ChangeOperatorParameter.ENTITY_SPLIT_EXPRESSION))) {
             //TyphonML
             Model targetModel = splitEntity(smo, model);
 
@@ -39,7 +39,7 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
 
             return targetModel;
         } else {
-            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.FIRST_NEW_ENTITY + ", " + ChangeOperatorParameter.SECOND_NEW_ENTITY + ", " + ChangeOperatorParameter.ATTRIBUTE_NAME + ", " + ChangeOperatorParameter.ATTRIBUTE_VALUE + "]");
+            throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + ", " + ChangeOperatorParameter.ENTITY_SPLIT_ATTRIBUTE + ", " + ChangeOperatorParameter.ENTITY_SPLIT_EXPRESSION + "]");
         }
 
     }

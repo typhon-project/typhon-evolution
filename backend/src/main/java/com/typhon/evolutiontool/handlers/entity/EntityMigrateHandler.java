@@ -30,13 +30,11 @@ public class EntityMigrateHandler extends BaseHandler {
             Database database = (Database) smo.getInputParameter().get(ChangeOperatorParameter.DATABASE);
             String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityDO.getName(), model);
             DatabaseType targetDatabaseType = getDatabaseType(database);
-            // Verify that an instance of the underlying database is running in the TyphonDL.
-            if (!typhonDLInterface.isDatabaseRunning(targetDatabaseType.name(), database.getName())) {
-                typhonDLInterface.createDatabase(targetDatabaseType.name(), database.getName());
-            }
+
             Model targetModel = typhonMLInterface.deleteEntityMappings(entityDO.getName(), sourceEntityNameInDatabase, model);
             targetModel = typhonMLInterface.createDatabase(targetDatabaseType, database.getName(), targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(targetDatabaseType, database.getName(), sourceEntityNameInDatabase, entityDO.getName(), targetModel);
+
             typhonQLInterface.createEntityType(entityDO, targetModel);
             WorkingSet data = typhonQLInterface.readAllEntityData(entityDO.getName(), model);
             typhonQLInterface.writeWorkingSetData(data, targetModel);

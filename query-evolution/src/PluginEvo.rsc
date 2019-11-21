@@ -1,4 +1,4 @@
-module Plugin
+module PluginEvo
 
 import lang::typhonevo::EvolutionIDE;
 

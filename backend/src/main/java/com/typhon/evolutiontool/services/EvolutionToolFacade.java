@@ -5,8 +5,8 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.Model;
 
 public interface EvolutionToolFacade {
-	
-	String evolve(String initialModelPath, String finalModelPath);
+
+    String evolve(String initialModelPath, String finalModelPath);
 
     Model executeChangeOperators(Model model) throws InputParameterException, EvolutionOperationNotSupported;
 

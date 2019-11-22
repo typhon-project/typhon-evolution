@@ -1,0 +1,4 @@
+from User e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY User on TyphonML [typhonml.impl.ModelImpl@4f4cc4af]
+TQL DDL RENAME ENTITY Order TO Purchase

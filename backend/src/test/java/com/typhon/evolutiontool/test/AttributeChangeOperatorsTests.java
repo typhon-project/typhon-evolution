@@ -22,7 +22,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addAttributeChangeOperator_final.xmi");
 
-        Entity updatedEntity = typhonMLInterface.getEntityTypeFromName(addAttribute.getOwnerEntity().getName(), targetModel);
+        Entity updatedEntity = evolutionService.getTyphonMLInterface().getEntityTypeFromName(addAttribute.getOwnerEntity().getName(), targetModel);
         Attribute addedAttribute = updatedEntity.getAttributes()
                 .stream()
                 .filter(attr -> addAttribute.getName().equals(attr.getName()))

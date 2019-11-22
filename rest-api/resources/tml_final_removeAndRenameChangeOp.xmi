@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:DocumentDB" name="MongoDB">
-    <collections entity="//@dataTypes.0" name="orderCollection"/>
+    <collections name="orderCollection" entity="//@dataTypes.0"/>
   </databases>
-  <databases xsi:type="typhonml:RelationalDB" name="MySQL">
-    <tables name="clientsTable" db="//@databases.1"/>
-  </databases>
-  <dataTypes xsi:type="typhonml:Entity" name="Purchase" genericList="//@databases.0/@collections.0">
+  <databases xsi:type="typhonml:RelationalDB" name="MySQL"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Purchase">
     <attributes name="date" type="//@dataTypes.0"/>
     <attributes name="totalAmount" type="//@dataTypes.0"/>
   </dataTypes>

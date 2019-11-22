@@ -30,7 +30,8 @@ public class SMOAdapter implements SMO {
                 || changeOperator instanceof RenameEntity
                 || changeOperator instanceof AddEntity
                 || changeOperator instanceof MigrateEntity
-                || changeOperator instanceof SplitEntity
+                || changeOperator instanceof SplitEntityHorizontal
+                || changeOperator instanceof SplitEntityVertical
                 || changeOperator instanceof MergeEntity) {
             typhonMLObject = TyphonMLObject.ENTITY;
         }
@@ -62,10 +63,10 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.ADD;
         if (changeOperator instanceof MigrateEntity)
             evolutionOperator = EvolutionOperator.MIGRATE;
-        if (changeOperator instanceof SplitEntity)
+        if (changeOperator instanceof SplitEntityVertical)
             evolutionOperator = EvolutionOperator.SPLITVERTICAL;
-//        if (changeOperator instanceof SplitEntity)
-//            evolutionOperator = EvolutionOperator.SPLITHORIZONTAL;
+        if (changeOperator instanceof SplitEntityHorizontal)
+            evolutionOperator = EvolutionOperator.SPLITHORIZONTAL;
         if (changeOperator instanceof MergeEntity)
             evolutionOperator = EvolutionOperator.MERGE;
         if (changeOperator instanceof EnableRelationContainment)
@@ -104,14 +105,17 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ChangeOperatorParameter.DATABASE, ((MigrateEntity) changeOperator).getNewDatabase());
             }
             if (evolutionOperator == EvolutionOperator.SPLITVERTICAL) {
-                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
-                inputParameter.put(ChangeOperatorParameter.FIRST_NEW_ENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
-                inputParameter.put(ChangeOperatorParameter.SECOND_NEW_ENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntityVertical) changeOperator).getEntity1());
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((SplitEntityVertical) changeOperator).getEntity2name());
+                //The list of attributes and relations to move from entity 1 to the new entity
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES, ((SplitEntityVertical) changeOperator).getAttributeList());
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_RELATIONS, ((SplitEntityVertical) changeOperator).getRelationList());
             }
             if (evolutionOperator == EvolutionOperator.SPLITHORIZONTAL) {
-                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntity) changeOperator).getEntityToBeSplit());
-                inputParameter.put(ChangeOperatorParameter.FIRST_NEW_ENTITY, ((SplitEntity) changeOperator).getFirstNewEntity());
-                inputParameter.put(ChangeOperatorParameter.SECOND_NEW_ENTITY, ((SplitEntity) changeOperator).getSecondNewEntity());
+                inputParameter.put(ChangeOperatorParameter.ENTITY, ((SplitEntityHorizontal) changeOperator).getEntity1());
+                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((SplitEntityHorizontal) changeOperator).getEntity2name());
+                inputParameter.put(ChangeOperatorParameter.ENTITY_SPLIT_ATTRIBUTE, ((SplitEntityHorizontal) changeOperator).getAttribute());
+                inputParameter.put(ChangeOperatorParameter.ENTITY_SPLIT_EXPRESSION, ((SplitEntityHorizontal) changeOperator).getExpression());
             }
             if (evolutionOperator == EvolutionOperator.MERGE) {
                 inputParameter.put(ChangeOperatorParameter.FIRST_ENTITY_TO_MERGE, ((MergeEntity) changeOperator).getFirstEntityToMerge());

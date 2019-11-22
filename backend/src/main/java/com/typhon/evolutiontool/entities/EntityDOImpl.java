@@ -11,14 +11,14 @@ public class EntityDOImpl implements EntityDO {
     private String namespace;
     private List<RelationDO> relations;
     private String entityIdentifier;
-    private Map<String, Object> attributes;
+    private Map<String, DataTypeDO> attributes;
 
     public EntityDOImpl() {
         this.relations = new ArrayList<>();
         this.attributes = new HashMap<>();
     }
 
-    public EntityDOImpl(String name, String namespace, List<RelationDO> relations, String entityIdentifier, Map<String, Object> attributes) {
+    public EntityDOImpl(String name, String namespace, List<RelationDO> relations, String entityIdentifier, Map<String, DataTypeDO> attributes) {
         this.name = name;
         this.namespace = namespace;
         this.relations = relations;
@@ -27,11 +27,11 @@ public class EntityDOImpl implements EntityDO {
     }
 
     @Override
-    public void addAttribute(String name, String datatype) {
+    public void addAttribute(String name, DataTypeDO dataTypeDO) {
         if (this.attributes == null) {
             this.attributes = new HashMap<>();
         }
-        this.attributes.put(name, datatype);
+        this.attributes.put(name, dataTypeDO);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class EntityDOImpl implements EntityDO {
     }
 
     @Override
-    public Map<String, Object> getAttributes() {
+    public Map<String, DataTypeDO> getAttributes() {
         return this.attributes;
     }
 

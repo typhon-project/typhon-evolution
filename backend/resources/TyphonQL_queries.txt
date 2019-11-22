@@ -3,3 +3,15 @@ FROM Comment e SELECT e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@47faa49c]
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@2fd1433e]
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@5e21e98f]
+from Comment e select e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@5e21e98f]

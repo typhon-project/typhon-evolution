@@ -12,6 +12,13 @@ import java.util.stream.Collectors;
 
 public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
+    private static final String BLANK = " ";
+    private static final String CREATE = "create ";
+    private static final String AS = " as ";
+    private static final String DOT = ".";
+    private static final String TYPE = " : ";
+    private static final String RELATION = " -> ";
+    private static final String CONTAINMENT = " :-> ";
     private static final String FROM = "from ";
     private static final String SELECT = "select ";
     private static final String WHERE = "where ";
@@ -19,6 +26,37 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
 
     public TyphonQLInterfaceImpl() {
+    }
+
+    @Override
+    public String createEntity(String entityName, String databaseName) {
+        logger.info("Create entity [{}] TyphonQL query", entityName);
+        return CREATE.concat(entityName).concat(AS).concat(databaseName);
+    }
+
+    @Override
+    public String createEntityAttribute(String entityName, String attributeName, String attributeTypeName) {
+        logger.info("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, attributeTypeName, entityName);
+        return CREATE.concat(entityName).concat(DOT).concat(attributeName).concat(TYPE).concat(attributeTypeName);
+    }
+
+    @Override
+    public String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality) {
+        logger.info("Create relation [{}" + (containment ? CONTAINMENT : RELATION) + "{} [{}]] for entity [{}] TyphonQL query", relationName, relationTargetTypeName, cardinality.getName(), entityName);
+        String cardinalityValue = "";
+        switch (cardinality.getValue()) {
+            case CardinalityDO.ZERO_ONE_VALUE : cardinalityValue = "[0..1]"; break;
+            case CardinalityDO.ONE_VALUE : cardinalityValue = "[1..1]"; break;
+            case CardinalityDO.ZERO_MANY_VALUE : cardinalityValue = "[0..*]"; break;
+            case CardinalityDO.ONE_MANY_VALUE : cardinalityValue = "[1..*]"; break;
+        }
+        return CREATE.concat(entityName).concat(DOT).concat(relationName).concat(containment ? CONTAINMENT : RELATION).concat(relationTargetTypeName).concat(cardinalityValue);
+    }
+
+    @Override
+    public String selectEntityData(String entityName) {
+        logger.info("Select data for entity [{}] TyphonQL query", entityName);
+        return FROM.concat(entityName).concat(BLANK).concat(entityName.toLowerCase()).concat(BLANK).concat(SELECT).concat(entityName.toLowerCase());
     }
 
     private TyphonQLConnection getTyphonQLConnection(Model model) {
@@ -33,7 +71,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         //TODO Handling of Identifier, index, etc...
         String tql;
         logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(), model);
-        tql = "TQLDDL CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey() + " " + entry.getValue()).collect(Collectors.joining(",")) + "}";
+        tql = "CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey() + " " + entry.getValue()).collect(Collectors.joining(",")) + "}";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
         return tql;
     }

@@ -4,11 +4,15 @@ import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.EntityDOImpl;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
+import com.typhon.evolutiontool.utils.DataTypeDOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import typhonml.Model;
+import typhonml.PrimitiveDataType;
+import typhonml.TyphonmlFactory;
+import typhonml.impl.PrimitiveDataTypeImpl;
 
 public class TyphonMLInterfaceTests {
 
@@ -33,8 +37,12 @@ public class TyphonMLInterfaceTests {
     @Test
     public void testCreateEntityWithAttributesTyphonML() {
         EntityDO entity = new EntityDOImpl("fakeEntity", null, null, null, null);
-        entity.addAttribute("attr1", "string");
-        entity.addAttribute("attr2", "number");
+        PrimitiveDataType attribute1DataType = TyphonmlFactory.eINSTANCE.createPrimitiveDataType();
+        attribute1DataType.setName("string");
+        PrimitiveDataType attribute2DataType = TyphonmlFactory.eINSTANCE.createPrimitiveDataType();
+        attribute2DataType.setName("number");
+        entity.addAttribute("attr1", DataTypeDOFactory.buildInstance(attribute1DataType));
+        entity.addAttribute("attr2", DataTypeDOFactory.buildInstance(attribute2DataType));
         targetModel = typhonMLInterface.createEntityType(sourceModel, entity);
         Assert.assertNotNull(targetModel);
         typhonml.Entity retrievedEntity = (typhonml.Entity) targetModel.getDataTypes().get(0);

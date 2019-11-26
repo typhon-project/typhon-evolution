@@ -5,6 +5,7 @@ import ParseTree;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
+import lang::typhonevo::utils;
 
 EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 	switch(op){
@@ -17,8 +18,8 @@ EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 		case (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`: {
 			return entity_split(q, name, entity1, entity2);
 		}
-		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`:{
-			return entity_merge(q, new_name, entity1, entity2);
+		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name> joined by <Id relation>`:{
+			return entity_merge(q, new_name, entity1, entity2, relation);
 		}
 		
 	};
@@ -51,7 +52,7 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 	}
 	
 	if(matched){
-		return parse(#EvoQuery, "#@ Entity <name> removed. That query is broken @# <query>");
+		return parse(#EvoQuery, "#@ Cannot evolve query :  Entity <name> removed. @# <query>");
 	}
 	return q;
 }
@@ -75,7 +76,6 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 		
 		Binding old_bind = (Binding) `<EId old_name> <VId old_alias>`;
 		
-		println("<e1_vid>.to_<entity2> == <e2_vid>");
 		Expr join_expr = parse(#Expr, "<e1_vid>.to_<entity2> == <e2_vid>");
 		// Transform
 		
@@ -85,11 +85,17 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 					if(bind == old_bind){
 						insert (Query) `from <Binding e1_bind>, <Binding e2_bind>, <{Binding ","}+ end> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`;
 					}
+					else{
+						fail;
+					}
 				}
 				
 			case (Query) `from <{Binding ","}+ before>, <Binding bind>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`:{
 					if(bind == old_bind){
 						insert (Query) `from <{Binding ","}+ before>, <Binding e1_bind>, <Binding e2_bind>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`;
+					}
+					else{
+						fail;
 					}
 				}
 			
@@ -98,11 +104,17 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 					if(bind == old_bind){
 						insert (Query) `from <{Binding ","}+ front>, <Binding e1_bind>, <Binding e2_bind> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`;
 					}
+					else{
+						fail;
+					}
 				}
 				
 			case (Query) `from <Binding bind> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`: {
 					if(bind == bind){
 						insert (Query) `from <Binding e1_bind>, <Binding e2_bind> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`;
+					}
+					else{
+						fail;
 					}
 				}
 		}
@@ -119,7 +131,7 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 	return q;
 }
 
-EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
+EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Id relation){
 
 	map[EId, VId] binding = ();
 	
@@ -134,20 +146,12 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
 		new_alias = binding[entity1];
 		result = (Result) `<Expr new_alias>`;
 		
+		q = removeBinding(q, del_binding); 
+		
 		
 		// alter Binding
 		q = visit(q){
-			case old_alias => new_alias
-			
-			case (Query) `from <{Binding ","}+ before>, <Binding del_binding>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				=> (Query) `from <{Binding ","}+ before>, <{Binding ","}+ after> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-			
-			case (Query) `from <{Binding ","}+ front>, <Binding del_binding> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				=> (Query) `from <{Binding ","}+ front> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				
-			case (Query) `from <Binding del_binding>, <{Binding ","}+ end> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				=> (Query) `from <{Binding ","}+ end> select <{Result ","}+ selected> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				
+			case old_alias => new_alias	
 		}
 		
 		// alter Results
@@ -161,6 +165,11 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2){
 		
 		// Clear where clause
 
+		q = visit(q){
+			case (Where) `where <VId v>.<Id c> == <Expr a>, <{Expr ","}+ end>`
+				=> (Where) `where <{Expr ","}+ end>`
+			when c := relation
+		}
 	
 		return q;
 	}

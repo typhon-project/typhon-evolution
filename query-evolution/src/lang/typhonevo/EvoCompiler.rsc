@@ -22,6 +22,7 @@ EvoSyntax evolve(EvoSyntax x){
 
 EvoQuery transform(q:(EvoQuery)`<Annotation _>  <Query _>`, _) = q;
 
+
 EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 	// Ignoring the query with annotation
 	

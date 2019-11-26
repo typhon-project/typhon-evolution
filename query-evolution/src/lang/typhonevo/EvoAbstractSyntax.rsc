@@ -15,7 +15,16 @@ start syntax EvoSyntax
 
 syntax EvoQuery
 	= annotatedQuery: Annotation an QlQuery q
+	| result: Status stat QlQuery q
+	| result2: Status stat Annotation annot QlQuery q
 	| query : QlQuery q
+	;
+	
+lexical Status
+	= "unchanged"
+	| "changed"
+	| "warning"
+	| "error"
 	;
 	
 syntax QlQuery
@@ -47,7 +56,7 @@ syntax EntityOperation
 	| remove: "remove" "entity" EId name // Done
 	| rename: "rename" "entity" EId oldName "as" EId newName // Done
 	| splitEntity: "split" "entity" EId name "{" "left" EId entity1 "right" EId entity2 "}" //TODO (waiting for new syntax)
- 	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name // In progress
+ 	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name "joined" "by" Id rel // In progress
  	| migrate: "migrate" "entity" EId entity "to" EId db // Nothing
 	;
 	

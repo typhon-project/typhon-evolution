@@ -26,7 +26,7 @@ public class RelationRenameHandler extends BaseHandler {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             String newRelationName = smo.getInputParameter().get(ChangeOperatorParameter.RELATION_NAME).toString();
             Model targetModel = typhonMLInterface.renameRelation(relationDO.getName(), relationDO.getSourceEntity().getName(), newRelationName, model);
-            typhonQLInterface.renameRelation(relationDO.getName(), newRelationName, targetModel);
+            typhonQLInterface.renameRelation(relationDO.getSourceEntity().getName(), relationDO.getName(), newRelationName, targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + ", " + ChangeOperatorParameter.RELATION_NAME + "]");

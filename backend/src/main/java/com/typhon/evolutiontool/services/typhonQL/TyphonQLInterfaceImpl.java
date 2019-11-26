@@ -50,10 +50,18 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         logger.info("Create relation [{}" + (containment ? CONTAINMENT : RELATION) + "{} [{}]] for entity [{}] TyphonQL query", relationName, relationTargetTypeName, cardinality.getName(), entityName);
         String cardinalityValue = "";
         switch (cardinality.getValue()) {
-            case CardinalityDO.ZERO_ONE_VALUE : cardinalityValue = "[0..1]"; break;
-            case CardinalityDO.ONE_VALUE : cardinalityValue = "[1..1]"; break;
-            case CardinalityDO.ZERO_MANY_VALUE : cardinalityValue = "[0..*]"; break;
-            case CardinalityDO.ONE_MANY_VALUE : cardinalityValue = "[1..*]"; break;
+            case CardinalityDO.ZERO_ONE_VALUE:
+                cardinalityValue = "[0..1]";
+                break;
+            case CardinalityDO.ONE_VALUE:
+                cardinalityValue = "[1..1]";
+                break;
+            case CardinalityDO.ZERO_MANY_VALUE:
+                cardinalityValue = "[0..*]";
+                break;
+            case CardinalityDO.ONE_MANY_VALUE:
+                cardinalityValue = "[1..*]";
+                break;
         }
         return CREATE.concat(entityName).concat(DOT).concat(relationName).concat(containment ? CONTAINMENT : RELATION).concat(relationTargetTypeName).concat(cardinalityValue);
     }
@@ -84,31 +92,10 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public String createEntityType(EntityDO newEntity, Model model) {
-        //TODO Handling of Identifier, index, etc...
-        String tql;
-        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(), model);
-        tql = "CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().entrySet().stream().map(entry -> entry.getKey() + " " + entry.getValue()).collect(Collectors.joining(",")) + "}";
-        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
-        return tql;
-    }
-
-    @Override
-    public String createEntityType(typhonml.Entity newEntity, Model model) {
-        //TODO Handling of Identifier, index, etc...
-        String tql;
-        logger.info("Create entity [{}] via TyphonQL DDL query on TyphonML model [{}] ", newEntity.getName(), model);
-        tql = "TQLDDL CREATE ENTITY " + newEntity.getName() + " {" + newEntity.getAttributes().stream().map(attribute -> attribute.getName() + " " + attribute.getType()).collect(Collectors.joining(",")) + "}";
-        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
-        return tql;
-    }
-
-    @Override
     public void renameEntity(String oldEntityName, String newEntityName, Model model) {
         logger.info("Rename EntityDO [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName, model);
-        String tql = "TQL DDL RENAME ENTITY " + oldEntityName + " TO " + newEntityName;
+        String tql = "rename " + oldEntityName + " to " + newEntityName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
-
     }
 
     @Override
@@ -165,74 +152,82 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void deleteRelationshipInEntity(String relationname, String entityname, Model model) {
         logger.info("Delete Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationname, entityname, model);
-        String tql = "TQL DDL DELETE RELATION " + relationname + " IN " + entityname;
+        String tql = "drop " + entityname + "." + relationname;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void enableContainment(String relationName, String entityname, Model model) {
         logger.info("Enabling containment Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationName, entityname, model);
-        String tql = "dummy enable containment TQL DDL";
+        String tql = "change " + entityname + "." + relationName + " :->";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void disableContainment(String relationName, String entityname, Model model) {
         logger.info("Disabling containment Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationName, entityname, model);
-        String tql = "dummy disable containment TQL DDL";
+        String tql = "change " + entityname + "." + relationName + " ->";
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void changeCardinalityInRelation(String relationname, String entityname, CardinalityDO cardinality, Model model) {
         logger.info("Change cardinality of Relationship [{}] in [{}] via TyphonQL on TyphonML model [{}]", relationname, entityname, model);
-        String tql = "TQL DDL dummy change relation cardinality";
+        String cardinalityValue = "";
+        switch (cardinality.getValue()) {
+            case CardinalityDO.ZERO_ONE_VALUE:
+                cardinalityValue = "[0..1]";
+                break;
+            case CardinalityDO.ONE_VALUE:
+                cardinalityValue = "[1..1]";
+                break;
+            case CardinalityDO.ZERO_MANY_VALUE:
+                cardinalityValue = "[0..*]";
+                break;
+            case CardinalityDO.ONE_MANY_VALUE:
+                cardinalityValue = "[1..*]";
+                break;
+        }
+        String tql = "change " + entityname + "." + relationname + " " + cardinalityValue;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
         logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
-        String tql = "TQL DDL ADD ATTRIBUTE " + attributeDO.getName() + " IN " + entityname;
+        String tql = createEntityAttribute(entityname, attributeDO.getName(), attributeDO.getDataTypeDO().getName());
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
-    public void renameRelation(String relationName, String newRelationName, Model model) {
+    public void renameRelation(String entityName, String relationName, String newRelationName, Model model) {
         logger.info("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model [{}]", relationName, newRelationName, model);
-        String tql = "TQL DDL RENAME RELATION " + relationName + " TO " + newRelationName;
+        String tql = "rename " + entityName + "." + relationName + " to " + newRelationName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model) {
         logger.info("Rename attribute [from '{}' to '{}'] in entity [{}]  via TyphonQL on TyphonML model [{}]", oldAttributeName, newAttributeName, entityName, model);
-        String tql = "TQL DDL RENAME ATTRIBUTE " + oldAttributeName + " TO " + newAttributeName + " IN " + entityName;
+        String tql = "rename " + entityName + "." + oldAttributeName + " to " + newAttributeName;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
     public void changeTypeAttribute(AttributeDO attribute, String entityName, Model model) {
         logger.info("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model [{}]", attribute.getName(), attribute.getDataTypeDO().getName(), entityName, model);
-        String tql = "TQL DDL UPDATE ATTRIBUTE " + attribute.getName() + " SET TYPE TO " + attribute.getDataTypeDO().getName() + " IN " + entityName;
+        String tql = "change " + entityName + "." + attribute.getName() + " : " + attribute.getDataTypeDO().getName();
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 
     @Override
-    public void deleteEntityStructure(String entityname, Model model) {
-        String tql = "TQLDDL DELETE ENTITY " + entityname + " on TyphonML [" + model + "]";
-        logger.info("Delete entity [{}] via TyphonQL DDL on TyphonML model [{}] ", entityname, model);
-        getTyphonQLConnection(model).executeTyphonQLDDL(tql);
-    }
-
-    @Override
-    public void removeAttributes(String entityName, List<String> attributes, Model model) {
+    public void removeAttribute(String entityName, String attribute, Model model) {
         //TODO Separate deletion of data and structure.
         // Delete data
-        getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityName, attributes, model));
+//        getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityName, attribute, model));
 
         //Delete Structure
-        String tql = "TQLDDL DELETE ATTRIBUTES " + entityName + ", " + attributes.stream().map("e."::concat).collect(Collectors.joining(",")) + " on TyphonML [" + model + "]";
+        String tql = "drop " + entityName + "." + attribute;
         logger.info("Delete attributes [{}] via TyphonQL DDL on TyphonML model [{}] ", entityName, model);
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
@@ -246,7 +241,22 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     public void createRelationshipType(RelationDO relation, Model model) {
         String tql;
         logger.info("Create relationship [{}] via TyphonQL DDL query on TyphonML model [{}] ", relation.getName(), model);
-        tql = "TQLDDL CREATE RELATIONSHIP " + relation;
+        String cardinalityValue = "";
+        switch (relation.getCardinality().getValue()) {
+            case CardinalityDO.ZERO_ONE_VALUE:
+                cardinalityValue = "[0..1]";
+                break;
+            case CardinalityDO.ONE_VALUE:
+                cardinalityValue = "[1..1]";
+                break;
+            case CardinalityDO.ZERO_MANY_VALUE:
+                cardinalityValue = "[0..*]";
+                break;
+            case CardinalityDO.ONE_MANY_VALUE:
+                cardinalityValue = "[1..*]";
+                break;
+        }
+        tql = "create " + relation.getSourceEntity().getName() + "." + relation.getName() + " -> " + relation.getTargetEntity().getName() + cardinalityValue;
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 

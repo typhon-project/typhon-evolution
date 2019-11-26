@@ -13,6 +13,7 @@ public interface TyphonQLInterface {
 
     /**
      * Create a new entity in the polystore using a TyphonQL query
+     *
      * @param entityName the name of the entity
      * @return the TyphonQL query
      */
@@ -20,8 +21,9 @@ public interface TyphonQLInterface {
 
     /**
      * Create a new attribute for the entity in the polystore using a TyphonQL query
-     * @param entityName the name of the entity
-     * @param attributeName the name of the attribute
+     *
+     * @param entityName        the name of the entity
+     * @param attributeName     the name of the attribute
      * @param attributeTypeName the type name of the attribute
      * @return the TyphonQL query
      */
@@ -29,17 +31,19 @@ public interface TyphonQLInterface {
 
     /**
      * Create a new relation for the entity in the polystore using a TyphonQL query
-     * @param entityName the name of the entity
-     * @param relationName the name of the relation
-     * @param containment the boolean value of containment of the relation
+     *
+     * @param entityName             the name of the entity
+     * @param relationName           the name of the relation
+     * @param containment            the boolean value of containment of the relation
      * @param relationTargetTypeName the name of the target type of the relation
-     * @param cardinality the cardinality of the relation
+     * @param cardinality            the cardinality of the relation
      * @return the TyphonQL query
      */
     String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality);
 
     /**
      * Select the entity data from the polystore using a TyphonQL query
+     *
      * @param entityName the name of the entity
      * @return the TyphonQL query
      */
@@ -47,7 +51,8 @@ public interface TyphonQLInterface {
 
     /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
-     * @param entityName the name of the entity
+     *
+     * @param entityName       the name of the entity
      * @param entityAttributes the set of entity attributes
      * @return the TyphonQL query
      */
@@ -55,20 +60,11 @@ public interface TyphonQLInterface {
 
     /**
      * Drop the entity in the polystore using a TyphonQL query
+     *
      * @param entityName the name of the entity
      * @return the TyphonQL query
      */
     String dropEntity(String entityName);
-
-    /**
-     * Creates a new Entity
-     *
-     * @param newEntity the Entity to create
-     * @return the QL query
-     */
-    String createEntityType(EntityDO newEntity, Model model);
-
-    String createEntityType(typhonml.Entity newEntity, Model model);
 
     void renameEntity(String oldEntityName, String newEntityName, Model model);
 
@@ -89,16 +85,14 @@ public interface TyphonQLInterface {
 
     void deleteAllEntityData(String entityid, Model model);
 
-    void deleteEntityStructure(String entityname, Model model);
-
     /**
      * Remove the attributes and their data of a given entity.
      *
      * @param entityName the name of the entity
-     * @param attributes the list of attributes to remove
+     * @param attribute the list of attributes to remove
      * @param model      the model containing the information about the entity and its attributes
      */
-    void removeAttributes(String entityName, List<String> attributes, Model model);
+    void removeAttribute(String entityName, String attribute, Model model);
 
     void deleteWorkingSetData(WorkingSet dataToDelete, Model model);
 
@@ -128,7 +122,7 @@ public interface TyphonQLInterface {
 
     void addAttribute(AttributeDO attributeDO, String entityname, Model model);
 
-    void renameRelation(String relationName, String newRelationName, Model model);
+    void renameRelation(String entityName, String relationName, String newRelationName, Model model);
 
     void renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 

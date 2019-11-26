@@ -28,7 +28,7 @@ public class AttributeRemoveHandler extends BaseHandler {
             String entityName = attributeDO.getEntity().getName();
             Model targetModel = typhonMLInterface.removeAttribute(attributeDO, entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
-            typhonQLInterface.removeAttributes(entityName, Collections.singletonList(attributeDO.getName()), targetModel);
+            typhonQLInterface.removeAttribute(entityName, attributeDO.getName(), targetModel);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ATTRIBUTE + ", " + ChangeOperatorParameter.ENTITY_NAME + "]");

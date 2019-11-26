@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import typhonml.Model;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -22,6 +23,10 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String FROM = "from ";
     private static final String SELECT = "select ";
     private static final String WHERE = "where ";
+    private static final String INSERT = "insert ";
+    private static final String DROP = "drop ";
+    private static final String OPENING_CURLY_BRACE = " { ";
+    private static final String CLOSING_CURLY_BRACE = " } ";
 
     private Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
 
@@ -57,6 +62,18 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     public String selectEntityData(String entityName) {
         logger.info("Select data for entity [{}] TyphonQL query", entityName);
         return FROM.concat(entityName).concat(BLANK).concat(entityName.toLowerCase()).concat(BLANK).concat(SELECT).concat(entityName.toLowerCase());
+    }
+
+    @Override
+    public String insertEntityData(String entityName, Set<String> entityAttributes) {
+        logger.info("Insert working set data for entity [{}] TyphonQL query", entityName);
+        return INSERT.concat(entityName).concat(OPENING_CURLY_BRACE).concat(String.join(":, ", entityAttributes).concat(":")).concat(CLOSING_CURLY_BRACE);
+    }
+
+    @Override
+    public String dropEntity(String entityName) {
+        logger.info("Drop entity [{}] TyphonQL query", entityName);
+        return DROP.concat(entityName);
     }
 
     private TyphonQLConnection getTyphonQLConnection(Model model) {

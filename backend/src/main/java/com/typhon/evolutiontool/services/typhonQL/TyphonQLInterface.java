@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
 import java.util.List;
+import java.util.Set;
 
 /*
     This interface specifies the operations that needs to be performed on the Typhon polystore in order to apply a Schema Modification Operator. Either modification of structure or of data.
@@ -43,6 +44,21 @@ public interface TyphonQLInterface {
      * @return the TyphonQL query
      */
     String selectEntityData(String entityName);
+
+    /**
+     * Insert the working set data into the entity in the polystore using a TyphonQL query
+     * @param entityName the name of the entity
+     * @param entityAttributes the set of entity attributes
+     * @return the TyphonQL query
+     */
+    String insertEntityData(String entityName, Set<String> entityAttributes);
+
+    /**
+     * Drop the entity in the polystore using a TyphonQL query
+     * @param entityName the name of the entity
+     * @return the TyphonQL query
+     */
+    String dropEntity(String entityName);
 
     /**
      * Creates a new Entity

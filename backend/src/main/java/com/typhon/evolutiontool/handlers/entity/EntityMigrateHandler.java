@@ -62,12 +62,11 @@ public class EntityMigrateHandler extends BaseHandler {
             queries.add(typhonQLInterface.selectEntityData(entityDO.getName()));
             //WorkingSet data = typhonQLInterface.readAllEntityData(entityDO.getName(), model);
             //Insert the source entity data into the target entity
+            queries.add(typhonQLInterface.insertEntityData(entityDO.getName(), entityDO.getAttributes().keySet()));
             //typhonQLInterface.writeWorkingSetData(data, targetModel);
-            //Delete the source entity data
+            //Delete the source entity
+            queries.add(typhonQLInterface.dropEntity(entityDO.getName()));
             //typhonQLInterface.deleteWorkingSetData(data, model);
-            //Drop the source entity relationships
-
-            //Drop the source entity
             //typhonQLInterface.deleteEntityStructure(entityDO.getName(), model);
             //Log the QL queries
             logger.info("\nMIGRATE ENTITY QL queries:\n");

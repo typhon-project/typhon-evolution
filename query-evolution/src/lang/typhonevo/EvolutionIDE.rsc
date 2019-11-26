@@ -10,6 +10,7 @@ import util::Prompt;
 
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EvoCompiler;
+import lang::typhonml::XMIReader;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";
@@ -38,7 +39,10 @@ public void testString(EvoSyntax x, loc selection) {
 }
 
 public void getIDEid(Tree t, loc selection){
-	text(getIDEID());
+	str xmi = readFile(|project://query-evolution/src/complexModelWithChangeOperators.xmi|);
+  	Model m = xmiString2Model(xmi);
+  	Schema s = model2schema(m);
+	text(s);
 }
 
 public set[Contribution] languageContrib = {

@@ -15,3 +15,37 @@ from Comment e select e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@5e21e98f]
+rename CreditCard to PaymentCard
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create CreditCard.user -> User[1..1]
+drop CreditCard.user
+change User.paymentsDetails :->
+change User.paymentsDetails ->
+change User.paymentsDetails :->
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+rename User.paymentsDetails to creditCards
+change User.paymentsDetails [1..*]
+create CreditCard.creationDate : Date
+drop CreditCard.creationDate
+rename CreditCard.expiryDate to expirationDate
+rename CreditCard.expiryDate to expirationDate
+change CreditCard.expiryDate : Date
+drop CreditCard.newOppositeRelation
+drop CreditCard.user
+drop CreditCard.newOppositeRelation
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+change User.paymentsDetails :->
+rename User.paymentsDetails to creditCards
+drop CreditCard.user
+create CreditCard.user -> User[1..1]
+change User.paymentsDetails [1..*]
+change User.paymentsDetails :->
+change User.paymentsDetails ->
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+rename CreditCard to PaymentCard
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate

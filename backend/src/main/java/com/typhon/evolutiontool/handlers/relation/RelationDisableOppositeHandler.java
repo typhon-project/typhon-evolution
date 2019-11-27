@@ -28,7 +28,7 @@ public class RelationDisableOppositeHandler extends BaseHandler {
 //        	Model targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity() != null ? oppositeRelation.getSourceEntity().getName() : null, model);
             Model targetModel = typhonMLInterface.disableOpposite(relation, model);
 
-//            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
+            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
             //TODO: complete the QL necessary operations
 
             return targetModel;

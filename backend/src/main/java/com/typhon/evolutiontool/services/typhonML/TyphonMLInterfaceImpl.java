@@ -190,7 +190,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //ENTITY
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
-        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, (DataType) type, newModel)));
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type.getName(), newModel)));
         newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         newModel.getDataTypes().add(entity);
         return newModel;
@@ -575,11 +575,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return relation;
     }
 
-    private Attribute createAttribute(String name, DataType type, Model targetModel) {
+    private Attribute createAttribute(String name, String dataTypeName, Model targetModel) {
         //TODO Handling of dataTypes
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
-        attribute.setType(getDataTypeFromName(type.getName(), targetModel));
+        attribute.setType(getDataTypeFromName(dataTypeName, targetModel));
         return attribute;
     }
 }

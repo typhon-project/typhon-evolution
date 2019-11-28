@@ -15,9 +15,10 @@ public interface TyphonQLInterface {
      * Create a new entity in the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String createEntity(String entityName, String databaseName);
+    String createEntity(String entityName, String databaseName, Model model);
 
     /**
      * Create a new attribute for the entity in the polystore using a TyphonQL query
@@ -25,9 +26,10 @@ public interface TyphonQLInterface {
      * @param entityName        the name of the entity
      * @param attributeName     the name of the attribute
      * @param attributeTypeName the type name of the attribute
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String createEntityAttribute(String entityName, String attributeName, String attributeTypeName);
+    String createEntityAttribute(String entityName, String attributeName, String attributeTypeName, Model model);
 
     /**
      * Create a new relation for the entity in the polystore using a TyphonQL query
@@ -37,34 +39,38 @@ public interface TyphonQLInterface {
      * @param containment            the boolean value of containment of the relation
      * @param relationTargetTypeName the name of the target type of the relation
      * @param cardinality            the cardinality of the relation
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality);
+    String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality, Model model);
 
     /**
      * Select the entity data from the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String selectEntityData(String entityName);
+    String selectEntityData(String entityName, Model model);
 
     /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
      *
      * @param entityName       the name of the entity
      * @param entityAttributes the set of entity attributes
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String insertEntityData(String entityName, Set<String> entityAttributes);
+    String insertEntityData(String entityName, Set<String> entityAttributes, Model model);
 
     /**
      * Drop the entity in the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
+     * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String dropEntity(String entityName);
+    String dropEntity(String entityName, Model model);
 
     void renameEntity(String oldEntityName, String newEntityName, Model model);
 

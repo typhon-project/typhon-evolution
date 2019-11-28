@@ -34,19 +34,23 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public String createEntity(String entityName, String databaseName) {
+    public String createEntity(String entityName, String databaseName, Model model) {
         logger.info("Create entity [{}] TyphonQL query", entityName);
-        return CREATE.concat(entityName).concat(AS).concat(databaseName);
+        String tql = CREATE.concat(entityName).concat(AS).concat(databaseName);
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     @Override
-    public String createEntityAttribute(String entityName, String attributeName, String attributeTypeName) {
+    public String createEntityAttribute(String entityName, String attributeName, String attributeTypeName, Model model) {
         logger.info("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, attributeTypeName, entityName);
-        return CREATE.concat(entityName).concat(DOT).concat(attributeName).concat(TYPE).concat(attributeTypeName);
+        String tql = CREATE.concat(entityName).concat(DOT).concat(attributeName).concat(TYPE).concat(attributeTypeName);
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     @Override
-    public String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality) {
+    public String createEntityRelation(String entityName, String relationName, boolean containment, String relationTargetTypeName, CardinalityDO cardinality, Model model) {
         logger.info("Create relation [{}" + (containment ? CONTAINMENT : RELATION) + "{} [{}]] for entity [{}] TyphonQL query", relationName, relationTargetTypeName, cardinality.getName(), entityName);
         String cardinalityValue = "";
         switch (cardinality.getValue()) {
@@ -63,25 +67,33 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
                 cardinalityValue = "[1..*]";
                 break;
         }
-        return CREATE.concat(entityName).concat(DOT).concat(relationName).concat(containment ? CONTAINMENT : RELATION).concat(relationTargetTypeName).concat(cardinalityValue);
+        String tql = CREATE.concat(entityName).concat(DOT).concat(relationName).concat(containment ? CONTAINMENT : RELATION).concat(relationTargetTypeName).concat(cardinalityValue);
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     @Override
-    public String selectEntityData(String entityName) {
+    public String selectEntityData(String entityName, Model model) {
         logger.info("Select data for entity [{}] TyphonQL query", entityName);
-        return FROM.concat(entityName).concat(BLANK).concat(entityName.toLowerCase()).concat(BLANK).concat(SELECT).concat(entityName.toLowerCase());
+        String tql = FROM.concat(entityName).concat(BLANK).concat(entityName.toLowerCase()).concat(BLANK).concat(SELECT).concat(entityName.toLowerCase());
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     @Override
-    public String insertEntityData(String entityName, Set<String> entityAttributes) {
+    public String insertEntityData(String entityName, Set<String> entityAttributes, Model model) {
         logger.info("Insert working set data for entity [{}] TyphonQL query", entityName);
-        return INSERT.concat(entityName).concat(OPENING_CURLY_BRACE).concat(String.join(":, ", entityAttributes).concat(":")).concat(CLOSING_CURLY_BRACE);
+        String tql = INSERT.concat(entityName).concat(OPENING_CURLY_BRACE).concat(String.join(":, ", entityAttributes).concat(":")).concat(CLOSING_CURLY_BRACE);
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     @Override
-    public String dropEntity(String entityName) {
+    public String dropEntity(String entityName, Model model) {
         logger.info("Drop entity [{}] TyphonQL query", entityName);
-        return DROP.concat(entityName);
+        String tql = DROP.concat(entityName);
+        getTyphonQLConnection(model).query(tql);
+        return tql;
     }
 
     private TyphonQLConnection getTyphonQLConnection(Model model) {
@@ -195,7 +207,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void addAttribute(AttributeDO attributeDO, String entityname, Model model) {
         logger.info("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model [{}]", attributeDO.getName(), entityname, model);
-        String tql = createEntityAttribute(entityname, attributeDO.getName(), attributeDO.getDataTypeDO().getName());
+        String tql = createEntityAttribute(entityname, attributeDO.getName(), attributeDO.getDataTypeDO().getName(), model);
         getTyphonQLConnection(model).executeTyphonQLDDL(tql);
     }
 

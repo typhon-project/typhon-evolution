@@ -49,3 +49,29 @@ drop CreditCard.creationDate
 create CreditCard.creationDate : Date
 change CreditCard.expiryDate : Date
 rename CreditCard.expiryDate to expirationDate
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate
+create Comment as DocumentDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment { name:, id: } 
+drop Comment
+create Comment as 
+create Comment.name : String
+create Comment.id : String
+create Comment.user -> User[1..1]
+create Comment as DocumentDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment { name:, id: } 
+drop Comment
+from Comment e select e
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard

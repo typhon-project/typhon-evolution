@@ -14,7 +14,7 @@
     </parent>
 
     <modules>
-        <module>backend</module>
+        <!--<module>backend</module>-->
         <module>rest-api</module>
         <module>query-evolution</module>
     </modules>
@@ -48,6 +48,7 @@
         <repository>
             <id>typhonQL</id>
             <layout>p2</layout>
+            <!--<url>https://typhon-cd.swat.engineering/typhon-ql/repository/</url>-->
             <url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
         </repository>
         <repository>
@@ -55,6 +56,11 @@
             <layout>p2</layout>
             <url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
         </repository>
+        <!--<repository>
+            <id>typhon-composite</id>
+            <layout>p2</layout>
+            <url>https://typhon.swat.engineering/composite-proxy/</url>
+        </repository>-->
     </repositories>
 
 </project>

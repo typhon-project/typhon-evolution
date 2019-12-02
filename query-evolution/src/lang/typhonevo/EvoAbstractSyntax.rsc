@@ -15,17 +15,9 @@ start syntax EvoSyntax
 
 syntax EvoQuery
 	= annotatedQuery: Annotation an QlQuery q
-	| result: Status stat QlQuery q
-	| result2: Status stat Annotation annot QlQuery q
 	| query : QlQuery q
 	;
 	
-lexical Status
-	= "unchanged"
-	| "changed"
-	| "warning"
-	| "error"
-	;
 	
 syntax QlQuery
 	= Query query

@@ -164,10 +164,19 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Id re
 		q = entity_rename(q, entity1, new_name);
 		
 		// Clear where clause
+		
 
 		q = visit(q){
-			case (Where) `where <VId v>.<Id c> == <Expr a>, <{Expr ","}+ end>`
-				=> (Where) `where <{Expr ","}+ end>`
+			case (Where) `where <{Expr ","}+ front>, <VId v>.<Id c> == <Expr a>, <{Expr ","}* end>`
+				=> (Where) `where <{Expr ","}+ front>, <{Expr ","}* end>`
+			when c := relation
+			
+			case (Where) `where <{Expr ","}* before>, <VId v>.<Id c> == <Expr a>, <{Expr ","}+ after>`
+				=> (Where) `where <{Expr ","}* before>, <{Expr ","}+ after>`
+			when c := relation
+			
+			case (Where) `where <VId v>.<Id c> == <Expr a>`
+				=> (Where) `where true == true`
 			when c := relation
 		}
 	

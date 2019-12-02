@@ -1,0 +1,13 @@
+changeOperators [ 
+	merge entities Product Stock as Product_info joined by stock
+]
+
+// import "/path/to/source.xmi"
+
+from Product p, Stock s select s, p where p.customer == "jerome", p.stock == s,
+
+from Product p select p,
+
+from Product p select p.review
+
+ 

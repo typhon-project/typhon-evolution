@@ -1,18 +1,27 @@
 changeOperators [ 
-	rename entity Product as Item 
-	//rename attribute prod as product_id
-	merge entities Item Stock as Product_info
+	remove entity Review
+	rename entity Product as Item
+	merge entities Item Stock as Product_info joined by stock
+	split entity User { left PersonalInfo right Customer}
 ]
 
-// Insert queries here
+//import "/path/to/source.xmi"
 
+from Product_info p select p,
 
-from Product_info p select p where p.id == "1230",
+from PersonalInfo u1, Customer u2, Order o select o where  u1.orders == o, u1.id == "324", u1.to_Customer == u2  ,
 
-from Product_info p, Stock p select p, p where p.id == "30",
+from PersonalInfo u1, Customer u2 select u1.orders where  u1.id == "324", u1.to_Customer == u2  ,
 
-from Person p select p.name,
+from PersonalInfo u1, Customer u2 select u1.orders.paidWith   ,
 
-from Product_info s, Person p select p, s where s.customer == p,
+from Product_info p select p.review,
 
-from Product_info p, Stock p select p, p.quantity where p.id == r.reviewed_product, p.prod == p.id  
+#@ Cannot evolve query :  Entity Review removed. @# from Review r select r where r.product.id == "product_id",
+
+#@ Cannot evolve query :  Entity Review removed. @# insert
+    @pp User { name: "Pablo", reviews: badradio },
+    @radio Product_info {name: "Radio", description: "Wireless", reviews: badradio },
+    @badradio Review { contents: "Bad radio",product: radio,user: pp},
+    
+delete Product_info p where p.name == "Half Life 3"

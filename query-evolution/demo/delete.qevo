@@ -1,0 +1,24 @@
+changeOperators [ 
+	remove entity Review
+]
+
+//import "/path/to/source.xmi"
+
+from Product p select p,
+
+from User u, Order o select o where u.orders == o, u.id == "324",
+
+from User u select u.orders where u.id == "324",
+
+from User u select u.orders.paidWith,
+
+from Product p select p.review,
+
+from Review r select r where r.product.id == "product_id",
+
+insert
+    @pp User { name: "Pablo", reviews: badradio },
+    @radio Product {name: "Radio", description: "Wireless", reviews: badradio },
+    @badradio Review { contents: "Bad radio",product: radio,user: pp},
+    
+delete Product p where p.name == "Half Life 3"

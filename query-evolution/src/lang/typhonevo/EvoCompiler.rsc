@@ -6,10 +6,15 @@ import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EntityEvolution;
 import lang::typhonevo::AttributeEvolution;
+import lang::typhonml::XMIReader;
+import lang::typhonml::Util;
 
 
-EvoSyntax evolve(EvoSyntax x){
+EvoSyntax evolve(EvoSyntax x, loc location){
 	operators = extract_op(x);
+	
+	str xmi = readFile(location + "<extract_path(x)>");
+	Schema s = loadSchemaFromXMI(xmi);
 	
 	for ( ChangeOperator op <- operators){	
 		x = visit(x){
@@ -45,5 +50,6 @@ EvoQuery transform(EvoQuery evoq, ChangeOperator op){
 }
 
 list[ChangeOperator] extract_op(EvoSyntax x) = [ c | /ChangeOperator c := x];
+Path extract_path(EvoSyntax x) = [c | /Path c := x][0];
 
 

@@ -1,3 +1,5 @@
+import /src/complexModelWithChangeOperators.xmi ;
+
 changeOperators [ 
 	merge entities Product Stock as Product_info joined by stock
 ]

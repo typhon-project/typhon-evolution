@@ -8,17 +8,20 @@ extend lang::std::ASCII;
 // ML syntax : https://github.com/typhon-project/typhonml/blob/master/it.univaq.disim.typhonml.parent/bundles/it.univaq.disim.typhonml.xtext/src/it/univaq/disim/typhon/TyphonML.xtext
 
 lexical Annotation = "#@" (![@] | "@" !>> "#")* "@#";
+lexical Path = (![\t \n \a0B \a0C \r \ ;])*;
 
 start syntax EvoSyntax 
-	= evosyntax: "changeOperators" "[" ChangeOperator* "]"operators {EvoQuery ","}* queries;
+	= evosyntax: Import import "changeOperators" "[" ChangeOperator* "]"operators {EvoQuery ","}* queries;
 	
 
 syntax EvoQuery
 	= annotatedQuery: Annotation an QlQuery q
 	| query : QlQuery q
 	;
-	
-	
+
+syntax Import = "import" Path path ";";
+
+
 syntax QlQuery
 	= Query query
 	| Statement query;

@@ -11,6 +11,7 @@ import util::Prompt;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::EvoCompiler;
 import lang::typhonml::XMIReader;
+import lang::typhonml::Util;
 
 private str languageName = "TyphonQL";
 private str extQL = "qevo";
@@ -27,7 +28,8 @@ private loc project(loc file) {
 
 
 public void evalQuery(EvoSyntax x, loc selection) {
-	evolved = evolve(x);
+	loc l = project(selection);
+	evolved = evolve(x, l);
 	writeFile(project(x@\loc) + "/src/result.qevo", "<evolved>");
 }
 
@@ -40,8 +42,7 @@ public void testString(EvoSyntax x, loc selection) {
 
 public void getIDEid(Tree t, loc selection){
 	str xmi = readFile(|project://query-evolution/src/complexModelWithChangeOperators.xmi|);
-  	Model m = xmiString2Model(xmi);
-  	Schema s = model2schema(m);
+  	Schema s = loadSchemaFromXMI(xmi);
 	text(s);
 }
 

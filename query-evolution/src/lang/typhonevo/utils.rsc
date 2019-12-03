@@ -17,4 +17,27 @@ EvoQuery removeBinding(EvoQuery q, Binding del_binding)
 			when b := del_binding
 		};
 
+
+EvoQuery addBinding(EvoQuery q, Binding b)
+	= visit(q){
+		case (Query) `from <{Binding ","}+ bindings> select <{Result ","}+ s1> <Where? w1> <GroupBy? g1> <OrderBy? o1>`
+			=> (Query) `from <{Binding ","}+ bindings>, <Binding b> select <{Result ","}+ s1> <Where? w1> <GroupBy? g1> <OrderBy? o1>`
+	};
+	
+
+
+EvoQuery removeExprFromWhere(EvoQuery q, Id relation)
+	= visit(q){
+		case (Where) `where <{Expr ","}+ front>, <VId v>.<Id c> == <Expr a>, <{Expr ","}* end>`
+			=> (Where) `where <{Expr ","}+ front>, <{Expr ","}* end>`
+		when c := relation
+		
+		case (Where) `where <{Expr ","}* before>, <VId v>.<Id c> == <Expr a>, <{Expr ","}+ after>`
+			=> (Where) `where <{Expr ","}* before>, <{Expr ","}+ after>`
+		when c := relation
+		
+		case (Where) `where <VId v>.<Id c> == <Expr a>`
+			=> (Where) `where true == true`
+		when c := relation
+	};
 	

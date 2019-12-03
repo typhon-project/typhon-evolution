@@ -4,52 +4,39 @@ import IO;
 import ParseTree;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
-import lang::typhonevo::EntityEvolution;
-import lang::typhonevo::AttributeEvolution;
+import lang::typhonevo::handlers::EntityEvolution;
+import lang::typhonevo::handlers::AttributeEvolution;
 import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
+import lang::typhonml::TyphonML;
 
 
 EvoSyntax evolve(EvoSyntax x, loc location){
 	operators = extract_op(x);
 	
 	str xmi = readFile(location + "<extract_path(x)>");
-	Schema s = loadSchemaFromXMI(xmi);
-	
-	for ( ChangeOperator op <- operators){	
+	Model m = xmiString2Model(xmi);
+	Schema s = model2schema(m);
+
+	for ( ChangeOp op <- operators){	
 		x = visit(x){
-			case EvoQuery q => transform(q, op)
+			case EvoQuery q => transform(q, op.op)
 		};
 	};
 	
 	return x;
 }
 
-EvoQuery transform(q:(EvoQuery)`<Annotation _>  <Query _>`, _) = q;
+EvoQuery transform(q:(EvoQuery)`<Status _>  <QlQuery _>`, _) = q;
+EvoQuery transform(q:(EvoQuery)`<Status _> <Annotation _>  <QlQuery _>`, _) = q;
+
+EvoQuery transform(EvoQuery evoq, EntityOperation op) = evolve_entity(evoq, op);
+EvoQuery transform(EvoQuery evoq, AttributesOperations op) = evolve_attribute(evoq, op);
 
 
-EvoQuery transform(EvoQuery evoq, ChangeOperator op){
-	// Ignoring the query with annotation
-	
-	if ((EvoQuery)`<Annotation annot>  <Query query>` := evoq) {
-		return evoq;
-	}
-	
-	// TODO remove this (pattern match in signature
-	visit(op){
-		case EntityOperation operation: {
-			evoq = evolve_entity(evoq, operation);
-		}
-		case AttributesOperations operation:{
-			evoq = evolve_attribute(evoq, operation);
-		}
-		
-	};
-	
-	return evoq;
-}
+list[ChangeOp] extract_op(EvoSyntax x) = [ c | /ChangeOp c := x];
+list[EvoQuery] extract_queries(EvoSyntax x) = [ c | /EvoQuery c := x];
 
-list[ChangeOperator] extract_op(EvoSyntax x) = [ c | /ChangeOperator c := x];
 Path extract_path(EvoSyntax x) = [c | /Path c := x][0];
 
 

@@ -3,7 +3,6 @@ module lang::typhonevo::EvoAbstractSyntax
 extend lang::typhonql::Query;
 extend lang::typhonql::DML;
 extend lang::std::Id;
-extend lang::std::ASCII;
 
 // ML syntax : https://github.com/typhon-project/typhonml/blob/master/it.univaq.disim.typhonml.parent/bundles/it.univaq.disim.typhonml.xtext/src/it/univaq/disim/typhon/TyphonML.xtext
 
@@ -11,22 +10,29 @@ lexical Annotation = "#@" (![@] | "@" !>> "#")* "@#";
 lexical Path = (![\t \n \a0B \a0C \r \ ;])*;
 
 start syntax EvoSyntax 
-	= evosyntax: Import import "changeOperators" "[" ChangeOperator* "]"operators {EvoQuery ","}* queries;
+	= evosyntax: Import import "changeOperators" "[" ChangeOp* "]"operators {EvoQuery ","}* queries;
 	
 
 syntax EvoQuery
 	= annotatedQuery: Annotation an QlQuery q
+	| flagged: Status status Annotation an QlQuery q
 	| query : QlQuery q
 	;
 
 syntax Import = "import" Path path ";";
+
+syntax Status
+	= "MOD"
+	| "WARN"
+	| "ERR"
+	;
 
 
 syntax QlQuery
 	= Query query
 	| Statement query;
 
-syntax ChangeOperator
+syntax ChangeOp
 	= entityOperator: EntityOperation op
 	| attributeOperator : AttributesOperations op
 	| relationOperator: RelationOperations op

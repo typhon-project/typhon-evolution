@@ -1,4 +1,4 @@
-module lang::typhonevo::AttributeEvolution
+module lang::typhonevo::handlers::AttributeEvolution
 
 import IO;
 import ParseTree;

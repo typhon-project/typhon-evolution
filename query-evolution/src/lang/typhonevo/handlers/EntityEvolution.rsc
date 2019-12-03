@@ -1,4 +1,4 @@
-module lang::typhonevo::EntityEvolution
+module lang::typhonevo::handlers::EntityEvolution
 
 import IO;
 import ParseTree;
@@ -6,6 +6,7 @@ import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
 import lang::typhonevo::utils;
+import lang::typhonevo::utils::EvolveStatus;
 
 EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 	switch(op){
@@ -52,7 +53,8 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 	}
 	
 	if(matched){
-		return parse(#EvoQuery, "#@ Cannot evolve query :  Entity <name> removed. @# <query>");
+		q = annotate("Entity <name> removed. That query is broken", q);
+		q = setStatusError(q);
 	}
 	return q;
 }

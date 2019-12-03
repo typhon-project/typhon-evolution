@@ -27,8 +27,8 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	return x;
 }
 
-EvoQuery transform(q:(EvoQuery)`<Status _>  <QlQuery _>`, _) = q;
-EvoQuery transform(q:(EvoQuery)`<Status _> <Annotation _>  <QlQuery _>`, _) = q;
+EvoQuery transform(q:(EvoQuery)`ERR  <QlQuery _>`, _) = q;
+EvoQuery transform(q:(EvoQuery)`ERR <Annotation+ _>  <QlQuery _>`, _) = q;
 
 EvoQuery transform(EvoQuery evoq, EntityOperation op) = evolve_entity(evoq, op);
 EvoQuery transform(EvoQuery evoq, AttributesOperations op) = evolve_attribute(evoq, op);

@@ -14,8 +14,8 @@ start syntax EvoSyntax
 	
 
 syntax EvoQuery
-	= annotatedQuery: Annotation an QlQuery q
-	| flagged: Status status Annotation an QlQuery q
+	= annotatedQuery: Status s QlQuery q
+	| flagged: Status s  Annotation+ annots  QlQuery q
 	| query : QlQuery q
 	;
 

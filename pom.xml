@@ -14,7 +14,7 @@
     </parent>
 
     <modules>
-        <!--<module>backend</module>-->
+<!--        <module>backend</module>-->
         <module>rest-api</module>
         <module>query-evolution</module>
     </modules>
@@ -23,44 +23,5 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>eclipse-release</id>
-            <url>http://download.eclipse.org/releases/2019-09/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>eclipse-epsilon</id>
-            <url>http://download.eclipse.org/epsilon/updates/</url>
-            <layout>p2</layout>
-        </repository>
-        <repository>
-            <id>usethesource-rascalmpl-unstable</id>
-            <layout>p2</layout>
-            <url>https://update.rascal-mpl.org/unstable/</url>
-        </repository>
-        <repository>
-            <id>rascalmpl-libs</id>
-            <layout>p2</layout>
-            <url>https://update.rascal-mpl.org/libs/</url>
-        </repository>
-        <repository>
-            <id>typhonQL</id>
-            <layout>p2</layout>
-            <!--<url>https://typhon-cd.swat.engineering/typhon-ql/repository/</url>-->
-            <url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
-        </repository>
-        <repository>
-            <id>ML</id>
-            <layout>p2</layout>
-            <url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
-        </repository>
-        <!--<repository>
-            <id>typhon-composite</id>
-            <layout>p2</layout>
-            <url>https://typhon.swat.engineering/composite-proxy/</url>
-        </repository>-->
-    </repositories>
 
 </project>

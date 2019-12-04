@@ -39,7 +39,7 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
 
             //TyphonML
             Model targetModel = typhonMLInterface.createEntityType(model, secondEntityDO);
-            RelationDO relationDO = new RelationDOImpl("to_" + secondEntityDO.getName(), secondEntityDO.getName(), firstEntityDO, secondEntityDO, null, false, CardinalityDO.ONE);
+            RelationDO relationDO = new RelationDOImpl("to_" + firstEntityDO.getName(), firstEntityDO.getName(), secondEntityDO, firstEntityDO, null, false, CardinalityDO.ONE);
             targetModel = typhonMLInterface.createRelationship(relationDO, targetModel);
             Database sourceDatabase = typhonMLInterface.getEntityDatabase(firstEntityDO.getName(), targetModel);
             DatabaseType sourceDatabaseType = getDatabaseType(sourceDatabase);

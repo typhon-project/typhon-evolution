@@ -14,15 +14,5 @@
     <attributes name="lastName" type="//@dataTypes.1"/>
     <attributes name="creationDate" type="//@dataTypes.0"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:SplitEntity" entityToBeSplit="//@dataTypes.2">
-    <firstNewEntity name="firstNewEntity">
-      <attributes name="id" type="//@dataTypes.1"/>
-      <attributes name="creationDate" type="//@dataTypes.0"/>
-    </firstNewEntity>
-    <secondNewEntity name="secondNewEntity">
-      <attributes name="id" type="//@dataTypes.1"/>
-      <attributes name="firstName" type="//@dataTypes.1"/>
-      <attributes name="lastName" type="//@dataTypes.1"/>
-    </secondNewEntity>
-  </changeOperators>
+  <changeOperators xsi:type="typhonml:SplitEntityHorizontal" entity1="//@dataTypes.2" entity2name="SplittedEntity" attribute="//@dataTypes.2/@attributes.0" expression="1"/>
 </typhonml:Model>

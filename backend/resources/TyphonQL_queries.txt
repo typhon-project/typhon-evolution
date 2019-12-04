@@ -75,3 +75,57 @@ from Comment e select e
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 drop Comment
 rename CreditCard to PaymentCard
+create splittedEntity at RelationalDatabase
+create splittedEntity.firstName : String
+create splittedEntity.lastName : String
+create splittedEntity.id : String
+create splittedEntity.creationDate : Date
+create User.to_splittedEntity -> splittedEntity[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={splittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create splittedEntity at RelationalDatabase
+create splittedEntity.firstName : String
+create splittedEntity.lastName : String
+create splittedEntity.id : String
+create splittedEntity.creationDate : Date
+create splittedEntity.to_User -> User[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={splittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 

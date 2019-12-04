@@ -40,12 +40,15 @@ EvoQuery setStatusChanged(EvoQuery q, str txt){
 EvoQuery set_status(Status s, (EvoQuery)`<QlQuery q>`)
 	= (EvoQuery) `<Status s> <QlQuery q>`;
 
-EvoQuery set_status(Status s, (EvoQuery)`<Status _>  <QlQuery q>`)
-	= (EvoQuery) `<Status s> <QlQuery q>`;
+EvoQuery set_status(Status s, (EvoQuery)`<Status old>  <QlQuery q>`){
+	Status final = status_priority(s, old);
+	return (EvoQuery) `<Status final> <QlQuery q>`;
+}
 
-EvoQuery set_status(Status s, (EvoQuery)`<Status _> <Annotation+ a> <QlQuery q>`)
-	= (EvoQuery) `<Status s> <Annotation+ a> <QlQuery q>`;
-	
+EvoQuery set_status(Status s, (EvoQuery)`<Status old> <Annotation+ a> <QlQuery q>`){
+	Status final = status_priority(s, old);
+	return (EvoQuery) `<Status final> <Annotation+ a> <QlQuery q>`;
+}
 
 EvoQuery annotate(str text, EvoQuery q){
 	Annotation a = parse(#Annotation, "#@ <text> @#");
@@ -59,3 +62,7 @@ EvoQuery set_annotation(Annotation a, (EvoQuery)`<Status s> <Annotation+ old> <Q
 	= (EvoQuery) `<Status s> <Annotation+ old> <Annotation a> <QlQuery q>`;
 
 
+Status status_priority((Status) `MOD`, s:(Status) `WARN`) = s;
+Status status_priority((Status) `MOD`, s:(Status) `ERR`) = s;
+Status status_priority((Status) `WARN`, s:(Status) `ERR`) = s;
+default Status status_priority(Status new, _) = new;

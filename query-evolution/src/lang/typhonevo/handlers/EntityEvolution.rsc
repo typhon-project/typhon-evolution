@@ -5,7 +5,7 @@ import ParseTree;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
-import lang::typhonevo::utils;
+import lang::typhonevo::utils::QueryManipulation;
 import lang::typhonevo::utils::EvolveStatus;
 
 EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
@@ -32,9 +32,14 @@ default EvoQuery evolve(EvoQuery q, EntityOperation op) = q;
 
 EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	
-	return visit(q){
+	EvoQuery e = visit(q){
 		case old_name => new_name
 	};
+	
+	if (e := q)
+		return q;
+	
+	return setStatusChanged(e);
 }
 
 
@@ -127,6 +132,7 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 			case (Where) `where  <{Expr ","}+ clause>`
 				=> (Where) `where  <{Expr ","}+ clause>, <Expr join_expr>`
 		}
+		q = setStatusWarn(q, "Entity <old_name> split into <entity1>, <entity2>");
 	}
 	
 	return q;
@@ -164,14 +170,16 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Id re
 		}
 		
 		q = entity_rename(q, entity1, new_name);
-		
 		q = removeExprFromWhere(q, relation);
+		q = setStatusChanged(q);
 	
 		return q;
 	}
 	else{
 		q = entity_rename(q, entity1, new_name);
 		q = entity_rename(q, entity2, new_name);
+		
+		q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
 	}
 		
 	return q;

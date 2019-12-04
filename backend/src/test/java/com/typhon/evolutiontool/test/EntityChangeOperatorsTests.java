@@ -67,6 +67,28 @@ public class EntityChangeOperatorsTests extends InitialTest {
     }
 
     @Test
+    public void fillSplitHSourceXMI() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/splitHorizontalEntityChangeOperator.xmi");
+        SplitEntityHorizontal splitEntityHorizontal = TyphonmlFactory.eINSTANCE.createSplitEntityHorizontal();
+        Entity firstEntity = TyphonmlFactory.eINSTANCE.createEntity();
+        firstEntity.setName("firstNewEntity");
+        Attribute attribute1 = TyphonmlFactory.eINSTANCE.createAttribute();
+        attribute1.setName("id");
+        attribute1.setType(sourceModel.getDataTypes().get(1));
+        firstEntity.getAttributes().add(attribute1);
+        Attribute attribute2 = TyphonmlFactory.eINSTANCE.createAttribute();
+        attribute2.setName("creationDate");
+        attribute2.setType(sourceModel.getDataTypes().get(0));
+        firstEntity.getAttributes().add(attribute2);
+        splitEntityHorizontal.setEntity1(firstEntity);
+        splitEntityHorizontal.setAttribute(attribute1);
+        splitEntityHorizontal.setExpression("1");
+        splitEntityHorizontal.setEntity2name("splittedEntity");
+        sourceModel.getChangeOperators().add(splitEntityHorizontal);
+        TyphonMLUtils.saveModel(sourceModel, "src/test/resources/splitHorizontalEntityChangeOperator.xmi");
+    }
+
+    @Test
     public void testSplitHorizontalEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/splitHorizontalEntityChangeOperator.xmi");
         SplitEntity splitHorizontalEntity = (SplitEntity) sourceModel.getChangeOperators().get(0);

@@ -7,8 +7,10 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
 import lang::typhonevo::utils::QueryManipulation;
 import lang::typhonevo::utils::EvolveStatus;
+import lang::typhonevo::utils::SchemaUtils;
+import lang::typhonml::Util;
 
-EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
+EvoQuery evolve_entity(EvoQuery q, EntityOperation op, Schema s){
 	switch(op){
 		case (EntityOperation) `rename entity  <EId old_id> as <EId new_id>`:{
 		 	return entity_rename(q, old_id, new_id);
@@ -19,8 +21,8 @@ EvoQuery evolve_entity(EvoQuery q, EntityOperation op){
 		case (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`: {
 			return entity_split(q, name, entity1, entity2);
 		}
-		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name> joined by <Id relation>`:{
-			return entity_merge(q, new_name, entity1, entity2, relation);
+		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`:{
+			return entity_merge(q, new_name, entity1, entity2, s);
 		}
 		
 	};
@@ -138,7 +140,7 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 	return q;
 }
 
-EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Id relation){
+EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schema s){
 
 	map[EId, VId] binding = ();
 	
@@ -170,8 +172,15 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Id re
 		}
 		
 		q = entity_rename(q, entity1, new_name);
-		q = removeExprFromWhere(q, relation);
-		q = setStatusChanged(q);
+		
+		for(Rel r <- get_relations(s, "<entity1>", "<entity2>")){
+			Id from = parse(#Id, r.fromRole);
+			Id to  = parse(#Id, r.toRole);
+			
+			q = removeExprFromWhere(q, from);
+			q = removeExprFromWhere(q, to);
+		}
+		q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
 	
 		return q;
 	}

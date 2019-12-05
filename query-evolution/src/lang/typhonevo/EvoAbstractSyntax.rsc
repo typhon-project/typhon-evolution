@@ -57,7 +57,7 @@ syntax EntityOperation
 	| remove: "remove" "entity" EId name // Done
 	| rename: "rename" "entity" EId oldName "as" EId newName // Done
 	| splitEntity: "split" "entity" EId name "{" "left" EId entity1 "right" EId entity2 "}" //TODO (waiting for new syntax)
- 	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name "joined" "by" Id rel // In progress
+ 	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name 
  	| migrate: "migrate" "entity" EId entity "to" EId db // Nothing
 	;
 	
@@ -71,7 +71,7 @@ syntax AttributesOperations
 	
 syntax RelationOperations
 	= add: NameSpace? 'add' 'relation' Id relation 'to' EId entity ':'? '-\>' EId "."? Id? '[' Cardinality ']' //NOTHING
-	| rename: "rename" "relation" Id old_name "as" EId new_name //NOTHING
+	| rename: "rename" "relation" Id old_name "as" Id new_name //NOTHING
 	| remove: "remove" "relation" Id to_remove //TODO Missing information or other
 	| changeContainement: 'change' 'containment' Id relation 'as' Bool //NOTHING
 	| changeCardinality: 'change' 'cardinality' Id relation 'as' Cardinality //NOTHING

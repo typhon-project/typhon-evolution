@@ -4,15 +4,18 @@ import IO;
 import ParseTree;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
+import lang::typhonevo::utils::EvolveStatus;
+import lang::typhonevo::utils::SchemaUtils;
+import lang::typhonml::Util;
 
 
-EvoQuery evolve_attribute(EvoQuery q, EntityOperation op){
+EvoQuery evolve_attribute(EvoQuery q, EntityOperation op, Schema s){
 	switch(op){
 		case (AttributesOperations) `rename attribute  <Id old_id> as <Id new_id>`:{
 		 	return attribute_rename(q, old_id, new_id);
 		}
-		case (AttributesOperations) `remove attribute <Id entity>`: {
-			return attribute_remove(q, entity);
+		case (AttributesOperations) `remove attribute <Id attribute>`: {
+			return attribute_remove(q, attribute, s);
 		}
 	};
 	
@@ -30,7 +33,7 @@ EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name){
 	return req;
 }
 
-EvoQuery attribute_remove(EvoQuery q, Id name){
+EvoQuery attribute_remove(EvoQuery q, Id name, Schema s){
 	//TODO check if the attribute is called explicitly. 
 	
 	Query query;

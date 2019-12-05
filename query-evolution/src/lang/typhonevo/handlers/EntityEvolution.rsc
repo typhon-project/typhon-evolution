@@ -10,27 +10,24 @@ import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
 
-EvoQuery evolve_entity(EvoQuery q, EntityOperation op, Schema s){
-	switch(op){
-		case (EntityOperation) `rename entity  <EId old_id> as <EId new_id>`:{
-		 	return entity_rename(q, old_id, new_id);
-		}
-		case (EntityOperation) `remove entity <EId entity>`: {
-			return entity_remove(q, entity);
-		}
-		case (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`: {
-			return entity_split(q, name, entity1, entity2);
-		}
-		case (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`:{
-			return entity_merge(q, new_name, entity1, entity2, s);
-		}
-		
-	};
-	
-	return q;
-}
+// DISPATCHER
 
-default EvoQuery evolve(EvoQuery q, EntityOperation op) = q;
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `rename entity  <EId old_id> as <EId new_id>`, Schema s)
+	= entity_rename(q, old_id, new_id);
+	
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `remove entity <EId entity>`, Schema s)
+	= entity_remove(q, entity);
+	
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`, Schema s)
+	= entity_split(q, name, entity1, entity2);
+	
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`, Schema s)
+	= entity_merge(q, new_name, entity1, entity2, s);
+
+default EvoQuery evolve_entity(EvoQuery q, _, _) = q;
+
+
+// HANDLERS
 
 EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 	

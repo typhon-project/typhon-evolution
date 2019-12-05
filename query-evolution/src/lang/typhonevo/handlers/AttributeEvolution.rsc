@@ -9,19 +9,18 @@ import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
 
 
-EvoQuery evolve_attribute(EvoQuery q, EntityOperation op, Schema s){
-	switch(op){
-		case (AttributesOperations) `rename attribute  <Id old_id> as <Id new_id>`:{
-		 	return attribute_rename(q, old_id, new_id);
-		}
-		case (AttributesOperations) `remove attribute <Id attribute>`: {
-			return attribute_remove(q, attribute, s);
-		}
-	};
-	
-	return q;
-}
+// DISPATCHERS
 
+EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `rename attribute  <Id old_id> as <Id new_id>`, Schema s)
+	= attribute_rename(q, old_id, new_id);
+	
+EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `remove attribute <Id attribute>`, Schema s)
+	= attribute_remove(q, attribute, s);
+
+default EvoQuery evolve_attribute(EvoQuery q, _, _) = q;
+
+
+// HANDLERS 
 
 EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name){
 	// TODO verify the entity owning this attribute

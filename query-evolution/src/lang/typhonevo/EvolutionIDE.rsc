@@ -30,7 +30,7 @@ private loc project(loc file) {
 public void evalQuery(EvoSyntax x, loc selection) {
 	loc l = project(selection);
 	evolved = evolve(x, l);
-	writeFile(project(x@\loc) + "/src/result.qevo", "<evolved>");
+	writeFile(x@\loc, "<evolved>");
 }
 
 public void testString(EvoSyntax x, loc selection) {

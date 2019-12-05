@@ -39,19 +39,19 @@ EvoQuery setStatusChanged(EvoQuery q, str txt){
 
 EvoQuery set_status(Status s, (EvoQuery)`<QlQuery q>`)
 	= (EvoQuery) `<Status s> 
-				' <QlQuery q>`;
+					'<QlQuery q>`;
 
 EvoQuery set_status(Status s, (EvoQuery)`<Status old>  <QlQuery q>`){
 	Status final = status_priority(s, old);
 	return (EvoQuery) `<Status final> 
-					' <QlQuery q>`;
+						'<QlQuery q>`;
 }
 
 EvoQuery set_status(Status s, (EvoQuery)`<Status old> <Annotation+ a> <QlQuery q>`){
 	Status final = status_priority(s, old);
 	return (EvoQuery) `<Status final> 
-						' <Annotation+ a> 
-						' <QlQuery q>`;
+						'<Annotation+ a> 
+						'<QlQuery q>`;
 }
 
 EvoQuery annotate(str text, EvoQuery q){
@@ -61,14 +61,14 @@ EvoQuery annotate(str text, EvoQuery q){
 
 EvoQuery set_annotation(Annotation a, (EvoQuery)`<Status s>  <QlQuery q>`)
 	= (EvoQuery) `<Status s>
-				' <Annotation a> 
-				' <QlQuery q>`;
+				'<Annotation a> 
+				'<QlQuery q>`;
 
 EvoQuery set_annotation(Annotation a, (EvoQuery)`<Status s> <Annotation+ old> <QlQuery q>`)
 	= (EvoQuery) `<Status s> 
-				' <Annotation+ old> 
-				' <Annotation a> 
-				' <QlQuery q>`;
+				'<Annotation+ old> 
+				'<Annotation a> 
+				'<QlQuery q>`;
 
 
 Status status_priority((Status) `MOD`, s:(Status) `WARN`) = s;

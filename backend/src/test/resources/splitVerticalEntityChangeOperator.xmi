@@ -13,16 +13,12 @@
     <attributes name="firstName" type="//@dataTypes.1"/>
     <attributes name="lastName" type="//@dataTypes.1"/>
     <attributes name="creationDate" type="//@dataTypes.0"/>
+    <relations name="relation1" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
+    <relations name="relation2" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:SplitEntity" entityToBeSplit="//@dataTypes.2">
-    <firstNewEntity name="firstNewEntity">
-      <attributes name="id" type="//@dataTypes.1"/>
-      <attributes name="creationDate" type="//@dataTypes.0"/>
-    </firstNewEntity>
-    <secondNewEntity name="secondNewEntity">
-      <attributes name="id" type="//@dataTypes.1"/>
-      <attributes name="firstName" type="//@dataTypes.1"/>
-      <attributes name="lastName" type="//@dataTypes.1"/>
-    </secondNewEntity>
-  </changeOperators>
+  <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
+    <attributes name="id" type="//@dataTypes.1"/>
+    <attributes name="expiryDate" type="//@dataTypes.0"/>
+  </dataTypes>
+  <changeOperators xsi:type="typhonml:SplitEntityVertical" entity1="//@dataTypes.2" entity2name="SplittedEntity" attributeList="//@dataTypes.2/@attributes.2 //@dataTypes.2/@attributes.3" relationList="//@dataTypes.2/@relations.1"/>
 </typhonml:Model>

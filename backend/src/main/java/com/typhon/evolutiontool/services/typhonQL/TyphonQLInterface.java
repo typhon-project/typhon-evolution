@@ -49,9 +49,9 @@ public interface TyphonQLInterface {
      *
      * @param entityName the name of the entity
      * @param model the TyphonML schema
-     * @return the TyphonQL query
+     * @return the WorkingSet results
      */
-    String selectEntityData(String entityName, Model model);
+    WorkingSet selectEntityData(String entityName, Model model);
 
     /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
@@ -87,7 +87,7 @@ public interface TyphonQLInterface {
 
     WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue, Model model);
 
-    WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model);
+    WorkingSet readEntityDataSelectAttributes(String sourceEntityName, Set<String> attributes, Model model);
 
     void deleteAllEntityData(String entityid, Model model);
 

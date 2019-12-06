@@ -129,3 +129,36 @@ create SplittedEntity.to_User -> User[1..1]
 from User user select user where id = 1
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User userselect user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2

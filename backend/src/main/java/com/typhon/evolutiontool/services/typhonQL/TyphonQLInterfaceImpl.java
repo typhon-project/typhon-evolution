@@ -1,12 +1,12 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
 
+import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
 import com.typhon.evolutiontool.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,11 +67,12 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public String selectEntityData(String entityName, Model model) {
+    public WorkingSet selectEntityData(String entityName, Model model) {
         logger.debug("Select data for entity [{}] TyphonQL query", entityName);
         String tql = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase()).toString();
         getTyphonQLConnection(model).query(tql);
-        return tql;
+        //TODO return the WorkingSet data
+        return new WorkingSetDummyImpl();
     }
 
     @Override
@@ -106,12 +107,12 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
     @Override
     public WorkingSet readAllEntityData(EntityDO entity, Model model) {
-        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(entity.getName()).append(BLANK).append(entity.getName().toLowerCase()).append(SELECT).append(entity.getName().toLowerCase()).toString());
+        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(entity.getName()).append(BLANK).append(entity.getName().toLowerCase()).append(BLANK).append(SELECT).append(entity.getName().toLowerCase()).toString());
     }
 
     @Override
     public WorkingSet readAllEntityData(String entityId, Model model) {
-        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(entityId).append(BLANK).append(entityId.toLowerCase()).append(SELECT).append(entityId.toLowerCase()).toString(), entityId);
+        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(entityId).append(BLANK).append(entityId.toLowerCase()).append(BLANK).append(SELECT).append(entityId.toLowerCase()).toString(), entityId);
     }
 
     @Override
@@ -120,8 +121,8 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, List<String> attributes, Model model) {
-        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(SELECT).toString() + attributes.stream().map(sourceEntityName.toLowerCase().concat(DOT)::concat).collect(Collectors.joining(COMMA)));
+    public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, Set<String> attributes, Model model) {
+        return getTyphonQLConnection(model).query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(BLANK).append(SELECT).toString() + attributes.stream().map(sourceEntityName.toLowerCase().concat(DOT)::concat).collect(Collectors.joining(COMMA)));
     }
 
     @Override

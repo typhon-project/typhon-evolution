@@ -1,51 +1,95 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import typhonml.Model;
+import com.typhon.evolutiontool.utils.DataTypeDOFactory;
+import com.typhon.evolutiontool.utils.EntityDOFactory;
+import com.typhon.evolutiontool.utils.RelationDOFactory;
+import com.typhon.evolutiontool.utils.WorkingSetFactory;
+import typhonml.*;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class EntitySplitVerticalHandler extends EntitySplitHandler {
+public class EntitySplitVerticalHandler extends BaseHandler {
 
     public EntitySplitVerticalHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
-    /**
-     * Partially migrates the instances of sourceEntity to a new entity targetEntity. Only the values
-     * of attributes [attributesNames] are migrated. The link between the instances of entity1 and entity2 is
-     * kept via a new one-to-one relationship relName.
-     *
-     * @param smo the change operator to apply
-     * @return the updated model, after the change operator has been applied
-     * @throws InputParameterException when a mandatory parameter is missing
-     */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.NEW_ENTITY_NAME, ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES, ChangeOperatorParameter.NEW_ENTITY_RELATIONS))) {
-            //The list of attributes and relations to move from entity 1 to the new entity
-//            NEW_ENTITY_ATTRIBUTES
-//            NEW_ENTITY_RELATIONS
+            EntityDO firstEntityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.ENTITY), false);
+            String newEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_NAME));
+            Map<String, DataTypeDO> entityAttributes = buildEntityAttributes((List<Attribute>) smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES));
+            List<RelationDO> entityRelations = ((List<Relation>) smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_RELATIONS)).stream().map(relation -> RelationDOFactory.buildInstance(relation, false)).collect(Collectors.toList());
+            EntityDO secondEntityDO = new EntityDOImpl();
+            secondEntityDO.setName(newEntityName);
+            secondEntityDO.getAttributes().putAll(entityAttributes);
+            secondEntityDO.getRelations().addAll(entityRelations);
             //TyphonML
-            Model targetModel = splitEntity(smo, model);
+            Model targetModel = typhonMLInterface.createEntityType(model, secondEntityDO);
+            RelationDO relationDO = new RelationDOImpl("to_" + firstEntityDO.getName(), firstEntityDO.getName(), secondEntityDO, firstEntityDO, null, false, CardinalityDO.ONE);
+            targetModel = typhonMLInterface.createRelationship(relationDO, targetModel);
+            for (String attributeName : entityAttributes.keySet()) {
+                targetModel = typhonMLInterface.removeAttribute(attributeName, firstEntityDO.getName(), targetModel);
+            }
+            for (RelationDO relation : entityRelations) {
+                targetModel = typhonMLInterface.deleteRelationshipInEntity(relation.getName(), firstEntityDO.getName(), targetModel);
+            }
+            Database sourceDatabase = typhonMLInterface.getEntityDatabase(firstEntityDO.getName(), targetModel);
+            DatabaseType sourceDatabaseType = getDatabaseType(sourceDatabase);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), secondEntityDO.getName(), secondEntityDO.getName(), targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
             //TyphonQL
-            //TODO Data Manipulation
-            //1. retrieve all data from sourceEntity for the firstNewEntity attributes
-            //2. retrieve all data from sourceEntity for the secondNewEntity attributes
-//            typhonQLInterface.createEntityType(firstNewEntity, targetModel);
-//            typhonQLInterface.createEntityType(secondNewEntity, targetModel);
-//            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            //Create the new entity
+            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName(), targetModel);
+            //Create the new entity attributes
+            if (secondEntityDO.getAttributes() != null && !secondEntityDO.getAttributes().isEmpty()) {
+                for (String attributeName : secondEntityDO.getAttributes().keySet()) {
+                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName(), model);
+                }
+            }
+            //Create the new entity relationships
+            if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
+                for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
+                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality(), model);
+                }
+            }
+            //Create a new relation between the source entity and the new entity
+            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            //Select the source entity data for the attribute and the value
+            WorkingSet dataSource = typhonQLInterface.readEntityDataSelectAttributes(firstEntityDO.getName(), entityAttributes.keySet(), model);
+            //Create a working set containing the source entity data adapted for the new entity
+            WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
+            dataTarget.setEntityRows(secondEntityDO.getName(), dataSource.getEntityInstanceRows(firstEntityDO.getName()));
+            //Insert the adapted data in the new entity
+            typhonQLInterface.writeWorkingSetData(dataTarget, targetModel);
+            //Remove the attributes from the source entity, which have been copied to the second entity
+            for (String attributeName : secondEntityDO.getAttributes().keySet()) {
+                typhonQLInterface.removeAttribute(firstEntityDO.getName(), attributeName, targetModel);
+            }
+            //Remove the relations from the source entity, which have been copied to the second entity
+            for (RelationDO secondEntityRelation : secondEntityDO.getRelations()) {
+                typhonQLInterface.deleteRelationshipInEntity(secondEntityRelation.getName(), firstEntityDO.getName(), targetModel);
+            }
 
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES + ", " + ChangeOperatorParameter.NEW_ENTITY_RELATIONS + "]");
         }
+    }
+
+    private Map<String, DataTypeDO> buildEntityAttributes(List<Attribute> attributes) {
+        Map<String, DataTypeDO> entityAttributes = new HashMap<>();
+        attributes.forEach(attribute -> entityAttributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType())));
+        return entityAttributes;
     }
 
 

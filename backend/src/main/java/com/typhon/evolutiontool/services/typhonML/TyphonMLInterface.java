@@ -64,7 +64,7 @@ public interface TyphonMLInterface {
 
     Model addAttribute(AttributeDO attributeDO, String entityName, Model model);
 
-    Model removeAttribute(AttributeDO attributeDO, String entityName, Model model);
+    Model removeAttribute(String attributeName, String entityName, Model model);
 
     Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 

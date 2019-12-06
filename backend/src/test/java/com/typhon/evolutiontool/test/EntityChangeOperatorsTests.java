@@ -6,6 +6,7 @@ import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 import typhonml.*;
 
@@ -58,7 +59,7 @@ public class EntityChangeOperatorsTests extends InitialTest {
     @Test
     public void testSplitVerticalEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/splitVerticalEntityChangeOperator.xmi");
-        SplitEntity splitVerticalEntity = (SplitEntity) sourceModel.getChangeOperators().get(0);
+        SplitEntityVertical splitVerticalEntity = (SplitEntityVertical) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(splitVerticalEntity);
 
         targetModel = evolutionService.evolveEntity(smo, sourceModel);

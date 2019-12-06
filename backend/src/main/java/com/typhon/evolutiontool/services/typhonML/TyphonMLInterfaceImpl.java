@@ -300,12 +300,12 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model removeAttribute(AttributeDO attributeDO, String entityName, Model model) {
+    public Model removeAttribute(String attributeName, String entityName, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityTypeFromName(entityName, newModel);
         if (entity.getAttributes() != null) {
             for (Attribute attribute : entity.getAttributes()) {
-                if (attribute.getName().equals(attributeDO.getName())) {
+                if (attribute.getName().equals(attributeName)) {
                     entity.getAttributes().remove((attribute));
                     break;
                 }

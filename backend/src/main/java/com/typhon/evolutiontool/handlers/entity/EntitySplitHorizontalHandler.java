@@ -2,6 +2,7 @@ package com.typhon.evolutiontool.handlers.entity;
 
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
@@ -13,18 +14,12 @@ import typhonml.Model;
 
 import java.util.Arrays;
 
-public class EntitySplitHorizontalHandler extends EntitySplitHandler {
+public class EntitySplitHorizontalHandler extends BaseHandler {
 
     public EntitySplitHorizontalHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
     }
 
-
-    /**
-     * Migrates the data instances of sourceEntity that has a given attributeValue of their attribute
-     * attributeName to a newly created targetEntity with the same structure.
-     * This new entity is mapped to a new table/collection/.. in the same database as sourceEntity.
-     */
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY, ChangeOperatorParameter.NEW_ENTITY_NAME, ChangeOperatorParameter.ENTITY_SPLIT_ATTRIBUTE, ChangeOperatorParameter.ENTITY_SPLIT_EXPRESSION))) {
@@ -44,6 +39,7 @@ public class EntitySplitHorizontalHandler extends EntitySplitHandler {
             Database sourceDatabase = typhonMLInterface.getEntityDatabase(firstEntityDO.getName(), targetModel);
             DatabaseType sourceDatabaseType = getDatabaseType(sourceDatabase);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(sourceDatabaseType, sourceDatabase.getName(), secondEntityDO.getName(), secondEntityDO.getName(), targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
             //TyphonQL
             //Create the new entity

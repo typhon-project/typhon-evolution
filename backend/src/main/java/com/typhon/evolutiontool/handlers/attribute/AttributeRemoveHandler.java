@@ -26,7 +26,7 @@ public class AttributeRemoveHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String entityName = attributeDO.getEntity().getName();
-            Model targetModel = typhonMLInterface.removeAttribute(attributeDO, entityName, model);
+            Model targetModel = typhonMLInterface.removeAttribute(attributeDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
             typhonQLInterface.removeAttribute(entityName, attributeDO.getName(), targetModel);
             return targetModel;

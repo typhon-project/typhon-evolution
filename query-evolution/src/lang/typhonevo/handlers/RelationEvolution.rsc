@@ -41,7 +41,7 @@ EvoQuery rename_relation(EvoQuery q, Id old_name, Id new_name){
 EvoQuery remove_relation(EvoQuery q, Id to_remove){
 	
 	if(query_use_relation(q, to_remove)){
-		q = setStatusError(q, "The relation <to_remove> was removed");
+		q = setStatusBroken(q, "The relation <to_remove> was removed");
 	}
 	
 	return q;

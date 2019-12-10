@@ -57,7 +57,7 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 	}
 	
 	if(matched){
-		q = setStatusError(q, "Entity <name> removed. That query is broken");
+		q = setStatusBroken(q, "Entity <name> removed. That query is broken");
 	}
 	return q;
 }

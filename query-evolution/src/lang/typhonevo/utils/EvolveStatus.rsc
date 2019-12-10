@@ -3,38 +3,43 @@ module lang::typhonevo::utils::EvolveStatus
 import lang::typhonevo::EvoAbstractSyntax;
 import ParseTree;
 
-EvoQuery setStatusError(EvoQuery q){
-	Status s = (Status) `ERR`;
+EvoQuery setStatusBroken(EvoQuery q){
+	Status s = (Status) `BROKEN`;
 	return set_status(s, q);
 }
 
-EvoQuery setStatusError(EvoQuery q, str txt){
-	Status s = (Status) `ERR`;
+EvoQuery setStatusBroken(EvoQuery q, str txt){
+	Status s = (Status) `BROKEN`;
 	q = set_status(s,q);
 	return annotate(txt, q);
 }
 
 EvoQuery setStatusWarn(EvoQuery q){
-	Status s = (Status) `WARN`;
+	Status s = (Status) `WARNING`;
 	return set_status(s, q);
 }
 
 EvoQuery setStatusWarn(EvoQuery q, str txt){
-	Status s = (Status) `WARN`;
+	Status s = (Status) `WARNING`;
 	q = set_status(s,q);
 	return annotate(txt, q);
 }
 
 
 EvoQuery setStatusChanged(EvoQuery q){
-	Status s = (Status) `MOD`;
+	Status s = (Status) `MODIFIED`;
 	return set_status(s, q);
 }
 
 EvoQuery setStatusChanged(EvoQuery q, str txt){
-	Status s = (Status) `MOD`;
+	Status s = (Status) `MODIFIED`;
 	q = set_status(s,q);
 	return annotate(txt, q);
+}
+
+EvoQuery setStatusUnchanged(EvoQuery q){
+	Status s = (Status) `UNCHANGED`;
+	return set_status(s,q);
 }
 
 EvoQuery set_status(Status s, (EvoQuery)`<QlQuery q>`)
@@ -71,7 +76,7 @@ EvoQuery set_annotation(Annotation a, (EvoQuery)`<Status s> <Annotation+ old> <Q
 				'<QlQuery q>`;
 
 
-Status status_priority((Status) `MOD`, s:(Status) `WARN`) = s;
-Status status_priority((Status) `MOD`, s:(Status) `ERR`) = s;
-Status status_priority((Status) `WARN`, s:(Status) `ERR`) = s;
+Status status_priority((Status) `MODIFIED`, s:(Status) `WARNING`) = s;
+Status status_priority((Status) `MODIFIED`, s:(Status) `BROKEN`) = s;
+Status status_priority((Status) `WARNING`, s:(Status) `BROKEN`) = s;
 default Status status_priority(Status new, _) = new;

@@ -7,48 +7,53 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
-
+import lang::typhonevo::utils::EvolveStatus;
 
 // DISPATCHERS
 
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `rename attribute  <Id old_id> as <Id new_id>`, Schema s)
-	= attribute_rename(q, old_id, new_id);
+EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `rename attribute  <Id old_id> from <EId entity> as <Id new_id>`, Schema s)
+	= attribute_rename(q, old_id, new_id, entity);
 	
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `remove attribute <Id attribute>`, Schema s)
-	= attribute_remove(q, attribute, s);
+EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `remove attribute <Id attribute> from <EId entity>`, Schema s)
+	= attribute_remove(q, attribute, entity, s);
 
 default EvoQuery evolve_attribute(EvoQuery q, _, _) = q;
 
 
 // HANDLERS 
 
-EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name){
-	// TODO verify the entity owning this attribute
+EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name, EId entity){
 	
+	// Get mapping
+	
+	// Construct expr
+	
+	// check if expr in query
 	req = visit(q){
 		case old_name => new_name
 	};
 	
-	return req;
+	if(req := q)
+		return q;
+	
+	return setStatusChanged(req);
 }
 
-EvoQuery attribute_remove(EvoQuery q, Id name, Schema s){
+EvoQuery attribute_remove(EvoQuery q, Id name, EId entity, Schema s){
 	//TODO check if the attribute is called explicitly. 
 	
 	Query query;
 	matched = false;
 	
 	visit(q){
-		case Query qu:{
-			query = qu;
-		}
 		case name :{
 			matched = true;
 		}
 	}
 	
+	// Err if use in where clause. Warning otherwise
 	if(matched){
-		return parse(#EvoQuery, "#@ Attribute <name> is removed. That query is broken @# <query>");
+		setStatusWarn(q, "Query might change, Attribut <name> was removed");
 	}
 	return q;
 }

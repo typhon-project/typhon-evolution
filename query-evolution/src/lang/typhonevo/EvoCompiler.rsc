@@ -13,6 +13,7 @@ import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
 
 import lang::typhonevo::utils::SchemaUtils;
+import lang::typhonevo::utils::EvolveStatus;
 
 
 EvoSyntax evolve(EvoSyntax x, loc location){
@@ -22,6 +23,10 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	Model m = xmiString2Model(xmi);
 	Schema s = model2schema(m);
 	
+	// Init all queries to unchanged
+	x = visit(x){
+		case EvoQuery q => setStatusUnchanged(q)
+	};
 
 	for ( ChangeOp op <- operators){	
 		x = visit(x){
@@ -32,8 +37,8 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	return x;
 }
 
-EvoQuery transform(q:(EvoQuery)`ERR  <QlQuery _>`, _, _) = q;
-EvoQuery transform(q:(EvoQuery)`ERR <Annotation+ _>  <QlQuery _>`, _, _) = q;
+EvoQuery transform(q:(EvoQuery)`BROKEN  <QlQuery _>`, _, _) = q;
+EvoQuery transform(q:(EvoQuery)`BROKEN <Annotation+ _>  <QlQuery _>`, _, _) = q;
 
 EvoQuery transform(EvoQuery evoq, EntityOperation op, Schema s) = evolve_entity(evoq, op, s);
 EvoQuery transform(EvoQuery evoq, AttributesOperations op, Schema s) = evolve_attribute(evoq, op, s);

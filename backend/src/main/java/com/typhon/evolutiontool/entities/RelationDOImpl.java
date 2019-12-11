@@ -31,6 +31,11 @@ public class RelationDOImpl implements RelationDO {
     }
 
     @Override
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    @Override
     public EntityDO getSourceEntity() {
         return this.sourceEntityDO;
     }

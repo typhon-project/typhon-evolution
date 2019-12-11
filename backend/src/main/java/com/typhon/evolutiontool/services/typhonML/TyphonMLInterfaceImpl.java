@@ -35,7 +35,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Database getEntityDatabase(String entityName, Model model) {
-        Entity entity = this.getEntityTypeFromName(entityName, model);
         List<Database> databases = model.getDatabases();
         if (databases != null) {
             for (Database database : databases) {
@@ -43,7 +42,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Table> tables = ((RelationalDB) database).getTables();
                     if (tables != null) {
                         for (Table table : tables) {
-                            if (table.getEntity().getName().equals(entity.getName())) {
+                            if (table.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -53,7 +52,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Collection> collections = ((DocumentDB) database).getCollections();
                     if (collections != null) {
                         for (Collection collection : collections) {
-                            if (collection.getEntity().getName().equals(entity.getName())) {
+                            if (collection.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -63,7 +62,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<GraphNode> graphNodes = ((GraphDB) database).getNodes();
                     if (graphNodes != null) {
                         for (GraphNode graphNode : graphNodes) {
-                            if (graphNode.getEntity().getName().equals(entity.getName())) {
+                            if (graphNode.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -73,7 +72,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Column> columns = ((ColumnDB) database).getColumns();
                     if (columns != null) {
                         for (Column column : columns) {
-                            if (column.getEntity().getName().equals(entity.getName())) {
+                            if (column.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -83,7 +82,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<KeyValueElement> keyValueElements = ((KeyValueDB) database).getElements();
                     if (keyValueElements != null) {
                         for (KeyValueElement keyValueElement : keyValueElements) {
-                            if (keyValueElement.getEntity().getName().equals(entity.getName())) {
+                            if (keyValueElement.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -190,9 +189,9 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //ENTITY
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
+        newModel.getDataTypes().add(entity);
         newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type.getName(), newModel)));
         newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
-        newModel.getDataTypes().add(entity);
         return newModel;
     }
 

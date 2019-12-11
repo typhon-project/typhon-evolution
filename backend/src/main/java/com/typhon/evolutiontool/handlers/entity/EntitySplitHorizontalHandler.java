@@ -33,6 +33,8 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
             secondEntityDO.getRelations().addAll(firstEntityDO.getRelations());
 
             //TyphonML
+            //Check entity self referencing relations
+            checkEntityRelations(firstEntityDO.getName(), secondEntityDO);
             Model targetModel = typhonMLInterface.createEntityType(model, secondEntityDO);
             RelationDO relationDO = new RelationDOImpl("to_" + firstEntityDO.getName(), firstEntityDO.getName(), secondEntityDO, firstEntityDO, null, false, CardinalityDO.ONE);
             targetModel = typhonMLInterface.createRelationship(relationDO, targetModel);
@@ -53,6 +55,7 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
             //Create the new entity relationships
             if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
                 for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
+                    boolean isRelationSelfReferencing = firstEntityDO.getName().equals(relationDO.getTypeName());
                     typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality(), model);
                 }
             }

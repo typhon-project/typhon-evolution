@@ -13,6 +13,7 @@
     <attributes name="firstName" type="//@dataTypes.1"/>
     <attributes name="lastName" type="//@dataTypes.1"/>
     <attributes name="creationDate" type="//@dataTypes.0"/>
+    <relations name="users" type="//@dataTypes.2" cardinality="zero_many" isContainment="false"/>
   </dataTypes>
   <changeOperators xsi:type="typhonml:SplitEntityHorizontal" entity1="//@dataTypes.2" entity2name="SplittedEntity" attribute="//@dataTypes.2/@attributes.0" expression="1"/>
 </typhonml:Model>

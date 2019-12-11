@@ -1,8 +1,6 @@
 package com.typhon.evolutiontool.handlers;
 
-import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
-import com.typhon.evolutiontool.entities.DatabaseType;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -14,14 +12,14 @@ import typhonml.*;
 
 import java.util.List;
 
-public class BaseHandler implements Handler{
+public class BaseHandler implements Handler {
     Logger logger = LoggerFactory.getLogger(EvolutionServiceImpl.class);
 
     protected TyphonDLInterface typhonDLInterface;
     protected TyphonMLInterface typhonMLInterface;
     protected TyphonQLInterface typhonQLInterface;
 
-    public BaseHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql){
+    public BaseHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         typhonMLInterface = tml;
         typhonQLInterface = tql;
         typhonDLInterface = tdl;
@@ -34,7 +32,7 @@ public class BaseHandler implements Handler{
     }
 
     protected boolean containParameters(SMO smo, List<ChangeOperatorParameter> parameters) {
-        logger.info("Verifying input parameter for [{}] - [{}] operator",smo.getTyphonObject(), smo.getEvolutionOperator());
+        logger.info("Verifying input parameter for [{}] - [{}] operator", smo.getTyphonObject(), smo.getEvolutionOperator());
         return smo.inputParametersContainsExpected(parameters);
     }
 
@@ -57,5 +55,15 @@ public class BaseHandler implements Handler{
             }
         }
         return null;
+    }
+
+    protected void checkEntityRelations(String sourceEntityName, EntityDO entityDO) {
+        if (entityDO != null && entityDO.getRelations() != null) {
+            for (RelationDO relationDO : entityDO.getRelations()) {
+                if (relationDO.getTypeName().equals(sourceEntityName)) {
+                    relationDO.setTypeName(entityDO.getName());
+                }
+            }
+        }
     }
 }

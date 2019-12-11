@@ -15,10 +15,11 @@
     <attributes name="creationDate" type="//@dataTypes.0"/>
     <relations name="relation1" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
     <relations name="relation2" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
+    <relations name="users" type="//@dataTypes.2" cardinality="zero_many" isContainment="false"/>
   </dataTypes>
   <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:SplitEntityVertical" entity1="//@dataTypes.2" entity2name="SplittedEntity" attributeList="//@dataTypes.2/@attributes.2 //@dataTypes.2/@attributes.3" relationList="//@dataTypes.2/@relations.1"/>
+  <changeOperators xsi:type="typhonml:SplitEntityVertical" entity1="//@dataTypes.2" entity2name="SplittedEntity" attributeList="//@dataTypes.2/@attributes.2 //@dataTypes.2/@attributes.3" relationList="//@dataTypes.2/@relations.1 //@dataTypes.2/@relations.2"/>
 </typhonml:Model>

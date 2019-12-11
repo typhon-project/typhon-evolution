@@ -43,6 +43,12 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
+    public String uploadSchema(Model model) {
+        getTyphonQLConnection(model).setSchema(model);
+        return "success";
+    }
+
+    @Override
     public String createEntity(String entityName, String databaseName, Model model) {
         logger.debug("Create entity [{}] TyphonQL query", entityName);
         String tql = new StringBuilder(CREATE).append(entityName).append(AT).append(databaseName).toString();
@@ -76,7 +82,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public String insertEntityData(String entityName, Set<String> entityAttributes, Model model) {
+    public String insertEntityData(String entityName, Set<String> entityAttributes, WorkingSet ws, Model model) {
         logger.debug("Insert working set data for entity [{}] TyphonQL query", entityName);
         String tql = new StringBuilder(INSERT).append(entityName).append(OPENING_CURLY_BRACE).append(String.join(":, ", entityAttributes)).append(":").append(CLOSING_CURLY_BRACE).toString();
         getTyphonQLConnection(model).query(tql);

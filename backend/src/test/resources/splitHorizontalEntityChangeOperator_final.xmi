@@ -14,12 +14,14 @@
     <attributes name="firstName" type="//@dataTypes.1"/>
     <attributes name="lastName" type="//@dataTypes.1"/>
     <attributes name="creationDate" type="//@dataTypes.0"/>
+    <relations name="users" type="//@dataTypes.2" cardinality="zero_many" isContainment="false"/>
   </dataTypes>
   <dataTypes xsi:type="typhonml:Entity" name="SplittedEntity">
     <attributes name="firstName" type="//@dataTypes.1"/>
     <attributes name="lastName" type="//@dataTypes.1"/>
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="creationDate" type="//@dataTypes.0"/>
+    <relations name="users" type="//@dataTypes.3" cardinality="zero_many" isContainment="false"/>
     <relations name="to_User" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
   </dataTypes>
 </typhonml:Model>

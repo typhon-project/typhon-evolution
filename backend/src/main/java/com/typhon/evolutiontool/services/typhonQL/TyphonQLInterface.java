@@ -12,6 +12,14 @@ import java.util.Set;
 public interface TyphonQLInterface {
 
     /**
+     * Upload a new XMI model to the polystore
+     *
+     * @param model the new TyphonML model
+     * @return the TyphonQL query
+     */
+    String uploadSchema(Model model);
+
+    /**
      * Create a new entity in the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
@@ -58,10 +66,11 @@ public interface TyphonQLInterface {
      *
      * @param entityName       the name of the entity
      * @param entityAttributes the set of entity attributes
+     * @param ws the WorkingSet containing the data to insert
      * @param model the TyphonML schema
      * @return the TyphonQL query
      */
-    String insertEntityData(String entityName, Set<String> entityAttributes, Model model);
+    String insertEntityData(String entityName, Set<String> entityAttributes, WorkingSet ws, Model model);
 
     /**
      * Drop the entity in the polystore using a TyphonQL query

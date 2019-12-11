@@ -28,7 +28,7 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 		case EvoQuery q => setStatusUnchanged(q)
 	};
 
-	for ( ChangeOp op <- operators){	
+	for ( EvoChangeOp op <- operators){	
 		x = visit(x){
 			case EvoQuery q => transform(q, op.op, s)
 		};
@@ -45,7 +45,7 @@ EvoQuery transform(EvoQuery evoq, AttributesOperations op, Schema s) = evolve_at
 EvoQuery transform(EvoQuery evoq, RelationOperations op, Schema s) = evolve_relation(evoq, op, s);
 
 
-list[ChangeOp] extract_op(EvoSyntax x) = [ c | /ChangeOp c := x];
+list[EvoChangeOp] extract_op(EvoSyntax x) = [ c | /EvoChangeOp c := x];
 list[EvoQuery] extract_queries(EvoSyntax x) = [ c | /EvoQuery c := x];
 
 Path extract_path(EvoSyntax x) = [c | /Path c := x][0];

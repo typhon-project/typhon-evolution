@@ -23,8 +23,10 @@ default EvoQuery evolve_relation(EvoQuery q, _, _) = q;
 
 
 EvoQuery rename_relation(EvoQuery q, Id old_name, Id new_name){
+
 	EvoQuery res = visit(q){
 		case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new_name>`
+		case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new_name>.<{Id"."}+ r>`
 		when c := old_name
 	};
 	
@@ -61,7 +63,7 @@ EvoQuery change_containment(EvoQuery q, Id relation){
 EvoQuery change_cardinality(EvoQuery q, Id relation, Cardinality c){
 	
 	if(query_use_relation(q, relation)){
-		q = setStatusWarn(q, "Cardinality of relation <relation> as change to <c>");
+		q = setStatusWarn(q, "Cardinality of relation <relation> as changed to <c>");
 	}
 	
 	return q;
@@ -74,6 +76,10 @@ bool query_use_relation(q, relation){
 	
 	visit(q){
 		case (Expr) `<VId v>.<Id c>`: {
+			if(c := relation)
+				impacted = true;
+		}
+		case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>`: {
 			if(c := relation)
 				impacted = true;
 		}

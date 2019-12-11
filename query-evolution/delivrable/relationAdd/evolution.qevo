@@ -1,0 +1,14 @@
+import /src/schema.xmi;
+
+changeOperators[
+	add relation relation2 to E1 -> E2 [0..*]
+]
+
+from E1 e1 select e1.relation1,
+
+from E1 e1 select e1 where e1.relation1,
+
+from E1 e1 select e1 where e1.relation1.Attr2 == "dummy"
+
+
+

@@ -10,7 +10,7 @@ lexical Annotation = "#@" (![@] | "@" !>> "#")* "@#";
 lexical Path = (![\t \n \a0B \a0C \r \ ;])*;
 
 start syntax EvoSyntax 
-	= evosyntax: Import import "changeOperators" "[" ChangeOp* "]"operators {EvoQuery ","}* queries;
+	= evosyntax: Import import "changeOperators" "[" EvoChangeOp* "]"operators {EvoQuery ","}* queries;
 	
 
 syntax EvoQuery
@@ -33,7 +33,7 @@ syntax QlQuery
 	= Query query
 	| Statement query;
 
-syntax ChangeOp
+syntax EvoChangeOp
 	= entityOperator: EntityOperation op
 	| attributeOperator : AttributesOperations op
 	| relationOperator: RelationOperations op

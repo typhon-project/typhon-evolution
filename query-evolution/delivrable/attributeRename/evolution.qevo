@@ -1,0 +1,17 @@
+import /src/schema.xmi;
+
+changeOperators[
+	rename attribute Attr1 from E1 as NewAttributName
+]
+
+MODIFIED 
+from E1 e select e.NewAttributName,
+
+MODIFIED 
+insert E1 {NewAttributName: "dummy"},
+
+MODIFIED 
+delete E1 e where e.NewAttributName == "dummy",
+
+MODIFIED 
+update E1 e where e.NewAttributName == "dummy" set {NewAttributName: "foobuzz"}

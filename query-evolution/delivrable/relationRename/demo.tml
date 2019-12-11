@@ -1,0 +1,10 @@
+entity E1{
+	Attr1: String
+	relation1 -> E2
+}
+
+entity E2 {
+	Attr2 : String
+}
+
+changeOperators[rename relation "E1.relation" as new_relation_name]

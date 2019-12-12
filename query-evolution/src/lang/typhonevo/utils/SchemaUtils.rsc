@@ -18,3 +18,6 @@ Rel get_relation_by_name(Schema s, str name){
 	
 	return head(res);
 }
+
+list[str] get_entity_name(Schema s, str attribute)
+	= [r[0] | r <- s.attrs, r[1] == attribute];

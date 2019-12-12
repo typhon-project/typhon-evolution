@@ -3,6 +3,7 @@ module lang::typhonevo::handlers::EntityEvolution
 import IO;
 import ParseTree;
 import List;
+import Exception;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
 import lang::typhonevo::utils::QueryManipulation;
@@ -171,22 +172,35 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 		q = entity_rename(q, entity1, new_name);
 		
 		for(Rel r <- get_relations(s, "<entity1>", "<entity2>")){
-			Id from = parse(#Id, r.fromRole);
-			Id to  = parse(#Id, r.toRole);
 			
-			q = removeExprFromWhere(q, from);
-			q = removeExprFromWhere(q, to);
+			try {
+				Id from = parse(#Id, r.fromRole);
+				q = removeExprFromWhere(q, from);
+				
+				Id to  = parse(#Id, r.toRole);
+				q = removeExprFromWhere(q, to);
+			}
+			catch: a = 10;
 		}
-		q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
-	
-		return q;
+		
 	}
 	else{
 		q = entity_rename(q, entity1, new_name);
 		q = entity_rename(q, entity2, new_name);
 		
-		q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
 	}
+	
+	switch(q.q.query){
+		case (Statement) `insert <{Obj ","}* obj>` : 
+			q = setStatusBroken(q, "<entity1> and <entity2> merged.");
+		case (Statement) `delete <Binding binding> <Where? where>` : 
+			q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
+		case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
+			q = setStatusChanged(q, "<entity1> and <entity2> merged.");
+		case Query quer : 
+			q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
+	};
+	
 		
 	return q;
 }

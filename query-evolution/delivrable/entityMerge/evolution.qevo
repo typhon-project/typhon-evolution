@@ -1,0 +1,15 @@
+import /src/schema.xmi;
+
+changeOperators[
+	merge entities E1 E2 as EMerged
+]
+
+from E1 e1 select e1.Attr1,
+
+from E1 e1, E2 e2 select e2.Attr2 where e1.relation1 == e2, e2.Attr2 == "dummy",
+
+insert E1 {Attr1: "dummy"},
+
+delete E1 e where e.Attr1 == "dummy",
+
+update E1 e where e.Attr1 == "dummy" set {Attr1: "foobuzz"}

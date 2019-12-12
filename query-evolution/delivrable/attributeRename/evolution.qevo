@@ -4,14 +4,14 @@ changeOperators[
 	rename attribute Attr1 from E1 as NewAttributName
 ]
 
-MODIFIED 
+UNCHANGED 
 from E1 e select e.NewAttributName,
 
-MODIFIED 
+UNCHANGED 
 insert E1 {NewAttributName: "dummy"},
 
-MODIFIED 
+UNCHANGED 
 delete E1 e where e.NewAttributName == "dummy",
 
-MODIFIED 
+UNCHANGED 
 update E1 e where e.NewAttributName == "dummy" set {NewAttributName: "foobuzz"}

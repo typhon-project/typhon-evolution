@@ -65,8 +65,8 @@ syntax EntityOperation
 syntax AttributesOperations
 	= add: NameSpace? "add" "attribute" Id name ":" EId type "to" EId entity //Nothing
 	| rename: "rename" "attribute" Id name "from" EId entity "as" Id new_name //TODO Missing entity information
-	| remove: "remove" "attribute" Id attribute "from" EId entity//TODO Missing entity information
-	| changeType: 'change' 'attribute' Id attribute 'type' EId type "from" EId entity//NOTHING
+	| remove: "remove" "attribute" Id attribute//TODO Missing entity information
+	| changeType: 'change' 'attribute' Id attribute 'type' EId type//NOTHING
 	| addToIndex: 'extends' 'tableindex' EId entity '{' {Id ","}+ '}' //NOTHING
 	| removeFromIndex: 'reduce' 'tableindex' EId entity '{' {Id ","}+  '}'; //NOTHING
 	

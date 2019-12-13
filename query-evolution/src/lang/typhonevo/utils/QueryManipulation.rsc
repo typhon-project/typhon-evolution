@@ -41,3 +41,14 @@ EvoQuery removeExprFromWhere(EvoQuery q, Id relation)
 		when c := relation
 	};
 	
+
+map[EId, VId] get_bindings(EvoQuery q){
+	map[EId, VId] binding = ();
+
+	for(/(Binding) `<EId entity> <VId bind>` := q){
+		binding[entity] = bind;
+	}
+	
+	return binding;
+} 
+	

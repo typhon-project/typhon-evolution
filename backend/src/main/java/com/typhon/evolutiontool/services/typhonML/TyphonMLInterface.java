@@ -44,7 +44,9 @@ public interface TyphonMLInterface {
 
     Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
 
-    Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel);
+    Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model model);
+
+    Model updateEntityMappingInDatabase(String entityName, String databaseName, Model model);
 
     Database getDatabaseFromName(String dbname, Model model);
 

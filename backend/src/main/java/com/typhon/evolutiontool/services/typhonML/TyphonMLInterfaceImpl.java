@@ -10,8 +10,8 @@ import typhonml.Collection;
 import typhonml.Table;
 import typhonml.*;
 
+import javax.xml.crypto.Data;
 import java.util.List;
-
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
@@ -423,6 +423,76 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                 KeyValueDB keyValueDB = (KeyValueDB) db;
                 keyValueDB.getElements().add(keyValueElement);
                 break;
+        }
+        return newModel;
+    }
+
+    @Override
+    public Model updateEntityMappingInDatabase(String entityName, String databaseName, Model model) {
+        logger.info("Updating the mapping for entity [{}] in TyphonML", entityName);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
+        Database database = getDatabaseFromName(databaseName, newModel);
+        if (database instanceof DocumentDB) {
+            DocumentDB documentDB = (DocumentDB) database;
+            List<Collection> collections = documentDB.getCollections();
+            if (collections != null) {
+                for (Collection collection : collections) {
+                    if (collection.getEntity().getName().equals(entityName)) {
+                        collection.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof RelationalDB) {
+            RelationalDB relationalDB = (RelationalDB) database;
+            List<Table> tables = relationalDB.getTables();
+            if (tables != null) {
+                for (Table table : tables) {
+                    if (table.getEntity().getName().equals(entityName)) {
+                        table.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof ColumnDB) {
+            ColumnDB columnDB = (ColumnDB) database;
+            List<Column> columns = columnDB.getColumns();
+            if (columns != null) {
+                for (Column column : columns) {
+                    if (column.getEntity().getName().equals(entityName)) {
+                        column.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof GraphDB) {
+            GraphDB graphDB = (GraphDB) database;
+            List<GraphNode> graphNodes = graphDB.getNodes();
+            if (graphNodes != null) {
+                for (GraphNode graphNode : graphNodes) {
+                    if (graphNode.getEntity().getName().equals(entityName)) {
+                        graphNode.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof KeyValueDB) {
+            KeyValueDB keyValueDB = (KeyValueDB) database;
+            List<KeyValueElement> keyValueElements = keyValueDB.getElements();
+            if (keyValueElements != null) {
+                for (KeyValueElement keyValueElement : keyValueElements) {
+                    if (keyValueElement.getEntity().getName().equals(entityName)) {
+                        keyValueElement.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
         }
         return newModel;
     }

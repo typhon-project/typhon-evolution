@@ -1,15 +1,13 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
-import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.SMO;
+import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
+import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
 
@@ -24,22 +22,18 @@ public class EntityAddHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (this.containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ENTITY))) {
-            // Verify that an instance of the underlying database is running in the TyphonDL.
-//            if (!typhonDLInterface.isDatabaseRunning(databasetype, databasename)) {
-//                typhonDLInterface.createDatabase(databasetype, databasename);
-//            }
-            //Executing evolution operations
-//            newEntity = smo.getPOJOFromInputParameter(ChangeOperatorParameter.ENTITY, EntityDOJsonImpl.class);
             EntityDO entityDO = EntityDOFactory.buildInstance((Entity) smo.getInputParameter().get(ChangeOperatorParameter.ENTITY), false);
-            Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
-//            targetModel = typhonMLInterface.createDatabase(dbtype, databasename, targetModel);
-//            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(dbtype, databasename, logicalname, entityDO.getName(), targetModel);
+            //Retrieve source database information
+            Database sourceDatabase = typhonMLInterface.getEntityDatabase(entityDO.getName(), model);
 
-            //TyphonQL
+            //Typhon ML
+            Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
+            targetModel = typhonMLInterface.updateEntityMappingInDatabase(entityDO.getName(), sourceDatabase.getName(), targetModel);
+
+            //Typhon QL
             //typhonQLInterface.createEntityType(entityDO, targetModel);
             //Create the entity
-            //TODO database.getName()
-            typhonQLInterface.createEntity(entityDO.getName(), "", model);
+            typhonQLInterface.createEntity(entityDO.getName(), sourceDatabase.getName(), model);
             //Create the entity attributes
             if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
                 for (String attributeName : entityDO.getAttributes().keySet()) {

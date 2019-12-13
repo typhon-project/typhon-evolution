@@ -9,6 +9,7 @@
       <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
       <idSpec attributes="//@dataTypes.3/@attributes.1"/>
     </tables>
+    <tables name="NewTable" entity="//@changeOperators.0"/>
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
@@ -23,8 +24,8 @@
     <attributes name="expiryDate" type="//@dataTypes.0"/>
   </dataTypes>
   <changeOperators xsi:type="typhonml:AddEntity" name="Comment">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="name" type="//@dataTypes.1"/>
-    <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
+    <attributes xsi:type="typhonml:AddAttribute" name="id" type="//@dataTypes.1" ownerEntity="//@changeOperators.0"/>
+    <attributes xsi:type="typhonml:AddAttribute" name="name" type="//@dataTypes.1" ownerEntity="//@changeOperators.0"/>
+    <relations xsi:type="typhonml:AddRelation" name="newRelation" type="//@dataTypes.3" cardinality="zero_many" ownerEntity="//@changeOperators.0"/>
   </changeOperators>
 </typhonml:Model>

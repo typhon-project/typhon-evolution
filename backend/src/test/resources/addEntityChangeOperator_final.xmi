@@ -9,6 +9,7 @@
       <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
       <idSpec attributes="//@dataTypes.3/@attributes.1"/>
     </tables>
+    <tables name="NewTable" entity="//@dataTypes.4"/>
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
@@ -25,6 +26,6 @@
   <dataTypes xsi:type="typhonml:Entity" name="Comment">
     <attributes name="name" type="//@dataTypes.1"/>
     <attributes name="id" type="//@dataTypes.1"/>
-    <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
+    <relations name="newRelation" type="//@dataTypes.3" cardinality="zero_many" isContainment="false"/>
   </dataTypes>
 </typhonml:Model>

@@ -319,3 +319,97 @@ drop User.creationDate
 drop User.lastName
 drop User.relation2
 drop User.users
+
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+create Comment at 
+create Comment.name : String
+create Comment.id : String
+create Comment.user -> User[1..1]
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+from Comment comment select comment
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..*]

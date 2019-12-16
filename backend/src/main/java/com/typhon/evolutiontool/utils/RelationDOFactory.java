@@ -30,7 +30,7 @@ public class RelationDOFactory {
                 targetEntityDO = targetEntity != null ? EntityDOFactory.buildInstance(targetEntity, true) : null;
                 oppositeRelationDO = null;
                 if (relation.getOpposite() != null) {
-                    oppositeRelationDO = buildInstance(relation.getOpposite(), false);
+                    oppositeRelationDO = buildInstance(relation.getOpposite(), true);
                 }
             }
             boolean isContainment = relation.getIsContainment() != null ? relation.getIsContainment() : false;

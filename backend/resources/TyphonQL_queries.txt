@@ -413,3 +413,113 @@ create Comment at RelationalDatabase
 create Comment.name : String
 create Comment.id : String
 create Comment.newRelation -> CreditCard[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity

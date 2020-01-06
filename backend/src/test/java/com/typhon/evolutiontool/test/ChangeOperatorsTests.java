@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.test;
 
+import com.typhon.evolutiontool.EvolutionTool;
 import com.typhon.evolutiontool.entities.EvolutionOperator;
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.entities.TyphonMLObject;
@@ -27,5 +28,19 @@ public class ChangeOperatorsTests extends InitialTest {
         SMOAdapter smo2 = SMOFactory.createSMOAdapterFromChangeOperator(changeOperator);
         Assert.assertEquals(TyphonMLObject.ENTITY, smo2.getTyphonObject());
         Assert.assertEquals(EvolutionOperator.RENAME, smo2.getEvolutionOperator());
+    }
+
+    @Test
+    public void testMultipleOperators() {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/multi-op.xmi");
+        EvolutionTool evolutionTool = new EvolutionTool();
+        evolutionTool.evolve("src/test/resources/multi-op.xmi", "src/test/resources/multi-op-final.xmi");
+    }
+
+    @Test
+    public void testMultipleOperators2() {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/multi-op-final.xmi");
+        EvolutionTool evolutionTool = new EvolutionTool();
+        evolutionTool.evolve("src/test/resources/multi-op-final.xmi", "src/test/resources/multi-op-final.xmi");
     }
 }

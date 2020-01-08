@@ -30,9 +30,9 @@ public class EntityRemoveHandler extends BaseHandler {
                 throw new InputParameterException("Cannot delete an entity involved in a relationship. Remove the relationships first.");
             }
             //Delete data
-            typhonQLInterface.deleteAllEntityData(entityname, model);
+            typhonQLInterface.deleteAllEntityData(entityname);
             //Delete structures
-            typhonQLInterface.dropEntity(entityname, model);
+            typhonQLInterface.dropEntity(entityname);
 
             targetModel = typhonMLInterface.deleteEntityMappings(entityname, sourceEntityNameInDatabase, model);
             targetModel = typhonMLInterface.deleteEntityType(entityname, targetModel);

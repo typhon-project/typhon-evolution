@@ -34,10 +34,10 @@ public class RelationChangeContainmentHandler extends BaseHandler {
             if (newContainment != null) {
                 if (newContainment) {
                     targetModel = typhonMLInterface.enableContainment(relationDO, model);
-                    typhonQLInterface.enableContainment(relationDO.getName(), relationDO.getSourceEntity().getName(), targetModel);
+                    typhonQLInterface.enableContainment(relationDO.getName(), relationDO.getSourceEntity().getName());
                 } else {
                     targetModel = typhonMLInterface.disableContainment(relationDO, model);
-                    typhonQLInterface.disableContainment(relationDO.getName(), relationDO.getSourceEntity().getName(), targetModel);
+                    typhonQLInterface.disableContainment(relationDO.getName(), relationDO.getSourceEntity().getName());
                 }
             }
             return targetModel;

@@ -12,7 +12,10 @@ import com.typhon.evolutiontool.utils.RelationDOFactory;
 import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import typhonml.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class EntitySplitVerticalHandler extends BaseHandler {
@@ -51,36 +54,36 @@ public class EntitySplitVerticalHandler extends BaseHandler {
 
             //TyphonQL
             //Create the new entity
-            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName(), targetModel);
+            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName());
             //Create the new entity attributes
             if (secondEntityDO.getAttributes() != null && !secondEntityDO.getAttributes().isEmpty()) {
                 for (String attributeName : secondEntityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName(), model);
+                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName());
                 }
             }
             //Create the new entity relationships
             if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
                 for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
                     boolean isRelationSelfReferencing = firstEntityDO.getName().equals(relationDO.getTypeName());
-                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality(), model);
+                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality());
                 }
             }
             //Create a new relation between the source entity and the new entity
-            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            typhonQLInterface.createRelationshipType(relationDO);
             //Select the source entity data for the attribute and the value
-            WorkingSet dataSource = typhonQLInterface.readEntityDataSelectAttributes(firstEntityDO.getName(), entityAttributes.keySet(), model);
+            WorkingSet dataSource = typhonQLInterface.readEntityDataSelectAttributes(firstEntityDO.getName(), entityAttributes.keySet());
             //Create a working set containing the source entity data adapted for the new entity
             WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
             dataTarget.setEntityRows(secondEntityDO.getName(), dataSource.getEntityInstanceRows(firstEntityDO.getName()));
             //Insert the adapted data in the new entity
-            typhonQLInterface.writeWorkingSetData(dataTarget, targetModel);
+            typhonQLInterface.writeWorkingSetData(dataTarget);
             //Remove the attributes from the source entity, which have been copied to the second entity
             for (String attributeName : secondEntityDO.getAttributes().keySet()) {
-                typhonQLInterface.removeAttribute(firstEntityDO.getName(), attributeName, targetModel);
+                typhonQLInterface.removeAttribute(firstEntityDO.getName(), attributeName);
             }
             //Remove the relations from the source entity, which have been copied to the second entity
             for (RelationDO secondEntityRelation : secondEntityDO.getRelations()) {
-                typhonQLInterface.deleteRelationshipInEntity(secondEntityRelation.getName(), firstEntityDO.getName(), targetModel);
+                typhonQLInterface.deleteRelationshipInEntity(secondEntityRelation.getName(), firstEntityDO.getName());
             }
 
             return targetModel;

@@ -50,28 +50,28 @@ public class EntityMigrateHandler extends BaseHandler {
             //Typhon QL
             try {
                 //Create the entity
-                typhonQLInterface.createEntity(targetEntityName, database.getName(), targetModel);
+                typhonQLInterface.createEntity(targetEntityName, database.getName());
                 //Create the entity attributes
                 if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
                     for (String attributeName : entityDO.getAttributes().keySet()) {
-                        typhonQLInterface.createEntityAttribute(targetEntityName, attributeName, entityDO.getAttributes().get(attributeName).getName(), targetModel);
+                        typhonQLInterface.createEntityAttribute(targetEntityName, attributeName, entityDO.getAttributes().get(attributeName).getName());
                     }
                 }
                 //Create the entity relationships
                 if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
                     for (RelationDO relationDO : entityDO.getRelations()) {
-                        typhonQLInterface.createEntityRelation(targetEntityName, relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality(), targetModel);
+                        typhonQLInterface.createEntityRelation(targetEntityName, relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
                     }
                 }
                 //Select the source entity data
-                WorkingSet ws = typhonQLInterface.selectEntityData(sourceEntityName, targetModel);
+                WorkingSet ws = typhonQLInterface.selectEntityData(sourceEntityName);
                 //Insert the source entity data into the target entity
-                typhonQLInterface.insertEntityData(targetEntityName, entityDO.getAttributes().keySet(), ws, targetModel);
+                typhonQLInterface.insertEntityData(targetEntityName, entityDO.getAttributes().keySet(), ws);
                 //Delete the source entity
-                typhonQLInterface.dropEntity(sourceEntityName, targetModel);
+                typhonQLInterface.dropEntity(sourceEntityName);
             } catch (Exception exception) {
                 //Revert Typhon QL operations
-                typhonQLInterface.dropEntity(targetEntityName, targetModel);
+                typhonQLInterface.dropEntity(targetEntityName);
                 //Reset the source XMI to the polystore
                 typhonQLInterface.uploadSchema(model);
                 return model;

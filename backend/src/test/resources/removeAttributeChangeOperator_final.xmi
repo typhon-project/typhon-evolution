@@ -21,6 +21,5 @@
     <attributes name="id" type="//@dataTypes.1"/>
     <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="expiryDate" type="//@dataTypes.0"/>
-    <attributes name="creationDate" type="//@dataTypes.0"/>
   </dataTypes>
 </typhonml:Model>

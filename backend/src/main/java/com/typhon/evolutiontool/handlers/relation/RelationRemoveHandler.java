@@ -27,7 +27,7 @@ public class RelationRemoveHandler extends BaseHandler {
             String entityName = relationDO.getSourceEntity().getName();
             Model targetModel = typhonMLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
-            typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, targetModel);
+            typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

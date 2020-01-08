@@ -2,38 +2,47 @@ package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
 import com.typhon.evolutiontool.entities.WorkingSet;
+import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.ChangeOperator;
 import typhonml.Model;
 
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-//import nl.cwi.swat.typhonql.Engine
-//import nl.cwi.swat.typhonql.WorkingSet
+import java.util.Base64;
 
-
-//TODO WorkingSet class should be the class from TyphonQL
 public class TyphonQLConnectionImpl implements TyphonQLConnection {
 
+    private static final String LOCALHOST_URL = "http://localhost:8080/";
+    private static final String H2020_URL = "http://h2020.info.fundp.ac.be:8080/";
+    private static final String RESET_DATABASES_URL = "api/resetdatabases";
+    private static final String GET_USERS_URL = "users";
+    private static final String QUERY_URL = "api/query";
+    private static final String UPDATE_URL = "api/update";
+    private static final String GET_ML_MODEL_URL = "api/model/ml/";
+    private static final String GET_ML_MODELS_URL = "api/models/ml";
+    private static final String UPLOAD_ML_MODEL_URL = "api/model/ml";
+
+    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
+    private static final JerseyClient restClient = JerseyClientBuilder.createClient();
+    private static WebTarget webTarget = restClient.target(LOCALHOST_URL);
+
     private Path outPath;
-    //    private Engine engine;
-    private Model schema;
     private Logger logger = LoggerFactory.getLogger(TyphonQLConnectionImpl.class);
 
-    public TyphonQLConnectionImpl() {
+    TyphonQLConnectionImpl() {
         //TODO remove this temporary method
         outPath = Paths.get("resources/TyphonQL_queries.txt");
     }
-
-    //TODO use this constructor when the Engine interface is available from QL (should be given as a parameter of EvolutionTool.evolve(...) method)
-//    public TyphonQLConnectionImpl(Engine engine) {
-//        this.engine = engine;
-//    }
 
     //TODO remove this temporary method
     @Override
@@ -44,8 +53,19 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
     }
 
     @Override
-    public void setSchema(Model schema) {
-        this.schema = schema;
+    public void uploadModel(String schemaContent) {
+        logger.info("Querying TyphonQL upload ML model web service: {}", schemaContent);
+        webTarget = webTarget.path(UPLOAD_ML_MODEL_URL);
+        String escapedDoubleQuotesContent = schemaContent.replaceAll("\"", "\\\\\"");
+        String json = "{\"name\":\"newTyphonMLModel\",\"contents\":\"" + escapedDoubleQuotesContent + "\"}";
+        Response response = webTarget
+                .request()
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(javax.ws.rs.client.Entity.entity(json, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            logger.error("Error during the web service query call: {}", webTarget.getUri());
+        }
+        logger.info("Upload of ML model successful");
     }
 
     @Override
@@ -115,9 +135,5 @@ public class TyphonQLConnectionImpl implements TyphonQLConnection {
         } catch (IOException e) {
             logger.error("IOException while writing the query to the output file.\nException is:\n{}", e.getMessage());
         }
-    }
-
-    public Model getSchema() {
-        return schema;
     }
 }

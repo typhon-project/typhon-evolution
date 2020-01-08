@@ -15,7 +15,6 @@ import typhonml.Model;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class EntityMergeHandler extends BaseHandler {
 
@@ -62,28 +61,28 @@ public class EntityMergeHandler extends BaseHandler {
             typhonQLInterface.uploadSchema(targetModel);
 
             //TyphonQL
-            typhonQLInterface.createEntity(newEntityName, sourceDatabase.getName(), targetModel);
+            typhonQLInterface.createEntity(newEntityName, sourceDatabase.getName());
             //Create the entity attributes
             if (newEntityDO.getAttributes() != null && !newEntityDO.getAttributes().isEmpty()) {
                 for (String attributeName : newEntityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(newEntityDO.getName(), attributeName, newEntityDO.getAttributes().get(attributeName).getName(), model);
+                    typhonQLInterface.createEntityAttribute(newEntityDO.getName(), attributeName, newEntityDO.getAttributes().get(attributeName).getName());
                 }
             }
             //Create the entity relationships
             if (newEntityDO.getRelations() != null && !newEntityDO.getRelations().isEmpty()) {
                 for (RelationDO relationDO : newEntityDO.getRelations()) {
-                    typhonQLInterface.createEntityRelation(newEntityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality(), model);
+                    typhonQLInterface.createEntityRelation(newEntityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
                 }
             }
             //Select the source entity data
-            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName(), targetModel);
-            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName(), targetModel);
+            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName());
+            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName());
             WorkingSet mergedWs = mergeWs(firstWs, secondWs);
             //Insert the source entity data into the target entity
-            typhonQLInterface.insertEntityData(newEntityName, newEntityDO.getAttributes().keySet(), mergedWs, targetModel);
+            typhonQLInterface.insertEntityData(newEntityName, newEntityDO.getAttributes().keySet(), mergedWs);
             //Delete the 2 source entities
-            typhonQLInterface.dropEntity(firstNewEntity.getName(), targetModel);
-            typhonQLInterface.dropEntity(secondNewEntity.getName(), targetModel);
+            typhonQLInterface.dropEntity(firstNewEntity.getName());
+            typhonQLInterface.dropEntity(secondNewEntity.getName());
 
             return targetModel;
         } else {

@@ -11,7 +11,7 @@ public interface TyphonQLConnection {
 
     String executeTyphonQLDDL(String tqlDDL);
 
-    void setSchema(Model schema);
+    void uploadModel(String schemaContent);
 
     void evolve(ChangeOperator changeOperator);
 

@@ -1,6 +1,9 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
+import com.typhon.evolutiontool.entities.EntityDO;
+import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
@@ -31,19 +34,19 @@ public class EntityAddHandler extends BaseHandler {
             targetModel = typhonMLInterface.updateEntityMappingInDatabase(entityDO.getName(), sourceDatabase.getName(), targetModel);
 
             //Typhon QL
-            //typhonQLInterface.createEntityType(entityDO, targetModel);
+            //typhonQLInterface.createEntityType(entityDO);
             //Create the entity
-            typhonQLInterface.createEntity(entityDO.getName(), sourceDatabase.getName(), model);
+            typhonQLInterface.createEntity(entityDO.getName(), sourceDatabase.getName());
             //Create the entity attributes
             if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
                 for (String attributeName : entityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(entityDO.getName(), attributeName, entityDO.getAttributes().get(attributeName).getName(), model);
+                    typhonQLInterface.createEntityAttribute(entityDO.getName(), attributeName, entityDO.getAttributes().get(attributeName).getName());
                 }
             }
             //Create the entity relationships
             if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
                 for (RelationDO relationDO : entityDO.getRelations()) {
-                    typhonQLInterface.createEntityRelation(entityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality(), model);
+                    typhonQLInterface.createEntityRelation(entityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
                 }
             }
             return targetModel;

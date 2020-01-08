@@ -1,7 +1,5 @@
 package com.typhon.evolutiontool.handlers.relation;
 
-import java.util.Collections;
-
 import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
@@ -14,6 +12,8 @@ import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.Model;
 import typhonml.Relation;
 
+import java.util.Collections;
+
 public class RelationDisableContainmentHandler extends BaseHandler {
 
     public RelationDisableContainmentHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
@@ -24,7 +24,7 @@ public class RelationDisableContainmentHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
             RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             Model targetModel = typhonMLInterface.disableContainment(relation, model);
-            typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName(), targetModel);
+            typhonQLInterface.disableContainment(relation.getName(), relation.getSourceEntity().getName());
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

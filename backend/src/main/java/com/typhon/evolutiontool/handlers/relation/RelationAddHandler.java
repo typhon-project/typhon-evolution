@@ -26,7 +26,7 @@ public class RelationAddHandler extends BaseHandler {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
 
             Model targetModel = typhonMLInterface.createRelationship(relationDO, model);
-            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            typhonQLInterface.createRelationshipType(relationDO);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

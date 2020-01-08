@@ -22,13 +22,13 @@ public class RelationDisableOppositeHandler extends BaseHandler {
 
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
-        	RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
-        	RelationDO oppositeRelation = relation.getOpposite();
+            RelationDO relation = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
+            RelationDO oppositeRelation = relation.getOpposite();
 
 //        	Model targetModel = typhonMLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity() != null ? oppositeRelation.getSourceEntity().getName() : null, model);
             Model targetModel = typhonMLInterface.disableOpposite(relation, model);
 
-            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), oppositeRelation.getSourceEntity().getName(), targetModel);
+            typhonQLInterface.deleteRelationshipInEntity(oppositeRelation.getName(), relation.getTargetEntity().getName());
             //TODO: complete the QL necessary operations
 
             return targetModel;

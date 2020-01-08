@@ -24,7 +24,7 @@ public class EntityRenameHandler extends BaseHandler {
             String newEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_NAME));
             Model targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
-            typhonQLInterface.renameEntity(oldEntityName, newEntityName, model);
+            typhonQLInterface.renameEntity(oldEntityName, newEntityName);
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + "]");

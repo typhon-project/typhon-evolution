@@ -45,31 +45,31 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
 
             //TyphonQL
             //Create the new entity
-            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName(), targetModel);
+            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName());
             //Create the new entity attributes
             if (secondEntityDO.getAttributes() != null && !secondEntityDO.getAttributes().isEmpty()) {
                 for (String attributeName : secondEntityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName(), model);
+                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName());
                 }
             }
             //Create the new entity relationships
             if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
                 for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
                     boolean isRelationSelfReferencing = firstEntityDO.getName().equals(relationDO.getTypeName());
-                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality(), model);
+                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality());
                 }
             }
             //Create a new relation between the source entity and the new entity
-            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            typhonQLInterface.createRelationshipType(relationDO);
             //Select the source entity data for the attribute and the value
-            WorkingSet dataSource = typhonQLInterface.readEntityDataEqualAttributeValue(firstEntityDO.getName(), splitAttributeName, splitAttributeValue, model);
+            WorkingSet dataSource = typhonQLInterface.readEntityDataEqualAttributeValue(firstEntityDO.getName(), splitAttributeName, splitAttributeValue);
             //Create a working set containing the source entity data adapted for the new entity
             WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
             dataTarget.setEntityRows(secondEntityDO.getName(), dataSource.getEntityInstanceRows(firstEntityDO.getName()));
             //Insert the adapted data in the new entity
-            typhonQLInterface.writeWorkingSetData(dataTarget, targetModel);
+            typhonQLInterface.writeWorkingSetData(dataTarget);
             //Delete the source entity data concerned by the attribute and the value
-            typhonQLInterface.deleteWorkingSetData(dataSource, targetModel);
+            typhonQLInterface.deleteWorkingSetData(dataSource);
 
             return targetModel;
         } else {

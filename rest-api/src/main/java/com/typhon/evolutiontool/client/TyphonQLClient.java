@@ -1,18 +1,17 @@
 package com.typhon.evolutiontool.client;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import typhonml.Model;
+import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Base64;
 
 public class TyphonQLClient {
-
-    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
-    private static final Client restClient = Client.create();
 
     private static final String LOCALHOST_URL = "http://localhost:8080/";
     private static final String H2020_URL = "http://h2020.info.fundp.ac.be:8080/";
@@ -22,169 +21,181 @@ public class TyphonQLClient {
     private static final String UPDATE_URL = "api/update";
     private static final String GET_ML_MODEL_URL = "api/model/ml/";
     private static final String GET_ML_MODELS_URL = "api/models/ml";
+    private static final String UPLOAD_ML_MODEL_URL = "api/model/ml";
 
-    private static final String RESET_DATABASES_LOCALHOST_URL = LOCALHOST_URL + RESET_DATABASES_URL;
-    private static final String GET_USERS_LOCALHOST_URL = LOCALHOST_URL + GET_USERS_URL;
-    private static final String QUERY_LOCALHOST_URL = LOCALHOST_URL + QUERY_URL;
-    private static final String UPDATE_DATABASES_LOCALHOST_URL = LOCALHOST_URL + UPDATE_URL;
-    private static final String GET_ML_MODEL_LOCALHOST_URL = LOCALHOST_URL + GET_ML_MODEL_URL;
-    private static final String GET_ML_MODELS_LOCALHOST_URL = LOCALHOST_URL + GET_ML_MODELS_URL;
-    private static final String RESET_DATABASES_H2020_URL = H2020_URL + RESET_DATABASES_URL;
-    private static final String GET_USERS_H2020_URL = H2020_URL + GET_USERS_URL;
-    private static final String QUERY_H2020_URL = H2020_URL + QUERY_URL;
-    private static final String UPDATE_DATABASES_H2020_URL = H2020_URL + UPDATE_URL;
-    private static final String GET_ML_MODEL_H2020_URL = H2020_URL + GET_ML_MODEL_URL;
-    private static final String GET_ML_MODELS_H2020_URL = H2020_URL + GET_ML_MODELS_URL;
+    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
+    private static final JerseyClient restClient = JerseyClientBuilder.createClient();
+    private static WebTarget webTarget = restClient.target(LOCALHOST_URL);
 
     public static void main(String[] args) {
         System.out.println("Base64 encoded auth string: " + authStringEnc);
         //Reset databases in the polystore
-//        resetDatabases(RESET_DATABASES_LOCALHOST_URL);
-//        resetDatabases(RESET_DATABASES_H2020_URL);
+//        resetDatabases();
         //Get polystore users
-//        getUsers(GET_USERS_LOCALHOST_URL);
-//        getUsers(GET_USERS_H2020_URL);
+//        getUsers();
         //Get all instances of "User" entity
-//        select(QUERY_LOCALHOST_URL);
-//        select(GET_USERS_H2020_URL);
+//        select();
         //Insert an instance of "User" entity
-//        insert(UPDATE_DATABASES_LOCALHOST_URL);
-//        insert(UPDATE_DATABASES_H2020_URL);
+//        insert();
         //Create a new entity "TestRelational" into the relational database
-//        create(UPDATE_DATABASES_LOCALHOST_URL);
-//        create(UPDATE_DATABASES_H2020_URL);
+//        create();
+        //Create a new attribute "id" for "TestRelational" entity
+//        createAttribute();
+        //Create a new relation "relationalToDocument" in "TestRelational" entity to "TestDocument" entity
+//        createRelation();
         //Drop "TestRelational" entity from the relational database
-//        delete(UPDATE_DATABASES_LOCALHOST_URL);
-//        delete(UPDATE_DATABASES_H2020_URL);
-//        getModel(GET_ML_MODEL_LOCALHOST_URL, 1);
-//        getModel(GET_ML_MODEL_H2020_URL, 1);
-        getModels(GET_ML_MODELS_LOCALHOST_URL);
-//        getModel(GET_ML_MODEL_H2020_URL, 1);
+//        delete();
+        //Get first uploaded TyphonML model
+//        getModel(1);
+        //Get all uploaded TyphonML models
+//        getModels();
+        //Upload a TyphonML model
+        uploadModel();
     }
 
-    private static WebResource createWebResource(String url) {
-        return restClient.resource(url);
+    private static void resetDatabases() {
+        webTarget = webTarget.path(RESET_DATABASES_URL);
+        String result = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .get(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void resetDatabases(String url) {
-        WebResource webResource = createWebResource(url);
-        ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                .get(ClientResponse.class);
-        if (resp.getStatus() != 200) {
-            System.err.println("Unable to connect to the server");
+    private static void getUsers() {
+        webTarget = webTarget.path(GET_USERS_URL);
+        String result = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .get(String.class);
+        System.out.println("Result: " + result);
+    }
+
+    private static void select() {
+        String query = "from User u select u";
+        webTarget = webTarget.path(QUERY_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
-        String output = resp.getEntity(String.class);
-        System.out.println("response: " + output);
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void getUsers(String url) {
-        WebResource webResource = createWebResource(url);
-        ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                .get(ClientResponse.class);
-        if (resp.getStatus() != 200) {
-            System.err.println("Unable to connect to the server");
+    private static void insert() {
+        String query = "insert User {id: 2, name: \"test2\", surname: \"test2\" }";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
-        String output = resp.getEntity(String.class);
-        System.out.println("response: " + output);
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void select(String url) {
-        try {
-            WebResource webResource = createWebResource(url);
-            String input = "from User u select u";
-            ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                    .post(ClientResponse.class, input);
-            if (resp.getStatus() != 200) {
-                System.err.println("Unable to connect to the server");
-            }
-            System.out.println("Output from Server .... \n");
-            String output = resp.getEntity(String.class);
-            System.out.println(output);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void create() {
+        String query = "create TestRelational at RelationalDatabase";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void insert(String url) {
-        try {
-            WebResource webResource = createWebResource(url);
-            String input = "insert User {id: 2, name: \"test2\", surname: \"test2\" }";
-            ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                    .post(ClientResponse.class, input);
-            if (resp.getStatus() != 200) {
-                System.err.println("Unable to connect to the server");
-            }
-            System.out.println("Output from Server .... \n");
-            String output = resp.getEntity(String.class);
-            System.out.println(output);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void createAttribute() {
+        String query = "create TestDocument.id : str";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void create(String url) {
-        try {
-            WebResource webResource = createWebResource(url);
-            String input = "create TestRelational at RelationalDatabase";
-            ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                    .post(ClientResponse.class, input);
-            if (resp.getStatus() != 200) {
-                System.err.println("Unable to connect to the server");
-            }
-            System.out.println("Output from Server .... \n");
-            String output = resp.getEntity(String.class);
-            System.out.println(output);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void createRelation() {
+        String query = "create TestRelational.relationalToDocument -> TestDocument[1..1]";
+//        String query = "create TestDocument.documentToRelational -> TestRelational[1..1]";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void delete(String url) {
-        try {
-            WebResource webResource = createWebResource(url);
-            String input = "drop TestRelational";
-            ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                    .post(ClientResponse.class, input);
-            if (resp.getStatus() != 200) {
-                System.err.println("Unable to connect to the server");
-            }
-            System.out.println("Output from Server .... \n");
-            String output = resp.getEntity(String.class);
-            System.out.println(output);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void delete() {
+        String query = "drop TestRelational";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 
-    private static void getModel(String url, int typhonMLModelVersion) {
-        WebResource webResource = createWebResource(url + typhonMLModelVersion);
-        ClientResponse resp = webResource.accept("application/octet-stream").header("Authorization", "Basic " + authStringEnc)
-                .get(ClientResponse.class);
-        if (resp.getStatus() != 200) {
-            System.err.println("Unable to connect to the server");
-        }
-        String xmiString = resp.getEntity(String.class);
-        System.out.println("response: " + xmiString);
-        try (PrintWriter out = new PrintWriter("resources/xmi.xmi")) {
-            out.println(xmiString);
+    private static void getModel(int typhonMLModelVersion) {
+        webTarget = webTarget.path(GET_ML_MODEL_URL + typhonMLModelVersion);
+        String result = webTarget
+                .request(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Authorization", "Basic " + authStringEnc)
+                .get(String.class);
+        System.out.println("Result: " + result);
+        try (PrintWriter out = new PrintWriter("xmi.xmi")) {
+            out.println(result);
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write the content of the XMI file");
         }
     }
 
-    private static void getModels(String url) {
-        WebResource webResource = createWebResource(url);
-        ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-                .get(ClientResponse.class);
-        if (resp.getStatus() != 200) {
-            System.err.println("Unable to connect to the server");
-        }
-        String xmiString = resp.getEntity(String.class);
-        System.out.println("response: " + xmiString);
+    private static void getModels() {
+        webTarget = webTarget.path(GET_ML_MODELS_URL);
+        String result = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .get(String.class);
+        System.out.println("Result: " + result);
         try (PrintWriter out = new PrintWriter("xmis.xmi")) {
-            out.println(xmiString);
+            out.println(result);
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write the content of the XMI file");
         }
+    }
+
+    private static void uploadModel() {
+        String stringXMI = "<?xml version=\"1.0\" encoding=\"ASCII\"?><typhonml:Model xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typhonml=\"http://org.typhon.dsls.typhonml.sirius\">  <databases xsi:type=\"typhonml:RelationalDB\" name=\"RelationalDatabase\">    <tables name=\"UserDB\" entity=\"//@dataTypes.2\">      <indexSpec name=\"userIndex\" attributes=\"//@dataTypes.2/@attributes.1\"/>      <idSpec attributes=\"//@dataTypes.2/@attributes.1\"/>    </tables>    <tables name=\"CreditCardDB\" entity=\"//@dataTypes.3\">      <indexSpec name=\"creditCardIndex\" attributes=\"//@dataTypes.3/@attributes.1\"/>      <idSpec attributes=\"//@dataTypes.3/@attributes.1\"/>    </tables>  </databases>  <databases xsi:type=\"typhonml:DocumentDB\" name=\"DocumentDatabase\">    <collections name=\"CommentDB\" entity=\"//@dataTypes.4\"/>  </databases>  <dataTypes xsi:type=\"typhonml:PrimitiveDataType\" name=\"Date\"/>  <dataTypes xsi:type=\"typhonml:PrimitiveDataType\" name=\"String\"/>  <dataTypes xsi:type=\"typhonml:Entity\" name=\"User\">    <attributes name=\"id\" type=\"//@dataTypes.1\"/>    <attributes name=\"name\" type=\"//@dataTypes.1\"/>    <relations name=\"paymentsDetails\" type=\"//@dataTypes.3\" cardinality=\"zero_many\" isContainment=\"true\"/>  </dataTypes>  <dataTypes xsi:type=\"typhonml:Entity\" name=\"CreditCard\">    <attributes name=\"id\" type=\"//@dataTypes.1\"/>    <attributes name=\"number\" type=\"//@dataTypes.1\"/>    <attributes name=\"expiryDate\" type=\"//@dataTypes.0\"/>  </dataTypes>  <dataTypes xsi:type=\"typhonml:Entity\" name=\"Comment_migrated\">    <attributes name=\"name\" type=\"//@dataTypes.1\"/>    <attributes name=\"id\" type=\"//@dataTypes.1\"/>    <relations name=\"responses\" type=\"//@dataTypes.4\" cardinality=\"zero_many\" isContainment=\"false\"/>  </dataTypes></typhonml:Model>";
+        String escapedDoubleQuotesXMI = stringXMI.replaceAll("\"", "\\\\\"");
+        String jsonXMI = "{\"name\":\"newTyphonMLModel\",\"contents\":\"" + escapedDoubleQuotesXMI + "\"}";
+        webTarget = webTarget.path(UPLOAD_ML_MODEL_URL);
+        Response response = webTarget
+                .request()
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(jsonXMI, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        System.out.println("Result: " + response);
     }
 }

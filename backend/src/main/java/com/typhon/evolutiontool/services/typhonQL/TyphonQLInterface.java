@@ -1,6 +1,9 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.AttributeDO;
+import com.typhon.evolutiontool.entities.CardinalityDO;
+import com.typhon.evolutiontool.entities.RelationDO;
+import com.typhon.evolutiontool.entities.WorkingSet;
 import typhonml.Model;
 
 import java.util.Set;
@@ -76,8 +79,6 @@ public interface TyphonQLInterface {
 
     void renameEntity(String oldEntityName, String newEntityName);
 
-    WorkingSet readAllEntityData(EntityDO entity);
-
     /**
      * Retrieve the entity data using the model provided.
      *
@@ -110,12 +111,6 @@ public interface TyphonQLInterface {
     void createRelationshipType(RelationDO relation);
 
     void writeWorkingSetData(WorkingSet workingSetData);
-
-    void deleteForeignKey(EntityDO sourceEntity, EntityDO targetEntity);
-
-    WorkingSet readRelationship(RelationDO relation);
-
-    void deleteRelationship(RelationDO relation, boolean datadelete);
 
     void deleteRelationshipInEntity(String relationname, String entityname);
 

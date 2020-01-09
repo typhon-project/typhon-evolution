@@ -34,7 +34,7 @@ public class TyphonQLClient {
         //Get polystore users
 //        getUsers();
         //Get all instances of "User" entity
-//        select();
+        select();
         //Insert an instance of "User" entity
 //        insert();
         //Create a new entity "TestRelational" into the relational database
@@ -50,7 +50,7 @@ public class TyphonQLClient {
         //Get all uploaded TyphonML models
 //        getModels();
         //Upload a TyphonML model
-        uploadModel();
+//        uploadModel();
     }
 
     private static void resetDatabases() {
@@ -86,7 +86,7 @@ public class TyphonQLClient {
     }
 
     private static void insert() {
-        String query = "insert User {id: 2, name: \"test2\", surname: \"test2\" }";
+        String query = "insert User {id: 1, name: \"test\", surname: \"test\" }";
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)

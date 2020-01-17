@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ASCII"?>
+<typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
+    <tables name="User" entity="//@dataTypes.2">
+      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
+    </tables>
+  </databases>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="Order_migrated" entity="//@dataTypes.3"/>
+  </databases>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
+  <dataTypes xsi:type="typhonml:Entity" name="User">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="name" type="//@dataTypes.0"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="Order_migrated">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
+  </dataTypes>
+</typhonml:Model>

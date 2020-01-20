@@ -1,9 +1,6 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
-import com.typhon.evolutiontool.entities.AttributeDO;
-import com.typhon.evolutiontool.entities.CardinalityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
-import com.typhon.evolutiontool.entities.WorkingSet;
+import com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
 import java.util.Set;
@@ -60,14 +57,22 @@ public interface TyphonQLInterface {
     WorkingSet selectEntityData(String entityName);
 
     /**
+     * Update the entity name in the source entity data
+     * @param sourceEntityData the source entity data
+     * @param sourceEntityName the source entity name
+     * @param targetEntityName the target entity name
+     */
+    void updateEntityNameInSourceEntityData(WorkingSet sourceEntityData, String sourceEntityName, String targetEntityName);
+
+    /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
      *
      * @param entityName       the name of the entity
-     * @param entityAttributes the set of entity attributes
      * @param ws               the WorkingSet containing the data to insert
+     * @param entityDO               the entityDO containing the attributes and their types
      * @return the TyphonQL query
      */
-    String insertEntityData(String entityName, Set<String> entityAttributes, WorkingSet ws);
+    String insertEntityData(String entityName, WorkingSet ws, EntityDO entityDO);
 
     /**
      * Drop the entity in the polystore using a TyphonQL query

@@ -16,6 +16,7 @@
     <attributes name="name" type="//@dataTypes.0"/>
   </dataTypes>
   <dataTypes xsi:type="typhonml:Entity" name="Order_migrated">
+    <attributes name="number" type="//@dataTypes.1"/>
     <attributes name="id" type="//@dataTypes.0"/>
     <relations name="user" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
   </dataTypes>

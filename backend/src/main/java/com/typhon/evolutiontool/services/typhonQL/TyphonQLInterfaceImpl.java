@@ -2,9 +2,10 @@ package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClient;
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClientImpl;
-import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
@@ -14,9 +15,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,7 +85,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public String createEntityAttribute(String entityName, String attributeName, String attributeTypeName) {
         logger.debug("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, attributeTypeName, entityName);
-        String tql = new StringBuilder(CREATE).append(entityName).append(DOT).append(attributeName).append(COLON).append(attributeTypeName).toString();
+        String tql = new StringBuilder(CREATE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(attributeTypeName)).toString();
         getTyphonQLWebServiceClient().update(tql);
         return tql;
     }
@@ -103,17 +102,74 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     public WorkingSet selectEntityData(String entityName) {
         logger.debug("Select data for entity [{}] TyphonQL query", entityName);
         String tql = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase()).toString();
-        getTyphonQLWebServiceClient().query(tql);
-        //TODO return the WorkingSet data
-        return new WorkingSetDummyImpl();
+        String result = getTyphonQLWebServiceClient().query(tql);
+        String data = result.substring(15, result.length() - 3);
+        JSONArray entities = new JSONObject(data).getJSONArray(entityName);
+        System.out.println(entities);
+        WorkingSet ws = new WorkingSetImpl();
+        if (entities != null && !entities.isEmpty()) {
+            List<EntityInstance> instances = new ArrayList<>();
+            for (int index = 0; index < entities.length(); index++) {
+                JSONObject entity = entities.getJSONObject(index);
+                EntityInstance instance = new EntityInstance((String) entity.get("uuid"));
+                Map<String, Object> fields = entity.getJSONObject("fields").toMap();
+                if (fields != null && !fields.isEmpty()) {
+                    for (String fieldName : fields.keySet()) {
+                        Object fieldValue = fields.get(fieldName);
+                        //For relations, the field value is a Map containing the key "uuid" and its value
+                        if (fieldValue instanceof Map) {
+                            instance.addAttribute(fieldName, "#" + ((Map) fieldValue).get("uuid"));
+                        } else {
+                            instance.addAttribute(fieldName, fieldValue);
+                        }
+                    }
+                }
+                instances.add(instance);
+            }
+            ws.addEntityRows(entityName, instances);
+        }
+        return ws;
     }
 
     @Override
-    public String insertEntityData(String entityName, Set<String> entityAttributes, WorkingSet ws) {
+    public void updateEntityNameInSourceEntityData(WorkingSet sourceEntityData, String sourceEntityName, String targetEntityName) {
+        if (sourceEntityData != null) {
+            sourceEntityData.addEntityRows(targetEntityName, sourceEntityData.getEntityRows(sourceEntityName));
+            sourceEntityData.deleteEntityRows(sourceEntityName);
+        }
+    }
+
+    @Override
+    public String insertEntityData(String entityName, WorkingSet ws, EntityDO entityDO) {
         logger.debug("Insert working set data for entity [{}] TyphonQL query", entityName);
-        String tql = new StringBuilder(INSERT).append(entityName).append(OPENING_CURLY_BRACE).append(String.join(":, ", entityAttributes)).append(":").append(CLOSING_CURLY_BRACE).toString();
-        getTyphonQLWebServiceClient().update(tql);
+        List<EntityInstance> instances = ws.getEntityRows(entityName);
+        String tql = "";
+        if (instances != null && !instances.isEmpty()) {
+            List<String> insertQueries = new ArrayList<>();
+            for (EntityInstance instance : instances) {
+                Map<String, Object> attributes = instance.getAttributes();
+                insertQueries.add(attributes.entrySet().stream().map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, entityDO)).collect(Collectors.joining(COMMA, entityName + OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim())));
+            }
+            tql = new StringBuilder(INSERT).append(String.join(COMMA, insertQueries)).toString();
+            getTyphonQLWebServiceClient().update(tql);
+        }
         return tql;
+    }
+
+    private String getAttributeValueByType(Map.Entry attribute, EntityDO entityDO) {
+        Map<String, DataTypeDO> attributes = entityDO.getAttributes();
+        Optional<DataTypeDO> attributeDataType = attributes.keySet().stream().filter(attributeType -> attributeType.equals(attribute.getKey())).map(attributes::get).findFirst();
+        if (attributeDataType.isPresent()) {
+            switch (attributeDataType.get().getName()) {
+                case "String":
+                case "Date":
+                    return "\"" + attribute.getValue() + "\"";
+                case "int":
+                case "Real":
+                    return attribute.getValue().toString();
+            }
+        }
+        return attribute.getValue().toString();
     }
 
     @Override
@@ -126,24 +182,30 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
     @Override
     public void renameEntity(String oldEntityName, String newEntityName) {
-        logger.debug("Rename EntityDO [{}] to [{}] via TyphonQL on TyphonML model [{}]", oldEntityName, newEntityName);
+        logger.debug("Rename entity (from '{}' to '{}') TyphonQL query", oldEntityName, newEntityName);
         String tql = new StringBuilder(RENAME).append(oldEntityName).append(TO).append(newEntityName).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
     @Override
     public WorkingSet readAllEntityData(String entityId) {
-        return getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(entityId).append(BLANK).append(entityId.toLowerCase()).append(BLANK).append(SELECT).append(entityId.toLowerCase()).toString());
+        String result = getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(entityId).append(BLANK).append(entityId.toLowerCase()).append(BLANK).append(SELECT).append(entityId.toLowerCase()).toString());
+        //TODO
+        return new WorkingSetImpl();
     }
 
     @Override
     public WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue) {
-        return getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(BLANK).append(SELECT).append(sourceEntityName.toLowerCase()).append(BLANK).append(WHERE).append(attributeName).append(EQUALS).append(attributeValue).toString());
+        String result = getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(BLANK).append(SELECT).append(sourceEntityName.toLowerCase()).append(BLANK).append(WHERE).append(attributeName).append(EQUALS).append(attributeValue).toString());
+        //TODO
+        return new WorkingSetImpl();
     }
 
     @Override
     public WorkingSet readEntityDataSelectAttributes(String sourceEntityName, Set<String> attributes) {
-        return getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(BLANK).append(SELECT).toString() + attributes.stream().map(sourceEntityName.toLowerCase().concat(DOT)::concat).collect(Collectors.joining(COMMA)));
+        String result = getTyphonQLWebServiceClient().query(new StringBuilder(FROM).append(sourceEntityName).append(BLANK).append(sourceEntityName.toLowerCase()).append(BLANK).append(SELECT).toString() + attributes.stream().map(sourceEntityName.toLowerCase().concat(DOT)::concat).collect(Collectors.joining(COMMA)));
+        //TODO
+        return new WorkingSetImpl();
     }
 
     @Override
@@ -259,6 +321,22 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
                 return CARDINALITY_ZERO_MANY;
             case CardinalityDO.ONE_MANY_VALUE:
                 return CARDINALITY_ONE_MANY;
+        }
+        return "";
+    }
+
+    private String covertMLTypeToQLType(String mlType) {
+        if (mlType != null && !mlType.isEmpty()) {
+            switch (mlType) {
+                case "String":
+                    return "str";
+                case "Date":
+                    return "str";
+                case "int":
+                    return "int";
+                case "Real":
+                    return "float";
+            }
         }
         return "";
     }

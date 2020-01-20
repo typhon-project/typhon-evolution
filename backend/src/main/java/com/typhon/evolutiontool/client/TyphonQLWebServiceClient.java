@@ -14,7 +14,7 @@ public interface TyphonQLWebServiceClient {
 
     void getUsers();
 
-    WorkingSet query(String query);
+    String query(String query);
 
     void update(String query);
 

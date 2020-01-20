@@ -7,13 +7,33 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
+import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
 
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class EntityMigrateHandler extends BaseHandler {
+
+
+    private static final String LOCALHOST_URL = "http://localhost:8080/";
+    private static final String H2020_URL = "http://h2020.info.fundp.ac.be:8080/";
+    private static final String RESET_DATABASES_URL = "api/resetdatabases";
+    private static final String GET_USERS_URL = "users";
+    private static final String QUERY_URL = "api/query";
+    private static final String UPDATE_URL = "api/update";
+    private static final String GET_ML_MODEL_URL = "api/model/ml/";
+    private static final String GET_ML_MODELS_URL = "api/models/ml";
+    private static final String UPLOAD_ML_MODEL_URL = "api/model/ml";
+
+    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
+    private static final JerseyClient restClient = JerseyClientBuilder.createClient();
 
     public EntityMigrateHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);
@@ -38,37 +58,46 @@ public class EntityMigrateHandler extends BaseHandler {
             //Check entity self referencing relations
             checkEntityRelations(sourceEntityName, entityDO);
             Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
-            targetModel = typhonMLInterface.deleteEntityMappings(sourceEntityName, sourceEntityNameInDatabase, targetModel);
-            targetModel = typhonMLInterface.deleteEntityType(sourceEntityName, targetModel);
 //            targetModel = typhonMLInterface.createDatabase(targetDatabaseType, database.getName(), targetModel);
-            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(targetDatabaseType, database.getName(), sourceEntityNameInDatabase, targetEntityName, targetModel);
+            targetModel = typhonMLInterface.createNewEntityMappingInDatabase(targetDatabaseType, database.getName(), targetEntityName, targetEntityName, targetModel);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
-
-            //Upload the new XMI to the polystore
-            typhonQLInterface.uploadSchema(targetModel);
 
             //Typhon QL
             try {
+                //Select the source entity data
+                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName);
+                //Manipulate the source entity data (modify the entity name, to the new entity name)
+                typhonQLInterface.updateEntityNameInSourceEntityData(entityData, sourceEntityName, targetEntityName);
+                //Upload the new XMI to the polystore
+                typhonQLInterface.uploadSchema(targetModel);
                 //Create the entity
                 typhonQLInterface.createEntity(targetEntityName, database.getName());
                 //Create the entity attributes
-                if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
-                    for (String attributeName : entityDO.getAttributes().keySet()) {
-                        typhonQLInterface.createEntityAttribute(targetEntityName, attributeName, entityDO.getAttributes().get(attributeName).getName());
+                if (!database.getName().equals("DocumentDatabase")) {
+                    if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
+                        for (String attributeName : entityDO.getAttributes().keySet()) {
+                            typhonQLInterface.createEntityAttribute(targetEntityName, attributeName, entityDO.getAttributes().get(attributeName).getName());
+                        }
                     }
                 }
                 //Create the entity relationships
                 if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
                     for (RelationDO relationDO : entityDO.getRelations()) {
                         typhonQLInterface.createEntityRelation(targetEntityName, relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
+                        //TODO Drop relation is not yet implemented in TyphonQL
+//                        typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), sourceEntityName);
                     }
                 }
-                //Select the source entity data
-                WorkingSet ws = typhonQLInterface.selectEntityData(sourceEntityName);
                 //Insert the source entity data into the target entity
-                typhonQLInterface.insertEntityData(targetEntityName, entityDO.getAttributes().keySet(), ws);
+                typhonQLInterface.insertEntityData(targetEntityName, entityData, entityDO);
                 //Delete the source entity
                 typhonQLInterface.dropEntity(sourceEntityName);
+
+                //Typhon ML: delete old entity and its mappings
+                targetModel = typhonMLInterface.deleteEntityMappings(sourceEntityName, sourceEntityNameInDatabase, targetModel);
+                targetModel = typhonMLInterface.deleteEntityType(sourceEntityName, targetModel);
+                //Upload the new XMI to the polystore
+                typhonQLInterface.uploadSchema(targetModel);
             } catch (Exception exception) {
                 //Revert Typhon QL operations
                 typhonQLInterface.dropEntity(targetEntityName);

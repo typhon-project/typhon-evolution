@@ -1,7 +1,5 @@
 package com.typhon.evolutiontool.client;
 
-import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
-import com.typhon.evolutiontool.entities.WorkingSet;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -54,11 +52,11 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     public void resetDatabases() {
         logger.info("Querying TyphonQL web service to reset the polystore databases");
         WebTarget webTarget = restClient.target(LOCALHOST_URL).path(RESET_DATABASES_URL);
-        String result = webTarget
+        Boolean result = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .get(String.class);
-        System.out.println("Result: " + result);
+                .get(Boolean.class);
+        logger.info(RESET_DATABASES_URL + " result: " + result);
         logger.info("Reset of polystore databases successful");
     }
 
@@ -70,7 +68,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
                 .get(String.class);
-        System.out.println("Result: " + result);
+        logger.info(GET_USERS_URL + " result: " + result);
         logger.info("Get polytstore users successful");
     }
 
@@ -78,8 +76,8 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
      * Select data from the polystore
      */
     @Override
-    public WorkingSet query(String query) {
-        logger.info("Querying TyphonQL web service to execute a DML query");
+    public String query(String query) {
+        logger.info("Querying TyphonQL web service to execute a DML query: {}", query);
         WebTarget webTarget = restClient.target(LOCALHOST_URL).path(QUERY_URL);
 //        String query = "from User u select u";
         Response response = webTarget
@@ -87,12 +85,12 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
                 .header("Authorization", "Basic " + authStringEnc)
                 .post(Entity.entity(query, MediaType.TEXT_PLAIN));
         if (response.getStatus() != 200) {
-            System.err.println("Error during the web service query call: " + webTarget.getUri());
+            logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        System.out.println("Result: " + result);
+        logger.info(QUERY_URL + " result: " + result);
         logger.info("DML query for the polystore successful");
-        return new WorkingSetDummyImpl();
+        return result;
     }
 
     /**
@@ -100,18 +98,17 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
      */
     @Override
     public void update(String query) {
-        logger.info("Querying TyphonQL web service to execute a DDL query");
+        logger.info("Querying TyphonQL web service to execute a DDL query: {}", query);
         WebTarget webTarget = restClient.target(LOCALHOST_URL).path(UPDATE_URL);
-//        String query = "insert User {id: 2, name: \"test2\", surname: \"test2\" }";
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
                 .post(Entity.entity(query, MediaType.TEXT_PLAIN));
         if (response.getStatus() != 200) {
-            System.err.println("Error during the web service query call: " + webTarget.getUri());
+            logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        System.out.println("Result: " + result);
+        logger.info(UPDATE_URL + " result: " + result);
         logger.info("DDL query for the polystore successful");
     }
 
@@ -122,13 +119,13 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
      */
     @Override
     public Model getModel(Integer typhonMLModelVersion) {
-        logger.info("Querying TyphonQL web service to get a given version of a TyphonML model");
+        logger.info("Querying TyphonQL web service to get version '{}' of the TyphonML model", typhonMLModelVersion);
         WebTarget webTarget = restClient.target(LOCALHOST_URL).path(GET_ML_MODEL_URL + (typhonMLModelVersion != null ? typhonMLModelVersion : -1));
         String result = webTarget
                 .request(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Authorization", "Basic " + authStringEnc)
                 .get(String.class);
-        System.out.println("Result: " + result);
+        logger.info(GET_ML_MODEL_URL + " result: " + result);
         try (PrintWriter out = new PrintWriter("xmi.xmi")) {
             out.println(result);
         } catch (FileNotFoundException e) {
@@ -149,7 +146,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
                 .get(String.class);
-        System.out.println("Result: " + result);
+        logger.info(GET_ML_MODELS_URL + " result: " + result);
         try (PrintWriter out = new PrintWriter("xmis.xmi")) {
             out.println(result);
         } catch (FileNotFoundException e) {

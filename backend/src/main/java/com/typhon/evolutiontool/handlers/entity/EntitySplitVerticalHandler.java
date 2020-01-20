@@ -74,7 +74,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             WorkingSet dataSource = typhonQLInterface.readEntityDataSelectAttributes(firstEntityDO.getName(), entityAttributes.keySet());
             //Create a working set containing the source entity data adapted for the new entity
             WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
-            dataTarget.setEntityRows(secondEntityDO.getName(), dataSource.getEntityInstanceRows(firstEntityDO.getName()));
+            dataTarget.addEntityRows(secondEntityDO.getName(), dataSource.getEntityRows(firstEntityDO.getName()));
             //Insert the adapted data in the new entity
             typhonQLInterface.writeWorkingSetData(dataTarget);
             //Remove the attributes from the source entity, which have been copied to the second entity

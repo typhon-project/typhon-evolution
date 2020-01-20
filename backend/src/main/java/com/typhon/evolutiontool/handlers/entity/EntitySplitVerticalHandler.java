@@ -9,7 +9,6 @@ import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.DataTypeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
-import com.typhon.evolutiontool.utils.WorkingSetFactory;
 import typhonml.*;
 
 import java.util.Arrays;
@@ -73,7 +72,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             //Select the source entity data for the attribute and the value
             WorkingSet dataSource = typhonQLInterface.readEntityDataSelectAttributes(firstEntityDO.getName(), entityAttributes.keySet());
             //Create a working set containing the source entity data adapted for the new entity
-            WorkingSet dataTarget = WorkingSetFactory.createEmptyWorkingSet();
+            WorkingSet dataTarget = new WorkingSetImpl();
             dataTarget.addEntityRows(secondEntityDO.getName(), dataSource.getEntityRows(firstEntityDO.getName()));
             //Insert the adapted data in the new entity
             typhonQLInterface.writeWorkingSetData(dataTarget);

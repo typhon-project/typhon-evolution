@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.handlers.entity;
 
-import com.typhon.evolutiontool.dummy.WorkingSetDummyImpl;
+import com.typhon.evolutiontool.entities.WorkingSetImpl;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -79,7 +79,7 @@ public class EntityMergeHandler extends BaseHandler {
             WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName());
             WorkingSet mergedWs = mergeWs(firstWs, secondWs);
             //Insert the source entity data into the target entity
-            typhonQLInterface.insertEntityData(newEntityName, newEntityDO.getAttributes().keySet(), mergedWs);
+            typhonQLInterface.insertEntityData(newEntityName, mergedWs, newEntityDO);
             //Delete the 2 source entities
             typhonQLInterface.dropEntity(firstNewEntity.getName());
             typhonQLInterface.dropEntity(secondNewEntity.getName());
@@ -125,7 +125,7 @@ public class EntityMergeHandler extends BaseHandler {
     }
 
     private WorkingSet mergeWs(WorkingSet firstWs, WorkingSet secondWs) {
-        WorkingSet ws = new WorkingSetDummyImpl();
+        WorkingSet ws = new WorkingSetImpl();
         if (firstWs == null || firstWs.getRows().isEmpty()) {
             return secondWs;
         }
@@ -135,7 +135,7 @@ public class EntityMergeHandler extends BaseHandler {
         for (String entityName : firstWs.getRows().keySet()) {
             List<EntityInstance> entityInstances = firstWs.getRows().get(entityName);
             if (secondWs.getRows().containsKey(entityName)) {
-                entityInstances.addAll(secondWs.getEntityInstanceRows(entityName));
+                entityInstances.addAll(secondWs.getEntityRows(entityName));
             }
             ws.getRows().put(entityName, entityInstances);
         }

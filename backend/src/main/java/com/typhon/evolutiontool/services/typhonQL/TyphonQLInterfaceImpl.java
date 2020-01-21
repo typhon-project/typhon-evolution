@@ -105,7 +105,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         String result = getTyphonQLWebServiceClient().query(tql);
         String data = result.substring(15, result.length() - 3);
         JSONArray entities = new JSONObject(data).getJSONArray(entityName);
-        System.out.println(entities);
+        logger.info("Selected entities: {}", entities);
         WorkingSet ws = new WorkingSetImpl();
         if (entities != null && !entities.isEmpty()) {
             List<EntityInstance> instances = new ArrayList<>();

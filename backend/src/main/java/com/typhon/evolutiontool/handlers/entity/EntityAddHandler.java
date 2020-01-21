@@ -32,15 +32,19 @@ public class EntityAddHandler extends BaseHandler {
             //Typhon ML
             Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
             targetModel = typhonMLInterface.updateEntityMappingInDatabase(entityDO.getName(), sourceDatabase.getName(), targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
             //Typhon QL
-            //typhonQLInterface.createEntityType(entityDO);
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
             //Create the entity
             typhonQLInterface.createEntity(entityDO.getName(), sourceDatabase.getName());
             //Create the entity attributes
-            if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
-                for (String attributeName : entityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(entityDO.getName(), attributeName, entityDO.getAttributes().get(attributeName).getName());
+            if (!sourceDatabase.getName().equals("DocumentDatabase")) {
+                if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
+                    for (String attributeName : entityDO.getAttributes().keySet()) {
+                        typhonQLInterface.createEntityAttribute(entityDO.getName(), attributeName, entityDO.getAttributes().get(attributeName).getName());
+                    }
                 }
             }
             //Create the entity relationships

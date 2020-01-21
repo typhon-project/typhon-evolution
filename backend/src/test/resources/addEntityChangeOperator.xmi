@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="UserDB" entity="//@dataTypes.2">
-      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.1"/>
+    <tables name="Order" entity="//@dataTypes.2">
+      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
     </tables>
-    <tables name="CreditCardDB" entity="//@dataTypes.3">
-      <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.3/@attributes.1"/>
+    <tables name="User" entity="//@dataTypes.3">
+      <indexSpec name="userIndex" attributes="//@dataTypes.3/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.3/@attributes.0"/>
     </tables>
-    <tables name="NewTable" entity="//@changeOperators.0"/>
   </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="NewEntity" entity="//@changeOperators.0"/>
+  </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:Entity" name="User">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="name" type="//@dataTypes.1"/>
-    <relations name="paymentsDetails" type="//@dataTypes.3" cardinality="zero_many" isContainment="true"/>
-  </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
-    <attributes name="id" type="//@dataTypes.1"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Order">
+    <attributes name="id" type="//@dataTypes.0"/>
     <attributes name="number" type="//@dataTypes.1"/>
-    <attributes name="expiryDate" type="//@dataTypes.0"/>
+    <relations name="user" type="//@dataTypes.3" cardinality="one"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:AddEntity" name="Comment">
-    <attributes xsi:type="typhonml:AddAttribute" name="id" type="//@dataTypes.1" ownerEntity="//@changeOperators.0"/>
-    <attributes xsi:type="typhonml:AddAttribute" name="name" type="//@dataTypes.1" ownerEntity="//@changeOperators.0"/>
-    <relations xsi:type="typhonml:AddRelation" name="newRelation" type="//@dataTypes.3" cardinality="zero_many" ownerEntity="//@changeOperators.0"/>
+  <dataTypes xsi:type="typhonml:Entity" name="User">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="name" type="//@dataTypes.0"/>
+  </dataTypes>
+  <changeOperators xsi:type="typhonml:AddEntity" name="NewEntity">
+    <attributes xsi:type="typhonml:AddAttribute" name="id" type="//@dataTypes.0" ownerEntity="//@changeOperators.0"/>
+    <attributes xsi:type="typhonml:AddAttribute" name="name" type="//@dataTypes.0" ownerEntity="//@changeOperators.0"/>
+    <relations xsi:type="typhonml:AddRelation" name="newRelation" type="//@dataTypes.2" cardinality="zero_many" ownerEntity="//@changeOperators.0" isContainment="false"/>
   </changeOperators>
 </typhonml:Model>
+
+

@@ -140,6 +140,25 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
+    public void removeUselessAttributesInSourceEntityData(WorkingSet entityData, String entityName, Set<String> attributesToKeep) {
+        if (entityData != null && attributesToKeep != null && !attributesToKeep.isEmpty()) {
+            List<EntityInstance> instances = entityData.getEntityRows(entityName);
+            if (instances != null && !instances.isEmpty()) {
+                for (EntityInstance instance : instances) {
+                    Map<String, Object> attributes = instance.getAttributes();
+                    Map<String, Object> keptAttributes = new HashMap<>();
+                    for (String attributeName : attributes.keySet()) {
+                        if (attributesToKeep.contains(attributeName)) {
+                            keptAttributes.put(attributeName, attributes.get(attributeName));
+                        }
+                    }
+                    instance.setAttributes(keptAttributes);
+                }
+            }
+        }
+    }
+
+    @Override
     public String insertEntityData(String entityName, WorkingSet ws, EntityDO entityDO) {
         logger.debug("Insert working set data for entity [{}] TyphonQL query", entityName);
         List<EntityInstance> instances = ws.getEntityRows(entityName);
@@ -287,11 +306,6 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
     @Override
     public void removeAttribute(String entityName, String attribute) {
-        //TODO Separate deletion of data and structure.
-        // Delete data
-//        getTyphonQLConnection(model).delete(this.readEntityDataSelectAttributes(entityName, attribute));
-
-        //Delete Structure
         String tql = new StringBuilder(DROP).append(entityName).append(DOT).append(attribute).toString();
         logger.debug("Delete attributes [{}] via TyphonQL DDL on TyphonML model", entityName);
         getTyphonQLWebServiceClient().update(tql);
@@ -329,7 +343,6 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         if (mlType != null && !mlType.isEmpty()) {
             switch (mlType) {
                 case "String":
-                    return "str";
                 case "Date":
                     return "str";
                 case "int":

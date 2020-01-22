@@ -65,6 +65,14 @@ public interface TyphonQLInterface {
     void updateEntityNameInSourceEntityData(WorkingSet sourceEntityData, String sourceEntityName, String targetEntityName);
 
     /**
+     * Remove the entity useless attributes in the entity data
+     * @param entityData the entity data
+     * @param entityName the entity name
+     * @param attributesToKeep the entity attributes to keep in the entity data
+     */
+    void removeUselessAttributesInSourceEntityData(WorkingSet entityData, String entityName, Set<String> attributesToKeep);
+
+    /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
      *
      * @param entityName       the name of the entity

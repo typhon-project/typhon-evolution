@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="UserDB" entity="//@dataTypes.2">
-      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.1"/>
+    <tables name="Order" entity="//@dataTypes.2">
+      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
     </tables>
-    <tables name="SplittedEntity" db="//@databases.0" entity="//@dataTypes.4"/>
+    <tables name="User" entity="//@dataTypes.3">
+      <indexSpec name="userIndex" attributes="//@dataTypes.3/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.3/@attributes.0"/>
+    </tables>
+    <tables name="Address" db="//@databases.0" entity="//@dataTypes.4"/>
   </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Order">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="number" type="//@dataTypes.1"/>
+  </dataTypes>
   <dataTypes xsi:type="typhonml:Entity" name="User">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="firstName" type="//@dataTypes.1"/>
-    <relations name="relation1" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="name" type="//@dataTypes.0"/>
   </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="expiryDate" type="//@dataTypes.0"/>
-  </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="SplittedEntity">
-    <attributes name="creationDate" type="//@dataTypes.0"/>
-    <attributes name="lastName" type="//@dataTypes.1"/>
-    <relations name="relation2" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
-    <relations name="users" type="//@dataTypes.4" cardinality="zero_many" isContainment="false"/>
-    <relations name="to_User" type="//@dataTypes.2" cardinality="one" isContainment="false"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Address">
+    <attributes name="city" type="//@dataTypes.0"/>
+    <attributes name="street" type="//@dataTypes.0"/>
+    <relations name="to_User" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
   </dataTypes>
 </typhonml:Model>

@@ -86,7 +86,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
                 }
             }
             //Create a new relation between the source entity and the new entity
-//            typhonQLInterface.createRelationshipType(relationDO);
+            //TODO check the relation creation works after QL update (actually not working, because relation creation does not create a join table, nor a reference attribute)
+            typhonQLInterface.createRelationshipType(relationDO);
             //Insert the adapted data in the new entity
             typhonQLInterface.insertEntityData(secondEntityDO.getName(), entityData, secondEntityDO);
 

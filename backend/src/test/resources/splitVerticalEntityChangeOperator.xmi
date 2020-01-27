@@ -5,12 +5,9 @@
       <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
       <idSpec attributes="//@dataTypes.2/@attributes.0"/>
     </tables>
-    <tables name="User" entity="//@dataTypes.3">
-      <indexSpec name="userIndex" attributes="//@dataTypes.3/@attributes.0"/>
-      <idSpec attributes="//@dataTypes.3/@attributes.0"/>
-    </tables>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="User" entity="//@dataTypes.3"/>
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>

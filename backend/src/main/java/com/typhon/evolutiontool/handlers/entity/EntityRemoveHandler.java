@@ -19,23 +19,22 @@ public class EntityRemoveHandler extends BaseHandler {
 
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
-        Model targetModel;
-        String entityname;
-
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ENTITY_NAME))) {
-            entityname = smo.getInputParameter().get(ChangeOperatorParameter.ENTITY_NAME).toString();
-            String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityname, model);
+            String entityName = smo.getInputParameter().get(ChangeOperatorParameter.ENTITY_NAME).toString();
+            String sourceEntityNameInDatabase = typhonMLInterface.getEntityNameInDatabase(entityName, model);
             //If the entity is involved in a relationship. Abort
-            if (typhonMLInterface.hasRelationship(entityname, model)) {
+            if (typhonMLInterface.hasRelationship(entityName, model)) {
                 throw new InputParameterException("Cannot delete an entity involved in a relationship. Remove the relationships first.");
             }
-            //Delete data
-            typhonQLInterface.deleteAllEntityData(entityname);
-            //Delete structures
-            typhonQLInterface.dropEntity(entityname);
+            //Delete the entity
+            typhonQLInterface.dropEntity(entityName);
 
-            targetModel = typhonMLInterface.deleteEntityMappings(entityname, sourceEntityNameInDatabase, model);
-            targetModel = typhonMLInterface.deleteEntityType(entityname, targetModel);
+            Model targetModel = typhonMLInterface.deleteEntityMappings(entityName, sourceEntityNameInDatabase, model);
+            targetModel = typhonMLInterface.deleteEntityType(entityName, targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
 
             return targetModel;
         } else {

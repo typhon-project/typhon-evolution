@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import typhonml.Collection;
 import typhonml.Table;
 import typhonml.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
@@ -217,18 +215,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         }
         return newModel;
     }
-
-    @Override
-    public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
-        logger.info("Copying EntityDO type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));
-        copyEntity.setName(targetEntityName);
-        newModel.getDataTypes().add(copyEntity);
-        return newModel;
-    }
-
 
     @Override
     public Model createRelationship(RelationDO relation, Model model) {
@@ -505,42 +491,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
             }
         }
         return null;
-    }
-
-    @Override
-    public Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException {
-        if (this.getDatabaseFromName(databasename, targetModel) == null) {
-
-            logger.info("Creating a Database of type [{}] with name [{}] in TyphonML", dbtype.toString(), databasename);
-            Model newModel;
-            newModel = EcoreUtil.copy(targetModel);
-            Database db = null;
-
-            switch (dbtype) {
-                case DOCUMENTDB:
-                    db = TyphonmlFactory.eINSTANCE.createDocumentDB();
-                    break;
-                case RELATIONALDB:
-                    db = TyphonmlFactory.eINSTANCE.createRelationalDB();
-                    break;
-                case COLUMNDB:
-                    db = TyphonmlFactory.eINSTANCE.createColumnDB();
-                    break;
-                case GRAPHDB:
-                    db = TyphonmlFactory.eINSTANCE.createGraphDB();
-                    break;
-                case KEYVALUE:
-                    db = TyphonmlFactory.eINSTANCE.createKeyValueDB();
-                    break;
-            }
-            if (db == null) {
-                throw new InputParameterException("Error creating database. Verify that database type is [DOCUMENTDB, RELATIONALDB, COLUMNBD, GRAPHDB, KEYVALUEDB]");
-            }
-            db.setName(databasename);
-            newModel.getDatabases().add(db);
-            return newModel;
-        }
-        return targetModel;
     }
 
     @Override

@@ -227,12 +227,6 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public void deleteAllEntityData(String entityid) {
-        //TODO check the query
-        getTyphonQLWebServiceClient().update(new StringBuilder(FROM).append(entityid).append(BLANK).append(entityid.toLowerCase()).append(BLANK).append(DELETE).append(BLANK).append(entityid.toLowerCase()).toString());
-    }
-
-    @Override
     public void deleteRelationshipInEntity(String relationname, String entityname) {
         logger.debug("Delete Relationship [{}] in [{}] via TyphonQL on TyphonML model", relationname, entityname);
         String tql = new StringBuilder(DROP).append(entityname).append(DOT).append(relationname).toString();

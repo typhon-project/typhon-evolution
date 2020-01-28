@@ -5,9 +5,6 @@ import typhonml.Model;
 
 import java.util.Set;
 
-/*
-    This interface specifies the operations that needs to be performed on the Typhon polystore in order to apply a Schema Modification Operator. Either modification of structure or of data.
- */
 public interface TyphonQLInterface {
 
     /**
@@ -58,8 +55,8 @@ public interface TyphonQLInterface {
     /**
      * Select the entity data from the polystore using a TyphonQL query
      *
-     * @param entityName the name of the entity
-     * @param attributeName the name of the entity attribute for the "where" clause
+     * @param entityName     the name of the entity
+     * @param attributeName  the name of the entity attribute for the "where" clause
      * @param attributeValue the value of the entity attribute for the "where" clause
      * @return the WorkingSet results
      */
@@ -67,6 +64,7 @@ public interface TyphonQLInterface {
 
     /**
      * Update the entity name in the source entity data
+     *
      * @param sourceEntityData the source entity data
      * @param sourceEntityName the source entity name
      * @param targetEntityName the target entity name
@@ -75,8 +73,9 @@ public interface TyphonQLInterface {
 
     /**
      * Remove the entity useless attributes in the entity data
-     * @param entityData the entity data
-     * @param entityName the entity name
+     *
+     * @param entityData       the entity data
+     * @param entityName       the entity name
      * @param attributesToKeep the entity attributes to keep in the entity data
      */
     void removeUselessAttributesInSourceEntityData(WorkingSet entityData, String entityName, Set<String> attributesToKeep);
@@ -84,9 +83,9 @@ public interface TyphonQLInterface {
     /**
      * Insert the working set data into the entity in the polystore using a TyphonQL query
      *
-     * @param entityName       the name of the entity
-     * @param ws               the WorkingSet containing the data to insert
-     * @param entityDO               the entityDO containing the attributes and their types
+     * @param entityName the name of the entity
+     * @param ws         the WorkingSet containing the data to insert
+     * @param entityDO   the entityDO containing the attributes and their types
      * @return the TyphonQL query
      */
     String insertEntityData(String entityName, WorkingSet ws, EntityDO entityDO);
@@ -94,8 +93,8 @@ public interface TyphonQLInterface {
     /**
      * Delete the entity data from the polystore using a TyphonQL query
      *
-     * @param entityName the name of the entity
-     * @param attributeName the name of the entity attribute for the "where" clause
+     * @param entityName     the name of the entity
+     * @param attributeName  the name of the entity attribute for the "where" clause
      * @param attributeValue the value of the entity attribute for the "where" clause
      */
     void deleteEntityData(String entityName, String attributeName, String attributeValue);
@@ -109,8 +108,6 @@ public interface TyphonQLInterface {
     String dropEntity(String entityName);
 
     void renameEntity(String oldEntityName, String newEntityName);
-
-    void deleteAllEntityData(String entityid);
 
     /**
      * Remove the attributes and their data of a given entity.

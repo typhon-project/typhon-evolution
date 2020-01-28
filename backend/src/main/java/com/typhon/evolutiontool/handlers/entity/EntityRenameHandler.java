@@ -22,9 +22,18 @@ public class EntityRenameHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ENTITY_NAME, ChangeOperatorParameter.NEW_ENTITY_NAME))) {
             String oldEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.ENTITY_NAME));
             String newEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_NAME));
+
+            //TyphonQL
+            //TODO not implemented yet by TyphonQL
+            typhonQLInterface.renameEntity(oldEntityName, newEntityName);
+
+            //TyphonML
             Model targetModel = typhonMLInterface.renameEntity(oldEntityName, newEntityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
-            typhonQLInterface.renameEntity(oldEntityName, newEntityName);
+
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + "]");

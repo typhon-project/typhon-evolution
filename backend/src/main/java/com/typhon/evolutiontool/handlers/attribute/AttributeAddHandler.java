@@ -25,8 +25,14 @@ public class AttributeAddHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
 
+            //TyphonML
             Model targetModel = typhonMLInterface.addAttribute(attributeDO, attributeDO.getEntity().getName(), model);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            //TyphonQL
+            typhonQLInterface.uploadSchema(targetModel);
             typhonQLInterface.addAttribute(attributeDO, attributeDO.getEntity().getName());
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.ATTRIBUTE + "]");

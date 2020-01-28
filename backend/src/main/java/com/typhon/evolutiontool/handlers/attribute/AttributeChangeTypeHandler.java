@@ -27,8 +27,16 @@ public class AttributeChangeTypeHandler extends BaseHandler {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String entityName = attributeDO.getEntity().getName();
             String dataTypeName = ((DataType) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE_TYPE)).getName();
+
+            //TyphonQL
+            typhonQLInterface.changeTypeAttribute(attributeDO.getName(), dataTypeName, entityName);
+
+            //TyphonML
             Model targetModel = typhonMLInterface.changeTypeAttribute(attributeDO, entityName, dataTypeName, model);
-            typhonQLInterface.changeTypeAttribute(attributeDO, entityName);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ATTRIBUTE_NAME + ", " + ChangeOperatorParameter.ATTRIBUTE_TYPE + "]");

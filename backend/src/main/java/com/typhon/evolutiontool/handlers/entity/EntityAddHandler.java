@@ -2,7 +2,6 @@ package com.typhon.evolutiontool.handlers.entity;
 
 import com.typhon.evolutiontool.entities.ChangeOperatorParameter;
 import com.typhon.evolutiontool.entities.EntityDO;
-import com.typhon.evolutiontool.entities.RelationDO;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
@@ -37,22 +36,8 @@ public class EntityAddHandler extends BaseHandler {
             //Typhon QL
             //Upload the new XMI to the polystore
             typhonQLInterface.uploadSchema(targetModel);
-            //Create the entity
-            typhonQLInterface.createEntity(entityDO.getName(), sourceDatabase.getName());
-            //Create the entity attributes
-            if (!sourceDatabase.getName().equals("DocumentDatabase")) {
-                if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
-                    for (String attributeName : entityDO.getAttributes().keySet()) {
-                        typhonQLInterface.createEntityAttribute(entityDO.getName(), attributeName, entityDO.getAttributes().get(attributeName).getName());
-                    }
-                }
-            }
-            //Create the entity relationships
-            if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
-                for (RelationDO relationDO : entityDO.getRelations()) {
-                    typhonQLInterface.createEntityRelation(entityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
-                }
-            }
+            //Create the new entity, with its attributes and relations
+            typhonQLInterface.createEntity(entityDO, sourceDatabase.getName());
             return targetModel;
         } else
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.ENTITY + "]");

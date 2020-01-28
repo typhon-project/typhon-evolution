@@ -43,32 +43,21 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
             //TyphonQL
-            //Create the new entity
-            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName());
-            //Create the new entity attributes
-            if (secondEntityDO.getAttributes() != null && !secondEntityDO.getAttributes().isEmpty()) {
-                for (String attributeName : secondEntityDO.getAttributes().keySet()) {
-                    typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName());
-                }
-            }
-            //Create the new entity relationships
-            if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
-                for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
-                    boolean isRelationSelfReferencing = firstEntityDO.getName().equals(relationDO.getTypeName());
-                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality());
-                }
-            }
-            //Create a new relation between the source entity and the new entity
-            typhonQLInterface.createRelationshipType(relationDO);
             //Select the source entity data for the attribute and the value
-            WorkingSet dataSource = typhonQLInterface.readEntityDataEqualAttributeValue(firstEntityDO.getName(), splitAttributeName, splitAttributeValue);
+            WorkingSet dataSource = typhonQLInterface.selectEntityData(firstEntityDO.getName(), splitAttributeName, splitAttributeValue);
             //Create a working set containing the source entity data adapted for the new entity
             WorkingSet dataTarget = new WorkingSetImpl();
             dataTarget.addEntityRows(secondEntityDO.getName(), dataSource.getEntityRows(firstEntityDO.getName()));
-            //Insert the adapted data in the new entity
-            typhonQLInterface.writeWorkingSetData(dataTarget);
             //Delete the source entity data concerned by the attribute and the value
-            typhonQLInterface.deleteWorkingSetData(dataSource);
+            typhonQLInterface.deleteEntityData(firstEntityDO.getName(), splitAttributeName, splitAttributeValue);
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+            //Create the new entity, with its attributes and relations
+            typhonQLInterface.createEntity(secondEntityDO, sourceDatabase.getName());
+            //Create a new relation between the source entity and the new entity
+            typhonQLInterface.createRelationshipType(relationDO);
+            //Insert the adapted data in the new entity
+            typhonQLInterface.insertEntityData(newEntityName, dataTarget, secondEntityDO);
 
             return targetModel;
         } else {

@@ -13,9 +13,6 @@ import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -65,29 +62,20 @@ public class EntityMigrateHandler extends BaseHandler {
             //Typhon QL
             try {
                 //Select the source entity data
-                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName);
+                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, null, null);
                 //Manipulate the source entity data (modify the entity name, to the new entity name)
                 typhonQLInterface.updateEntityNameInSourceEntityData(entityData, sourceEntityName, targetEntityName);
                 //Upload the new XMI to the polystore
                 typhonQLInterface.uploadSchema(targetModel);
-                //Create the entity
-                typhonQLInterface.createEntity(targetEntityName, database.getName());
-                //Create the entity attributes
-                if (!database.getName().equals("DocumentDatabase")) {
-                    if (entityDO.getAttributes() != null && !entityDO.getAttributes().isEmpty()) {
-                        for (String attributeName : entityDO.getAttributes().keySet()) {
-                            typhonQLInterface.createEntityAttribute(targetEntityName, attributeName, entityDO.getAttributes().get(attributeName).getName());
-                        }
-                    }
-                }
-                //Create the entity relationships
-                if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
-                    for (RelationDO relationDO : entityDO.getRelations()) {
-                        typhonQLInterface.createEntityRelation(targetEntityName, relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
-                        //TODO Drop relation is not yet implemented in TyphonQL
+                //Create the new entity, with its attributes and relations
+                typhonQLInterface.createEntity(entityDO, database.getName());
+                //Drop the source entity relationships
+                //TODO Drop relation is not yet implemented in TyphonQL
+//                if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
+//                    for (RelationDO relationDO : entityDO.getRelations()) {
 //                        typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), sourceEntityName);
-                    }
-                }
+//                    }
+//                }
                 //Insert the source entity data into the target entity
                 typhonQLInterface.insertEntityData(targetEntityName, entityData, entityDO);
                 //Delete the source entity

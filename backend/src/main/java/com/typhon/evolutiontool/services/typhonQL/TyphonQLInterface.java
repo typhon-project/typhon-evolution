@@ -19,6 +19,13 @@ public interface TyphonQLInterface {
     String uploadSchema(Model model);
 
     /**
+     * Create a new entity (with its attributes and relations) in the polystore using a TyphonQL query
+     *
+     * @param entity the entity
+     */
+    void createEntity(EntityDO entity, String databaseName);
+
+    /**
      * Create a new entity in the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
@@ -52,9 +59,11 @@ public interface TyphonQLInterface {
      * Select the entity data from the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
+     * @param attributeName the name of the entity attribute for the "where" clause
+     * @param attributeValue the value of the entity attribute for the "where" clause
      * @return the WorkingSet results
      */
-    WorkingSet selectEntityData(String entityName);
+    WorkingSet selectEntityData(String entityName, String attributeName, String attributeValue);
 
     /**
      * Update the entity name in the source entity data
@@ -83,6 +92,15 @@ public interface TyphonQLInterface {
     String insertEntityData(String entityName, WorkingSet ws, EntityDO entityDO);
 
     /**
+     * Delete the entity data from the polystore using a TyphonQL query
+     *
+     * @param entityName the name of the entity
+     * @param attributeName the name of the entity attribute for the "where" clause
+     * @param attributeValue the value of the entity attribute for the "where" clause
+     */
+    void deleteEntityData(String entityName, String attributeName, String attributeValue);
+
+    /**
      * Drop the entity in the polystore using a TyphonQL query
      *
      * @param entityName the name of the entity
@@ -91,18 +109,6 @@ public interface TyphonQLInterface {
     String dropEntity(String entityName);
 
     void renameEntity(String oldEntityName, String newEntityName);
-
-    /**
-     * Retrieve the entity data using the model provided.
-     *
-     * @param entityId the identifier of the entity
-     * @return the WorkingSet containing the entity data
-     */
-    WorkingSet readAllEntityData(String entityId);
-
-    WorkingSet readEntityDataEqualAttributeValue(String sourceEntityName, String attributeName, String attributeValue);
-
-    WorkingSet readEntityDataSelectAttributes(String sourceEntityName, Set<String> attributes);
 
     void deleteAllEntityData(String entityid);
 
@@ -114,16 +120,12 @@ public interface TyphonQLInterface {
      */
     void removeAttribute(String entityName, String attribute);
 
-    void deleteWorkingSetData(WorkingSet dataToDelete);
-
     /**
      * Depending on the underlying databases. Creates foreign key (for relational) or changes the way the data must be inserted (for NoSQL). See detailed action plan appendix.
      *
      * @param relation the foreign key relation
      */
     void createRelationshipType(RelationDO relation);
-
-    void writeWorkingSetData(WorkingSet workingSetData);
 
     void deleteRelationshipInEntity(String relationname, String entityname);
 

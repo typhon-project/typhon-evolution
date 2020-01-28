@@ -57,8 +57,8 @@ public class EntityMergeHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data
-            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName());
-            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName());
+            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName(), null, null);
+            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName(), null, null);
             //Manipulate the source entities data (modify the entities names, to the new entity name)
             typhonQLInterface.updateEntityNameInSourceEntityData(firstWs, firstNewEntity.getName(), newEntityName);
             typhonQLInterface.updateEntityNameInSourceEntityData(secondWs, secondNewEntity.getName(), newEntityName);
@@ -74,22 +74,8 @@ public class EntityMergeHandler extends BaseHandler {
             targetModel = typhonMLInterface.deleteEntityType(secondNewEntity.getName(), targetModel);
             //Upload the new XMI to the polystore
             typhonQLInterface.uploadSchema(targetModel);
-            //Create the merged entity
-            typhonQLInterface.createEntity(newEntityName, sourceDatabase.getName());
-            //Create the entity attributes
-            if (!sourceDatabase.getName().equals("DocumentDatabase")) {
-                if (newEntityDO.getAttributes() != null && !newEntityDO.getAttributes().isEmpty()) {
-                    for (String attributeName : newEntityDO.getAttributes().keySet()) {
-                        typhonQLInterface.createEntityAttribute(newEntityDO.getName(), attributeName, newEntityDO.getAttributes().get(attributeName).getName());
-                    }
-                }
-            }
-            //Create the entity relationships
-            if (newEntityDO.getRelations() != null && !newEntityDO.getRelations().isEmpty()) {
-                for (RelationDO relationDO : newEntityDO.getRelations()) {
-                    typhonQLInterface.createEntityRelation(newEntityDO.getName(), relationDO.getName(), relationDO.isContainment(), relationDO.getTypeName(), relationDO.getCardinality());
-                }
-            }
+            //Create the new entity, with its attributes and relations
+            typhonQLInterface.createEntity(newEntityDO, sourceDatabase.getName());
             //Insert the source entity data into the target entity
             typhonQLInterface.insertEntityData(newEntityName, mergedWs, newEntityDO);
 

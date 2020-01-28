@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="UserDB" entity="//@dataTypes.2">
-      <indexSpec name="userIndex" attributes="//@dataTypes.2/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.1"/>
+    <tables name="Order" entity="//@dataTypes.2">
+      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
     </tables>
   </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="User" entity="//@dataTypes.3"/>
+  </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:Entity" name="User">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="firstName" type="//@dataTypes.1"/>
-    <attributes name="lastName" type="//@dataTypes.1"/>
-    <attributes name="creationDate" type="//@dataTypes.0"/>
-    <relations name="users" type="//@dataTypes.2" cardinality="zero_many" isContainment="false"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Order">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="number" type="//@dataTypes.1"/>
   </dataTypes>
-  <changeOperators xsi:type="typhonml:SplitEntityHorizontal" entity1="//@dataTypes.2" entity2name="SplittedEntity" attribute="//@dataTypes.2/@attributes.0" expression="1"/>
+  <dataTypes xsi:type="typhonml:Entity" name="User">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="name" type="//@dataTypes.0"/>
+    <attributes name="street" type="//@dataTypes.0"/>
+    <attributes name="city" type="//@dataTypes.0"/>
+  </dataTypes>
+  <changeOperators xsi:type="typhonml:SplitEntityHorizontal" entity1="//@dataTypes.3" entity2name="FirstUser" attribute="//@dataTypes.3/@attributes.0" expression="1"/>
 </typhonml:Model>

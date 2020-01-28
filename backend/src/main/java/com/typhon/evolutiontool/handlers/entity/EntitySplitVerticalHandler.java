@@ -47,7 +47,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data for the attribute and the value
-            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName());
+            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName(), null, null);
             //Manipulate the source entity data (keep only the new entity attributes)
             typhonQLInterface.removeUselessAttributesInSourceEntityData(entityData, firstEntityDO.getName(), entityAttributes.keySet());
             //Manipulate the source entity data (modify the entity name, to the new entity name)
@@ -69,22 +69,8 @@ public class EntitySplitVerticalHandler extends BaseHandler {
             }
             //Upload the new XMI to the polystore
             typhonQLInterface.uploadSchema(targetModel);
-            //Create the new entity
-            typhonQLInterface.createEntity(secondEntityDO.getName(), sourceDatabase.getName());
-            //Create the new entity attributes
-            if (!sourceDatabase.getName().equals("DocumentDatabase")) {
-                if (secondEntityDO.getAttributes() != null && !secondEntityDO.getAttributes().isEmpty()) {
-                    for (String attributeName : secondEntityDO.getAttributes().keySet()) {
-                        typhonQLInterface.createEntityAttribute(secondEntityDO.getName(), attributeName, secondEntityDO.getAttributes().get(attributeName).getName());
-                    }
-                }
-            }
-            //Create the new entity relationships
-            if (secondEntityDO.getRelations() != null && !secondEntityDO.getRelations().isEmpty()) {
-                for (RelationDO secondEntityRelationDO : secondEntityDO.getRelations()) {
-                    typhonQLInterface.createEntityRelation(secondEntityDO.getName(), secondEntityRelationDO.getName(), secondEntityRelationDO.isContainment(), secondEntityRelationDO.getTypeName(), secondEntityRelationDO.getCardinality());
-                }
-            }
+            //Create the new entity, with its attributes and relations
+            typhonQLInterface.createEntity(secondEntityDO, sourceDatabase.getName());
             //Create a new relation between the source entity and the new entity
             //TODO check the relation creation works after QL update (actually not working, because relation creation does not create a join table, nor a reference attribute)
             typhonQLInterface.createRelationshipType(relationDO);

@@ -26,9 +26,16 @@ public class AttributeRemoveHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String entityName = attributeDO.getEntity().getName();
+
+            //TyphonQL
+            typhonQLInterface.removeAttribute(entityName, attributeDO.getName());
+
+            //TyphonML
             Model targetModel = typhonMLInterface.removeAttribute(attributeDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
-            typhonQLInterface.removeAttribute(entityName, attributeDO.getName());
+
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ATTRIBUTE + ", " + ChangeOperatorParameter.ENTITY_NAME + "]");

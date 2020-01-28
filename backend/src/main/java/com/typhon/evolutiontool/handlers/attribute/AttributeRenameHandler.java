@@ -26,8 +26,16 @@ public class AttributeRenameHandler extends BaseHandler {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String newAttributeName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ATTRIBUTE_NAME));
             String entityName = attributeDO.getEntity().getName();
-            Model targetModel = typhonMLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, model);
+
+            //TyphonQL
             typhonQLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName);
+
+            //TyphonML
+            Model targetModel = typhonMLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, model);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.NEW_ATTRIBUTE_NAME + ", " + ChangeOperatorParameter.ENTITY_NAME + "]");

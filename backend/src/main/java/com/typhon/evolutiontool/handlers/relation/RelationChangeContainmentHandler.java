@@ -30,7 +30,9 @@ public class RelationChangeContainmentHandler extends BaseHandler {
             if (database instanceof RelationalDB) {
                 throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
             }
-            Model targetModel = model;
+
+            //Typhon ML && QL
+            Model targetModel = typhonMLInterface.removeCurrentChangeOperator(model);
             if (newContainment != null) {
                 if (newContainment) {
                     targetModel = typhonMLInterface.enableContainment(relationDO, model);
@@ -40,6 +42,9 @@ public class RelationChangeContainmentHandler extends BaseHandler {
                     typhonQLInterface.disableContainment(relationDO.getName(), relationDO.getSourceEntity().getName());
                 }
             }
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + ", " + ChangeOperatorParameter.NEW_CONTAINMENT + "]");

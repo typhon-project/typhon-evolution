@@ -25,9 +25,16 @@ public class RelationRemoveHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             String entityName = relationDO.getSourceEntity().getName();
+
+            //Typhon ML
             Model targetModel = typhonMLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            //Typhon QL
             typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), entityName);
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

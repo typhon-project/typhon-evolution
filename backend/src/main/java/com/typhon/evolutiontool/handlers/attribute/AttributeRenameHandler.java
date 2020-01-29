@@ -28,12 +28,14 @@ public class AttributeRenameHandler extends BaseHandler {
             String entityName = attributeDO.getEntity().getName();
 
             //TyphonQL
+            //TODO not implemented yet by TyphonQL
             typhonQLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName);
 
             //TyphonML
             Model targetModel = typhonMLInterface.renameAttribute(attributeDO.getName(), newAttributeName, entityName, model);
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
+            //Upload the new XMI to the polystore
             typhonQLInterface.uploadSchema(targetModel);
 
             return targetModel;

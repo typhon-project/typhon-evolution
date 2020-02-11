@@ -11,7 +11,6 @@
     </tables>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="Address" entity="//@dataTypes.4"/>
   </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
@@ -24,11 +23,6 @@
     <attributes name="id" type="//@dataTypes.0"/>
     <attributes name="name" type="//@dataTypes.0"/>
   </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="Address">
-    <attributes name="city" type="//@dataTypes.0"/>
-    <attributes name="street" type="//@dataTypes.0"/>
-    <relations name="user" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
-  </dataTypes>
-  <changeOperators xsi:type="typhonml:RemoveRelation" relationToRemove="//@dataTypes.4/@relations.0"/>
+  <changeOperators xsi:type="typhonml:MigrateEntity" entity="//@dataTypes.2" newDatabase="//@databases.1"/>
 </typhonml:Model>
 

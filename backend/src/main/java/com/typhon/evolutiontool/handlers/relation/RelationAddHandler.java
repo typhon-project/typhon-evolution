@@ -25,8 +25,15 @@ public class RelationAddHandler extends BaseHandler {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.RELATION))) {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
 
+            //Typhon ML
             Model targetModel = typhonMLInterface.createRelationship(relationDO, model);
-            typhonQLInterface.createRelationshipType(relationDO, targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            //Typhon QL
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+            typhonQLInterface.createRelationshipType(relationDO);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

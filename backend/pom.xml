@@ -3,24 +3,60 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>be.unamur.typhonevo</groupId>
-		<artifactId>typhonevo</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
-	</parent>
-
+	<groupId>be.unamur.typhonevo</groupId>
 	<artifactId>be.unamur.typhonevo.backend</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+
 	<name>typhonevo-backend</name>
 	<packaging>eclipse-plugin</packaging>
 
 
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>eclipse_public_p2</id> -->
-<!-- 			<url>http://download.eclipse.org/releases/latest</url> -->
-<!-- 			<layout>p2</layout> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
+	<repositories>
+		<repository>
+			<id>eclipse-release</id>
+			<url>http://download.eclipse.org/releases/2019-09/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>eclipse-epsilon</id>
+			<url>http://download.eclipse.org/epsilon/updates/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>usethesource-rascalmpl-unstable</id>
+			<layout>p2</layout>
+			<url>https://update.rascal-mpl.org/unstable/</url>
+		</repository>
+		<repository>
+			<id>rascalmpl-libs</id>
+			<layout>p2</layout>
+			<url>https://update.rascal-mpl.org/libs/</url>
+		</repository>
+		<repository>
+			<id>typhonQL</id>
+			<layout>p2</layout>
+			<!--<url>https://typhon-cd.swat.engineering/typhon-ql/repository/</url>-->
+			<url>http://typhon.clmsuk.com:8082/typhon-ql/repository/</url>
+		</repository>
+		<repository>
+			<id>ML</id>
+			<layout>p2</layout>
+			<url>http://typhon.clmsuk.com:8082/typhon-ml/repository/</url>
+		</repository>
+		<!--<repository>
+            <id>typhon-composite</id>
+            <layout>p2</layout>
+            <url>https://typhon.swat.engineering/composite-proxy/</url>
+        </repository>-->
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20190722</version>
+		</dependency>
+	</dependencies>
 
 
 

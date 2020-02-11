@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="firstNewEntity" db="//@databases.0" entity="//@dataTypes.2"/>
-    <tables name="secondNewEntity" db="//@databases.0" entity="//@dataTypes.3"/>
+    <tables name="Order" entity="//@dataTypes.2">
+      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
+    </tables>
   </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="User" entity="//@dataTypes.3"/>
+    <collections name="FirstUser" entity="//@dataTypes.4"/>
+  </databases>
   <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:Entity" name="firstNewEntity">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="creationDate" type="//@dataTypes.0"/>
-    <relations name="splitRelation" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
+  <dataTypes xsi:type="typhonml:Entity" name="Order">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="number" type="//@dataTypes.1"/>
   </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="secondNewEntity">
-    <attributes name="firstName" type="//@dataTypes.1"/>
-    <attributes name="lastName" type="//@dataTypes.1"/>
-    <attributes name="id" type="//@dataTypes.1"/>
+  <dataTypes xsi:type="typhonml:Entity" name="User">
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="name" type="//@dataTypes.0"/>
+    <attributes name="street" type="//@dataTypes.0"/>
+    <attributes name="city" type="//@dataTypes.0"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="FirstUser">
+    <attributes name="name" type="//@dataTypes.0"/>
+    <attributes name="id" type="//@dataTypes.0"/>
+    <attributes name="city" type="//@dataTypes.0"/>
+    <attributes name="street" type="//@dataTypes.0"/>
+    <relations name="to_User" type="//@dataTypes.3" cardinality="one" isContainment="false"/>
   </dataTypes>
 </typhonml:Model>

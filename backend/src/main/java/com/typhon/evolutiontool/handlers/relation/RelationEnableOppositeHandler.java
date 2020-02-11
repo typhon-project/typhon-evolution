@@ -34,7 +34,7 @@ public class RelationEnableOppositeHandler extends BaseHandler {
             Model targetModel = typhonMLInterface.createRelationship(oppositeRelation, model);
             targetModel = typhonMLInterface.enableOpposite(relationDO, oppositeRelation, targetModel);
 
-            typhonQLInterface.createRelationshipType(oppositeRelation, targetModel);
+            typhonQLInterface.createRelationshipType(oppositeRelation);
             //TODO: complete the QL necessary operations
 
             return targetModel;

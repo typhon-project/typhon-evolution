@@ -1,311 +1,810 @@
-from CreditCard e select e.creationDate
+TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@2f217633 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@2f217633 (name: String, importedNamespace: null)}
+FROM Comment e SELECT e
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@2c35e847]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@4fb3ee4e]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@f5acb9d]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@f5acb9d]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@614ca7df]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@71c8becc]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@4fb3ee4e]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@2fb3536e
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-dummy enable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
-TQL DDL DELETE RELATION newOppositeRelation IN CreditCard
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE ENTITY Comment {id typhonml.impl.PrimitiveDataTypeImpl@32ee6fee (name: String, importedNamespace: null)}
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@47faa49c]
 from Comment e select e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@2fd1433e]
 from Comment e select e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@5e21e98f]
 from Comment e select e
 TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-dummy enable containment TQL DDL
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3116c353]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3116c353]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@352ff4da]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@4a00d9cf (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@352ff4da]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQL DDL DELETE RELATION newOppositeRelation IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@5824a83d
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@6c284af
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@73e22a3d (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@71238fc2]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
+TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@5e21e98f]
+rename CreditCard to PaymentCard
 from Comment e select e
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@fa49800]
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@463fd068 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@463fd068 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@bd4dc25 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@209da20d
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@6caf0677
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@11d8ae8b
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@4ef782af
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@11d8ae8b
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@51c693d
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@58695725
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@49049a04
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@303cf2ba
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@4f80542f
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@231f98ef
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48aca48b
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48bb62
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@58d75e99]
+create CreditCard.user -> User[1..1]
+drop CreditCard.user
+change User.paymentsDetails :->
+change User.paymentsDetails ->
+change User.paymentsDetails :->
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+rename User.paymentsDetails to creditCards
+change User.paymentsDetails [1..*]
+create CreditCard.creationDate : Date
+drop CreditCard.creationDate
+rename CreditCard.expiryDate to expirationDate
+rename CreditCard.expiryDate to expirationDate
+change CreditCard.expiryDate : Date
+drop CreditCard.newOppositeRelation
+drop CreditCard.user
+drop CreditCard.newOppositeRelation
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+change User.paymentsDetails :->
+rename User.paymentsDetails to creditCards
+drop CreditCard.user
+create CreditCard.user -> User[1..1]
+change User.paymentsDetails [1..*]
+change User.paymentsDetails :->
+change User.paymentsDetails ->
 from Comment e select e
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3646a422]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@485966cc (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@58d75e99]
-from Comment e select e
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@3646a422]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@16610890 (name: String, importedNamespace: null)}
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@169e6180
-from CreditCard e select e.creationDate
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5d7148e2]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48aca48b
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@48bb62
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@662b4c69 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@662b4c69 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@2d710f1a (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@2d710f1a (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@47e2e487]
+rename CreditCard to PaymentCard
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate
+create Comment as DocumentDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment { name:, id: } 
+drop Comment
+create Comment as 
+create Comment.name : String
+create Comment.id : String
+create Comment.user -> User[1..1]
+create Comment as DocumentDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment { name:, id: } 
+drop Comment
 from Comment e select e
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@45099dd3]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@8519cb4 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@8519cb4 (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@311bf055 (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@311bf055 (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard
+create splittedEntity at RelationalDatabase
+create splittedEntity.firstName : String
+create splittedEntity.lastName : String
+create splittedEntity.id : String
+create splittedEntity.creationDate : Date
+create User.to_splittedEntity -> splittedEntity[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={splittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@6f36c2f0]
-from Comment e select e
+create splittedEntity at RelationalDatabase
+create splittedEntity.firstName : String
+create splittedEntity.lastName : String
+create splittedEntity.id : String
+create splittedEntity.creationDate : Date
+create splittedEntity.to_User -> User[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={splittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@a8ef162]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-from CreditCard e select e.creationDate
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User userselect user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@5456afaa]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@10f7f7de
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@1984b1f
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-from CreditCard e select e.creationDate
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@957e06]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@20b2475a (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@20b2475a (name: String, importedNamespace: null)}
-TQLDDL CREATE ENTITY Comment {name typhonml.impl.PrimitiveDataTypeImpl@7fc4780b (name: String, importedNamespace: null),id typhonml.impl.PrimitiveDataTypeImpl@7fc4780b (name: String, importedNamespace: null)}
-from Comment e select e
-TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@4bf48f6]
-from Comment e select e
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ENTITY Comment on TyphonML [typhonml.impl.ModelImpl@2a3888c1]
-TQL DDL RENAME ENTITY CreditCard TO PaymentCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@73302995
-dummy enable containment TQL DDL
-TQL DDL RENAME RELATION paymentsDetails TO creditCards
-TQL DDL DELETE RELATION user IN CreditCard
-TQLDDL CREATE RELATIONSHIP com.typhon.evolutiontool.entities.RelationDOImpl@3abada5a
-TQL DDL dummy change relation cardinality
-dummy enable containment TQL DDL
-dummy disable containment TQL DDL
-from CreditCard e select e.creationDate
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User userselect user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create CommentDB_migrated at DocumentDatabase
+create CommentDB_migrated.name : String
+create CommentDB_migrated.id : String
+create CommentDB_migrated.responses -> Comment[0..*]
+from CommentDB commentdb select commentdb
+insert CommentDB_migrated { name:, id: } 
+drop CommentDB
+create CommentDB_migrated at DocumentDatabase
+create CommentDB_migrated.name : String
+create CommentDB_migrated.id : String
+create CommentDB_migrated.responses -> Comment[0..*]
+from CommentDB commentdb select commentdb
+insert CommentDB_migrated { name:, id: } 
+drop CommentDB
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from CommentDB commentdb select commentdb
+insert Comment_migrated { name:, id: } 
+drop CommentDB
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from CommentDB commentdb select commentdb
+insert Comment_migrated { name:, id: } 
+drop CommentDB
+
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment at 
+create Comment.name : String
+create Comment.id : String
+create Comment.user -> User[1..1]
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
 TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
-TQLDDL DELETE ATTRIBUTES CreditCard, e.creationDate on TyphonML [typhonml.impl.ModelImpl@1b2abca6]
-TQL DDL ADD ATTRIBUTE creationDate IN CreditCard
-TQL DDL UPDATE ATTRIBUTE expiryDate SET TYPE TO Date IN CreditCard
-TQL DDL RENAME ATTRIBUTE expiryDate TO expirationDate IN CreditCard
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+create Comment at 
+create Comment.name : String
+create Comment.id : String
+create Comment.user -> User[1..1]
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+from Comment comment select comment
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..1]
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+create Review.rating : int
+create Review.rating : int
+create Review.responses -> Comment[0..*]
+drop Order.date
+change Order.totalAmount : int
+
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..*]
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+from Comment comment select comment
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+change User.paymentsDetails :-> 
+rename User.paymentsDetails to creditCards
+drop CreditCard.user
+create CreditCard.user -> User[1..1]
+change User.paymentsDetails [1..*]
+change User.paymentsDetails :-> 
+change User.paymentsDetails -> 
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..*]
+drop CreditCard.creationDate
+create CreditCard.creationDate : Date
+create CreditCard.creationDate : Date
+change CreditCard.expiryDate : Date
+rename CreditCard.expiryDate to expirationDate
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.creationDate : Date
+create SplittedEntity.lastName : String
+create SplittedEntity.relation2 -> CreditCard[1..1]
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user.lastName,user.creationDate
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+drop User.creationDate
+drop User.lastName
+drop User.relation2
+drop User.users
+create Comment at RelationalDatabase
+create Comment.name : String
+create Comment.id : String
+create Comment.newRelation -> CreditCard[0..*]
+create mergedEntity at RelationalDatabase
+create mergedEntity.firstName : String
+create mergedEntity.lastName : String
+create mergedEntity.id : String
+create mergedEntity.creationDate : Date
+from firstNewEntity firstnewentity select firstnewentity
+from secondNewEntity secondnewentity select secondnewentity
+insert mergedEntity { firstName:, lastName:, id:, creationDate: } 
+drop firstNewEntity
+drop secondNewEntity
+create SplittedEntity at RelationalDatabase
+create SplittedEntity.firstName : String
+create SplittedEntity.lastName : String
+create SplittedEntity.id : String
+create SplittedEntity.creationDate : Date
+create SplittedEntity.users -> SplittedEntity[0..*]
+create SplittedEntity.to_User -> User[1..1]
+from User user select user where id = 1
+TyphonQL 'insert' command working set : [{WorkingSetDummyImpl{rows={SplittedEntity=null}}}] 
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+create Comment_migrated at DocumentDatabase
+create Comment_migrated.name : String
+create Comment_migrated.id : String
+create Comment_migrated.responses -> Comment_migrated[0..*]
+from Comment comment select comment
+insert Comment_migrated { name:, id: } 
+drop Comment
+from Comment comment select comment
+TyphonQL 'delete' command working set : [{WorkingSetDummyImpl{rows={}}}] 
+drop Comment
+rename CreditCard to PaymentCard
+create CreditCard.paymentsDetails_opposite -> User[1..*]
+change User.paymentsDetails :-> 
+rename User.paymentsDetails to creditCards
+drop CreditCard.user
+create CreditCard.user -> User[1..1]
+change User.paymentsDetails [1..*]
+change User.paymentsDetails :-> 
+change User.paymentsDetails -> 
+drop CreditCard.newOppositeRelation

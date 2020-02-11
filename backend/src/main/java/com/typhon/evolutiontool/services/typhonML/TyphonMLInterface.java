@@ -2,10 +2,7 @@ package com.typhon.evolutiontool.services.typhonML;
 
 
 import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.InputParameterException;
 import typhonml.*;
-
-import javax.xml.crypto.Data;
 
 /**
  * Interface to access TyphonML.
@@ -15,6 +12,7 @@ public interface TyphonMLInterface {
 
     /**
      * Returns an EntityDO object of entity @param entityid in the TyphonML version @param sourcemodelid.
+     *
      * @param entityid
      * @param model
      * @return
@@ -23,6 +21,7 @@ public interface TyphonMLInterface {
 
     /**
      * Asks TyphonML module if the given entity name @param entityname is involved (as source or target) in a relationship.
+     *
      * @param entityname
      * @return
      */
@@ -42,13 +41,11 @@ public interface TyphonMLInterface {
 
     Model renameEntity(String oldEntityName, String newEntityName, Model model);
 
-    Model copyEntityType(String sourceEntityName, String targetEntityName, Model model);
+    Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model model);
 
-    Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel);
+    Model updateEntityMappingInDatabase(String entityName, String databaseName, Model model);
 
     Database getDatabaseFromName(String dbname, Model model);
-
-    Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException;
 
     Model deleteEntityMappings(String entityName, String entityNameInDatabase, Model model);
 
@@ -64,7 +61,7 @@ public interface TyphonMLInterface {
 
     Model addAttribute(AttributeDO attributeDO, String entityName, Model model);
 
-    Model removeAttribute(AttributeDO attributeDO, String entityName, Model model);
+    Model removeAttribute(String attributeName, String entityName, Model model);
 
     Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 

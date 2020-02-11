@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.utils;
 
+import com.typhon.evolutiontool.entities.DataTypeDO;
 import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.EntityDOImpl;
 import com.typhon.evolutiontool.entities.RelationDO;
@@ -27,11 +28,11 @@ public class EntityDOFactory {
                 }
             }
             List<Attribute> entityAttributes = entity.getAttributes();
-            Map<String, Object> attributes = new HashMap<>();
+            Map<String, DataTypeDO> attributes = new HashMap<>();
             if (entityAttributes != null) {
                 for (Attribute attribute : entityAttributes) {
                     if (attribute != null) {
-                        attributes.put(attribute.getName(), attribute.getType());
+                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType()));
                     }
                 }
             }

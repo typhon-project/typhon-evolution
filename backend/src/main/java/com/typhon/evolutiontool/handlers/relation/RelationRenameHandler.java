@@ -25,8 +25,18 @@ public class RelationRenameHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.RELATION, ChangeOperatorParameter.RELATION_NAME))) {
             RelationDO relationDO = RelationDOFactory.buildInstance((Relation) smo.getInputParameter().get(ChangeOperatorParameter.RELATION), false);
             String newRelationName = smo.getInputParameter().get(ChangeOperatorParameter.RELATION_NAME).toString();
+
+            //Typhon QL
+            //TODO not implemented yet by TyphonQL
+            typhonQLInterface.renameRelation(relationDO.getSourceEntity().getName(), relationDO.getName(), newRelationName);
+
+            //Typhon ML
             Model targetModel = typhonMLInterface.renameRelation(relationDO.getName(), relationDO.getSourceEntity().getName(), newRelationName, model);
-            typhonQLInterface.renameRelation(relationDO.getName(), newRelationName, targetModel);
+            targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
+
+            //Upload the new XMI to the polystore
+            typhonQLInterface.uploadSchema(targetModel);
+
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.RELATION + ", " + ChangeOperatorParameter.RELATION_NAME + "]");

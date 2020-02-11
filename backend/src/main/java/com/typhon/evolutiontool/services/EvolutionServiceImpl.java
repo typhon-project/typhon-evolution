@@ -16,7 +16,7 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
-import com.typhon.evolutiontool.services.typhonQL.TyphonInterfaceQLImpl;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class EvolutionServiceImpl implements EvolutionService {
     public EvolutionServiceImpl() {
         this.typhonDLInterface = new TyphonDLInterfaceImpl();
         this.typhonMLInterface = new TyphonMLInterfaceImpl();
-        this.typhonQLInterface = new TyphonInterfaceQLImpl();
+        this.typhonQLInterface = new TyphonQLInterfaceImpl();
 
         entityHandlers = new EnumMap<>(EvolutionOperator.class);
         entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));

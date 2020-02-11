@@ -6,6 +6,8 @@ public interface RelationDO {
 
     String getTypeName();
 
+    void setTypeName(String typeName);
+
     EntityDO getSourceEntity();
 
     EntityDO getTargetEntity();

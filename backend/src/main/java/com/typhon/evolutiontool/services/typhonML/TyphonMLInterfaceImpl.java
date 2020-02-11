@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import typhonml.Table;
 import typhonml.*;
 
 import java.util.List;
-
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
@@ -35,7 +33,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
     @Override
     public Database getEntityDatabase(String entityName, Model model) {
-        Entity entity = this.getEntityTypeFromName(entityName, model);
         List<Database> databases = model.getDatabases();
         if (databases != null) {
             for (Database database : databases) {
@@ -43,7 +40,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Table> tables = ((RelationalDB) database).getTables();
                     if (tables != null) {
                         for (Table table : tables) {
-                            if (table.getEntity().getName().equals(entity.getName())) {
+                            if (table.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -53,7 +50,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Collection> collections = ((DocumentDB) database).getCollections();
                     if (collections != null) {
                         for (Collection collection : collections) {
-                            if (collection.getEntity().getName().equals(entity.getName())) {
+                            if (collection.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -63,7 +60,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<GraphNode> graphNodes = ((GraphDB) database).getNodes();
                     if (graphNodes != null) {
                         for (GraphNode graphNode : graphNodes) {
-                            if (graphNode.getEntity().getName().equals(entity.getName())) {
+                            if (graphNode.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -73,7 +70,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<Column> columns = ((ColumnDB) database).getColumns();
                     if (columns != null) {
                         for (Column column : columns) {
-                            if (column.getEntity().getName().equals(entity.getName())) {
+                            if (column.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -83,7 +80,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     List<KeyValueElement> keyValueElements = ((KeyValueDB) database).getElements();
                     if (keyValueElements != null) {
                         for (KeyValueElement keyValueElement : keyValueElements) {
-                            if (keyValueElement.getEntity().getName().equals(entity.getName())) {
+                            if (keyValueElement.getEntity().getName().equals(entityName)) {
                                 return database;
                             }
                         }
@@ -190,9 +187,9 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         //ENTITY
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
-        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, (DataType) type, newModel)));
-        newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         newModel.getDataTypes().add(entity);
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type.getName(), newModel)));
+        newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         return newModel;
     }
 
@@ -218,18 +215,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         }
         return newModel;
     }
-
-    @Override
-    public Model copyEntityType(String sourceEntityName, String targetEntityName, Model model) {
-        logger.info("Copying EntityDO type [{}] to [{}] in TyphonML model", sourceEntityName, targetEntityName);
-        Model newModel;
-        newModel = EcoreUtil.copy(model);
-        DataType copyEntity = EcoreUtil.copy(this.getDataTypeFromEntityName(sourceEntityName, newModel));
-        copyEntity.setName(targetEntityName);
-        newModel.getDataTypes().add(copyEntity);
-        return newModel;
-    }
-
 
     @Override
     public Model createRelationship(RelationDO relation, Model model) {
@@ -300,12 +285,12 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model removeAttribute(AttributeDO attributeDO, String entityName, Model model) {
+    public Model removeAttribute(String attributeName, String entityName, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityTypeFromName(entityName, newModel);
         if (entity.getAttributes() != null) {
             for (Attribute attribute : entity.getAttributes()) {
-                if (attribute.getName().equals(attributeDO.getName())) {
+                if (attribute.getName().equals(attributeName)) {
                     entity.getAttributes().remove((attribute));
                     break;
                 }
@@ -429,6 +414,76 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public Model updateEntityMappingInDatabase(String entityName, String databaseName, Model model) {
+        logger.info("Updating the mapping for entity [{}] in TyphonML", entityName);
+        Model newModel;
+        newModel = EcoreUtil.copy(model);
+        typhonml.Entity entity = this.getEntityTypeFromName(entityName, newModel);
+        Database database = getDatabaseFromName(databaseName, newModel);
+        if (database instanceof DocumentDB) {
+            DocumentDB documentDB = (DocumentDB) database;
+            List<Collection> collections = documentDB.getCollections();
+            if (collections != null) {
+                for (Collection collection : collections) {
+                    if (collection.getEntity().getName().equals(entityName)) {
+                        collection.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof RelationalDB) {
+            RelationalDB relationalDB = (RelationalDB) database;
+            List<Table> tables = relationalDB.getTables();
+            if (tables != null) {
+                for (Table table : tables) {
+                    if (table.getEntity().getName().equals(entityName)) {
+                        table.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof ColumnDB) {
+            ColumnDB columnDB = (ColumnDB) database;
+            List<Column> columns = columnDB.getColumns();
+            if (columns != null) {
+                for (Column column : columns) {
+                    if (column.getEntity().getName().equals(entityName)) {
+                        column.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof GraphDB) {
+            GraphDB graphDB = (GraphDB) database;
+            List<GraphNode> graphNodes = graphDB.getNodes();
+            if (graphNodes != null) {
+                for (GraphNode graphNode : graphNodes) {
+                    if (graphNode.getEntity().getName().equals(entityName)) {
+                        graphNode.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        if (database instanceof KeyValueDB) {
+            KeyValueDB keyValueDB = (KeyValueDB) database;
+            List<KeyValueElement> keyValueElements = keyValueDB.getElements();
+            if (keyValueElements != null) {
+                for (KeyValueElement keyValueElement : keyValueElements) {
+                    if (keyValueElement.getEntity().getName().equals(entityName)) {
+                        keyValueElement.setEntity(entity);
+                        return newModel;
+                    }
+                }
+            }
+        }
+        return newModel;
+    }
+
+    @Override
     public Database getDatabaseFromName(String dbname, Model model) {
         for (Database db : model.getDatabases()) {
             if (db.getName().equals(dbname)) {
@@ -436,42 +491,6 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
             }
         }
         return null;
-    }
-
-    @Override
-    public Model createDatabase(DatabaseType dbtype, String databasename, Model targetModel) throws InputParameterException {
-        if (this.getDatabaseFromName(databasename, targetModel) == null) {
-
-            logger.info("Creating a Database of type [{}] with name [{}] in TyphonML", dbtype.toString(), databasename);
-            Model newModel;
-            newModel = EcoreUtil.copy(targetModel);
-            Database db = null;
-
-            switch (dbtype) {
-                case DOCUMENTDB:
-                    db = TyphonmlFactory.eINSTANCE.createDocumentDB();
-                    break;
-                case RELATIONALDB:
-                    db = TyphonmlFactory.eINSTANCE.createRelationalDB();
-                    break;
-                case COLUMNDB:
-                    db = TyphonmlFactory.eINSTANCE.createColumnDB();
-                    break;
-                case GRAPHDB:
-                    db = TyphonmlFactory.eINSTANCE.createGraphDB();
-                    break;
-                case KEYVALUE:
-                    db = TyphonmlFactory.eINSTANCE.createKeyValueDB();
-                    break;
-            }
-            if (db == null) {
-                throw new InputParameterException("Error creating database. Verify that database type is [DOCUMENTDB, RELATIONALDB, COLUMNBD, GRAPHDB, KEYVALUEDB]");
-            }
-            db.setName(databasename);
-            newModel.getDatabases().add(db);
-            return newModel;
-        }
-        return targetModel;
     }
 
     @Override
@@ -575,11 +594,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return relation;
     }
 
-    private Attribute createAttribute(String name, DataType type, Model targetModel) {
+    private Attribute createAttribute(String name, String dataTypeName, Model targetModel) {
         //TODO Handling of dataTypes
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
-        attribute.setType(getDataTypeFromName(type.getName(), targetModel));
+        attribute.setType(getDataTypeFromName(dataTypeName, targetModel));
         return attribute;
     }
 }

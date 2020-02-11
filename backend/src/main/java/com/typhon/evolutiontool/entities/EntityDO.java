@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface EntityDO {
 
-    void addAttribute(String name, String datatype);
+    void addAttribute(String name, DataTypeDO datatype);
 
     String getName();
 
@@ -13,7 +13,7 @@ public interface EntityDO {
 
     String getIdentifier();
 
-    Map<String, Object> getAttributes();
+    Map<String, DataTypeDO> getAttributes();
 
     List<RelationDO> getRelations();
 }

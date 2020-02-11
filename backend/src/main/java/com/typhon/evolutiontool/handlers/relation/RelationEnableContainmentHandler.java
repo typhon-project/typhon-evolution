@@ -30,7 +30,7 @@ public class RelationEnableContainmentHandler extends BaseHandler {
                 throw new InputParameterException("Cannot produce a containment relationship in relational database source entity");
             }
             Model targetModel = typhonMLInterface.enableContainment(relationDO, model);
-            typhonQLInterface.enableContainment(relationDO.getName(), relationDO.getSourceEntity().getName(), targetModel);
+            typhonQLInterface.enableContainment(relationDO.getName(), relationDO.getSourceEntity().getName());
             return targetModel;
         } else {
             throw new InputParameterException("Missing parameter. Needed [" + ChangeOperatorParameter.RELATION + "]");

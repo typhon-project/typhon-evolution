@@ -151,42 +151,76 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			
+			
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
 				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<configuration>
-							<target>
-								<echo>ANT TASK - copying files....</echo>
-								<copy todir="${basedir}/target" overwrite="true"
-									flatten="true">
-									<fileset
-										dir="${basedir}/src/main/resources/files_to_copy"
-										includes="*.bat">
-										<include name="*.bat" />
-										<include name="*.properties" />
-										<include name="ReadME.*" />
-										<include name="*.sh" />
-										<include name="*.docx" />
-									</fileset>
-								</copy>
-
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
+				  <execution>
+					<id>copy-resources</id>
+					<phase>package</phase>
+					<goals>
+					  <goal>copy-resources</goal>
+					</goals>
+					<configuration>
+					  <outputDirectory>${basedir}/target</outputDirectory>
+					  <resources>
+						<resource>
+						  <directory>${basedir}/src/main/resources/files_to_copy</directory>
+						  <filtering>true</filtering>
+						</resource>
+					  </resources>
+					</configuration>
+				  </execution>
 				</executions>
-			</plugin>
+			  </plugin>
+			
+
+			
 
 
 		</plugins>
 
-		
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-install-plugin
+										</artifactId>
+										<versionRange>
+											[2.5,)
+										</versionRange>
+										<goals>
+											<goal>install-file</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 	</build>
 
 

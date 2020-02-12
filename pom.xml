@@ -11,6 +11,7 @@
         <module>query-evolution</module>
         <module>evolution-feature</module>
         <module>evolution-updatesite</module>
+		<module>sqlextractor</module>
     </modules>
 
     <properties>

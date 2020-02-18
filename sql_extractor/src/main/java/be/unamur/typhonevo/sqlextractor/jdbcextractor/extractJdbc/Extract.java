@@ -10,10 +10,14 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -258,19 +262,20 @@ public class Extract {
 
 	private void extractIndex(String catalog, String schema, String tableName, Table table) throws SQLException {
 		ResultSet rs = md.getPrimaryKeys(catalog, schema, tableName);
-		List<GroupComponent> lComp = new ArrayList<GroupComponent>();
+		Map<Integer, GroupComponent> lComp = new HashMap<Integer, GroupComponent>();
 		String grName = null;
 		while (rs.next()) {
 			grName = rs.getString(6);
 			String colName = rs.getString(4);
 			int colPos = rs.getInt(5);
+			System.out.println("PK:" + grName + "=>" + colName + "=>" + tableName + "=>" + colPos);
 			Column col = table.findColumn(colName);
-			lComp.add(new GroupComponent(colPos, col));
+			lComp.put(colPos, new GroupComponent(colPos, col));
 		}
 		rs.close();
 
 		if (lComp.size() > 0) {
-			getGroup(table, grName, lComp, true, null, null);
+			getGroup(table, grName, new ArrayList<GroupComponent>(lComp.values()), true, null, null);
 //			PrimaryKey pk = new PrimaryKey();
 //			ListIterator<GroupComponent> it = lComp.listIterator();
 //			while (it.hasNext()) {
@@ -282,7 +287,7 @@ public class Extract {
 
 		}
 
-		lComp = new ArrayList<GroupComponent>();
+		lComp = new HashMap<Integer, GroupComponent>();
 		boolean secGrp = false;
 		rs = md.getIndexInfo(catalog, schema, tableName, false, true);
 		String curGrName = "";
@@ -292,11 +297,11 @@ public class Extract {
 				grName = rs.getString(6);
 				if (!grName.equals(curGrName)) {
 					if (!curGrName.isEmpty() && lComp.size() > 0) {
-						getGroup(table, curGrName, lComp, null, secGrp, null);
+						getGroup(table, curGrName, new ArrayList<GroupComponent>(lComp.values()), null, secGrp, null);
 
 					}
 					secGrp = false;
-					lComp = new ArrayList<GroupComponent>();
+					lComp = new HashMap<Integer, GroupComponent>();
 					boolean nonUnique = rs.getBoolean(4);
 					curGrName = grName;
 					if (!nonUnique) {
@@ -307,14 +312,14 @@ public class Extract {
 				Column col = table.findColumn(colName);
 				if (col != null) {
 					int colPos = rs.getInt(8);
-					lComp.add(new GroupComponent(colPos, col));
+					lComp.put(colPos, new GroupComponent(colPos, col));
 				} else {
 //					System.out.println("Error: column not found " + colName + ".");
 				}
 			}
 		}
 		if (lComp.size() > 0) {
-			getGroup(table, curGrName, lComp, null, secGrp, null);
+			getGroup(table, curGrName, new ArrayList<GroupComponent>(lComp.values()), null, secGrp, null);
 		}
 		rs.close();
 	}

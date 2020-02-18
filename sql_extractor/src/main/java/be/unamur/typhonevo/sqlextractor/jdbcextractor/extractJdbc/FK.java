@@ -2,14 +2,16 @@ package be.unamur.typhonevo.sqlextractor.jdbcextractor.extractJdbc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FK  implements Serializable {
 	private String fkName;
 	private Table fkTable;
-	private List<GroupComponent> fkCols = new ArrayList<GroupComponent>();
+	private Map<Integer, GroupComponent> fkCols = new HashMap<Integer, GroupComponent>();
 	private Table pkTable;
-	private List<GroupComponent> pkCols = new ArrayList<GroupComponent>();
+	private Map<Integer, GroupComponent> pkCols = new HashMap<Integer, GroupComponent>();
 
 	public FK(String fkName, Table fkTable, Table pkTable) {
 		this.setFkName(fkName);
@@ -19,7 +21,7 @@ public class FK  implements Serializable {
 	
 
 	public void createFk() {
-		Group group = Extract.getGroup(fkTable, fkName, fkCols, null, null, true);
+		Group group = Extract.getGroup(fkTable, fkName, new ArrayList<GroupComponent>(fkCols.values()), null, null, true);
 		group.setFk(this);
 		if (fkName != null && group.getListOfUnknownConstraintName().contains(fkName)) {
 			group.getListOfUnknownConstraintName().remove(fkName);
@@ -34,8 +36,8 @@ public class FK  implements Serializable {
 			Column fkCol_ = fkTable.findColumn(fkCol);
 			Column pkCol_ = pkTable.findColumn(pkCol);
 
-			fkCols.add(new GroupComponent(index, fkCol_));
-			pkCols.add(new GroupComponent(index, pkCol_));
+			fkCols.put(index, new GroupComponent(index, fkCol_));
+			pkCols.put(index, new GroupComponent(index, pkCol_));
 		}
 	}
 
@@ -68,7 +70,7 @@ public class FK  implements Serializable {
 	}
 
 	public boolean isMandatory() {
-		for (GroupComponent gc : fkCols)
+		for (GroupComponent gc : fkCols.values())
 			if (gc.getComponent().getColumnMinCard() == 0)
 				return false;
 
@@ -77,12 +79,12 @@ public class FK  implements Serializable {
 
 
 	public List<GroupComponent> getPrimaryGroup() {
-		return pkCols;
+		return new ArrayList<GroupComponent>(pkCols.values());
 	}
 
 
 	public List<GroupComponent> getFKGroup() {
-		return fkCols;
+		return new ArrayList<GroupComponent>(fkCols.values());
 	}
 
 

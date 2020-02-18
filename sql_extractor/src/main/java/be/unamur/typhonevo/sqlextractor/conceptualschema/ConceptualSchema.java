@@ -455,15 +455,17 @@ public class ConceptualSchema {
 		}
 		content.add("   }");
 		content.add("}");
+		
+		content.add("");
+		content.add("documentdb " + documentdb + " {");
 
 		if (isExistsDocumentDatabase() && splitTable.size() > 0) {
-			content.add("");
-			content.add("documentdb " + documentdb + " {");
+			
 			content.add("   collections {");
 			for(String s : splitTable)
 				content.add("      \"" + s + "\" : \"" + s + "\"");
 			content.add("   }");
-			content.add("}");
+			
 
 //			    collections {
 //			            Review : Review
@@ -471,6 +473,8 @@ public class ConceptualSchema {
 //			            Product : Product
 //			    }
 		}
+		
+		content.add("}");
 
 		writeToFile(file, content);
 	}

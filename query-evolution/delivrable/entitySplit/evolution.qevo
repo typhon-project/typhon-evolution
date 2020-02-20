@@ -1,0 +1,29 @@
+import /src/schema.xmi;
+
+changeOperators[
+	split entity E { left E1 right E2 }
+]
+
+WARNING
+#@ Entity E split into E1, E2 @# 
+from E1 e1, E2 e2 select e1, e2 where e1.toE2 == e2,
+
+WARNING
+#@ Entity E split into E1, E2 @# 
+from E1 e1 select e1.A,
+
+WARNING
+#@ Entity E split into E1, E2 @# 
+from E2 e2 select e2.B,
+
+BROKEN
+#@ Entity E split into E1, E2 @# 
+insert E {A: "dummy", B: "dummy"},
+
+BROKEN
+#@ Entity E split into E1, E2 @# 
+delete E e1 where  e1.A == "dummy", e1.to_E2 == e2,
+
+BROKEN
+#@ Entity E split into E1, E2 @# 
+update E e1 where  e1.A == "dummy", e1.to_E2 == e2 set {A: "foobuzz"}

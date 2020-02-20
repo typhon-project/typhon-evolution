@@ -1,0 +1,10 @@
+datatype String
+
+entity E1{
+	Attr1: String
+	relation1 -> E2[0..*]
+}
+
+entity E2 {
+	Attr2: String
+}

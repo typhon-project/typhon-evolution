@@ -1,0 +1,18 @@
+import /src/schema.xmi;
+
+changeOperators[
+	rename entity E1 as NewEntityName
+]
+
+
+MODIFIED 
+from NewEntityName e select e.Attr1,
+
+MODIFIED 
+insert NewEntityName {Attr1: "dummy"},
+
+MODIFIED 
+delete NewEntityName e where e.Attr1 == "dummy",
+
+MODIFIED 
+update NewEntityName e where e.Attr1 == "dummy" set {Attr1: "foobuzz"}

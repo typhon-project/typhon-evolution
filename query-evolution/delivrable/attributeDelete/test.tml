@@ -1,0 +1,7 @@
+datatype String
+datatype Int
+
+entity E1{
+	Attr1: String
+	Attr2: Int
+}

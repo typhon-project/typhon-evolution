@@ -1,0 +1,13 @@
+import /src/schema.xmi;
+
+changeOperators[
+	add attribute Attr1: String to E1
+]
+
+from E1 e select e.Attr2,
+
+insert E1 {Attr2: 10},
+
+delete E1 e where e.Attr2 == 15,
+
+update E1 e where e.Attr2 == 10 set {Attr2: 15}

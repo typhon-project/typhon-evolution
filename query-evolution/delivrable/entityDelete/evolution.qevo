@@ -1,0 +1,21 @@
+import /src/schema.xmi;
+
+changeOperators[
+	remove entity E1
+]
+
+BROKEN
+#@ Entity E1 removed. This query is broken @# 
+from E1 e select e.Attr1,
+
+BROKEN
+#@ Entity E1 removed. This query is broken @# 
+insert E1 {Attr1: "dummy"},
+
+BROKEN
+#@ Entity E1 removed. This query is broken @# 
+delete E1 e where e.Attr1 == "dummy",
+
+BROKEN
+#@ Entity E1 removed. This query is broken @# 
+update E1 e where e.Attr1 == "dummy" set {Attr1: "foobuzz"}

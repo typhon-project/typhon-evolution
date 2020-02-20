@@ -1,0 +1,14 @@
+import /src/schema.xmi;
+
+changeOperators[
+	rename relation relation1 as new_name
+]
+
+MODIFIED 
+from E1 e1 select e1.new_name,
+
+MODIFIED 
+from E1 e1 select e1 where e1.new_name,
+
+MODIFIED 
+from E1 e1 select e1 where e1.new_name.Attr2 == "dummy"

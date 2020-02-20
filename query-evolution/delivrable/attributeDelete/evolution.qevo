@@ -1,0 +1,29 @@
+import /src/schema.xmi;
+
+changeOperators[
+	remove attribute Attr2
+]
+
+BROKEN
+#@ Attribute E1.Attr2 removed @# 
+from E1 e select e.Attr2,
+
+BROKEN
+#@ Attribute E1.Attr2 removed @# 
+insert E1 {Attr2: 10},
+
+BROKEN
+#@ Attribute E1.Attr2 removed @# 
+delete E1 e where e.Attr2 == 15,
+
+BROKEN
+#@ Attribute E1.Attr2 removed @# 
+update E1 e where e.Attr2 == 10 set {Attr1: 10},
+
+WARNING
+#@ Query result might differ : Attribute E1.Attr2 removed @# 
+from E1 e select e where e.Attr1 == "test",
+
+WARNING
+#@ Query result might differ : Attribute E1.Attr2 removed @# 
+update E1 e where e.Attr1 == "dummy" set {Attr1: "test"}

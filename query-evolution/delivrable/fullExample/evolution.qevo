@@ -1,0 +1,33 @@
+import /src/schema.xmi;
+
+changeOperators[
+	add attribute rating : Int to Review
+	add relation responses to Review -> Comment[0..*]
+	merge entities User CreditCard as User
+	remove attribute date
+	change attribute totalAmount type Real
+]
+
+WARNING
+#@ Query return a different QuerySet : User contains attributes from User and CreditCard @# 
+from User u select u where u.name == "Doe"  ,
+
+BROKEN
+#@ User and CreditCard merged @#
+insert User {id:5, name:"John", surname:"Doe"},
+
+WARNING
+#@ Attribute rating added to Review. Result of the query may have changed @# 
+from Review r, Product p select r where p.review == r, p.id == "145",
+
+BROKEN
+#@ Attribute Order.date removed @# 
+from Order o select o where o.date > 1998,
+
+WARNING 
+#@ Query result might differ : Attribute Order.date removed @# 
+#@ The type of the attribute totalAmount from Order changed @# 
+update Order o where o.totalAmount > 99999 set {},
+
+UNCHANGED 
+delete Comment c where c.id == "122"

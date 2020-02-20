@@ -1,0 +1,76 @@
+datatype Date
+datatype String
+datatype int
+datatype Real
+datatype Blob
+datatype natural_language
+
+entity Review {
+    id : String
+    product -> Product[1]
+}
+entity Product {
+    id : String
+    name : String
+    description : String
+    photo : Blob
+    review :-> Review[0..*]
+    orders -> Product[0..*]
+}
+entity Order {
+    id : String
+    date : Date
+    totalAmount : int
+    
+    products -> Product.products[0..*]
+    users -> User[1]
+    paidWith -> CreditCard[1]
+}
+entity User {
+    id : String
+    name : String
+    surname : String
+    comments :-> Comment[0..*]
+    paymentsDetails :-> CreditCard[0..*]
+    orders -> Order[0..*]
+}
+entity Comment {
+    id : String
+    responses :-> Comment[0..*]
+}
+entity CreditCard {
+    id : String
+    number : String
+    expiryDate : Date
+}
+
+relationaldb RelationalDatabase {
+    tables {
+        table {
+            Order : Order
+            index orderIndex {
+                attributes ("Order.date")
+            }
+            idSpec ("Order.date")
+        }
+        table {
+            User : User
+            index  userIndex {
+                attributes ('User.name')
+                }
+            idSpec ('User.name')
+        }
+        table {
+            CreditCard : CreditCard
+            idSpec ("CreditCard.number")
+        }
+    }
+}
+
+changeOperators [ 
+	add attribute rating : int to Review,
+	add relation responses to Review -> Comment[0..*],
+	merge entities User CreditCard as User,
+	remove attribute "Order.date",
+	change attribute "Order.totalAmount" type Real
+]

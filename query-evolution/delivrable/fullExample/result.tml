@@ -1,0 +1,68 @@
+datatype Date
+datatype String
+datatype int
+datatype Real
+datatype Blob
+datatype natural_language
+
+entity Review {
+    id : String
+    rating: int
+    product -> Product[1]
+    responses -> Comment[0..*]
+}
+entity Product {
+    id : String
+    name : String
+    description : String
+    photo : Blob
+    review :-> Review[0..*]
+    orders -> Product[0..*]
+}
+entity Order {
+    id : String
+    totalAmount : Real
+    
+    products -> Product.products[0..*]
+    users -> User[1]
+    paidWith -> User[1]
+}
+entity User {
+    id : String
+    name : String
+    surname : String
+    number : String
+    expiryDate : Date
+    
+    comments :-> Comment[0..*]
+    orders -> Order[0..*]
+}
+entity Comment {
+    id : String
+    responses :-> Comment[0..*]
+}
+
+
+relationaldb RelationalDatabase {
+    tables {
+        table {
+            Order : Order
+            index orderIndex {
+                attributes ("Order.date")
+            }
+            idSpec ("Order.date")
+        }
+        table {
+            User : User
+            index  userIndex {
+                attributes ('User.name')
+                }
+            idSpec ('User.name')
+        }
+        table {
+            CreditCard : CreditCard
+            idSpec ("CreditCard.number")
+        }
+    }
+}
+

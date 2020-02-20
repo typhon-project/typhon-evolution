@@ -58,7 +58,7 @@ EvoQuery entity_remove(EvoQuery q, EId name){
 	}
 	
 	if(matched){
-		q = setStatusBroken(q, "Entity <name> removed. That query is broken");
+		q = setStatusBroken(q, "Entity <name> removed. This query is broken");
 	}
 	return q;
 }
@@ -183,24 +183,38 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 			catch: a = 10;
 		}
 		
-	}
-	else{
-		q = entity_rename(q, entity1, new_name);
-		q = entity_rename(q, entity2, new_name);
+		switch(q.q.query){
+			case (Statement) `insert <{Obj ","}* obj>` : 
+				q = setStatusBroken(q, "<entity1> and <entity2> merged.");
+			case (Statement) `delete <Binding binding> <Where? where>` : 
+				q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
+			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
+				q = setStatusChanged(q, "<entity1> and <entity2> merged.");
+			case Query quer : 
+				q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
+		};
 		
 	}
-	
-	switch(q.q.query){
-		case (Statement) `insert <{Obj ","}* obj>` : 
-			q = setStatusBroken(q, "<entity1> and <entity2> merged.");
-		case (Statement) `delete <Binding binding> <Where? where>` : 
-			q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
-		case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
-			q = setStatusChanged(q, "<entity1> and <entity2> merged.");
-		case Query quer : 
-			q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
-	};
-	
+	else{
+		r1 = entity_rename(q, entity1, new_name);
+		r2= entity_rename(r1, entity2, new_name);
+		
+		if(r2 := q)
+			return q;
+			
+		q = r2;
+		switch(q.q.query){
+			case (Statement) `insert <{Obj ","}* obj>` : 
+				q = setStatusBroken(q, "<entity1> and <entity2> merged.");
+			case (Statement) `delete <Binding binding> <Where? where>` : 
+				q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
+			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
+				q = setStatusChanged(q, "<entity1> and <entity2> merged.");
+			case Query quer : 
+				q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
+		};
+		
+	}
 		
 	return q;
 }

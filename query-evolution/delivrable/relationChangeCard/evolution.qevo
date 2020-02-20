@@ -8,7 +8,6 @@ from E1 e1 select e1.relation1,
 
 from E1 e1 select e1 where e1.relation1,
 
-from E1 e1 select e1 where e1.relation1.Attr2 == "dummy"
+from E1 e1 select e1 where e1.relation1.Attr2 == "dummy",
 
-
-
+delete E1 e where e.relation1 == "5"

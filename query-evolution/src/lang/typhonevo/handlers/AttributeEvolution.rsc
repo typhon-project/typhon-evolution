@@ -21,6 +21,9 @@ EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `remove attribute <
 EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `change attribute <Id attribute> type <EId t>`, Schema s)
 	= attribute_type_change(q, attribute, t, s);
 
+EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `add attribute <Id name> : <EId typ> to <EId entity>`, Schema s)
+	= attribute_add(q, name, entity);
+
 default EvoQuery evolve_attribute(EvoQuery q, _, _) = q;
 
 
@@ -76,6 +79,31 @@ EvoQuery attribute_type_change(EvoQuery q, Id name, EId t, Schema s){
 	
 	if(use_entity(q, eid)){
 		return setStatusWarn(q, "The type of the attribute <name> from <eid> changed");
+	}
+	
+	return q;
+}
+
+
+EvoQuery attribute_add(EvoQuery q, Id attr, EId entity){
+
+	switch(q.q.query){
+		case s:(Statement) `insert <{Obj ","}* obj>`:{
+			for(/(EId) e := s){
+				if(e := entity)
+					return setStatusBroken(q, "Attribute <attr> added to <entity>. Insert is broken");
+			}
+		}
+		case s:(Statement) `delete <EId ent> <VId var> <Where? where>`:{
+			if(ent := entity)
+				return setStatusWarn(q, "Attribute <attr> added to <entity>. You may delete more information than expected");
+		}
+		case Query s:{
+			for(/(EId) e := s){
+				if(e := entity)
+					return setStatusWarn(q, "Attribute <attr> added to <entity>. Result of the query may have changed");
+			}
+		}
 	}
 	
 	return q;

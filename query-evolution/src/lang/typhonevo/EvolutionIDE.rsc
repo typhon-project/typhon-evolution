@@ -49,8 +49,7 @@ public void getIDEid(Tree t, loc selection){
 public set[Contribution] languageContrib = {
 	popup(
 		menu("TyphonEvolution",[
-		    action("Evolve", evalQuery),
-		    action("getIDE", getIDEid)
+		    action("Evolve", evalQuery)
 	    ])
   	)
 };

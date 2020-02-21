@@ -57,6 +57,7 @@ syntax EntityOperation
 	= add: NameSpace? "add" "entity" EId name "{"  "}"// Nothing
 	| remove: "remove" "entity" EId name // Done
 	| rename: "rename" "entity" EId oldName "as" EId newName // Done
+	| splitVertical: "split" "entity" "vertical" EId entity1 "to" EId entity2 "attributes" ":" "[" {Expr ","}+ "]"
 	| splitEntity: "split" "entity" EId name "{" "left" EId entity1 "right" EId entity2 "}" //TODO (waiting for new syntax)
  	| merge: "merge" "entities" EId entity1 EId entity2 "as" EId new_name 
  	| migrate: "migrate" "entity" EId entity "to" EId db // Nothing

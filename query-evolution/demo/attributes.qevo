@@ -4,8 +4,12 @@ changeOperators [
 	rename attribute name from User as firstname
 ]
 
+UNCHANGED 
 from User u, Order o select o where u.orders == o, u.name == "jerome" ,
 
+UNCHANGED 
 from Order o select o,
 
+UNCHANGED 
+from User u select u.nameHANGED 
 from User u select u.name

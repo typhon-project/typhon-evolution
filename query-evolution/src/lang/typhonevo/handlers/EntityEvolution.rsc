@@ -24,6 +24,12 @@ EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `split entity <EId name> { 
 	
 EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`, Schema s)
 	= entity_merge(q, new_name, entity1, entity2, s);
+	
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `migrate entity <EId entity> to <EId db>`, Schema s)
+	= entity_migration(q, entity);
+	
+EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `split entity vertical <EId entity1> to <EId entity2> attributes : [ <{Expr ","}+ expr> ]`, Schema s)
+	= entity_split(q, entity1, entity1, entity2);
 
 default EvoQuery evolve_entity(EvoQuery q, _, _) = q;
 
@@ -219,4 +225,8 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 	return q;
 }
 
+
+EvoQuery entity_migration(EvoQuery q, EId entity_name){
+	return entity_rename(q, entity_name, parse(#EId, "<entity_name>_migrated"));
+}
 

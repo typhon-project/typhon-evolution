@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ASCII"?>
+<typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
+    <tables name="LOG_TABLE" entity="//@dataTypes.2">
+      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
+    </tables>
+    <tables name="AC_User" entity="//@dataTypes.3">
+      <idSpec attributes="//@dataTypes.3/@attributes.0"/>
+    </tables>
+    <tables name="AC_Subscription" entity="//@dataTypes.4">
+      <idSpec attributes="//@dataTypes.4/@attributes.0"/>
+    </tables>
+  </databases>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+  </databases>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Int"/>
+  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
+  <dataTypes xsi:type="typhonml:Entity" name="LOG_TABLE">
+    <attributes name="LG_ID" type="//@dataTypes.0"/>
+    <attributes name="LG_SYSTEM" type="//@dataTypes.1"/>
+    <attributes name="LG_SUBSYSTEM" type="//@dataTypes.1"/>
+    <attributes name="LG_GROUP" type="//@dataTypes.1"/>
+    <attributes name="LG_LEVEL" type="//@dataTypes.0"/>
+    <attributes name="LG_DESCRIPTION" type="//@dataTypes.1"/>
+    <attributes name="LG_DATA" type="//@dataTypes.1"/>
+    <attributes name="LG_USERID" type="//@dataTypes.0"/>
+    <attributes name="LG_SUBSCRIPTIONID" type="//@dataTypes.0"/>
+    <attributes name="LG_SESSIONID" type="//@dataTypes.1"/>
+    <attributes name="LG_CONNECTIONID" type="//@dataTypes.1"/>
+    <attributes name="ARCHIVE" type="//@dataTypes.1"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="AC_User">
+    <attributes name="UserId" type="//@dataTypes.0"/>
+    <attributes name="PersId" type="//@dataTypes.0"/>
+    <attributes name="Active" type="//@dataTypes.1"/>
+    <attributes name="UnsucVerif" type="//@dataTypes.0"/>
+    <attributes name="UserGrpId" type="//@dataTypes.0"/>
+    <attributes name="UserType" type="//@dataTypes.0"/>
+    <attributes name="MustApprGlProf" type="//@dataTypes.1"/>
+    <attributes name="LastSignOnChannelId" type="//@dataTypes.0"/>
+    <attributes name="MaxSessionTime" type="//@dataTypes.0"/>
+    <attributes name="MaxInactivityTime" type="//@dataTypes.0"/>
+    <attributes name="HaspData" type="//@dataTypes.1"/>
+    <attributes name="DebitFree" type="//@dataTypes.1"/>
+    <attributes name="CreditFree" type="//@dataTypes.1"/>
+    <attributes name="OwnerQueryFree" type="//@dataTypes.1"/>
+    <attributes name="BalanceFree" type="//@dataTypes.1"/>
+    <attributes name="SpecialValueFree" type="//@dataTypes.1"/>
+    <attributes name="FullSecurity" type="//@dataTypes.1"/>
+    <attributes name="BlocksFree" type="//@dataTypes.1"/>
+    <attributes name="BMasterOwnerID" type="//@dataTypes.1"/>
+    <attributes name="BMasterBank" type="//@dataTypes.1"/>
+    <attributes name="MigratedUser" type="//@dataTypes.0"/>
+    <attributes name="AliasChangedCount" type="//@dataTypes.0"/>
+    <relations name="AC_Subscription" type="//@dataTypes.4" cardinality="one"/>
+  </dataTypes>
+  <dataTypes xsi:type="typhonml:Entity" name="AC_Subscription">
+    <attributes name="SubsId" type="//@dataTypes.0"/>
+    <attributes name="SubType" type="//@dataTypes.0"/>
+    <attributes name="Active" type="//@dataTypes.1"/>
+    <attributes name="CompId" type="//@dataTypes.0"/>
+    <attributes name="ContPersId" type="//@dataTypes.0"/>
+    <attributes name="LangId" type="//@dataTypes.0"/>
+    <attributes name="ApplicationProvId" type="//@dataTypes.0"/>
+    <attributes name="ApplicationBranch" type="//@dataTypes.1"/>
+    <attributes name="SignProvId" type="//@dataTypes.0"/>
+    <attributes name="SignBranch" type="//@dataTypes.1"/>
+    <attributes name="BasicProdId" type="//@dataTypes.0"/>
+    <attributes name="PersonalCompName" type="//@dataTypes.1"/>
+    <attributes name="PersonalCompTitle" type="//@dataTypes.1"/>
+    <attributes name="DeactivatedTransId" type="//@dataTypes.0"/>
+    <attributes name="MaxApprLevel" type="//@dataTypes.0"/>
+    <attributes name="MaxApprLevelForSubsMaintenance" type="//@dataTypes.0"/>
+    <attributes name="AdministrationUnit" type="//@dataTypes.1"/>
+    <attributes name="CreatedByChannelId" type="//@dataTypes.0"/>
+  </dataTypes>
+  <changeOperators xsi:type="typhonml:MigrateEntity" entity="//@dataTypes.2" newDatabase="//@databases.1"/>
+  <changeOperators xsi:type="typhonml:SplitEntityVertical" entity1="//@dataTypes.2" entity2name="LG_DATA_COLLECTION" attributeList="//@dataTypes.2/@attributes.6"/>
+</typhonml:Model>

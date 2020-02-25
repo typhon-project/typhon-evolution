@@ -88,7 +88,7 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 		
 		Binding old_bind = (Binding) `<EId old_name> <VId old_alias>`;
 		
-		Expr join_expr = parse(#Expr, "<e1_vid>.to_<entity2> == <e2_vid>");
+		Expr join_expr = parse(#Expr, "<e2_vid>.to_<entity1> == <e1_vid>");
 		// Transform
 		
 		q = visit(q){

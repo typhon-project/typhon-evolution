@@ -2,6 +2,7 @@ module lang::typhonevo::EvoCompiler
 
 import IO;
 import ParseTree;
+import Exception;
 import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::handlers::EntityEvolution;
@@ -19,10 +20,13 @@ import lang::typhonevo::utils::EvolveStatus;
 EvoSyntax evolve(EvoSyntax x, loc location){
 	operators = extract_op(x);
 	
-	str xmi = readFile(location + "<extract_path(x)>");
-	Model m = xmiString2Model(xmi);
-	Schema s = model2schema(m);
-	
+	try{
+		str xmi = readFile(location + "<extract_path(x)>");
+		Model m = xmiString2Model(xmi);
+		Schema s = model2schema(m);
+	}
+	catch: s = Schema();
+		
 	// Init all queries to unchanged
 	x = visit(x){
 		case EvoQuery q => setStatusUnchanged(q)

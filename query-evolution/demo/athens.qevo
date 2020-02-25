@@ -1,4 +1,4 @@
-import /src/schema.xmi;
+import /src/athen.xmi;
 
 changeOperators [ 
 	migrate entity LOG_TABLE to DocumentDatabase

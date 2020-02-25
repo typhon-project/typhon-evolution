@@ -1,10 +1,9 @@
-import /src/athen.xmi;
+import /src/schema.xmi;
 
-changeOperators [ 
+changeOperators [
 	migrate entity LOG_TABLE to DocumentDatabase
-	split entity vertical LOG_TABLE_migrated to LOG_DATA attributes:["LOG_TABLE_migrated.LG_DATA"] 
+	split entity vertical LOG_TABLE_migrated to LG_DATA_COLLECTION attributes:["LOG_TABLE_migrated.LG_DATA"]
 ]
 
-from LOG_TABLE l select l,
 
-from LOG_TABLE l select l where lg_data == "bleh"
+from LOG_TABLE l select l where l.LG_CONNECTIONID == "connection1"

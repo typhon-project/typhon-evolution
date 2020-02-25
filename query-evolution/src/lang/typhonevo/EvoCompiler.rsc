@@ -20,12 +20,10 @@ import lang::typhonevo::utils::EvolveStatus;
 EvoSyntax evolve(EvoSyntax x, loc location){
 	operators = extract_op(x);
 	
-	try{
-		str xmi = readFile(location + "<extract_path(x)>");
-		Model m = xmiString2Model(xmi);
-		Schema s = model2schema(m);
-	}
-	catch: s = Schema();
+	str xmi = readFile(location + "<extract_path(x)>");
+	Model m = xmiString2Model(xmi);
+	Schema s = model2schema(m);
+
 		
 	// Init all queries to unchanged
 	x = visit(x){

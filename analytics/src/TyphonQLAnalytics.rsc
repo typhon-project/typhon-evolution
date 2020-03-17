@@ -31,5 +31,5 @@ public void extract(Query q) {
 }
 
 public void extract(Statement s) {
-	println("Statement");
+	println("Statement parameter");
 }

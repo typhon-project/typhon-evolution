@@ -12,6 +12,7 @@
         <module>evolution-feature</module>
         <module>evolution-updatesite</module>
 		<!-- <module>sql_extractor</module>-->
+        <module>analytics</module>
     </modules>
 
     <properties>

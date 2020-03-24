@@ -1,16 +1,86 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>be.unamur.typhonevo</groupId>
-    <artifactId>typhonevo</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>analytics</artifactId>
-  <name>analytics</name>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>be.unamur.typhonevo</groupId>
+		<artifactId>typhonevo</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>analytics</artifactId>
+	<name>analytics</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>nl.cwi.swat.typhonql</groupId>
+			<artifactId>nl.cwi.swat.typhonql</artifactId>
+			<version>0.1.0.202003051557</version>
+		</dependency>
+
+		<dependency>
+			<groupId>nl.cwi.swat.typhonql-ide</groupId>
+			<artifactId>nl.cwi.swat.typhonql-ide</artifactId>
+			<version>0.1.0.202003051557</version>
+		</dependency>
+
+		<dependency>
+			<groupId>rascal</groupId>
+			<artifactId>rascal</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jruby</groupId>
+			<artifactId>jruby</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jcommander</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>asciidoctor</groupId>
+			<artifactId>asciidoctor</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>QueryParsing</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
 </project>

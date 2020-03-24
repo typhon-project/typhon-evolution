@@ -1,0 +1,6 @@
+mvn install:install-file -Dfile=typhonql_0.1.0.202003051557.jar -DgroupId=nl.cwi.swat.typhonql -DartifactId=nl.cwi.swat.typhonql -Dversion=0.1.0.202003051557 -Dpackaging=jar
+mvn install:install-file -Dfile=typhonql-ide_0.1.0.202003051557.jar -DgroupId=nl.cwi.swat.typhonql-ide -DartifactId=nl.cwi.swat.typhonql-ide -Dversion=0.1.0.202003051557 -Dpackaging=jar
+mvn install:install-file -Dfile=rascal.jar -DgroupId=rascal -DartifactId=rascal -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
+mvn install:install-file -Dfile=jruby.jar -DgroupId=jruby -DartifactId=jruby -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
+mvn install:install-file -Dfile=jcommander.jar -DgroupId=jcommander -DartifactId=jcommander -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar
+mvn install:install-file -Dfile=asciidoctor.jar -DgroupId=asciidoctor -DartifactId=asciidoctor -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar

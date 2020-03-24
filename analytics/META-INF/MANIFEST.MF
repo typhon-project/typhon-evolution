@@ -1,7 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: TyphonEvolutionAnalytics
-Bundle-SymbolicName: TyphonEvolutionAnalytics
-Bundle-Version: 1.0.0
-Require-Bundle: rascal_eclipse
+Bundle-Name: Query
+Bundle-SymbolicName: Query
+Bundle-Version: 0.1.0
+Require-Bundle: typhonql,
+ typhonql-ide,
+ rascal_eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

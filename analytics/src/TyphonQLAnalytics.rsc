@@ -4,20 +4,21 @@ import IO;
 import lang::typhonql::Query;
 import lang::typhonql::DML;
 import ParseTree;
-import Node;
 import Map;
 import String;
-import Whitespace;
-import WhitespaceOrComment;
+import lang::json::\syntax::JSON;
 
 syntax QueryType
 = query: Query query
 | statement: Statement query;
 
 data Attribute = attribute(str alias_, list[str] attrs_);
-data EntityJoin = entityJoin(str entityName1, list[str] attrs1, str entityName2, list[str] attrs2);
-data AttributeComparator = attributeComparator(str entityName, list[str] attributes);
+alias EntityJoin = tuple[str entityName1, list[str] attrs1, str entityName2, list[str] attrs2];
+alias AttributeComparator = tuple[str entityName, list[str] attributes];
 data ImplicitInsert = implicitInsert(str entityName, list[ImplicitInsert] children);
+
+
+alias Insert = tuple[str entityName, list[value] children];
 
 //////////////////////////////////////////
 str querytype = "undefined";
@@ -28,14 +29,22 @@ map[str, str] mainEntities = ();
 list[EntityJoin] joins = [];
 list[AttributeComparator] attrComps = [];
 list[ImplicitInsert] implicitInserts = [];
+list[Insert] inserts = [];
 
 //////////////////////////////////////////
 
+alias QueryMetadata = tuple[str orignalQuery, str normalizedQuery, str displayableQuery, str queryType];
+alias QueryData = tuple[list[str] entities, list[EntityJoin] joinList, list[AttributeComparator] compList, list[Insert] insertList];
 
-void main(s) {
+alias QueryParsing
+  = tuple[QueryMetadata m, QueryData d];
+  
+
+
+public QueryParsing parseQuery(str query) {
 	init();
-	originalQuery = s;
-	x = parse(#QueryType, s);
+	originalQuery = query;
+	x = parse(#QueryType, query);
 	
 	extract(x.query);
 	
@@ -43,10 +52,36 @@ void main(s) {
 	setNormalizedQuery(temp);
 	setDisplayableQuery(temp);
 	
+	inserts = convertImplicitInserts(implicitInserts);
 	
-	printParsingResult();
+	// printParsingResult();
+
+	QueryMetadata metadata = <originalQuery, normalizedQuery, displayableQuery, querytype>;
+	
+	list[str] entities = [entityName | entityName <- range(mainEntities)];
+	
+	QueryData qdata = <entities, joins, attrComps, inserts>;
+	QueryParsing res = <metadata, qdata>;
+	return res;
+}
+
+
+
+
+public void main(list[str] args) {
+	
+	for(str query <- args)
+		parseQuery(query);
 	
 }
+
+list[Insert] convertImplicitInserts(list[ImplicitInsert] l) = [conversionImplicitInsert(ii) | ii <- l];
+
+Insert conversionImplicitInsert(ImplicitInsert ii) {
+	str entityName = ii.entityName;
+	list[Insert] children = convertImplicitInserts(ii.children);
+	return <entityName, children>;
+}	
 
 void init() {
 	querytype = "undefined";
@@ -57,6 +92,7 @@ void init() {
 	joins = [];
 	attrComps = [];
 	implicitInserts = [];
+	inserts = [];
 }
 
 void setNormalizedQuery(str query) {
@@ -96,9 +132,9 @@ void printParsingResult() {
 		println("********************************");
 		println("Joins between entities:");
 		for(EntityJoin ej <- joins) {
-			str e1 = ej.entityName1;
-			str e2 = ej.entityName2;
-			println("   - join between " + e1 + toString(ej.attrs1) + " and " + e2  + toString(ej.attrs2)); 
+			str e1 = ej[0];
+			str e2 = ej[2];
+			println("   - join between " + e1 + toString(ej[1]) + " and " + e2  + toString(ej[3])); 
 		}
 	}
 	
@@ -106,14 +142,14 @@ void printParsingResult() {
 		println("********************************");
 		println("Attribute comparisons:");
 		for(AttributeComparator ac <- attrComps) {
-			println("   - comparison on " + ac.entityName + toString(ac.attributes));
+			println("   - comparison on " + ac[0] + toString(ac[1]));
 		}
 	}
 	
-	if(size(implicitInserts) > 0) {
+	if(size(inserts) > 0) {
 		println("********************************");
 		println("Implicit inserts:");
-		println(implicitInserts);
+		println(inserts);
 	}
 	
 }
@@ -192,20 +228,20 @@ public void visitAttributeComparatorClause(Expr e1, Expr e2) {
 	if(!isEmpty(entityName1) && !isEmpty(entityName2)) {
 		list[str] attrs1 = part1.attrs_;
 		list[str] attrs2 = part2.attrs_;
-		joins += entityJoin(entityName1, attrs1, entityName2, attrs2);
+		joins += <entityName1, attrs1, entityName2, attrs2>;
 	} else {
 		
 		if(!isEmpty(entityName1)) {
 			list[str] attrs = part1.attrs_;
 			if(!isEmpty(attrs)) {
-				attrComps += attributeComparator(entityName1, attrs);
+				attrComps += <entityName1, attrs>;
 			}
 			
 		} else
 			if(!isEmpty(entityName2)) {
 				list[str] attrs = part2.attrs_;
 				if(!isEmpty(attrs)) {
-					attrComps += attributeComparator(entityName2, attrs);
+					attrComps += <entityName2, attrs>;
 				}
 			} 
 		

@@ -166,16 +166,22 @@ public void extract(Query q) {
 	
 	visitWhereClause(q.where);
 	visitOrderClause(q.orderBy);
+	visitGroupByClause(q.groupBy);
 }
 
 public void visitOrderClause(order) {
+	//TODO get and store selected attribute
 	visit(order) {
 		case OrderBy ob : visitOrderAttributes(ob);
 	}
 
 }
 
-public list[str] visitOrderAttributes(OrderBy order) = ["" + attr | attr <- order.attrs];
+public void visitGroupByClause(group) {
+	//TODO
+}
+
+public list[str] visitOrderAttributes(OrderBy order) = ["" + attr | attr <- order.vars];
 
 public void visitWhereClause(where) {
 	visit(where) {

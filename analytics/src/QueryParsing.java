@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.rascalmpl.debug.IRascalMonitor;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.JavaToRascal;
@@ -37,12 +42,23 @@ import io.usethesource.vallang.ITuple;
 import io.usethesource.vallang.IValue;
 import io.usethesource.vallang.IValueFactory;
 import io.usethesource.vallang.type.TypeFactory;
-import nl.cwi.swat.typhonql.workingset.Entity;
-import nl.cwi.swat.typhonql.workingset.WorkingSet;
+import model.TyphonModel;
+import typhonml.Attribute;
+import typhonml.Entity;
+import typhonml.Model;
+import typhonml.Relation;
+import typhonml.impl.ModelImpl;
 
 public class QueryParsing {
 	private static Evaluator evaluator = null;
 	private static IValueFactory vf = null;
+
+	static Logger logger = Logger.getLogger(QueryParsing.class);
+
+	static {
+		PropertyConfigurator.configure(
+				System.getProperty("user.dir") + File.separator + "resources" + File.separator + "log4j.properties");
+	}
 
 	private static boolean init() {
 
@@ -68,46 +84,77 @@ public class QueryParsing {
 				evaluator.addRascalSearchPath(loc);
 			}
 
-			System.out.println("Importing plugin ...");
+			logger.info("Importing plugin ...");
 			evaluator.doImport(null, "TyphonQLAnalytics");
 			vf = ValueFactoryFactory.getValueFactory();
-			System.out.println("Plugin imported with success");
+			logger.info("Plugin imported with success");
 			return true;
 		} catch (Exception | Error e) {
-			System.err.println("Impossible to initialize the QueryParsing plugin\nCause:\n" + e.getCause());
+			logger.error("Impossible to initialize the QueryParsing plugin\nCause:\n" + e.getCause());
 			return false;
 		}
 	}
 
 	public static void main(String[] args) throws URISyntaxException, IOException {
-
 		if (!init()) {
-			System.err.println("Query Parsing plugin exit");
+			logger.error("Query Parsing plugin exit");
 			return;
 		}
-		
+
 		Scanner in = new Scanner(System.in);
-		while(true) {
-			 String query = in.nextLine();
-			 
-			 try {
-				 eval(query);
-			 } catch(Exception | Error e) {
-				 System.err.println("Problem when analyzing: " + query);
-				 e.printStackTrace();
-			 }
+		while (true) {
+			String query = in.nextLine();
+
+			try {
+				eval(query);
+			} catch (Exception | Error e) {
+				logger.error("Problem when analyzing: " + query);
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
+		AttributeSelector as = sel;
+		List<Join> joins = new ArrayList<Join>();
+		Entity entity = model.getEntityTypeFromName(sel.getEntityName());
+		for (String attrRel : sel.getAttributes()) {
+			Relation relation = model.getRelationFromNameInEntity(attrRel, entity);
+			if (relation != null) {
+				List<String> attributes1 = new ArrayList<String>();
+				attributes1.add(attrRel);
+
+				joins.add(
+						new Join(entity.getName(), attributes1, relation.getType().getName(), new ArrayList<String>()));
+
+				entity = relation.getType();
+			} else {
+				Attribute attribute = model.getAttributeFromNameInEntity(attrRel, entity);
+				if (attribute != null) {
+					List<String> attributes = new ArrayList<String>();
+					attributes.add(attrRel);
+					as = new AttributeSelector(entity.getName(), attributes);
+				} else {
+					logger.error("Query is obsolete: " + attrRel + " in " + sel.getEntityName());
+					return;
+				}
+			}
+		}
+
+		if (joins.size() > 0) {
+			sel.setImplicitJoins(joins);
+			sel.setImplicitSel(as);
 		}
 
 	}
 
 	public static Query eval(String query) {
-		System.out.println("Query analyzing ...");
-		IValue v = evaluator.getEvaluator().call("parseQuery",
-				vf.string(query));
+		logger.info("Query analyzing ...\n" + query);
+		IValue v = evaluator.getEvaluator().call("parseQuery", vf.string(query));
 		Query q = parseResult(v);
-		System.out.println("Query analyzed");
+		logger.info("Query analyzed");
 		q.print();
-		
 		return q;
 	}
 
@@ -142,13 +189,13 @@ public class QueryParsing {
 			res.getJoins().add(j);
 		}
 
-		Iterator<IValue> attrComparatorIterator = ((IList) queryData.get(2)).iterator();
-		while (attrComparatorIterator.hasNext()) {
-			ITuple comp = (ITuple) attrComparatorIterator.next();
+		Iterator<IValue> attrSelectorIterator = ((IList) queryData.get(2)).iterator();
+		while (attrSelectorIterator.hasNext()) {
+			ITuple comp = (ITuple) attrSelectorIterator.next();
 			String entityName = ((IString) comp.get(0)).getValue();
 			List<String> attrs = getList(comp.get(1));
-			AttributeComparator ac = new AttributeComparator(entityName, attrs);
-			res.getAttributeComparators().add(ac);
+			AttributeSelector ac = new AttributeSelector(entityName, attrs);
+			res.addAttributeSelector(ac);
 		}
 
 		IList insertList = ((IList) queryData.get(3));
@@ -187,35 +234,15 @@ public class QueryParsing {
 		return res;
 	}
 
-	public static WorkingSet fromIValue(IValue v) {
-		// map[str entity, list[Entity] entities];
-		if (v instanceof IMap) {
-			IMap map = (IMap) v;
-			WorkingSet ws = new WorkingSet();
-			Iterator<Entry<IValue, IValue>> iter = map.entryIterator();
-			while (iter.hasNext()) {
-				Entry<IValue, IValue> entry = iter.next();
-				IString key = (IString) entry.getKey();
-				IList entries = (IList) entry.getValue();
-				Iterator<IValue> entryIter = entries.iterator();
-				List<Entity> entities = new ArrayList<Entity>();
-				while (entryIter.hasNext()) {
-					IValue current = entryIter.next();
-					Entity e = Entity.fromIValue(current);
-					entities.add(e);
-				}
-
-				ws.put(key.getValue(), entities);
-			}
-			return ws;
-		} else
-			throw new RuntimeException("IValue does not represent a working set");
+	public static void analyzeAttributeSelector(AttributeSelector sel) {
 
 	}
 
 }
 
 class Query {
+	private TyphonModel model = null;
+
 	private String originalQuery;
 	private String normalizedQuery;
 	private String displayableQuery;
@@ -224,37 +251,52 @@ class Query {
 	private List<String> mainEntities = new ArrayList<String>();
 
 	private List<Join> joins = new ArrayList<Join>();
-	private List<AttributeComparator> attributeComparators = new ArrayList<AttributeComparator>();
+	private List<AttributeSelector> attributeSelectors = new ArrayList<AttributeSelector>();
 	private List<Insert> inserts = new ArrayList<Insert>();
 
+	private TyphonModel getModel() {
+		if (model == null) {
+			model = TyphonModel.getCurrentModel();
+		}
+
+		return model;
+	}
+
 	public void print() {
-		System.out.println("Original query: " + originalQuery);
-		System.out.println("Normalized query: " + normalizedQuery);
-		System.out.println("Displayable query: " + displayableQuery);
-		System.out.println("Query type: " + queryType);
-		System.out.println("*****************************************");
-		System.out.println("Main entities: " + mainEntities);
-		System.out.println("*****************************************");
+		QueryParsing.logger.debug("Original query: " + originalQuery);
+		QueryParsing.logger.debug("Normalized query: " + normalizedQuery);
+		QueryParsing.logger.debug("Displayable query: " + displayableQuery);
+		QueryParsing.logger.debug("Query type: " + queryType);
+		QueryParsing.logger.debug("*****************************************");
+		QueryParsing.logger.debug("Main entities: " + mainEntities);
+		QueryParsing.logger.debug("*****************************************");
 		if (joins.size() > 0) {
-			System.out.println("Joins between entities: ");
+			QueryParsing.logger.debug("Joins between entities: ");
 			for (Join j : joins) {
-				System.out.println("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
+				QueryParsing.logger.debug("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
 						+ j.getAttributes2());
 			}
 
-			System.out.println("*****************************************");
+			QueryParsing.logger.debug("*****************************************");
 		}
 
-		if (attributeComparators.size() > 0) {
-			System.out.println("Attribute selectors:");
-			for (AttributeComparator c : attributeComparators) {
-				System.out.println("   " + c.getEntityName() + c.getAttributes());
+		if (attributeSelectors.size() > 0) {
+			QueryParsing.logger.debug("Attribute selectors:");
+			for (AttributeSelector c : attributeSelectors) {
+				QueryParsing.logger.debug("   " + c.getEntityName() + c.getAttributes()
+						+ (c.containsImplicitJoins() ? " contains implicit joins:" : ""));
+				if (c.containsImplicitJoins()) {
+					for(Join j : c.getImplicitJoins()) 
+						QueryParsing.logger.debug("   -> " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
+						+ j.getAttributes2());
+					QueryParsing.logger.debug("   -> " + c.getImplicitSel().getEntityName() + c.getImplicitSel().getAttributes());
+				}
 			}
-			System.out.println("*****************************************");
+			QueryParsing.logger.debug("*****************************************");
 		}
 
 		if (inserts.size() > 0) {
-			System.out.println("Inserts: " + inserts);
+			QueryParsing.logger.debug("Inserts: " + inserts);
 		}
 
 	}
@@ -299,12 +341,17 @@ class Query {
 		this.joins = joins;
 	}
 
-	public List<AttributeComparator> getAttributeComparators() {
-		return attributeComparators;
+	public void addAttributeSelector(AttributeSelector sel) {
+		QueryParsing.analyzeAtttributeSelector(sel, getModel());
+		attributeSelectors.add(sel);
 	}
 
-	public void setAttributeComparators(List<AttributeComparator> attributeComparators) {
-		this.attributeComparators = attributeComparators;
+	public List<AttributeSelector> getAttributeSelectors() {
+		return attributeSelectors;
+	}
+
+	public void setAttributeSelectors(List<AttributeSelector> attributeSelectors) {
+		this.attributeSelectors = attributeSelectors;
 	}
 
 	public List<Insert> getInserts() {
@@ -324,13 +371,20 @@ class Query {
 	}
 }
 
-class AttributeComparator {
+class AttributeSelector {
 	private String entityName;
 	private List<String> attributes;
 
-	public AttributeComparator(String entityName, List<String> attributes) {
+	private List<Join> implicitJoins;
+	private AttributeSelector implicitSel;
+
+	public AttributeSelector(String entityName, List<String> attributes) {
 		this.entityName = entityName;
 		this.attributes = attributes;
+	}
+
+	public boolean containsImplicitJoins() {
+		return implicitJoins.size() > 0;
 	}
 
 	public String getEntityName() {
@@ -347,6 +401,22 @@ class AttributeComparator {
 
 	public void setAttributes(List<String> attributes) {
 		this.attributes = attributes;
+	}
+
+	public List<Join> getImplicitJoins() {
+		return implicitJoins;
+	}
+
+	public void setImplicitJoins(List<Join> implicitJoins) {
+		this.implicitJoins = implicitJoins;
+	}
+
+	public AttributeSelector getImplicitSel() {
+		return implicitSel;
+	}
+
+	public void setImplicitSel(AttributeSelector implicitSel) {
+		this.implicitSel = implicitSel;
 	}
 
 }

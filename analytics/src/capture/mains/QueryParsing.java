@@ -1,53 +1,34 @@
+package capture.mains;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.rascalmpl.debug.IRascalMonitor;
 import org.rascalmpl.interpreter.Evaluator;
-import org.rascalmpl.interpreter.JavaToRascal;
-import org.rascalmpl.interpreter.NullRascalMonitor;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
-import org.rascalmpl.interpreter.load.IRascalSearchPathContributor;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
-import org.rascalmpl.interpreter.load.URIContributor;
-import org.rascalmpl.interpreter.utils.RascalManifest;
 import org.rascalmpl.library.util.PathConfig;
-import org.rascalmpl.uri.URIResolverRegistry;
 import org.rascalmpl.uri.URIUtil;
-import org.rascalmpl.uri.classloaders.SourceLocationClassLoader;
-import org.rascalmpl.uri.libraries.ClassResourceInput;
-import org.rascalmpl.util.ConcurrentSoftReferenceObjectPool;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 import io.usethesource.vallang.IList;
-import io.usethesource.vallang.IMap;
 import io.usethesource.vallang.ISourceLocation;
 import io.usethesource.vallang.IString;
 import io.usethesource.vallang.ITuple;
 import io.usethesource.vallang.IValue;
 import io.usethesource.vallang.IValueFactory;
-import io.usethesource.vallang.type.TypeFactory;
 import model.TyphonModel;
 import typhonml.Attribute;
 import typhonml.Entity;
-import typhonml.Model;
 import typhonml.Relation;
-import typhonml.impl.ModelImpl;
 
 public class QueryParsing {
 	private static Evaluator evaluator = null;
@@ -55,12 +36,8 @@ public class QueryParsing {
 
 	static Logger logger = Logger.getLogger(QueryParsing.class);
 
-	static {
-		PropertyConfigurator.configure(
-				System.getProperty("user.dir") + File.separator + "resources" + File.separator + "log4j.properties");
-	}
 
-	private static boolean init() {
+	public static boolean init() {
 
 		try {
 			ISourceLocation root = URIUtil.createFileLocation(
@@ -115,11 +92,40 @@ public class QueryParsing {
 
 	}
 
-	static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
-		AttributeSelector as = sel;
+	static void analyzeJoin(Join join, TyphonModel model) {
+		Couple<List<Join>, AttributeSelector> couple1 = getImplicitJoins(join.getEntityName1(), join.getAttributes1(),
+				model);
+		Couple<List<Join>, AttributeSelector> couple2 = getImplicitJoins(join.getEntityName2(), join.getAttributes2(),
+				model);
+
+		if (couple1 != null) {
+			List<Join> joins = couple1.getX();
+			AttributeSelector as = couple1.getY();
+
+			join.setImplicitJoins1(joins);
+			join.setImplicitAttributeSelector1(as);
+
+		}
+
+		if (couple2 != null) {
+			List<Join> joins = couple2.getX();
+			AttributeSelector as = couple2.getY();
+
+			join.setImplicitJoins2(joins);
+			join.setImplicitAttributeSelector2(as);
+
+		}
+
+	}
+
+	private static Couple<List<Join>, AttributeSelector> getImplicitJoins(String entityName, List<String> attrList,
+			TyphonModel model) {
+		Couple<List<Join>, AttributeSelector> res = null;
+
+		AttributeSelector as = null;
 		List<Join> joins = new ArrayList<Join>();
-		Entity entity = model.getEntityTypeFromName(sel.getEntityName());
-		for (String attrRel : sel.getAttributes()) {
+		Entity entity = model.getEntityTypeFromName(entityName);
+		for (String attrRel : attrList) {
 			Relation relation = model.getRelationFromNameInEntity(attrRel, entity);
 			if (relation != null) {
 				List<String> attributes1 = new ArrayList<String>();
@@ -136,14 +142,28 @@ public class QueryParsing {
 					attributes.add(attrRel);
 					as = new AttributeSelector(entity.getName(), attributes);
 				} else {
-					logger.error("Query is obsolete: " + attrRel + " in " + sel.getEntityName());
-					return;
+					logger.error("Query is obsolete: " + attrRel + " in " + entityName);
+					return res;
 				}
 			}
 		}
 
-		if (joins.size() > 0) {
-			sel.setImplicitJoins(joins);
+		if (joins.size() > 0)
+			res = new Couple(joins, as);
+		return res;
+	}
+
+	static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
+		Couple<List<Join>, AttributeSelector> couple = getImplicitJoins(sel.getEntityName(), sel.getAttributes(),
+				model);
+		if (couple == null)
+			return;
+
+		List<Join> implicitJoins = couple.getX();
+		AttributeSelector as = couple.getY();
+
+		if (implicitJoins.size() > 0) {
+			sel.setImplicitJoins(implicitJoins);
 			sel.setImplicitSel(as);
 		}
 
@@ -186,7 +206,7 @@ public class QueryParsing {
 			String entityName2 = ((IString) join.get(2)).getValue();
 			List<String> attrs2 = getList(join.get(3));
 			Join j = new Join(entityName1, attrs1, entityName2, attrs2);
-			res.getJoins().add(j);
+			res.addJoin(j);
 		}
 
 		Iterator<IValue> attrSelectorIterator = ((IList) queryData.get(2)).iterator();
@@ -275,6 +295,28 @@ class Query {
 			for (Join j : joins) {
 				QueryParsing.logger.debug("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
 						+ j.getAttributes2());
+				if (j.containsImplicitJoins1()) {
+					QueryParsing.logger.debug("Implicit joins in first part: ");
+					for (Join j2 : j.getImplicitJoins1())
+						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
+								+ j2.getEntityName2() + j2.getAttributes2());
+
+					if (j.getImplicitAttributeSelector1() != null)
+						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector1().getEntityName()
+								+ j.getImplicitAttributeSelector1().getAttributes());
+
+				}
+
+				if (j.containsImplicitJoins2()) {
+					QueryParsing.logger.debug("Implicit joins in snd part: ");
+					for (Join j2 : j.getImplicitJoins2())
+						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
+								+ j2.getEntityName2() + j2.getAttributes2());
+
+					if (j.getImplicitAttributeSelector2() != null)
+						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector2().getEntityName()
+								+ j.getImplicitAttributeSelector2().getAttributes());
+				}
 			}
 
 			QueryParsing.logger.debug("*****************************************");
@@ -286,10 +328,11 @@ class Query {
 				QueryParsing.logger.debug("   " + c.getEntityName() + c.getAttributes()
 						+ (c.containsImplicitJoins() ? " contains implicit joins:" : ""));
 				if (c.containsImplicitJoins()) {
-					for(Join j : c.getImplicitJoins()) 
-						QueryParsing.logger.debug("   -> " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
-						+ j.getAttributes2());
-					QueryParsing.logger.debug("   -> " + c.getImplicitSel().getEntityName() + c.getImplicitSel().getAttributes());
+					for (Join j : c.getImplicitJoins())
+						QueryParsing.logger.debug("   -> " + j.getEntityName1() + j.getAttributes1() + " AND "
+								+ j.getEntityName2() + j.getAttributes2());
+					QueryParsing.logger
+							.debug("   -> " + c.getImplicitSel().getEntityName() + c.getImplicitSel().getAttributes());
 				}
 			}
 			QueryParsing.logger.debug("*****************************************");
@@ -331,6 +374,11 @@ class Query {
 
 	public void setQueryType(String queryType) {
 		this.queryType = queryType;
+	}
+
+	public void addJoin(Join join) {
+		QueryParsing.analyzeJoin(join, getModel());
+		joins.add(join);
 	}
 
 	public List<Join> getJoins() {
@@ -384,7 +432,7 @@ class AttributeSelector {
 	}
 
 	public boolean containsImplicitJoins() {
-		return implicitJoins.size() > 0;
+		return implicitJoins != null && implicitJoins.size() > 0;
 	}
 
 	public String getEntityName() {
@@ -462,11 +510,50 @@ class Insert {
 
 }
 
+class Couple<X, Y> {
+	private X x;
+	private Y y;
+
+	public Couple(X x, Y y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public X getX() {
+		return x;
+	}
+
+	public void setX(X x) {
+		this.x = x;
+	}
+
+	public Y getY() {
+		return y;
+	}
+
+	public void setY(Y y) {
+		this.y = y;
+	}
+}
+
 class Join {
 	private String entityName1;
 	private List<String> attributes1;
 	private String entityName2;
 	private List<String> attributes2;
+
+	private List<Join> implicitJoins1;
+	private AttributeSelector implicitAttributeSelector1;
+	private List<Join> implicitJoins2;
+	private AttributeSelector implicitAttributeSelector2;
+
+	public boolean containsImplicitJoins1() {
+		return implicitJoins1 != null && implicitJoins1.size() > 0;
+	}
+
+	public boolean containsImplicitJoins2() {
+		return implicitJoins2 != null && implicitJoins2.size() > 0;
+	}
 
 	public Join(String entityName1, List<String> attributes1, String entityName2, List<String> attributes2) {
 		setEntityName1(entityName1);
@@ -505,6 +592,38 @@ class Join {
 
 	public void setAttributes2(List<String> attributes2) {
 		this.attributes2 = attributes2;
+	}
+
+	public List<Join> getImplicitJoins1() {
+		return implicitJoins1;
+	}
+
+	public void setImplicitJoins1(List<Join> implicitJoins1) {
+		this.implicitJoins1 = implicitJoins1;
+	}
+
+	public List<Join> getImplicitJoins2() {
+		return implicitJoins2;
+	}
+
+	public void setImplicitJoins2(List<Join> implicitJoins2) {
+		this.implicitJoins2 = implicitJoins2;
+	}
+
+	public AttributeSelector getImplicitAttributeSelector1() {
+		return implicitAttributeSelector1;
+	}
+
+	public void setImplicitAttributeSelector1(AttributeSelector implicitAttributeSelector1) {
+		this.implicitAttributeSelector1 = implicitAttributeSelector1;
+	}
+
+	public AttributeSelector getImplicitAttributeSelector2() {
+		return implicitAttributeSelector2;
+	}
+
+	public void setImplicitAttributeSelector2(AttributeSelector implicitAttributeSelector2) {
+		this.implicitAttributeSelector2 = implicitAttributeSelector2;
 	}
 
 }

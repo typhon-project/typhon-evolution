@@ -2,6 +2,10 @@ package model;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
+import org.bson.BsonInvalidOperationException;
+import org.bson.BsonValue;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -12,14 +16,21 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import typhonml.Collection;
-import typhonml.Table;
+
+import db.AnalyticsDB;
+import nl.cwi.swat.typhonql.DBType;
+import nl.cwi.swat.typhonql.client.DatabaseInfo;
 import typhonml.impl.ModelImpl;
 import typhonml.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -31,35 +42,41 @@ import javax.ws.rs.core.Response;
 
 public class TyphonModel {
 
-	private static final String LOCALHOST_URL = "http://localhost:8080/";
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
 	private static final String GET_ML_MODELS_URL = "api/models/ml";
 
-	private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
+	private static String authStringEnc;
 	private static final JerseyClient restClient = JerseyClientBuilder.createClient();
-	private final static WebTarget webTarget = restClient.target(LOCALHOST_URL);
+	private static WebTarget webTarget;
 
 	private static ResourceSet resourceSet = new ResourceSetImpl();
-	private static TyphonModel currentModel = null;
+	private static TyphonModel currentModel = AnalyticsDB.loadLatestRegisteredTyphonModel();
 
 	static {
 		typhonMLPackageRegistering();
 	}
 
 	private static Logger logger = Logger.getLogger(TyphonModel.class);
-	
+
 	///////////////////
-	
+
 	private Model model;
 	private int version;
-	
+
 	public TyphonModel(int version, Model model) {
 		this.version = version;
 		this.model = model;
 	}
-	
-	
-	
+
+	public boolean isEmpty() {
+		return model == null;
+	}
+
+	public static void initWebService(String url, String username, String password) {
+		authStringEnc = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+		webTarget = restClient.target(url);
+		logger.info("Connected to polystore webservice");
+	}
 
 	private static boolean typhonMLPackageRegistering() {
 
@@ -75,46 +92,48 @@ public class TyphonModel {
 	}
 
 	public static TyphonModel getCurrentModel() {
+		synchronized (currentModel) {
 
-		File tempFile = null;
-		try {
+			File tempFile = null;
+			try {
 
-			WebTarget target = webTarget.path(GET_ML_MODELS_URL);
-			String result = target.request(MediaType.APPLICATION_JSON).header("Authorization", "Basic " + authStringEnc)
-					.get(String.class);
+				WebTarget target = webTarget.path(GET_ML_MODELS_URL);
+				String result = target.request(MediaType.APPLICATION_JSON)
+						.header("Authorization", "Basic " + authStringEnc).get(String.class);
 
-			JSONArray arr = new JSONArray(result);
-			String latestModel = null;
-			int latestVersion = -1;
-			for (int i = 0; i < arr.length(); i++) {
-				int modelVersion = arr.getJSONObject(i).getInt("version");
-				if (latestVersion < modelVersion) {
-					latestVersion = modelVersion;
-					latestModel = arr.getJSONObject(i).getString("contents");
+				JSONArray arr = new JSONArray(result);
+				String latestModel = null;
+				int latestVersion = -1;
+				for (int i = 0; i < arr.length(); i++) {
+					int modelVersion = arr.getJSONObject(i).getInt("version");
+					if (latestVersion < modelVersion) {
+						latestVersion = modelVersion;
+						latestModel = arr.getJSONObject(i).getString("contents");
+					}
+
 				}
 
+				if (currentModel == null || currentModel.isEmpty() || currentModel.getVersion() < latestVersion) {
+					tempFile = File.createTempFile("model", ".tmp");
+					FileUtils.writeStringToFile(tempFile, latestModel, Charset.defaultCharset());
+					Model model = loadModelTyphonML(tempFile.getAbsolutePath());
+					currentModel = new TyphonModel(latestVersion, model);
+				}
+
+			} catch (Exception | Error e) {
+				logger.error("Impossible to load the current TyphonML model\nCause:");
+				e.printStackTrace();
+			} finally {
+				if (tempFile != null)
+					try {
+						tempFile.delete();
+					} catch (Exception | Error e) {
+						// error while deleting temp file
+					}
 			}
 
-			if(currentModel == null || currentModel.getVersion() < latestVersion) {
-				tempFile = File.createTempFile("model", ".tmp");
-				FileUtils.writeStringToFile(tempFile, latestModel, Charset.defaultCharset());
-				Model model = loadModelTyphonML(tempFile.getAbsolutePath());
-				currentModel = new TyphonModel(latestVersion, model);
-			}
-			
-			
-			
-		} catch (Exception | Error e) {
-			logger.error("Impossible to load the current TyphonML model\nCause:");
-			e.printStackTrace();
-		} finally {
-			if (tempFile != null)
-				try {
-					tempFile.delete();
-				} catch (Exception | Error e) {
-					// error while deleting temp file
-				}
 		}
+
 		return currentModel;
 
 	}
@@ -143,7 +162,7 @@ public class TyphonModel {
 	}
 
 	public Database getEntityDatabase(String entityName) {
-		List<Database> databases = model.getDatabases();
+		List<Database> databases = model != null ? model.getDatabases() : null;
 		if (databases != null) {
 			for (Database database : databases) {
 				if (database instanceof RelationalDB) {
@@ -258,7 +277,7 @@ public class TyphonModel {
 		}
 		return null;
 	}
-	
+
 	public Attribute getAttributeFromNameInEntity(String attributename, Entity entity) {
 		if (entity != null) {
 			for (Attribute a : entity.getAttributes()) {
@@ -269,13 +288,13 @@ public class TyphonModel {
 		}
 		return null;
 	}
-	
+
 	public Attribute getAttributeFromNameInEntity(String attributename, String entityname) {
 		Entity entity;
 		entity = this.getEntityTypeFromName(entityname);
 		return getAttributeFromNameInEntity(attributename, entity);
 	}
-	
+
 	public Relation getRelationFromNameInEntity(String relationname, Entity entity) {
 		if (entity != null) {
 			for (Relation r : entity.getRelations()) {
@@ -294,6 +313,7 @@ public class TyphonModel {
 	}
 
 	public DataType getDataTypeFromName(String dataTypeName) {
+		if(model != null) {
 		List<DataType> dataTypes = model.getDataTypes();
 		if (dataTypes != null) {
 			for (DataType dataType : dataTypes) {
@@ -301,11 +321,12 @@ public class TyphonModel {
 					return dataType;
 				}
 			}
-		}
+		}}
 		return null;
 	}
 
 	public Database getDatabaseFromName(String dbname) {
+		if(model != null)
 		for (Database db : model.getDatabases()) {
 			if (db.getName().equals(dbname)) {
 				return db;
@@ -314,8 +335,19 @@ public class TyphonModel {
 		return null;
 	}
 
+	public List<Entity> getEntities() {
+		List<Entity> entities = new ArrayList<Entity>();
+		if (model != null)
+			for (DataType datatype : model.getDataTypes()) {
+				if (datatype instanceof typhonml.Entity) {
+					entities.add((Entity) datatype);
+				}
+			}
+		return entities;
+	}
 
 	private DataType getDataTypeFromEntityName(String entityname) {
+		if(model != null)
 		for (DataType datatype : model.getDataTypes()) {
 			if (datatype instanceof typhonml.Entity) {
 				if (datatype.getName().equalsIgnoreCase(entityname)) {
@@ -327,37 +359,47 @@ public class TyphonModel {
 	}
 
 	private DataType getAttributeDataTypeFromDataTypeName(String dataTypeName) {
-		for (DataType datatype : model.getDataTypes()) {
-			if (datatype.getName().equalsIgnoreCase(dataTypeName)) {
-				if (datatype instanceof typhonml.PrimitiveDataType || datatype instanceof CustomDataType) {
-					return datatype;
+		if (model != null)
+			for (DataType datatype : model.getDataTypes()) {
+				if (datatype.getName().equalsIgnoreCase(dataTypeName)) {
+					if (datatype instanceof typhonml.PrimitiveDataType || datatype instanceof CustomDataType) {
+						return datatype;
+					}
 				}
 			}
-		}
 		return null;
 	}
-
 
 	public void setModel(Model model) {
 		this.model = model;
 	}
-	
+
 	public Model getModel() {
 		return this.model;
 	}
-
-
-
 
 	public int getVersion() {
 		return version;
 	}
 
-
-
-
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public static void getCurrentModelWithStats() {
+		TyphonModel oldModel;
+		synchronized (currentModel) {
+			oldModel = currentModel;
+		}
+		TyphonModel newModel = getCurrentModel();
+		if (oldModel.getVersion() < newModel.getVersion()) {
+			// new model was loaded
+			AnalyticsDB.saveTyphonModel(oldModel, newModel);
+		}
+
+		Map<String, Long> entitySize = DatabaseInformationMgr.getCurrentModelWithStats(newModel, webTarget, authStringEnc);
+		AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
+
 	}
 
 }

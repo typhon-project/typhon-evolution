@@ -15,24 +15,47 @@ import org.apache.log4j.PropertyConfigurator;
 import capture.commons.Event;
 import capture.commons.EventSchema;
 import capture.commons.PostEvent;
+import db.AnalyticsDB;
+import model.TyphonModel;
 
 public class ConsumePostEvents {
 	private static Logger logger = Logger.getLogger(ConsumePostEvents.class);
 
+	private static final long WAKEUP_TIME_MS_FREQUENCY = 50000;
+	private static final String KAFKA_CHANNEL_IP = "192.168.1.15";
+	private static final String KAFKA_CHANNEL_PORT = "29092";
+	private static final String WEBSERVICE_URL = "http://localhost:8080/";
+	private static final String WEBSERVICE_USERNAME = "admin";
+	private static final String WEBSERVICE_PASSWORD = "admin1@";
+	private static final String ANALYTICS_DB_IP = "localhost";
+	private static final int ANALYTICS_DB_PORT = 27018;
+	private static final String ANALYTICS_DB_USER = "username";
+	private static final String ANALYTICS_DB_PWD = "password";
+	private static final String ANALYTICS_DB_NAME = "Analytics";
+
 	static {
 		PropertyConfigurator.configure(
 				System.getProperty("user.dir") + File.separator + "resources" + File.separator + "log4j.properties");
+
 	}
 
 	public static void main(String[] args) throws Exception {
 		if (!initializeQueryParsingPlugin())
 			System.exit(1);
 
+		if (!AnalyticsDB.initConnection(ANALYTICS_DB_IP, ANALYTICS_DB_PORT, ANALYTICS_DB_USER, ANALYTICS_DB_PWD,
+				ANALYTICS_DB_NAME))
+			System.exit(1);
+		
+		TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD); 
+
+		startSavingGeneralInformationThread();
+
 		logger.info("Creating new kafka consumer ...");
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		Properties properties = new Properties();
-		properties.setProperty("bootstrap.servers", "192.168.1.15:29092");
+		properties.setProperty("bootstrap.servers", KAFKA_CHANNEL_IP + ":" + KAFKA_CHANNEL_PORT);
 		properties.setProperty("group.id", "namur");
 		properties.setProperty("auto.offset.reset", "earliest");
 
@@ -57,7 +80,7 @@ public class ConsumePostEvents {
 			@Override
 			public String map(Event event) throws Exception {
 				System.out.println("receiving post event...");
-				
+
 				try {
 
 					if (event instanceof PostEvent) {
@@ -70,15 +93,43 @@ public class ConsumePostEvents {
 					logger.error("Problem happened consuming the following post event: " + event + "\nCause: ");
 					e.printStackTrace();
 				}
-				
+
 				return "";
 			}
 
 		});
-		
+
 		logger.info("Kafka consumer created");
 		env.execute();
 
+	}
+
+	private static void startSavingGeneralInformationThread() {
+		new Thread() {
+			public void run() {
+				while (true) {
+
+					try {
+						updateGeneralInformation();
+						synchronized (this) {
+							wait(WAKEUP_TIME_MS_FREQUENCY);
+						}
+					} catch (Exception | Error e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+
+		}.start();
+
+		logger.info("General information saving Thread started");
+
+	}
+
+	protected static void updateGeneralInformation() {
+		TyphonModel.getCurrentModelWithStats();
+//		logger.debug("General information updated");
 	}
 
 	protected static void captureQuery(PostEvent postEvent) {
@@ -87,14 +138,14 @@ public class ConsumePostEvents {
 		Date endDate = postEvent.getEndTime();
 		long diff = endDate.getTime() - startDate.getTime();
 		Query q = QueryParsing.eval(query);
-		
-		saveAnalyzedQueryInAnalyticsDB(q);
+
+		saveAnalyzedQueryInAnalyticsDB(q, startDate, diff);
 
 	}
 
-	private static void saveAnalyzedQueryInAnalyticsDB(Query q) {
-		// TODO Auto-generated method stub
-		
+	private static void saveAnalyzedQueryInAnalyticsDB(Query q, Date startDate, long executionTime) {
+		AnalyticsDB.saveExecutedQuery(q, startDate, executionTime);
+
 	}
 
 	private static boolean initializeQueryParsingPlugin() {

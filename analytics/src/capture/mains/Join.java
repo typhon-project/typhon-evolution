@@ -1,6 +1,9 @@
 package capture.mains;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Join {
 	private String entityName1;
@@ -12,6 +15,48 @@ public class Join {
 	private AttributeSelector implicitAttributeSelector1;
 	private List<Join> implicitJoins2;
 	private AttributeSelector implicitAttributeSelector2;
+
+	public List<Join> getAllJoins() {
+		List<Join> res = new ArrayList<Join>();
+
+		if (!containsImplicitJoins1() && !containsImplicitJoins2())
+			res.add(this);
+
+		if (containsImplicitJoins1() && !containsImplicitJoins2()) {
+			res.addAll(this.getImplicitJoins1());
+			String lastEntityName = this.getImplicitJoins1().get(this.getImplicitJoins1().size() - 1).getEntityName2();
+			if (!lastEntityName.equals(entityName2)) {
+				// ex: from user u, product p select u, p where u.orders == p
+				// there is a join between order and product
+				Join j = new Join(lastEntityName, new ArrayList<String>(), entityName2, new ArrayList<String>());
+				res.add(j);
+			}
+
+		}
+
+		if (!containsImplicitJoins1() && containsImplicitJoins2()) {
+			res.addAll(getImplicitJoins2());
+			String lastEntityName = this.getImplicitJoins2().get(this.getImplicitJoins2().size() - 1).getEntityName2();
+			if (!lastEntityName.equals(entityName1)) {
+				// ex: from user u, product p select u, p where p == u.orders
+				// there is a join between order and product
+				Join j = new Join(lastEntityName, new ArrayList<String>(), entityName1, new ArrayList<String>());
+				res.add(j);
+			}
+		}
+
+		if (containsImplicitJoins1() && containsImplicitJoins2()) {
+			// ex: where p.orders == u.orders
+			res.addAll(implicitJoins1);
+			res.addAll(implicitJoins2);
+			String lastEntityName1 = this.getImplicitJoins1().get(this.getImplicitJoins1().size() - 1).getEntityName2();
+			String lastEntityName2 = this.getImplicitJoins2().get(this.getImplicitJoins2().size() - 1).getEntityName2();
+			Join j = new Join(lastEntityName1, new ArrayList<String>(), lastEntityName2, new ArrayList<String>());
+			res.add(j);
+		}
+
+		return res;
+	}
 
 	public boolean containsImplicitJoins1() {
 		return implicitJoins1 != null && implicitJoins1.size() > 0;

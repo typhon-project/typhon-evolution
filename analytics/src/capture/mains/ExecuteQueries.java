@@ -58,7 +58,7 @@ public class ExecuteQueries {
 					.header("Authorization", "Basic " + authStringEnc).post(ClientResponse.class, query);
 			if (resp.getStatus() != 200) {
 				System.err.println("Unable to connect to the server");
-				success = false;
+//				success = false;
 			}
 
 			String output = resp.getEntity(String.class);

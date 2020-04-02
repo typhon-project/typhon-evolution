@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -24,11 +26,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Indexes;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.util.JSON;
 
+import capture.mains.AttributeSelector;
 import capture.mains.ConsumePostEvents;
 import capture.mains.Insert;
+import capture.mains.Join;
 import capture.mains.Query;
 import model.TyphonModel;
 import typhonml.Entity;
@@ -52,7 +57,7 @@ public class AnalyticsDB {
 		logger.info("New Typhon model was loaded: " + newModel.getVersion());
 
 		MongoCollection<Document> coll = database.getCollection(TYPHON_MODEL_COLLECTION);
-
+		
 		Document document = new Document();
 		document.put("version", newModel.getVersion());
 		document.put("date", new Date().getTime());
@@ -106,6 +111,26 @@ public class AnalyticsDB {
 		}
 
 	}
+	
+	private static void createIndex(MongoCollection<Document> coll, boolean unique, String... attributes) {
+		
+		
+		String index = "{";
+		int i = 0;
+		for(String attr : attributes) {
+			if(i > 0)
+				index += ", ";
+			index += attr + ": 1";
+			i++;
+		}
+		
+		index += "}";
+		if(unique)
+			index += ", {unique: true}";
+		
+		logger.debug("Created index: " + index);
+		coll.createIndex((BasicDBObject) JSON.parse(index));
+	}
 
 	public static boolean initConnection(String ip, int port, String username, String password, String dbName) {
 
@@ -116,6 +141,24 @@ public class AnalyticsDB {
 			mongoClient = new MongoClient(uri);
 			database = mongoClient.getDatabase(dbName);
 			logger.info("Connected to Analytics DB");
+			
+			MongoCollection<Document> coll = database.getCollection(TYPHON_MODEL_COLLECTION);
+			createIndex(coll, true, "version");
+			
+			coll = database.getCollection(TYPHON_ENTITY_COLLECTION);
+			createIndex(coll, true, "name");
+			
+			coll = database.getCollection(TYPHON_ENTITY_HISTORY_COLLECTION);
+			createIndex(coll, true, "name", "updateDate");
+			createIndex(coll, false, "updateDate");
+			
+			coll = database.getCollection(QL_NORMALIZED_QUERY_COLLECTION);
+			createIndex(coll, true, "normalizedForm");
+			
+			coll = database.getCollection(QL_QUERY_COLLECTION);
+			createIndex(coll, false, "normalizedQueryId");
+			createIndex(coll, false, "executionDate");
+			
 			return true;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to connect the Analytics DB\nCause:");
@@ -176,7 +219,7 @@ public class AnalyticsDB {
 			Document document = new Document();
 			document.put("name", entityName);
 			document.put("updateDate", new Date().getTime());
-			document.put("currentModelVersion", version);
+			document.put("modelVersion", version);
 			document.put("dataSize", dataSize);
 
 			document.put("nbOfQueries", 0);
@@ -224,8 +267,8 @@ public class AnalyticsDB {
 		query.put("executionDate", startDate.getTime());
 		query.put("executionTime", executionTime);
 		query.put("modelVersion", q.getModel().getVersion());
-
-		queryColl.insertOne(query);
+		if (q.getMainEntities().size() > 0)
+			query.put("mainEntities", q.getMainEntities());
 
 		Map<String, EntityStats> entitiesStats = new HashMap<String, EntityStats>();
 		///// main entities
@@ -252,29 +295,105 @@ public class AnalyticsDB {
 			}
 		}
 
+		//// joins
+		List<Document> joinDocuments = new ArrayList<Document>();
+		for (Join j : q.getAllJoins()) {
+			String entity1 = j.getEntityName1();
+			String entity2 = j.getEntityName2();
+
+			EntityStats stat = entitiesStats.get(entity1);
+			if (stat == null) {
+				stat = new EntityStats(entity1);
+				entitiesStats.put(entity1, stat);
+			}
+			stat.incrementSelects();
+
+			stat = entitiesStats.get(entity2);
+			if (stat == null) {
+				stat = new EntityStats(entity2);
+				entitiesStats.put(entity2, stat);
+			}
+			stat.incrementSelects();
+
+			Document d = new Document();
+			d.put("entity1", entity1);
+			if (j.getAttributes1().size() > 0)
+				d.put("rel1", j.getAttributes1().get(0));
+			d.put("entity2", entity2);
+			if (j.getAttributes2().size() > 0)
+				d.put("rel2", j.getAttributes2().get(0));
+			joinDocuments.add(d);
+
+		}
+
+		if (joinDocuments.size() > 0)
+			query.put("joins", joinDocuments);
+
+		List<Document> selDocuments = new ArrayList<Document>();
+		for (AttributeSelector as : q.getAllAttributeSelectors()) {
+			String entity = as.getEntityName();
+			String attribute = as.getAttributes().get(0);
+			String operator = "WHERE";
+			Document sel = new Document();
+			sel.put("entity", entity);
+			sel.put("attribute", attribute);
+			sel.put("operator", operator);
+			selDocuments.add(sel);
+		}
+
+		if (selDocuments.size() > 0)
+			query.put("selectors", selDocuments);
+
 		//// implicit inserts
+		Set<String> implicitInsertedEntities = new HashSet<String>();
 		if (q.getQueryType().equals("INSERT"))
 			for (Insert i : q.getInserts())
-				stats(i, entitiesStats);
+				stats(i, entitiesStats, implicitInsertedEntities);
 		else
 			for (Insert i : q.getInserts())
-				stats2(i, entitiesStats);
+				stats2(i, entitiesStats, implicitInsertedEntities);
+
+		List<String> implicitList = new ArrayList<String>(implicitInsertedEntities);
+		if (implicitInsertedEntities.size() > 0)
+			query.put("implicitInsertedEntities", implicitList);
 
 		////////////////
 
+		queryColl.insertOne(query);
+
+		///////////////
+
 		MongoCollection<Document> histColl = database.getCollection(TYPHON_ENTITY_HISTORY_COLLECTION);
 		for (EntityStats stat : entitiesStats.values()) {
+
+			logger.debug("Statistics for " + stat.getEntityName() + ":");
+			if (stat.getSelects() > 0)
+				logger.debug("selected");
+			if (stat.getDeletes() > 0)
+				logger.debug("deleted");
+			if (stat.getInserts() > 0)
+				logger.debug("inserted");
+			if (stat.getUpdates() > 0)
+				logger.debug("updated");
+
 			String entityName = stat.getEntityName();
 			Document history = getEntityHistory(histColl, entityName, q.getModel().getVersion());
 			if (history != null) {
 				BasicDBObject findObject = new BasicDBObject().append("_id", history.getObjectId("_id"));
 				BasicDBObject updateObject = (BasicDBObject) JSON.parse("{ $inc: { nbOfQueries: 1 , nbOfSelect : "
-						+ stat.getSelects() + " , nbOfInsert : " + stat.getInserts() + " , nbOfUpdate : "
-						+ stat.getUpdates() + " , nbOfDelete : " + stat.getDeletes() + " } }");
+						+ (stat.getSelects() > 0 ? 1 : 0) + " , nbOfInsert : " + (stat.getInserts() > 0 ? 1 : 0)
+						+ " , nbOfUpdate : " + (stat.getUpdates() > 0 ? 1 : 0) + " , nbOfDelete : "
+						+ (stat.getDeletes() > 0 ? 1 : 0) + " } }");
 				histColl.findOneAndUpdate(findObject, updateObject);
 			}
+
 		}
 
+	}
+
+	private static void checkIfModelIsUpToDate() {
+		TyphonModel.getCurrentModelWithStats(false);
+		
 	}
 
 	private static Document getEntityHistory(MongoCollection<Document> coll, String entityName, int version) {
@@ -285,8 +404,10 @@ public class AnalyticsDB {
 		return history;
 	}
 
-	private static void stats2(Insert child, Map<String, EntityStats> entitiesStats) {
+	private static void stats2(Insert child, Map<String, EntityStats> entitiesStats,
+			Set<String> implicitInsertedEntities) {
 		String entity = child.getEntityName();
+		implicitInsertedEntities.add(entity);
 		EntityStats stat = entitiesStats.get(entity);
 		if (stat == null) {
 			stat = new EntityStats(entity);
@@ -295,12 +416,13 @@ public class AnalyticsDB {
 
 		stat.incrementInserts();
 		for (Insert c2 : child.getChildren())
-			stats2(c2, entitiesStats);
+			stats2(c2, entitiesStats, implicitInsertedEntities);
 	}
 
-	private static void stats(Insert i, Map<String, EntityStats> entitiesStats) {
+	private static void stats(Insert i, Map<String, EntityStats> entitiesStats, Set<String> implicitInsertedEntities) {
 		for (Insert child : i.getChildren()) {
 			String entity = child.getEntityName();
+			implicitInsertedEntities.add(entity);
 			EntityStats stat = entitiesStats.get(entity);
 			if (stat == null) {
 				stat = new EntityStats(entity);
@@ -308,7 +430,7 @@ public class AnalyticsDB {
 			}
 
 			stat.incrementInserts();
-			stats(child, entitiesStats);
+			stats(child, entitiesStats, implicitInsertedEntities);
 
 		}
 

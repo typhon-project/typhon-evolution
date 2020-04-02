@@ -20,11 +20,39 @@ public class Query {
 	private List<Insert> inserts = new ArrayList<Insert>();
 
 	public TyphonModel getModel() {
-		if (model == null) {
-			model = TyphonModel.getCurrentModel();
+		return model;
+	}
+	
+	public void setModel(TyphonModel m) {
+		this.model = m;
+	}
+
+	public List<Join> getAllJoins() {
+		List<Join> res = new ArrayList<Join>();
+
+		for (Join join : getJoins())
+			res.addAll(join.getAllJoins());
+
+		for (AttributeSelector sel : getAttributeSelectors()) {
+			if (sel.getImplicitJoins() != null)
+				res.addAll(sel.getImplicitJoins());
 		}
 
-		return model;
+		return res;
+	}
+
+	public List<AttributeSelector> getAllAttributeSelectors() {
+		List<AttributeSelector> res = new ArrayList<AttributeSelector>();
+
+		for (AttributeSelector c : attributeSelectors) {
+			if (c.containsImplicitJoins()) {
+				if (c.getImplicitSel() != null)
+					res.add(c.getImplicitSel());
+			} else
+				res.add(c);
+		}
+
+		return res;
 	}
 
 	public void print() {
@@ -35,53 +63,83 @@ public class Query {
 		QueryParsing.logger.debug("*****************************************");
 		QueryParsing.logger.debug("Main entities: " + mainEntities);
 		QueryParsing.logger.debug("*****************************************");
+
+		List<Join> joins = getAllJoins();
+		List<AttributeSelector> selectors = getAllAttributeSelectors();
+
 		if (joins.size() > 0) {
-			QueryParsing.logger.debug("Joins between entities: ");
+			QueryParsing.logger.debug("Join between entities: ");
 			for (Join j : joins) {
-				QueryParsing.logger.debug("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
-						+ j.getAttributes2());
-				if (j.containsImplicitJoins1()) {
-					QueryParsing.logger.debug("Implicit joins in first part: ");
-					for (Join j2 : j.getImplicitJoins1())
-						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
-								+ j2.getEntityName2() + j2.getAttributes2());
-
-					if (j.getImplicitAttributeSelector1() != null)
-						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector1().getEntityName()
-								+ j.getImplicitAttributeSelector1().getAttributes());
-
-				}
-
-				if (j.containsImplicitJoins2()) {
-					QueryParsing.logger.debug("Implicit joins in snd part: ");
-					for (Join j2 : j.getImplicitJoins2())
-						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
-								+ j2.getEntityName2() + j2.getAttributes2());
-
-					if (j.getImplicitAttributeSelector2() != null)
-						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector2().getEntityName()
-								+ j.getImplicitAttributeSelector2().getAttributes());
-				}
+				QueryParsing.logger.debug("   - " + j.getEntityName1() + j.getAttributes1() + " AND "
+						+ j.getEntityName2() + j.getAttributes2());
 			}
-
-			QueryParsing.logger.debug("*****************************************");
 		}
 
-		if (attributeSelectors.size() > 0) {
-			QueryParsing.logger.debug("Attribute selectors:");
-			for (AttributeSelector c : attributeSelectors) {
-				QueryParsing.logger.debug("   " + c.getEntityName() + c.getAttributes()
-						+ (c.containsImplicitJoins() ? " contains implicit joins:" : ""));
-				if (c.containsImplicitJoins()) {
-					for (Join j : c.getImplicitJoins())
-						QueryParsing.logger.debug("   -> " + j.getEntityName1() + j.getAttributes1() + " AND "
-								+ j.getEntityName2() + j.getAttributes2());
-					QueryParsing.logger
-							.debug("   -> " + c.getImplicitSel().getEntityName() + c.getImplicitSel().getAttributes());
-				}
+		if (selectors.size() > 0) {
+			QueryParsing.logger.debug("Attribute selectors: ");
+			for (AttributeSelector s : selectors) {
+				QueryParsing.logger.debug("   - " + s.getEntityName() + s.getAttributes());
 			}
-			QueryParsing.logger.debug("*****************************************");
 		}
+
+//		if (joins.size() > 0) {
+//			QueryParsing.logger.debug("Joins between entities: ");
+//			for (Join j : joins) {
+//				QueryParsing.logger.debug("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
+//						+ j.getAttributes2() + "=> details: ");
+//
+//				List<Join> all = j.getAllJoins();
+//				for (Join j2 : all)
+//					QueryParsing.logger.debug("      " + j2.getEntityName1() + j2.getAttributes1() + " AND "
+//							+ j2.getEntityName2() + j2.getAttributes2());
+//			}
+//
+//			QueryParsing.logger.debug("-------------------");
+//			for (Join j : joins) {
+//				QueryParsing.logger.debug("   " + j.getEntityName1() + j.getAttributes1() + " AND " + j.getEntityName2()
+//						+ j.getAttributes2());
+//				if (j.containsImplicitJoins1()) {
+//					QueryParsing.logger.debug("Implicit joins in first part: ");
+//					for (Join j2 : j.getImplicitJoins1())
+//						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
+//								+ j2.getEntityName2() + j2.getAttributes2());
+//
+//					if (j.getImplicitAttributeSelector1() != null)
+//						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector1().getEntityName()
+//								+ j.getImplicitAttributeSelector1().getAttributes());
+//
+//				}
+//
+//				if (j.containsImplicitJoins2()) {
+//					QueryParsing.logger.debug("Implicit joins in snd part: ");
+//					for (Join j2 : j.getImplicitJoins2())
+//						QueryParsing.logger.debug("   -> " + j2.getEntityName1() + j2.getAttributes1() + " AND "
+//								+ j2.getEntityName2() + j2.getAttributes2());
+//
+//					if (j.getImplicitAttributeSelector2() != null)
+//						QueryParsing.logger.debug("   -> " + j.getImplicitAttributeSelector2().getEntityName()
+//								+ j.getImplicitAttributeSelector2().getAttributes());
+//				}
+//			}
+//
+//			QueryParsing.logger.debug("*****************************************");
+//		}
+//
+//		if (attributeSelectors.size() > 0) {
+//			QueryParsing.logger.debug("Attribute selectors:");
+//			for (AttributeSelector c : attributeSelectors) {
+//				QueryParsing.logger.debug("   " + c.getEntityName() + c.getAttributes()
+//						+ (c.containsImplicitJoins() ? " contains implicit joins:" : ""));
+//				if (c.containsImplicitJoins()) {
+//					for (Join j : c.getImplicitJoins())
+//						QueryParsing.logger.debug("   -> " + j.getEntityName1() + j.getAttributes1() + " AND "
+//								+ j.getEntityName2() + j.getAttributes2());
+//					QueryParsing.logger
+//							.debug("   -> " + c.getImplicitSel().getEntityName() + c.getImplicitSel().getAttributes());
+//				}
+//			}
+//			QueryParsing.logger.debug("*****************************************");
+//		}
 
 		if (inserts.size() > 0) {
 			QueryParsing.logger.debug("Inserts: " + inserts);

@@ -313,25 +313,26 @@ public class TyphonModel {
 	}
 
 	public DataType getDataTypeFromName(String dataTypeName) {
-		if(model != null) {
-		List<DataType> dataTypes = model.getDataTypes();
-		if (dataTypes != null) {
-			for (DataType dataType : dataTypes) {
-				if (dataType.getName().equals(dataTypeName)) {
-					return dataType;
+		if (model != null) {
+			List<DataType> dataTypes = model.getDataTypes();
+			if (dataTypes != null) {
+				for (DataType dataType : dataTypes) {
+					if (dataType.getName().equals(dataTypeName)) {
+						return dataType;
+					}
 				}
 			}
-		}}
+		}
 		return null;
 	}
 
 	public Database getDatabaseFromName(String dbname) {
-		if(model != null)
-		for (Database db : model.getDatabases()) {
-			if (db.getName().equals(dbname)) {
-				return db;
+		if (model != null)
+			for (Database db : model.getDatabases()) {
+				if (db.getName().equals(dbname)) {
+					return db;
+				}
 			}
-		}
 		return null;
 	}
 
@@ -347,14 +348,14 @@ public class TyphonModel {
 	}
 
 	private DataType getDataTypeFromEntityName(String entityname) {
-		if(model != null)
-		for (DataType datatype : model.getDataTypes()) {
-			if (datatype instanceof typhonml.Entity) {
-				if (datatype.getName().equalsIgnoreCase(entityname)) {
-					return datatype;
+		if (model != null)
+			for (DataType datatype : model.getDataTypes()) {
+				if (datatype instanceof typhonml.Entity) {
+					if (datatype.getName().equalsIgnoreCase(entityname)) {
+						return datatype;
+					}
 				}
 			}
-		}
 		return null;
 	}
 
@@ -386,19 +387,30 @@ public class TyphonModel {
 		this.version = version;
 	}
 
-	public static void getCurrentModelWithStats() {
+	public static TyphonModel checkIfNewModelWasLoaded() {
+		getCurrentModelWithStats(true);
+		return currentModel;
+	}
+
+	public static void getCurrentModelWithStats(boolean onlyUpdateHistoriesIfCurrentModelIsOutdated) {
 		TyphonModel oldModel;
 		synchronized (currentModel) {
 			oldModel = currentModel;
 		}
 		TyphonModel newModel = getCurrentModel();
+		boolean isOutdated = false;
 		if (oldModel.getVersion() < newModel.getVersion()) {
 			// new model was loaded
+			isOutdated = true;
 			AnalyticsDB.saveTyphonModel(oldModel, newModel);
 		}
 
-		Map<String, Long> entitySize = DatabaseInformationMgr.getCurrentModelWithStats(newModel, webTarget, authStringEnc);
-		AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
+		if (!onlyUpdateHistoriesIfCurrentModelIsOutdated
+				|| (onlyUpdateHistoriesIfCurrentModelIsOutdated && isOutdated)) {
+			Map<String, Long> entitySize = DatabaseInformationMgr.getCurrentModelWithStats(newModel, webTarget,
+					authStringEnc);
+			AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
+		}
 
 	}
 

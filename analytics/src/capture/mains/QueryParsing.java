@@ -83,7 +83,7 @@ public class QueryParsing {
 			String query = in.nextLine();
 
 			try {
-				eval(query);
+				eval(query, TyphonModel.getCurrentModel());
 			} catch (Exception | Error e) {
 				logger.error("Problem when analyzing: " + query);
 				e.printStackTrace();
@@ -169,17 +169,17 @@ public class QueryParsing {
 
 	}
 
-	public static Query eval(String query) {
-		logger.info("Query analyzing ...\n" + query);
+	public static Query eval(String query, TyphonModel m) {
 		IValue v = evaluator.getEvaluator().call("parseQuery", vf.string(query));
-		Query q = parseResult(v);
-		logger.info("Query analyzed");
-		q.print();
+		Query q = parseResult(v, m);
+		logger.info("Query analyzed: " + query);
+//		q.print();
 		return q;
 	}
 
-	private static Query parseResult(IValue v) {
+	private static Query parseResult(IValue v, TyphonModel m) {
 		Query res = new Query();
+		res.setModel(m);
 
 		ITuple tuple = (ITuple) v;
 

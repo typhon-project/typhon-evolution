@@ -21,7 +21,7 @@ import model.TyphonModel;
 public class ConsumePostEvents {
 	private static Logger logger = Logger.getLogger(ConsumePostEvents.class);
 
-	private static final long WAKEUP_TIME_MS_FREQUENCY = 50000;
+	private static final long WAKEUP_TIME_MS_FREQUENCY = 5000000;
 	private static final String KAFKA_CHANNEL_IP = "192.168.1.15";
 	private static final String KAFKA_CHANNEL_PORT = "29092";
 	private static final String WEBSERVICE_URL = "http://localhost:8080/";
@@ -128,7 +128,7 @@ public class ConsumePostEvents {
 	}
 
 	protected static void updateGeneralInformation() {
-		TyphonModel.getCurrentModelWithStats();
+		TyphonModel.getCurrentModelWithStats(false);
 //		logger.debug("General information updated");
 	}
 
@@ -137,7 +137,11 @@ public class ConsumePostEvents {
 		Date startDate = postEvent.getStartTime();
 		Date endDate = postEvent.getEndTime();
 		long diff = endDate.getTime() - startDate.getTime();
-		Query q = QueryParsing.eval(query);
+		
+		TyphonModel m = TyphonModel.checkIfNewModelWasLoaded();
+		
+		
+		Query q = QueryParsing.eval(query, m);
 
 		saveAnalyzedQueryInAnalyticsDB(q, startDate, diff);
 

@@ -100,13 +100,13 @@
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql</groupId>
 			<artifactId>nl.cwi.swat.typhonql</artifactId>
-			<version>0.1.0.202003051557</version>
+			<version>0.1.0.202004031707</version>
 		</dependency>
 
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql-ide</groupId>
 			<artifactId>nl.cwi.swat.typhonql-ide</artifactId>
-			<version>0.1.0.202003051557</version>
+			<version>0.1.0.202004031707</version>
 		</dependency>
 
 		<dependency>
@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>it.univaq.disim.typhonml</groupId>
 			<artifactId>it.univaq.disim.typhonml</artifactId>
-			<version>1.0.0.201911150845</version>
+			<version>1.0.0.202004031140</version>
 		</dependency>
 
 		<dependency>

@@ -148,17 +148,13 @@ public class TyphonModel {
 	}
 
 	public Entity getEntityTypeFromName(String entityName) {
-		DataType dataType = this.getDataTypeFromEntityName(entityName);
-		if (dataType instanceof typhonml.Entity) {
-			return (typhonml.Entity) dataType;
-		}
-		return null;
-	}
 
-	public boolean hasRelationship(String entityname) {
-		DataType dataType = this.getDataTypeFromEntityName(entityname);
-		typhonml.Entity entity = (typhonml.Entity) dataType;
-		return !entity.getRelations().isEmpty();
+		for (Entity datatype : model.getEntities()) {
+			if (datatype.getName().equalsIgnoreCase(entityName))
+				return datatype;
+		}
+
+		return null;
 	}
 
 	public Database getEntityDatabase(String entityName) {
@@ -278,9 +274,9 @@ public class TyphonModel {
 		return null;
 	}
 
-	public Attribute getAttributeFromNameInEntity(String attributename, Entity entity) {
+	public EntityAttributeKind getAttributeFromNameInEntity(String attributename, Entity entity) {
 		if (entity != null) {
-			for (Attribute a : entity.getAttributes()) {
+			for (EntityAttributeKind a : entity.getAttributes()) {
 				if (a.getName().equalsIgnoreCase(attributename)) {
 					return a;
 				}
@@ -289,7 +285,7 @@ public class TyphonModel {
 		return null;
 	}
 
-	public Attribute getAttributeFromNameInEntity(String attributename, String entityname) {
+	public EntityAttributeKind getAttributeFromNameInEntity(String attributename, String entityname) {
 		Entity entity;
 		entity = this.getEntityTypeFromName(entityname);
 		return getAttributeFromNameInEntity(attributename, entity);
@@ -312,20 +308,6 @@ public class TyphonModel {
 		return getRelationFromNameInEntity(relationname, entity);
 	}
 
-	public DataType getDataTypeFromName(String dataTypeName) {
-		if (model != null) {
-			List<DataType> dataTypes = model.getDataTypes();
-			if (dataTypes != null) {
-				for (DataType dataType : dataTypes) {
-					if (dataType.getName().equals(dataTypeName)) {
-						return dataType;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
 	public Database getDatabaseFromName(String dbname) {
 		if (model != null)
 			for (Database db : model.getDatabases()) {
@@ -339,36 +321,10 @@ public class TyphonModel {
 	public List<Entity> getEntities() {
 		List<Entity> entities = new ArrayList<Entity>();
 		if (model != null)
-			for (DataType datatype : model.getDataTypes()) {
-				if (datatype instanceof typhonml.Entity) {
-					entities.add((Entity) datatype);
-				}
+			for (Entity datatype : model.getEntities()) {
+				entities.add(datatype);
 			}
 		return entities;
-	}
-
-	private DataType getDataTypeFromEntityName(String entityname) {
-		if (model != null)
-			for (DataType datatype : model.getDataTypes()) {
-				if (datatype instanceof typhonml.Entity) {
-					if (datatype.getName().equalsIgnoreCase(entityname)) {
-						return datatype;
-					}
-				}
-			}
-		return null;
-	}
-
-	private DataType getAttributeDataTypeFromDataTypeName(String dataTypeName) {
-		if (model != null)
-			for (DataType datatype : model.getDataTypes()) {
-				if (datatype.getName().equalsIgnoreCase(dataTypeName)) {
-					if (datatype instanceof typhonml.PrimitiveDataType || datatype instanceof CustomDataType) {
-						return datatype;
-					}
-				}
-			}
-		return null;
 	}
 
 	public void setModel(Model model) {

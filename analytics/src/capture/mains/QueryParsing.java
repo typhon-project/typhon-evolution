@@ -28,6 +28,7 @@ import io.usethesource.vallang.IValueFactory;
 import model.TyphonModel;
 import typhonml.Attribute;
 import typhonml.Entity;
+import typhonml.EntityAttributeKind;
 import typhonml.Relation;
 
 public class QueryParsing {
@@ -136,7 +137,7 @@ public class QueryParsing {
 
 				entity = relation.getType();
 			} else {
-				Attribute attribute = model.getAttributeFromNameInEntity(attrRel, entity);
+				EntityAttributeKind attribute = model.getAttributeFromNameInEntity(attrRel, entity);
 				if (attribute != null) {
 					List<String> attributes = new ArrayList<String>();
 					attributes.add(attrRel);

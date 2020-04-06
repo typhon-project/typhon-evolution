@@ -79,7 +79,7 @@ public class ConsumePostEvents {
 
 			@Override
 			public String map(Event event) throws Exception {
-				System.out.println("receiving post event...");
+				logger.info("receiving post event...");
 
 				try {
 

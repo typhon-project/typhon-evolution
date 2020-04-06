@@ -53,6 +53,7 @@ public class ExecuteQueries {
 
 			// Start timing for calculating execution time
 			boolean success = true;
+			System.out.println("executing query ...");
 			Date startTime = new Date();
 			ClientResponse resp = webResource.accept("application/json")
 					.header("Authorization", "Basic " + authStringEnc).post(ClientResponse.class, query);
@@ -60,11 +61,14 @@ public class ExecuteQueries {
 				System.err.println("Unable to connect to the server");
 //				success = false;
 			}
+			Date endTime = new Date();
+			
+			System.out.println("query executed : " + (endTime.getTime() - startTime.getTime() + "ms"));
 
 			String output = resp.getEntity(String.class);
 
 			// Get date/time when query execution has finished
-			Date endTime = new Date();
+			
 
 			System.out.println("Response: " + output);
 
@@ -76,9 +80,14 @@ public class ExecuteQueries {
 			postEvent.setStartTime(startTime);
 			postEvent.setEndTime(endTime);
 			System.out.println(postEvent);
+			
+			System.out.println("Sending postEvent:" + new Date());
 
 			// Publish PostEvent to POST queue
 			produce(postEvent);
+			
+			System.out.println("Post event sent:" + new Date());
+			
 
 		}
 

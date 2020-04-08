@@ -24,4 +24,13 @@
 /nbdist/
 /.nb-gradle/
 
+evolution-analytics/node_modules/
+evolution-analytics/dist/
+evolution-analytics/.idea/
+evolution-analytics-client/node_modules/
+evolution-analytics-client/dist/
+evolution-analytics-client/.idea/
+evolution-analytics-model/node_modules/
+evolution-analytics-model/dist/
+evolution-analytics-model/.idea/
 

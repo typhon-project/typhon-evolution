@@ -1,0 +1,15 @@
+<h1>Charts</h1>
+
+<div style="display: block; width: 50%; height: 50%" style="margin: 20%">
+  <canvas mdbChart
+          [title]="'Select time for entities'"
+          [chartType]="chartType"
+          [datasets]="chartDatasets"
+          [labels]="chartLabels"
+          [colors]="chartColors"
+          [options]="chartOptions"
+          [legend]="true"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)">
+  </canvas>
+</div>

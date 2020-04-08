@@ -1,0 +1,82 @@
+version: '3.7'
+
+services:
+  DocumentDatabase:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: username
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - target: 27017
+        published: 27018
+    hostname: DocumentDatabase
+    container_name : DocumentDatabase
+  RelationalDatabase:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - target: 3306
+        published: 3306
+    hostname: RelationalDatabase
+    container_name : RelationalDatabase
+  polystore-mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - published: 27017
+        target: 27017
+    hostname: polystore-mongo
+    container_name : polystore-mongo
+  typhon-polystore-service:
+    image: clms/typhon-polystore-api:latest
+    depends_on: 
+      - polystore-mongo
+    ports:
+      - published: 8080
+        target: 8080
+    hostname: polystore-api
+    container_name : typhon-polystore-service
+  polystore-ui:
+    image: clms/typhon-polystore-ui:latest
+    environment:
+      API_PORT: 8080
+      API_HOST: localhost
+    depends_on: 
+      - typhon-polystore-service
+    ports:
+      - published: 4200
+        target: 4200
+    hostname: polystore-ui
+    container_name : polystore-ui
+  typhonql-server:
+    image: swatengineering/typhonql-server
+    hostname: typhonql-server
+    container_name : typhonql-server
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - published: 2181
+        target: 2181
+    container_name : zookeeper
+
+  kafka:
+    depends_on: 
+      - zookeeper
+    ports:
+      - published: 29092
+        target: 29092
+    build: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.15
+      KAFKA_LISTENERS: OUTSIDE://:29092, INSIDE://:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT, OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ADVERTISED_LISTENERS: OUTSIDE://192.168.1.15:29092, INSIDE://:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    container_name : kafka

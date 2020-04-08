@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typhonDL:DeploymentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonDL="http://www.typhon.org/dsls/xtext/TyphonDL">
+  <guiMetaInformation xsi:type="typhonDL:Import" relativePath="ecommerceNewSyntax.xmi"/>
+  <guiMetaInformation xsi:type="typhonDL:Import" relativePath="DocumentDatabase.tdl"/>
+  <guiMetaInformation xsi:type="typhonDL:Import" relativePath="RelationalDatabase.tdl"/>
+  <guiMetaInformation xsi:type="typhonDL:Import" relativePath="dbTypes.tdl"/>
+  <elements xsi:type="typhonDL:ContainerType" name="Docker"/>
+  <elements xsi:type="typhonDL:ClusterType" name="DockerCompose"/>
+  <elements xsi:type="typhonDL:PlatformType" name="localhost"/>
+  <elements xsi:type="typhonDL:Platform" name="platformName" type="//@elements.2">
+    <clusters name="clusterName" type="//@elements.1">
+      <applications name="Polystore">
+        <containers name="DocumentDatabase" type="//@elements.0">
+          <deploys reference="//@elements.4"/>
+          <ports>
+            <key_values name="target" value="27017"/>
+            <key_values name="published" value="27018"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="DocumentDatabase"/>
+        </containers>
+        <containers name="RelationalDatabase" type="//@elements.0">
+          <deploys reference="//@elements.5"/>
+          <ports>
+            <key_values name="target" value="3306"/>
+            <key_values name="published" value="3306"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="RelationalDatabase"/>
+        </containers>
+        <containers name="polystore-mongo" type="//@elements.0">
+          <deploys reference="//@elements.8"/>
+          <ports>
+            <key_values name="published" value="27017"/>
+            <key_values name="target" value="27017"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="polystore-mongo"/>
+        </containers>
+        <containers name="typhon-polystore-service" type="//@elements.0">
+          <deploys reference="//@elements.9"/>
+          <depends_on reference="//@elements.3/@clusters.0/@applications.0/@containers.2"/>
+          <ports>
+            <key_values name="published" value="8080"/>
+            <key_values name="target" value="8080"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="polystore-api"/>
+        </containers>
+        <containers name="polystore-ui" type="//@elements.0">
+          <deploys reference="//@elements.10"/>
+          <depends_on reference="//@elements.3/@clusters.0/@applications.0/@containers.3"/>
+          <ports>
+            <key_values name="published" value="4200"/>
+            <key_values name="target" value="4200"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="polystore-ui"/>
+        </containers>
+        <containers name="typhonql-server">
+          <deploys reference="//@elements.11"/>
+          <properties xsi:type="typhonDL:Key_Values" name="hostname" value="typhonql-server"/>
+        </containers>
+        <containers name="zookeeper" type="//@elements.0">
+          <deploys reference="//@elements.12"/>
+          <ports>
+            <key_values name="published" value="2181"/>
+            <key_values name="target" value="2181"/>
+          </ports>
+        </containers>
+        <containers name="kafka" type="//@elements.0">
+          <depends_on reference="//@elements.3/@clusters.0/@applications.0/@containers.6"/>
+          <ports>
+            <key_values name="published" value="9092"/>
+            <key_values name="target" value="9092"/>
+          </ports>
+          <properties xsi:type="typhonDL:Key_Values" name="build" value="."/>
+          <properties xsi:type="typhonDL:Key_ValueArray" name="volumes">
+            <values>/var/run/docker.sock:/var/run/docker.sock</values>
+          </properties>
+          <properties xsi:type="typhonDL:Key_KeyValueList" name="environment">
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_ZOOKEEPER_CONNECT" value="zookeeper:2181"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_ADVERTISED_HOST_NAME" value="kafka"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_LISTENERS" value="PLAINTEXT://:29092, PLAINTEXT_HOST://:9092"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_LISTENER_SECURITY_PROTOCOL_MAP" value="PLAINTEXT:PLAINTEXT, PLAINTEXT_HOST:PLAINTEXT"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_INTER_BROKER_LISTENER_NAME" value="PLAINTEXT"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_ADVERTISED_LISTENERS" value="PLAINTEXT://kafka:29092, PLAINTEXT_HOST://localhost:9092"/>
+            <properties xsi:type="typhonDL:Key_Values" name="KAFKA_AUTO_CREATE_TOPICS_ENABLE" value="&quot;true&quot;"/>
+          </properties>
+        </containers>
+      </applications>
+    </clusters>
+  </elements>
+  <elements xsi:type="typhonDL:DB" name="DocumentDatabase" type="//@elements.6">
+    <parameters xsi:type="typhonDL:Key_KeyValueList" name="environment">
+      <properties xsi:type="typhonDL:Key_Values" name="MONGO_INITDB_ROOT_USERNAME" value="username"/>
+      <properties xsi:type="typhonDL:Key_Values" name="MONGO_INITDB_ROOT_PASSWORD" value="password"/>
+    </parameters>
+  </elements>
+  <elements xsi:type="typhonDL:DB" name="RelationalDatabase" type="//@elements.7">
+    <parameters xsi:type="typhonDL:Key_KeyValueList" name="environment">
+      <properties xsi:type="typhonDL:Key_Values" name="MYSQL_ROOT_PASSWORD" value="password"/>
+    </parameters>
+  </elements>
+  <elements xsi:type="typhonDL:DBType" name="Mongo">
+    <image value="mongo:latest"/>
+  </elements>
+  <elements xsi:type="typhonDL:DBType" name="MariaDB">
+    <image value="mariadb:latest"/>
+  </elements>
+  <elements xsi:type="typhonDL:DB" name="polystore_db" type="//@elements.6">
+    <parameters xsi:type="typhonDL:Key_KeyValueList" name="environment">
+      <properties xsi:type="typhonDL:Key_Values" name="MONGO_INITDB_ROOT_USERNAME" value="admin"/>
+      <properties xsi:type="typhonDL:Key_Values" name="MONGO_INITDB_ROOT_PASSWORD" value="admin"/>
+    </parameters>
+  </elements>
+  <elements xsi:type="typhonDL:Software" name="polystore_api">
+    <image value="clms/typhon-polystore-api:latest"/>
+  </elements>
+  <elements xsi:type="typhonDL:Software" name="polystore_ui">
+    <image value="clms/typhon-polystore-ui:latest"/>
+    <parameters xsi:type="typhonDL:Key_KeyValueList" name="environment">
+      <properties xsi:type="typhonDL:Key_Values" name="API_PORT" value="8080"/>
+      <properties xsi:type="typhonDL:Key_Values" name="API_HOST" value="localhost"/>
+    </parameters>
+  </elements>
+  <elements xsi:type="typhonDL:Software" name="QLServer">
+    <image value="swatengineering/typhonql-server"/>
+  </elements>
+  <elements xsi:type="typhonDL:Software" name="zookeeper">
+    <image value="wurstmeister/zookeeper"/>
+  </elements>
+</typhonDL:DeploymentModel>

@@ -24,14 +24,14 @@ public class ConsumePostEvents {
 	private static final long WAKEUP_TIME_MS_FREQUENCY = 5000000;
 	private static final String KAFKA_CHANNEL_IP = "192.168.1.15";
 	private static final String KAFKA_CHANNEL_PORT = "29092";
-	private static final String WEBSERVICE_URL = "http://localhost:8080/";
-	private static final String WEBSERVICE_USERNAME = "admin";
-	private static final String WEBSERVICE_PASSWORD = "admin1@";
-	private static final String ANALYTICS_DB_IP = "localhost";
-	private static final int ANALYTICS_DB_PORT = 27018;
-	private static final String ANALYTICS_DB_USER = "username";
-	private static final String ANALYTICS_DB_PWD = "password";
-	private static final String ANALYTICS_DB_NAME = "Analytics";
+	static final String WEBSERVICE_URL = "http://localhost:8080/";
+	static final String WEBSERVICE_USERNAME = "admin";
+	static final String WEBSERVICE_PASSWORD = "admin1@";
+	static final String ANALYTICS_DB_IP = "localhost";
+	static final int ANALYTICS_DB_PORT = 27018;
+	static final String ANALYTICS_DB_USER = "username";
+	static final String ANALYTICS_DB_PWD = "password";
+	static final String ANALYTICS_DB_NAME = "Analytics";
 
 	static {
 		PropertyConfigurator.configure(

@@ -3,18 +3,24 @@ package capture.mains;
 import java.io.File;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Random;
 
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import capture.commons.Event;
-import capture.commons.EventSchema;
-import capture.commons.PostEvent;
+import ac.york.typhon.analytics.commons.datatypes.events.Event;
+import ac.york.typhon.analytics.commons.datatypes.events.PostEvent;
+import ac.york.typhon.analytics.commons.serialization.EventSchema;
+
+//import capture.commons.Event;
+//import capture.commons.EventSchema;
+//import capture.commons.PostEvent;
+
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+
 import db.AnalyticsDB;
 import model.TyphonModel;
 
@@ -46,8 +52,8 @@ public class ConsumePostEvents {
 		if (!AnalyticsDB.initConnection(ANALYTICS_DB_IP, ANALYTICS_DB_PORT, ANALYTICS_DB_USER, ANALYTICS_DB_PWD,
 				ANALYTICS_DB_NAME))
 			System.exit(1);
-		
-		TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD); 
+
+		TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD);
 
 		startSavingGeneralInformationThread();
 
@@ -80,7 +86,7 @@ public class ConsumePostEvents {
 			@Override
 			public String map(Event event) throws Exception {
 				logger.info("receiving post event...");
-
+				logger.info(event);
 				try {
 
 					if (event instanceof PostEvent) {
@@ -133,14 +139,18 @@ public class ConsumePostEvents {
 	}
 
 	protected static void captureQuery(PostEvent postEvent) {
+		if (postEvent.getStartTime() == null)
+			postEvent.setStartTime(new Date());
+		if (postEvent.getEndTime() == null)
+			postEvent.setEndTime(new Date(postEvent.getStartTime().getTime() + new Random().nextInt(1000)));
+
 		String query = postEvent.getQuery();
 		Date startDate = postEvent.getStartTime();
 		Date endDate = postEvent.getEndTime();
 		long diff = endDate.getTime() - startDate.getTime();
-		
+
 		TyphonModel m = TyphonModel.checkIfNewModelWasLoaded();
-		
-		
+
 		Query q = QueryParsing.eval(query, m);
 
 		saveAnalyzedQueryInAnalyticsDB(q, startDate, diff);

@@ -150,6 +150,7 @@ public class AnalyticsDB {
 			
 			coll = database.getCollection(TYPHON_ENTITY_HISTORY_COLLECTION);
 			createIndex(coll, true, "name", "updateDate");
+			createIndex(coll, false, "name");
 			createIndex(coll, false, "updateDate");
 			
 			coll = database.getCollection(QL_NORMALIZED_QUERY_COLLECTION);

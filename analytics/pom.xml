@@ -75,7 +75,7 @@
 			<artifactId>jersey-client</artifactId>
 			<version>1.19.4</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>typhon</groupId>
 			<artifactId>ac.york.typhon.analytics</artifactId>

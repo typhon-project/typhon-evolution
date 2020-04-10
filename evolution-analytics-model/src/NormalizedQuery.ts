@@ -1,40 +1,52 @@
+import { ObjectId } from "mongodb";
+
 export class NormalizedQuery {
 
-    private id: number;
-    private normalizedForm: string;
-    private displayableForm: string;
+    private _id: ObjectId;
+    private _normalizedForm: string;
+    private _displayableForm: string;
+    private _count: number;
 
-    constructor(id: number, normalizedForm: string, displayableForm: string) {
-        this.id = id;
-        this.normalizedForm = normalizedForm;
-        this.displayableForm = displayableForm;
+    constructor(id: ObjectId, normalizedForm: string, displayableForm: string, count: number) {
+        this._id = id;
+        this._normalizedForm = normalizedForm;
+        this._displayableForm = displayableForm;
+        this._count = count;
     }
 
-    get getId(): number {
-        return this.id;
+    get id(): ObjectId {
+        return this._id;
     }
 
-    get getNormalizedForm(): string {
-        return this.normalizedForm;
+    get normalizedForm(): string {
+        return this._normalizedForm;
     }
 
-    get getDisplayableForm(): string {
-        return this.displayableForm;
+    get displayableForm(): string {
+        return this._displayableForm;
     }
 
-    set setId(id: number) {
-        this.id = id;
+    get count(): number {
+        return this._count;
     }
 
-    set setNormalizedForm(normalizedForm: string) {
-        this.normalizedForm = normalizedForm;
+    set id(_id: ObjectId) {
+        this._id = _id;
     }
 
-    set setDisplayableForm(displayableForm: string) {
-        this.displayableForm = displayableForm;
+    set normalizedForm(_normalizedForm: string) {
+        this._normalizedForm = _normalizedForm;
+    }
+
+    set displayableForm(_displayableForm: string) {
+        this._displayableForm = _displayableForm;
+    }
+
+    set count(_count: number) {
+        this._count = _count;
     }
 
     toString(): string {
-        return `{ id: ${this.id}, normalizedForm: ${this.normalizedForm}, displayableForm: ${this.displayableForm} }`;
+        return `{ _id: ${this._id}, _normalizedForm: ${this._normalizedForm}, _displayableForm: ${this._displayableForm}, _count: ${this._count} }`;
     }
 }

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SocketioService} from '../services/socketio.service';
+import {NormalizedQuery} from 'evolution-analytics-model/dist/NormalizedQuery';
 
 @Component({
   selector: 'app-root',

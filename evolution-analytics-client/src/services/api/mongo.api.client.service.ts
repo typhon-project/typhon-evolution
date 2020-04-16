@@ -6,20 +6,21 @@ import {Query} from 'evolution-analytics-model/dist/Query';
 import {Entity} from 'evolution-analytics-model/dist/Entity';
 import {EntityHistory} from 'evolution-analytics-model/dist/EntityHistory';
 import {Model} from 'evolution-analytics-model/dist/Model';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MongoApiClientService {
 
-  END_POINT = 'http://localhost:3000/';
+  END_POINT = environment.SOCKET_ENDPOINT;
   HTTP_OPTIONS = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
   /*Resources*/
-  FIND = 'find/';
+  FIND = '/find/';
   /*Collections*/
   NORMALIZED_QUERY_COLLECTION = 'QLNormalizedQuery';
   QUERY_COLLECTION = 'QLQuery';

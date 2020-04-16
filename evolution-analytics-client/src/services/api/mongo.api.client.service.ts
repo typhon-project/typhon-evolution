@@ -14,11 +14,6 @@ import {environment} from '../../environments/environment';
 export class MongoApiClientService {
 
   END_POINT = environment.SOCKET_ENDPOINT;
-  HTTP_OPTIONS = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
   /*Resources*/
   FIND = '/find/';
   /*Collections*/
@@ -32,18 +27,18 @@ export class MongoApiClientService {
   }
 
   public findAllNormalizedQueries(): Observable<NormalizedQuery[]> {
-    return this.http.get<NormalizedQuery[]>(this.END_POINT + this.FIND + this.NORMALIZED_QUERY_COLLECTION, this.HTTP_OPTIONS);
+    return this.http.get<NormalizedQuery[]>(this.END_POINT + this.FIND + this.NORMALIZED_QUERY_COLLECTION);
   }
   public findAllQueries(): Observable<Query[]> {
-    return this.http.get<Query[]>(this.END_POINT + this.FIND + this.QUERY_COLLECTION, this.HTTP_OPTIONS);
+    return this.http.get<Query[]>(this.END_POINT + this.FIND + this.QUERY_COLLECTION);
   }
   public findAllEntities(): Observable<Entity[]> {
-    return this.http.get<Entity[]>(this.END_POINT + this.FIND + this.ENTITY_COLLECTION, this.HTTP_OPTIONS);
+    return this.http.get<Entity[]>(this.END_POINT + this.FIND + this.ENTITY_COLLECTION);
   }
   public findAllEntitiesHistories(): Observable<EntityHistory[]> {
-    return this.http.get<EntityHistory[]>(this.END_POINT + this.FIND + this.ENTITY_HISTORY_COLLECTION, this.HTTP_OPTIONS);
+    return this.http.get<EntityHistory[]>(this.END_POINT + this.FIND + this.ENTITY_HISTORY_COLLECTION);
   }
   public findAllModels(): Observable<Model[]> {
-    return this.http.get<Model[]>(this.END_POINT + this.FIND + this.MODEL_COLLECTION, this.HTTP_OPTIONS);
+    return this.http.get<Model[]>(this.END_POINT + this.FIND + this.MODEL_COLLECTION);
   }
 }

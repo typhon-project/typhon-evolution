@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ClientService } from './client.service';
+import { ClientService } from './mongo.api.client.service';
 
 describe('ClientService', () => {
   let service: ClientService;

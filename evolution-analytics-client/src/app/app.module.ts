@@ -5,7 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {SocketioService} from '../services/socket/socketio.service';
 import {ChartsModule} from './charts/charts.module';
-import {ClientService} from '../services/api/client.service';
+import {MongoApiClientService} from '../services/api/mongo.api.client.service';
 import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
@@ -18,7 +18,7 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     ChartsModule
   ],
-  providers: [ClientService, SocketioService],
+  providers: [MongoApiClientService, SocketioService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

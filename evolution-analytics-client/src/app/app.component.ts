@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {SocketioService} from '../services/socketio.service';
-import {NormalizedQuery} from 'evolution-analytics-model/dist/NormalizedQuery';
+import {SocketioService} from '../services/socket/socketio.service';
+import {ClientService} from '../services/api/client.service';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +12,16 @@ export class AppComponent implements OnInit {
   userData = [423, 473, 523, 573, 623, 673, 723];
   orderData = [463, 513, 563, 613, 663, 713, 763];
 
-  constructor(private socketService: SocketioService) {
+  constructor(private clientService: ClientService, private socketService: SocketioService) {
   }
 
   ngOnInit() {
     this.socketService.setupSocketConnection();
+    this.clientService.findAllNormalizedQuery('QLNormalizedQuery').subscribe(queries => {
+      console.log(queries);
+      if (queries) {
+        queries.forEach(query => console.log(query.normalizedForm));
+      }
+    });
   }
 }

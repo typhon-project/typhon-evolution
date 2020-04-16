@@ -3,8 +3,10 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {SocketioService} from '../services/socketio.service';
+import {SocketioService} from '../services/socket/socketio.service';
 import {ChartsModule} from './charts/charts.module';
+import {ClientService} from '../services/api/client.service';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -13,9 +15,10 @@ import {ChartsModule} from './charts/charts.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     ChartsModule
   ],
-  providers: [SocketioService],
+  providers: [ClientService, SocketioService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

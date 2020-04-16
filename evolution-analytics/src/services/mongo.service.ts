@@ -49,9 +49,9 @@ export class MongoService {
      */
     public findAll = async (collection: Collection) => {
         console.log(`findAll from collection: ${collection.collectionName}`);
-        return new Promise<AnalyticsModel[]>(
+        return new Promise<any[]>(
             (
-                resolve: (docs: AnalyticsModel[]) => void,
+                resolve: (docs: any[]) => void,
                 reject: (err: MongoError) => void
             ) => {
                 collection.find({}).toArray(function (err, docs) {

@@ -20,6 +20,7 @@ export class MongoApiController {
                     result.status(500).send('No documents found');
                 }
                 result.status(200).send(documents);
+
             });
             mongoHelper.disconnect();
         });

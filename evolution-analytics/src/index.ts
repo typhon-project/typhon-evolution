@@ -6,18 +6,22 @@ import {MongoHelper} from './helpers/mongo.helper';
 import {MongoService} from './services/mongo.service';
 import {SocketService} from "./services/socket.service";
 import {mongoApiRouter} from "./api/routers/mongo.api.router";
-import bodyParser from "body-parser";
 
 const app = express();
-app.use( express.json() );
-app.use( express.urlencoded({ extended: true }) );
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+//API routers
+app.use('/', mongoApiRouter);
 
 const port = 3000;
 const httpServer = createServer.createServer(app);
 const io = SocketIOStatic(httpServer);
 
-//API routers
-app.use('/', mongoApiRouter);
 
 const mongoService = new MongoService();
 const mongoHelper = new MongoHelper();

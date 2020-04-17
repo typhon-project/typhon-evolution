@@ -22,7 +22,6 @@ app.use(function(req, res, next) {
 //API routers
 app.use('/', mongoApiRouter);
 
-const port = process.env.SERVER_PORT;
 const httpServer = createServer(app);
 const io = SocketIOStatic(httpServer);
 
@@ -30,8 +29,10 @@ const mongoService = new MongoService();
 const mongoHelper = new MongoHelper();
 const socketService = new SocketService();
 
+/*Retrieve environment variables from .env file*/
 const MONGO_DB_URL = process.env.MONGO_DB_URL;
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+const PORT = process.env.SERVER_PORT;
 
 mongoHelper.connect(MONGO_DB_URL).then(async () => {
     const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
@@ -63,6 +64,6 @@ mongoHelper.connect(MONGO_DB_URL).then(async () => {
 
     mongoHelper.disconnect();
 });
-socketService.runSocket(app, httpServer, port, io);
+socketService.runSocket(app, httpServer, PORT, io);
 
 

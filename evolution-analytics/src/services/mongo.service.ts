@@ -1,5 +1,4 @@
 import {Collection, Db, MongoError} from 'mongodb';
-import {AnalyticsModel} from '../models/analytics.model';
 
 export class MongoService {
     /*
@@ -66,9 +65,9 @@ export class MongoService {
      */
     public findWithFilter = async (collection: Collection, jsonObjectFilter): Promise<any> => {
         console.log(`findDocumentsWithFilter: ${jsonObjectFilter} in collection: ${collection.collectionName}`);
-        return new Promise<AnalyticsModel[]>(
+        return new Promise<any[]>(
             (
-                resolve: (docs: AnalyticsModel[]) => void,
+                resolve: (docs: any[]) => void,
                 reject: (err: MongoError) => void
             ) => {
                 collection.find(jsonObjectFilter).toArray(function (err, docs) {

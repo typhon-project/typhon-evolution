@@ -1,8 +1,8 @@
 /*
     Service permitting to:
         - define a default web server client page
-        - define a listener on web server port 3000
-        - define a socket permitting to communicate between the server and the Angular client
+        - define a listener on the web server given port
+        - define a socket permitting to communicate between the server and the client
  */
 export class SocketService {
 
@@ -12,7 +12,7 @@ export class SocketService {
             res.send(`<h1>Typhon Evolution Analytics server. Client on port 5000 by default</h1>`);
         });
 
-        //Server listening on port 3000
+        //Server listening on the given port (3000 by default)
         httpServer.listen(port, () => {
             console.log(`listening on *:${port}`);
         });

@@ -1,7 +1,7 @@
-import express from "express";
-import { MongoApiController } from "../controllers/mongo.api.controller";
+import {Router} from "express";
+import {MongoApiController} from "../controllers/mongo.api.controller";
 
-let mongoApiRouter: express.Router = express.Router();
+let mongoApiRouter: Router = Router();
 
 mongoApiRouter.get('/find/:collection/:id', MongoApiController.findOne);
 mongoApiRouter.post('/find/:collection', MongoApiController.findWithFilter);//json object in the body

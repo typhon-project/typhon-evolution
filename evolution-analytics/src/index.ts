@@ -1,11 +1,15 @@
 import express from 'express';
-import createServer from 'http';
 import SocketIOStatic from 'socket.io';
-import * as mongodb from 'mongodb';
 import {MongoHelper} from './helpers/mongo.helper';
 import {MongoService} from './services/mongo.service';
 import {SocketService} from "./services/socket.service";
 import {mongoApiRouter} from "./api/routers/mongo.api.router";
+import {config} from 'dotenv';
+import {Db} from "mongodb";
+import {createServer} from "http";
+
+//Import .env file
+config();
 
 const app = express();
 app.use(express.json());
@@ -18,22 +22,20 @@ app.use(function(req, res, next) {
 //API routers
 app.use('/', mongoApiRouter);
 
-const port = 3000;
-const httpServer = createServer.createServer(app);
+const port = process.env.SERVER_PORT;
+const httpServer = createServer(app);
 const io = SocketIOStatic(httpServer);
-
 
 const mongoService = new MongoService();
 const mongoHelper = new MongoHelper();
 const socketService = new SocketService();
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/test';
-const MONGO_DB_NAME = 'test';
-const MONGO_COLLECTION_NAME = 'ANALYTICS';
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
+const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
 
 mongoHelper.connect(MONGO_DB_URL).then(async () => {
-    const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
-    const collection: mongodb.Collection = mongoService.getCollection(db, MONGO_COLLECTION_NAME);
+    const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+    // const collection: mongodb.Collection = mongoService.getCollection(db, MONGO_COLLECTION_NAME);
     //mongoService.insertOne(collection, {id: 1, query: "from User u, Order o select u.orders where u.id = ?"});
     //mongoService.insertManyDocuments(collection, [{id: 2, query: "from User u, Order o select o where o.quantity = ?"}]);
     //mongoService.findAll(collection);

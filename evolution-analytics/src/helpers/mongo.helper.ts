@@ -1,8 +1,8 @@
-import * as mongo from 'mongodb';
+import {MongoClient} from 'mongodb';
 
 export class MongoHelper {
 
-    public client: mongo.MongoClient;
+    public client: MongoClient;
 
     constructor() {
     }
@@ -11,7 +11,7 @@ export class MongoHelper {
         try {
             if (!this.client) {
                 console.log('Connecting to Mongo database');
-                this.client = await mongo.MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+                this.client = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
                 console.log('Connection to Mongo database successful');
             }
         } catch (error) {

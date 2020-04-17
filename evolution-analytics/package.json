@@ -19,6 +19,7 @@
   "author": "UNamur",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "evolution-analytics-model": "file:../evolution-analytics-model",
     "express": "^4.17.1",
     "mongodb": "^3.5.5",

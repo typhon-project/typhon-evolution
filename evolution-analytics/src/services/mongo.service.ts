@@ -1,13 +1,13 @@
-import {Collection, Db, MongoError} from "mongodb";
-import {AnalyticsModel} from "../models/analytics.model";
+import {Collection, Db, MongoError} from 'mongodb';
+import {AnalyticsModel} from '../models/analytics.model';
 
 export class MongoService {
     /*
         Function permitting to insert ONE json object into the <MONGO_COLLECTION_NAME> collection
      */
-    public insertOne = async (collection: Collection, jsonObject: AnalyticsModel) => {
+    public insertOne = async (collection: Collection, jsonObject) => {
         console.log(`insertOne in collection: ${collection.collectionName}`);
-        console.log(`content: ${jsonObject.toString()}`);
+        console.log(`content: ${jsonObject}`);
         return new Promise<any>(
             (
                 resolve: (docs: any) => void,
@@ -17,18 +17,17 @@ export class MongoService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Inserted one document in the collection");
-                    console.log(res.result);
-                    resolve(res.result);
+                    console.log(`Inserted one document in '${collection.collectionName}' collection, result: ${res.result}`);
+                    resolve(res.result.ok);
                 });
             });
     };
     /*
         Function permitting to insert ONE json array into the <MONGO_COLLECTION_NAME> collection
      */
-    public insertManyDocuments = async (collection: Collection, jsonArray: AnalyticsModel[]) => {
+    public insertManyDocuments = async (collection: Collection, jsonArray) => {
         console.log(`insertManyDocuments in collection: ${collection.collectionName}`);
-        console.log(`content: ${jsonArray.toString()}`);
+        console.log(`content: ${jsonArray}`);
         return new Promise<any>(
             (
                 resolve: (docs: any) => void,
@@ -38,9 +37,46 @@ export class MongoService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Inserted documents in the collection");
-                    console.log(res.result);
-                    resolve(res.result);
+                    console.log(`Inserted documents in '${collection.collectionName}' collection, result: ${res.result}`);
+                    resolve(res.result.ok);
+                });
+            });
+    };
+    /*
+        Function permitting to find one document from the <MONGO_COLLECTION_NAME> collection
+     */
+    public findOne = async (collection: Collection, jsonObjectFilter) => {
+        console.log(`findOne from collection: ${collection.collectionName}`);
+        return new Promise<any>(
+            (
+                resolve: (docs: any) => void,
+                reject: (err: MongoError) => void
+            ) => {
+                collection.findOne(jsonObjectFilter).then(doc => {
+                    if (!doc) {
+                        reject(new MongoError('No document found'));
+                    }
+                    console.log(`Found one document from '${collection.collectionName}' collection: ${doc}`);
+                    resolve(doc);
+                });
+            });
+    };
+    /*
+        Function permitting to find documents with filter from the <MONGO_COLLECTION_NAME> collection
+     */
+    public findWithFilter = async (collection: Collection, jsonObjectFilter): Promise<any> => {
+        console.log(`findDocumentsWithFilter: ${jsonObjectFilter} in collection: ${collection.collectionName}`);
+        return new Promise<AnalyticsModel[]>(
+            (
+                resolve: (docs: AnalyticsModel[]) => void,
+                reject: (err: MongoError) => void
+            ) => {
+                collection.find(jsonObjectFilter).toArray(function (err, docs) {
+                    if (err) {
+                        reject(err);
+                    }
+                    console.log(`Found documents with filter from '${collection.collectionName}' collection, number: ${docs.length}`);
+                    resolve(docs);
                 });
             });
     };
@@ -58,36 +94,7 @@ export class MongoService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Found all documents from the collection");
-                    if (docs) {
-                        for (let doc in docs) {
-                            console.log(doc.toString());
-                        }
-                    }
-                    resolve(docs);
-                });
-            });
-    };
-    /*
-        Function permitting to find documents with filter from the <MONGO_COLLECTION_NAME> collection
-     */
-    public findDocumentsWithFilter = async (collection: Collection, jsonObjectFilter): Promise<any> => {
-        console.log(`findDocumentsWithFilter: ${jsonObjectFilter} in collection: ${collection.collectionName}`);
-        return new Promise<AnalyticsModel[]>(
-            (
-                resolve: (docs: AnalyticsModel[]) => void,
-                reject: (err: MongoError) => void
-            ) => {
-                collection.find(jsonObjectFilter).toArray(function (err, docs) {
-                    if (err) {
-                        reject(err);
-                    }
-                    console.log("Found documents with filter from the collection");
-                    if (docs) {
-                        for (let doc in docs) {
-                            console.log(doc.toString());
-                        }
-                    }
+                    console.log(`Found all documents from '${collection.collectionName}' collection, number: ${docs.length}`);
                     resolve(docs);
                 });
             });
@@ -107,9 +114,8 @@ export class MongoService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Update one document with filter in the collection");
-                    console.log(res.result);
-                    resolve(res.result);
+                    console.log(`Update one document with filter in '${collection.collectionName}' collection, result: ${res.result}`);
+                    resolve(res.result.ok);
                 });
             });
     };
@@ -127,9 +133,8 @@ export class MongoService {
                     if (err) {
                         reject(err);
                     }
-                    console.log("Deleted one document with filter in the collection");
-                    console.log(res.result);
-                    resolve(res.result);
+                    console.log(`Deleted one document with filter in '${collection.collectionName}' collection, result: ${res.result}`);
+                    resolve(res.result.ok);
                 });
             });
     };

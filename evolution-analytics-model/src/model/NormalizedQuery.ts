@@ -1,21 +1,21 @@
-import { ObjectId } from "mongodb";
+import {MongoCollection} from "./MongoCollection";
 
-export class NormalizedQuery {
+export class NormalizedQuery extends MongoCollection {
 
-    private _id: ObjectId;
     private _normalizedForm: string;
     private _displayableForm: string;
     private _count: number;
 
-    constructor(id: ObjectId, normalizedForm: string, displayableForm: string, count: number) {
+    constructor(id: string, normalizedForm: string, displayableForm: string, count: number) {
+        super();
         this._id = id;
         this._normalizedForm = normalizedForm;
         this._displayableForm = displayableForm;
         this._count = count;
     }
 
-    get id(): ObjectId {
-        return this._id;
+    get collectionName(): string {
+        return MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME;
     }
 
     get normalizedForm(): string {
@@ -28,10 +28,6 @@ export class NormalizedQuery {
 
     get count(): number {
         return this._count;
-    }
-
-    set id(_id: ObjectId) {
-        this._id = _id;
     }
 
     set normalizedForm(_normalizedForm: string) {

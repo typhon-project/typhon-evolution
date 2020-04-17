@@ -9,7 +9,7 @@ export class SocketService {
     runSocket = (app, httpServer, port, ioSocket): void => {
         //Welcome page
         app.get(`/`, (req, res) => {
-            res.send(`<h1>Typhon Evolution Analytics server. Client on port 4200 by default</h1>`);
+            res.send(`<h1>Typhon Evolution Analytics server. Client on port 5000 by default</h1>`);
         });
 
         //Server listening on port 3000

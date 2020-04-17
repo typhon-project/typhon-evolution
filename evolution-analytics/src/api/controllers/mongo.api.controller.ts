@@ -15,12 +15,27 @@ export class MongoApiController {
             const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: mongodb.Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.findDocumentsWithFilter(collection, { id: +request.params.id }).then(documents => {
+            mongoService.findOne(collection, { id: +request.params.id }).then(documents => {
                 if (!documents) {
                     result.status(500).send('No documents found');
                 }
                 result.status(200).send(documents);
 
+            });
+            mongoHelper.disconnect();
+        });
+    };
+    public static findWithFilter = (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        mongoHelper.connect(MONGO_DB_URL).then(() => {
+            const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
+            const mongoService = new MongoService();
+            const collection: mongodb.Collection = mongoService.getCollection(db, request.params.collection);
+            mongoService.findWithFilter(collection, JSON.stringify(request.body)).then(documents => {
+                if (!documents) {
+                    result.status(500).send('No documents found');
+                }
+                result.status(200).send(documents);
             });
             mongoHelper.disconnect();
         });
@@ -46,7 +61,7 @@ export class MongoApiController {
             const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: mongodb.Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.insertOne(collection, AnalyticsApiMapper.mapJsonObjectToAnalytics(request.body)).then(res => {
+            mongoService.insertOne(collection, JSON.stringify(request.body)).then(res => {
                 result.status(200).send(res);
             });
             mongoHelper.disconnect();
@@ -58,7 +73,7 @@ export class MongoApiController {
             const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: mongodb.Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.insertManyDocuments(collection, AnalyticsApiMapper.mapJsonArrayToAnalytics(request.body)).then(res => {
+            mongoService.insertManyDocuments(collection, JSON.stringify(request.body)).then(res => {
                 result.status(200).send(res);
             });
             mongoHelper.disconnect();
@@ -82,7 +97,7 @@ export class MongoApiController {
             const db: mongodb.Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: mongodb.Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.deleteOneWithFilter(collection, request.body).then(res => {
+            mongoService.deleteOneWithFilter(collection, JSON.stringify(request.body)).then(res => {
                 result.status(200).send(res);
             });
             mongoHelper.disconnect();

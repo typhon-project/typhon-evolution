@@ -1,11 +1,10 @@
-import { ObjectId } from "mongodb";
-import { Selector } from "./Selector";
-import { Join } from "./Join";
+import {Selector} from "./Selector";
+import {Join} from "./Join";
+import {MongoCollection} from "./MongoCollection";
 
-export class Query {
+export class Query extends MongoCollection {
 
-    private _id: ObjectId;
-    private _normalizedQueryId: ObjectId;
+    private _normalizedQueryId: string;
     private _query: string;
     private _type: string;
     private _executionDate: Date;
@@ -17,7 +16,8 @@ export class Query {
     private _implicitInsertedEntities?: string[];
 
 
-    constructor(id: ObjectId, normalizedQueryId: ObjectId, query: string, type: string, executionDate: Date, executionTime: Date, modelVersion: number, mainEntities?: string[], selectors?: Selector[], joins?: Join[], implicitInsertedEntities?: string[]) {
+    constructor(id: string, normalizedQueryId: string, query: string, type: string, executionDate: Date, executionTime: Date, modelVersion: number, mainEntities?: string[], selectors?: Selector[], joins?: Join[], implicitInsertedEntities?: string[]) {
+        super();
         this._id = id;
         this._normalizedQueryId = normalizedQueryId;
         this._query = query;
@@ -31,11 +31,11 @@ export class Query {
         this._implicitInsertedEntities = implicitInsertedEntities;
     }
 
-    get id(): ObjectId {
-        return this._id;
+    get collectionName(): string {
+        return MongoCollection.QUERY_COLLECTION_NAME;
     }
 
-    get normalizedQueryId(): ObjectId {
+    get normalizedQueryId(): string {
         return this._normalizedQueryId;
     }
 
@@ -75,11 +75,7 @@ export class Query {
         return this._implicitInsertedEntities;
     }
 
-    set id(id: ObjectId) {
-        this._id = id;
-    }
-
-    set normalizedQueryId(normalizedQueryId: ObjectId) {
+    set normalizedQueryId(normalizedQueryId: string) {
         this._normalizedQueryId = normalizedQueryId;
     }
 

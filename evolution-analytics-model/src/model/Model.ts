@@ -1,19 +1,19 @@
-import { ObjectId } from "mongodb";
+import {MongoCollection} from "./MongoCollection";
 
-export class Model {
+export class Model extends MongoCollection {
 
-    private _id: ObjectId;
     private _version: number;
     private _date: Date;
 
-    constructor(id: ObjectId, version: number, date: Date) {
+    constructor(id: string, version: number, date: Date) {
+        super();
         this._id = id;
         this._version = version;
         this._date = date;
     }
 
-    get id(): ObjectId {
-        return this._id;
+    get collectionName(): string {
+        return MongoCollection.MODEL_COLLECTION_NAME;
     }
 
     get version(): number {
@@ -22,10 +22,6 @@ export class Model {
 
     get date(): Date {
         return this._date;
-    }
-
-    set id(id: ObjectId) {
-        this._id = id;
     }
 
     set version(version: number) {

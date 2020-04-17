@@ -19,11 +19,8 @@
   "author": "UNamur",
   "license": "ISC",
   "devDependencies": {
-    "@types/mongodb": "^3.5.5",
     "@types/node": "^13.11.0",
     "typescript": "^3.8.3"
   },
-  "dependencies": {
-    "mongodb": "^3.5.5"
-  }
+  "dependencies": {}
 }

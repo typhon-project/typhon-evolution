@@ -12,7 +12,7 @@ export class SocketioService {
   }
 
   setupSocketConnection() {
-    this.setSocket(lookup(environment.SOCKET_ENDPOINT));
+    this.setSocket(lookup(environment.BACKEND_ENDPOINT));
     this.socket.emit('client-message', 'Hello from Angular web client');
     this.socket.on('server-message', (msg: string) => {
       console.log('Message from the server: ' + msg);

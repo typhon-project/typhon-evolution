@@ -4,6 +4,7 @@ import { MongoApiController } from "../controllers/mongo.api.controller";
 let mongoApiRouter: express.Router = express.Router();
 
 mongoApiRouter.get('/find/:collection/:id', MongoApiController.findOne);
+mongoApiRouter.post('/find/:collection', MongoApiController.findWithFilter);//json object in the body
 mongoApiRouter.get('/find/:collection', MongoApiController.findAll);
 mongoApiRouter.post('/insert/:collection', MongoApiController.insertOne); //json object in the body
 mongoApiRouter.post('/insert/many/:collection', MongoApiController.insertMany); //json array in the body

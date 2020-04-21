@@ -1,5 +1,5 @@
-import {Router} from "express";
-import {MongoApiController} from "../controllers/mongo.api.controller";
+import {Router} from 'express';
+import {MongoApiController} from '../controllers/mongo.api.controller';
 
 let mongoApiRouter: Router = Router();
 

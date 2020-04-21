@@ -16,7 +16,6 @@ export class MongoHelper {
             }
         } catch (error) {
             console.log('Error while connecting to Mongo database');
-            console.error(error);
         }
     }
 

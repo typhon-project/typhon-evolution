@@ -45,20 +45,8 @@ export class MongoService {
         Function permitting to find one document from the <MONGO_COLLECTION_NAME> collection
      */
     public findOne = async (collection: Collection, jsonObjectFilter) => {
-        console.log(`findOne from collection: ${collection.collectionName}`);
-        return new Promise<any>(
-            (
-                resolve: (docs: any) => void,
-                reject: (err: MongoError) => void
-            ) => {
-                collection.findOne(jsonObjectFilter).then(doc => {
-                    if (!doc) {
-                        reject(new MongoError('No document found'));
-                    }
-                    console.log(`Found one document from '${collection.collectionName}' collection: ${doc}`);
-                    resolve(doc);
-                });
-            });
+        console.log(`findOne from collection: ${collection.collectionName}, filter: ${jsonObjectFilter}`);
+        return await collection.findOne(jsonObjectFilter)
     };
     /*
         Function permitting to find documents with filter from the <MONGO_COLLECTION_NAME> collection

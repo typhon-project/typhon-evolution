@@ -1,10 +1,15 @@
-import {MongoService} from "../../services/mongo.service";
-import {Request, Response} from "express";
-import {MongoHelper} from "../../helpers/mongo.helper";
-import {Collection, Db} from "mongodb";
+import {MongoService} from '../../services/mongo.service';
+import {Request, Response} from 'express';
+import {MongoHelper} from '../../helpers/mongo.helper';
+import {Collection, Db, ObjectID} from 'mongodb';
+import {config} from 'dotenv';
 
-const MONGO_DB_URL = 'mongodb://localhost:27017/test';
-const MONGO_DB_NAME = 'test';
+//Import .env configuration file
+config();
+
+//Retrieve environment variables from .env file
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
+const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
 
 export class MongoApiController {
 
@@ -14,14 +19,22 @@ export class MongoApiController {
             const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.findOne(collection, {id: +request.params.id}).then(documents => {
+            console.log(MONGO_DB_URL);
+            console.log(MONGO_DB_NAME);
+            mongoService.findOne(collection, {_id: new ObjectID(request.params.id)}).then(documents => {
+                console.log(documents);
                 if (!documents) {
                     result.status(500).send('No documents found');
+                } else {
+                    result.status(200).send(documents);
                 }
-                result.status(200).send(documents);
-
+            }).catch(exception => {
+                console.error(exception);
+                result.status(500).send(exception);
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
     public static findWithFilter = (request: Request, result: Response) => {

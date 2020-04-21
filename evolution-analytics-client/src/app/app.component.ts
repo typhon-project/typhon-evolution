@@ -17,29 +17,54 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.socketService.setupSocketConnection();
-    this.mongoApiClientService.findAllNormalizedQueries().subscribe(normalizedQueries => {
-      if (normalizedQueries) {
-        normalizedQueries.forEach(normalizedQuerie => console.log(`Normalized query: ${normalizedQuerie.normalizedForm}`));
+    // this.mongoApiClientService.findAllNormalizedQueries().subscribe(normalizedQueries => {
+    //   if (normalizedQueries) {
+    //     normalizedQueries.forEach(normalizedQuerie => console.log(`Normalized query: ${normalizedQuerie.normalizedForm}`));
+    //   }
+    // });
+    // this.mongoApiClientService.findAllQueries().subscribe(queries => {
+    //   if (queries) {
+    //     queries.forEach(query => console.log(`Query: ${query.query}`));
+    //   }
+    // });
+    // this.mongoApiClientService.findAllEntities().subscribe(entities => {
+    //   if (entities) {
+    //     entities.forEach(entity => console.log(`Entity name: ${entity.name}`));
+    //   }
+    // });
+    // this.mongoApiClientService.findAllEntitiesHistories().subscribe(entitiesHistories => {
+    //   if (entitiesHistories) {
+    //     entitiesHistories.forEach(entityHistory => console.log(`Entity history nbOfQueries: ${entityHistory.nbOfQueries}`));
+    //   }
+    // });
+    // this.mongoApiClientService.findAllModels().subscribe(models => {
+    //   if (models) {
+    //     models.forEach(model => console.log(`Model version: ${model.version}`));
+    //   }
+    // });
+    this.mongoApiClientService.findOneNormalizedQuery('5e8f0cbd7ccb4924f78ccb4c').subscribe(normalizedQuery => {
+      if (normalizedQuery) {
+        console.log(`Normalized query: ${normalizedQuery.normalizedForm}`);
       }
     });
-    this.mongoApiClientService.findAllQueries().subscribe(queries => {
-      if (queries) {
-        queries.forEach(query => console.log(`Query: ${query.query}`));
+    this.mongoApiClientService.findOneQuery('5e8f0cbd7ccb4924f78ccb4d').subscribe(query => {
+      if (query) {
+        console.log(`Query: ${query.query}`);
       }
     });
-    this.mongoApiClientService.findAllEntities().subscribe(entities => {
-      if (entities) {
-        entities.forEach(entity => console.log(`Entity name: ${entity.name}`));
+    this.mongoApiClientService.findOneEntity('5e8f0ca27ccb4924f78ccb3f').subscribe(entity => {
+      if (entity) {
+        console.log(`Entity name: ${entity.name}`);
       }
     });
-    this.mongoApiClientService.findAllEntitiesHistories().subscribe(entitiesHistories => {
-      if (entitiesHistories) {
-        entitiesHistories.forEach(entityHistory => console.log(`Entity history nbOfQueries: ${entityHistory.nbOfQueries}`));
+    this.mongoApiClientService.findOneEntityHistory('5e8f0ca47ccb4924f78ccb46').subscribe(entityHistory => {
+      if (entityHistory) {
+        console.log(`Entity history nbOfQueries: ${entityHistory.nbOfQueries}`);
       }
     });
-    this.mongoApiClientService.findAllModels().subscribe(models => {
-      if (models) {
-        models.forEach(model => console.log(`Model version: ${model.version}`));
+    this.mongoApiClientService.findOneModel('5e8f0ca27ccb4924f78ccb3e').subscribe(model => {
+      if (model) {
+        console.log(`Model version: ${model.version}`);
       }
     });
   }

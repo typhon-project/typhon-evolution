@@ -44,10 +44,15 @@ export class MongoApiController {
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
             mongoService.findWithFilter(collection, JSON.stringify(request.body)).then(documents => {
+                console.log(documents);
                 if (!documents) {
                     result.status(500).send('No documents found');
+                } else {
+                    result.status(200).send(documents);
                 }
-                result.status(200).send(documents);
+            }).catch(exception => {
+                console.error(exception);
+                result.status(500).send(exception);
             });
             mongoHelper.disconnect();
         });

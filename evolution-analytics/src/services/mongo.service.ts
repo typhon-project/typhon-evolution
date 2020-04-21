@@ -1,4 +1,4 @@
-import {Collection, Cursor, Db, MongoError} from 'mongodb';
+import {Collection, Db, MongoError} from 'mongodb';
 
 export class MongoService {
     /*
@@ -60,19 +60,7 @@ export class MongoService {
      */
     public findAll = async (collection: Collection) => {
         console.log(`findAll from collection: ${collection.collectionName}`);
-        return new Promise<any[]>(
-            (
-                resolve: (docs: any[]) => void,
-                reject: (err: MongoError) => void
-            ) => {
-                collection.find({}).toArray(function (err, docs) {
-                    if (err) {
-                        reject(err);
-                    }
-                    console.log(`Found all documents from '${collection.collectionName}' collection, number: ${docs.length}`);
-                    resolve(docs);
-                });
-            });
+        return await collection.find({}).toArray();
     };
     /*
         Function permitting to update ONE document with filter in the <MONGO_COLLECTION_NAME> collection

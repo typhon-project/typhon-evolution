@@ -44,7 +44,7 @@ export class MongoApiController {
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
             mongoService.findWithFilter(collection, JSON.stringify(request.body)).then(documents => {
-                console.log(documents);
+                console.log(`findWithFilter from ${collection.collectionName} collection, results:\n${JSON.stringify(documents)}`);
                 if (!documents) {
                     result.status(500).send('No documents found');
                 } else {
@@ -64,10 +64,12 @@ export class MongoApiController {
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
             mongoService.findAll(collection).then(documents => {
+                console.log(`findAll from ${collection.collectionName} collection: ${documents.length} documents found`);
                 if (!documents) {
                     result.status(500).send('No documents found');
+                } else {
+                    result.status(200).send(documents);
                 }
-                result.status(200).send(documents);
             });
             mongoHelper.disconnect();
         });

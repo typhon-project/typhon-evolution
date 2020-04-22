@@ -115,17 +115,69 @@ export class AppComponent implements OnInit {
     //     models.forEach(model => console.log(`Model date: ${model.date}`));
     //   }
     // });
-    const normalizedQuery: NormalizedQuery = new NormalizedQuery(
+    // const normalizedQuery: NormalizedQuery = new NormalizedQuery(
+    //   'fromOrderProductx0selectx0wherex0.id=="?"',
+    //   'from OrderProduct x0 select x0 where x0.id == "?"',
+    //   3
+    // );
+    // this.mongoApiClientService.insertOneNormalizedQuery(normalizedQuery).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertOneNormalizedQuery result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const query: Query = new Query(
+    //   '5e8f0cbd7ccb4924f78ccb4c',
+    //   'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"',
+    //   'SELECT',
+    //   new Date(),
+    //   new Date(),
+    //   1,
+    //   ['OrderProduct'],
+    //   [new Selector('OrderProduct', 'id', 'WHERE')]
+    // );
+    // this.mongoApiClientService.insertOneQuery(query).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertOneQuery result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const entity: Entity = new Entity('abodart', 1, [1]);
+    // this.mongoApiClientService.insertOneEntity(entity).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertOneEntity result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const entityHistory: EntityHistory = new EntityHistory(
+    //   'abodart',
+    //   new Date(),
+    //   1,
+    //   0,
+    //   17,
+    //   3,
+    //   7,
+    //   5,
+    //   2);
+    // this.mongoApiClientService.insertOneEntityHistory(entityHistory).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertOneEntityHistory result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const model: Model = new Model(1, new Date());
+    // this.mongoApiClientService.insertOneModel(model).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertOneModel result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    const normalizedQueries: NormalizedQuery[] = [new NormalizedQuery(
       'fromOrderProductx0selectx0wherex0.id=="?"',
       'from OrderProduct x0 select x0 where x0.id == "?"',
       3
-    );
-    this.mongoApiClientService.insertOneNormalizedQuery(normalizedQuery).subscribe(result => {
+    )];
+    this.mongoApiClientService.insertManyNormalizedQueries(normalizedQueries).subscribe(result => {
       if (result) {
-        console.log(`insertOneNormalizedQuery result: ${JSON.stringify(result)}`);
+        console.log(`insertManyNormalizedQueries result: ${JSON.stringify(result)}`);
       }
     });
-    const query: Query = new Query(
+    const queries: Query[] = [new Query(
       '5e8f0cbd7ccb4924f78ccb4c',
       'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"',
       'SELECT',
@@ -134,19 +186,19 @@ export class AppComponent implements OnInit {
       1,
       ['OrderProduct'],
       [new Selector('OrderProduct', 'id', 'WHERE')]
-    );
-    this.mongoApiClientService.insertOneQuery(query).subscribe(result => {
+    )];
+    this.mongoApiClientService.insertManyQueries(queries).subscribe(result => {
       if (result) {
-        console.log(`insertOneQuery result: ${JSON.stringify(result)}`);
+        console.log(`insertManyQueries result: ${JSON.stringify(result)}`);
       }
     });
-    const entity: Entity = new Entity('abodart', 1, [1]);
-    this.mongoApiClientService.insertOneEntity(entity).subscribe(result => {
+    const entities: Entity[] = [new Entity('abodart', 1, [1])];
+    this.mongoApiClientService.insertManyEntities(entities).subscribe(result => {
       if (result) {
-        console.log(`insertOneEntity result: ${JSON.stringify(result)}`);
+        console.log(`insertManyEntities result: ${JSON.stringify(result)}`);
       }
     });
-    const entityHistory: EntityHistory = new EntityHistory(
+    const entitiesHistories: EntityHistory[] = [new EntityHistory(
       'abodart',
       new Date(),
       1,
@@ -155,16 +207,17 @@ export class AppComponent implements OnInit {
       3,
       7,
       5,
-      2);
-    this.mongoApiClientService.insertOneEntityHistory(entityHistory).subscribe(result => {
+      2
+    )];
+    this.mongoApiClientService.insertManyEntitiesHistories(entitiesHistories).subscribe(result => {
       if (result) {
-        console.log(`insertOneEntityHistory result: ${JSON.stringify(result)}`);
+        console.log(`insertManyEntitiesHistories result: ${JSON.stringify(result)}`);
       }
     });
-    const model: Model = new Model(1, new Date());
-    this.mongoApiClientService.insertOneModel(model).subscribe(result => {
+    const models: Model[] = [new Model(1, new Date())];
+    this.mongoApiClientService.insertManyModels(models).subscribe(result => {
       if (result) {
-        console.log(`insertOneModel result: ${JSON.stringify(result)}`);
+        console.log(`insertManyModels result: ${JSON.stringify(result)}`);
       }
     });
   }

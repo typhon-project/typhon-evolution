@@ -104,8 +104,14 @@ export class MongoApiController {
             const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
-            mongoService.insertManyDocuments(collection, JSON.stringify(request.body)).then(res => {
-                result.status(200).send(res);
+            mongoService.insertMany(collection, JSON.stringify(request.body)).then(res => {
+                if (res.result.ok === 1) {
+                    console.log(`insertMany result: ${JSON.stringify(res.ops)}`);
+                    result.status(200).send(res.ops);
+                } else {
+                    console.log(`insertMany error: ${res}`);
+                    result.status(500).send(res);
+                }
             });
             mongoHelper.disconnect();
         }).catch(exception => {

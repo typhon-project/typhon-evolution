@@ -1,0 +1,48 @@
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
+  <li ngbNavItem="schema">
+    <a ngbNavLink>
+      Schema
+    </a>
+    <ng-template ngbNavContent>
+      <app-time-radio-button [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
+
+      <div [ngClass]="{'invisible': timeEvolutionMode}" style="text-align:center; margin-top: 50px;">
+        <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+        <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+        <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+      </div>
+
+      <div [ngClass]="{'invisible': !timeEvolutionMode}" style="text-align:center; margin-top: 50px;">
+        <app-line-chart [chartTitle]="'Entity size over time'"></app-line-chart>
+        <app-line-chart [chartTitle]="'CRUD operation distribution over time'"></app-line-chart>
+        <app-line-chart [chartTitle]="'Proportion of queried entities over time'"></app-line-chart>
+      </div>
+    </ng-template>
+  </li>
+
+  <li ngbNavItem="queries">
+    <a ngbNavLink>
+      Queries
+    </a>
+    <ng-template ngbNavContent>
+      <app-table-pagination></app-table-pagination>
+    </ng-template>
+  </li>
+
+  <li *ngFor="let id of tabs" [ngbNavItem]="id">
+    <a ngbNavLink>
+      Tab {{ id }}
+      <span class="close position-relative pl-2 font-weight-light" (click)="close($event, id)">×</span>
+    </a>
+    <ng-template ngbNavContent>
+      <p>Tab {{ id }} content</p>
+    </ng-template>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href (click)="add($event)">...</a>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+

@@ -1,0 +1,23 @@
+<div>
+  <div style="display:inline-block;">
+    <label id="example-radio-group-label">Filtering period:</label>
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      (change)="changePeriodMode()"
+      [(ngModel)]="periodMode">
+      <mat-radio-button [class]="{'mat-radio-checked': !particularPeriodFilterVisible}" style="margin-left: 20px;" value="1">complete history</mat-radio-button>
+      <mat-radio-button style="margin-left: 20px;" value="2">particular period</mat-radio-button>
+    </mat-radio-group>
+    <div [ngClass]="{'hidden': !particularPeriodFilterVisible, 'dateLabel': particularPeriodFilterVisible}">
+      <label>From</label><input type="date" name="input" ng-model="example.value" [(ngModel)]="fromBoundDate"
+             placeholder="yyyy-MM-dd" required />
+      <label style="margin-left: 30px">to</label><input type="date" name="input" ng-model="example.value" [(ngModel)]="toBoundDate"
+                                placeholder="yyyy-MM-dd" required />
+
+      <button [ngClass]="{'filterButton': true, 'disabled': !fromBoundDate || !toBoundDate, 'disabledButton': !fromBoundDate || !toBoundDate}" (click)="filter()" mat-raised-button color="primary">Filter</button>
+    </div>
+  </div>
+  <div style="position: absolute; display:inline-block; right: 20px;">
+    <mat-slide-toggle (change)="changeChartMode()">Evolution over time</mat-slide-toggle>
+</div>

@@ -16,9 +16,8 @@ export class Query extends MongoCollection {
     private _implicitInsertedEntities?: string[];
 
 
-    constructor(id: string, normalizedQueryId: string, query: string, type: string, executionDate: Date, executionTime: Date, modelVersion: number, mainEntities?: string[], selectors?: Selector[], joins?: Join[], implicitInsertedEntities?: string[]) {
-        super();
-        this._id = id;
+    constructor(normalizedQueryId: string, query: string, type: string, executionDate: Date, executionTime: Date, modelVersion: number, mainEntities?: string[], selectors?: Selector[], joins?: Join[], implicitInsertedEntities?: string[], id?: string) {
+        super(id);
         this._normalizedQueryId = normalizedQueryId;
         this._query = query;
         this._type = type;

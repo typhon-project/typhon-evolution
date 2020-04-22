@@ -6,9 +6,8 @@ export class Entity extends MongoCollection {
     private _latestVersion: number;
     private _versions?: number[];
 
-    constructor(id: string, name: string, latestVersion: number, versions?: number[]) {
-        super();
-        this._id = id;
+    constructor(name: string, latestVersion: number, versions?: number[], id?: string) {
+        super(id);
         this._name = name;
         this._latestVersion = latestVersion;
         this._versions = versions;

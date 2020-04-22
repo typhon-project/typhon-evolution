@@ -12,9 +12,8 @@ export class EntityHistory extends MongoCollection{
     private _nbOfUpdate:number;
     private _nbOfDelete:number;
 
-    constructor(id: string, name: string, updateDate: Date, modelVersion: number, dataSize: number, nbOfQueries: number, nbOfSelect: number, nbOfInsert: number, nbOfUpdate: number, nbOfDelete: number) {
-        super();
-        this._id = id;
+    constructor( name: string, updateDate: Date, modelVersion: number, dataSize: number, nbOfQueries: number, nbOfSelect: number, nbOfInsert: number, nbOfUpdate: number, nbOfDelete: number, id?: string) {
+        super(id);
         this._name = name;
         this._updateDate = updateDate;
         this._modelVersion = modelVersion;

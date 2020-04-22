@@ -6,9 +6,8 @@ export class NormalizedQuery extends MongoCollection {
     private _displayableForm: string;
     private _count: number;
 
-    constructor(id: string, normalizedForm: string, displayableForm: string, count: number) {
-        super();
-        this._id = id;
+    constructor(normalizedForm: string, displayableForm: string, count: number, id?: string) {
+        super(id);
         this._normalizedForm = normalizedForm;
         this._displayableForm = displayableForm;
         this._count = count;

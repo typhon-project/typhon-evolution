@@ -1,16 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ClientService } from './mongo.api.client.service';
+import {TestBed} from '@angular/core/testing';
+import {MongoApiClientService} from './mongo.api.client.service';
 
 describe('ClientService', () => {
-  let service: ClientService;
+  let mongoApiClientService: MongoApiClientService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ClientService);
+    mongoApiClientService = TestBed.inject(MongoApiClientService);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(mongoApiClientService).toBeTruthy();
   });
 });

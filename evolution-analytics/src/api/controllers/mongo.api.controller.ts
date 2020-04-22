@@ -55,6 +55,8 @@ export class MongoApiController {
                 result.status(500).send(exception);
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
     public static findAll = (request: Request, result: Response) => {
@@ -72,6 +74,8 @@ export class MongoApiController {
                 }
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
     public static insertOne = (request: Request, result: Response) => {
@@ -81,9 +85,17 @@ export class MongoApiController {
             const mongoService = new MongoService();
             const collection: Collection = mongoService.getCollection(db, request.params.collection);
             mongoService.insertOne(collection, JSON.stringify(request.body)).then(res => {
-                result.status(200).send(res);
+                if (res.result.ok === 1) {
+                    console.log(`insertOne result: ${JSON.stringify(res.ops[0])}`);
+                    result.status(200).send(res.ops[0]);
+                } else {
+                    console.log(`insertOne error: ${res}`);
+                    result.status(500).send(res);
+                }
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
     public static insertMany = (request: Request, result: Response) => {
@@ -96,6 +108,8 @@ export class MongoApiController {
                 result.status(200).send(res);
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
     public static updateOne = (request: Request, result: Response) => {
@@ -107,6 +121,8 @@ export class MongoApiController {
             mongoService.updateOneWithFilter(collection, request.body.filter, request.body.document).then(res => {
                 result.status(200).send(res);
             });
+        }).catch(exception => {
+            console.error(exception)
         });
         mongoHelper.disconnect();
     };
@@ -120,6 +136,8 @@ export class MongoApiController {
                 result.status(200).send(res);
             });
             mongoHelper.disconnect();
+        }).catch(exception => {
+            console.error(exception)
         });
     };
 }

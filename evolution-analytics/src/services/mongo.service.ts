@@ -2,26 +2,6 @@ import {Collection, Db, MongoError} from 'mongodb';
 
 export class MongoService {
     /*
-        Function permitting to insert ONE json object into the <MONGO_COLLECTION_NAME> collection
-     */
-    public insertOne = async (collection: Collection, jsonObject) => {
-        console.log(`insertOne in collection: ${collection.collectionName}`);
-        console.log(`content: ${jsonObject}`);
-        return new Promise<any>(
-            (
-                resolve: (docs: any) => void,
-                reject: (err: MongoError) => void
-            ) => {
-                collection.insertOne(jsonObject, function (err, res) {
-                    if (err) {
-                        reject(err);
-                    }
-                    console.log(`Inserted one document in '${collection.collectionName}' collection, result: ${res.result}`);
-                    resolve(res.result.ok);
-                });
-            });
-    };
-    /*
         Function permitting to insert ONE json array into the <MONGO_COLLECTION_NAME> collection
      */
     public insertManyDocuments = async (collection: Collection, jsonArray) => {
@@ -61,6 +41,13 @@ export class MongoService {
     public findAll = async (collection: Collection) => {
         console.log(`findAll from collection: ${collection.collectionName}`);
         return await collection.find({}).toArray();
+    };
+    /*
+        Function permitting to insert ONE json object into the <MONGO_COLLECTION_NAME> collection
+     */
+    public insertOne = async (collection: Collection, jsonObject) => {
+        console.log(`insertOne in collection: ${collection.collectionName}, object: ${jsonObject}`);
+        return await collection.insertOne(JSON.parse(jsonObject));
     };
     /*
         Function permitting to update ONE document with filter in the <MONGO_COLLECTION_NAME> collection

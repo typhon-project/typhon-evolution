@@ -5,9 +5,8 @@ export class Model extends MongoCollection {
     private _version: number;
     private _date: Date;
 
-    constructor(id: string, version: number, date: Date) {
-        super();
-        this._id = id;
+    constructor(version: number, date: Date, id?: string) {
+        super(id);
         this._version = version;
         this._date = date;
     }

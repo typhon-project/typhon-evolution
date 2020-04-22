@@ -1,11 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {SocketioService} from '../services/socket/socketio.service';
-import {MongoApiClientService} from '../services/api/mongo.api.client.service';
 import {NormalizedQueryFilter} from 'evolution-analytics-model/dist/filter/NormalizedQueryFilter';
+import {NormalizedQuery} from 'evolution-analytics-model/dist/model/NormalizedQuery';
 import {QueryFilter} from 'evolution-analytics-model/dist/filter/QueryFilter';
+import {Query} from 'evolution-analytics-model/dist/model/Query';
 import {EntityFilter} from 'evolution-analytics-model/dist/filter/EntityFilter';
+import {Entity} from 'evolution-analytics-model/dist/model/Entity';
 import {EntityHistoryFilter} from 'evolution-analytics-model/dist/filter/EntityHistoryFilter';
+import {EntityHistory} from 'evolution-analytics-model/dist/model/EntityHistory';
 import {ModelFilter} from 'evolution-analytics-model/dist/filter/ModelFilter';
+import {Model} from 'evolution-analytics-model/dist/model/Model';
+import {Selector} from 'evolution-analytics-model/dist/model/Selector';
+import {MongoApiClientService} from '../services/api/mongo.api.client.service';
 
 @Component({
   selector: 'app-root',
@@ -72,39 +78,93 @@ export class AppComponent implements OnInit {
     //     console.log(`Model version: ${model.version}`);
     //   }
     // });
-    const normalizedQueryFilter: NormalizedQueryFilter = new NormalizedQueryFilter();
-    normalizedQueryFilter.normalizedForm = 'fromOrderProductx0selectx0wherex0.id=="?"';
-    this.mongoApiClientService.findWithFilterNormalizedQueries(normalizedQueryFilter).subscribe(normalizedQueries => {
-      if (normalizedQueries) {
-        normalizedQueries.forEach(normalizedQuery => console.log(`Normalized query displayable form: ${normalizedQuery.displayableForm}`));
+    // const normalizedQueryFilter: NormalizedQueryFilter = new NormalizedQueryFilter();
+    // normalizedQueryFilter.normalizedForm = 'fromOrderProductx0selectx0wherex0.id=="?"';
+    // this.mongoApiClientService.findWithFilterNormalizedQueries(normalizedQueryFilter).subscribe(normalizedQueries => {
+    //   if (normalizedQueries) {
+    //     normalizedQueries.forEach(
+    //       normalizedQuery => console.log(`Normalized query displayable form: ${normalizedQuery.displayableForm}`)
+    //     );
+    //   }
+    // });
+    // const queryFilter: QueryFilter = new QueryFilter();
+    // queryFilter.query = 'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"';
+    // this.mongoApiClientService.findWithFilterQueries(queryFilter).subscribe(queries => {
+    //   if (queries) {
+    //     queries.forEach(query => console.log(`Query type: ${query.type}`));
+    //   }
+    // });
+    // const entityFilter: EntityFilter = new EntityFilter();
+    // entityFilter.name = 'Review';
+    // this.mongoApiClientService.findWithFilterEntities(entityFilter).subscribe(entities => {
+    //   if (entities) {
+    //     entities.forEach(entity => console.log(`Entity lastest version: ${entity.latestVersion}`));
+    //   }
+    // });
+    // const entityHistoryFilter: EntityHistoryFilter = new EntityHistoryFilter();
+    // entityHistoryFilter.nbOfQueries = 208;
+    // this.mongoApiClientService.findWithFilterEntitiesHistories(entityHistoryFilter).subscribe(entitiesHistories => {
+    //   if (entitiesHistories) {
+    //     entitiesHistories.forEach(entityHistory => console.log(`Entity history name: ${entityHistory.name}`));
+    //   }
+    // });
+    // const modelFilter: ModelFilter = new ModelFilter();
+    // modelFilter.version = 1;
+    // this.mongoApiClientService.findWithFilterModels(modelFilter).subscribe(models => {
+    //   if (models) {
+    //     models.forEach(model => console.log(`Model date: ${model.date}`));
+    //   }
+    // });
+    const normalizedQuery: NormalizedQuery = new NormalizedQuery(
+      'fromOrderProductx0selectx0wherex0.id=="?"',
+      'from OrderProduct x0 select x0 where x0.id == "?"',
+      3
+    );
+    this.mongoApiClientService.insertOneNormalizedQuery(normalizedQuery).subscribe(result => {
+      if (result) {
+        console.log(`insertOneNormalizedQuery result: ${JSON.stringify(result)}`);
       }
     });
-    const queryFilter: QueryFilter = new QueryFilter();
-    queryFilter.query = 'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"';
-    this.mongoApiClientService.findWithFilterQueries(queryFilter).subscribe(queries => {
-      if (queries) {
-        queries.forEach(query => console.log(`Query type: ${query.type}`));
+    const query: Query = new Query(
+      '5e8f0cbd7ccb4924f78ccb4c',
+      'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"',
+      'SELECT',
+      new Date(),
+      new Date(),
+      1,
+      ['OrderProduct'],
+      [new Selector('OrderProduct', 'id', 'WHERE')]
+    );
+    this.mongoApiClientService.insertOneQuery(query).subscribe(result => {
+      if (result) {
+        console.log(`insertOneQuery result: ${JSON.stringify(result)}`);
       }
     });
-    const entityFilter: EntityFilter = new EntityFilter();
-    entityFilter.name = 'Review';
-    this.mongoApiClientService.findWithFilterEntities(entityFilter).subscribe(entities => {
-      if (entities) {
-        entities.forEach(entity => console.log(`Entity lastest version: ${entity.latestVersion}`));
+    const entity: Entity = new Entity('abodart', 1, [1]);
+    this.mongoApiClientService.insertOneEntity(entity).subscribe(result => {
+      if (result) {
+        console.log(`insertOneEntity result: ${JSON.stringify(result)}`);
       }
     });
-    const entityHistoryFilter: EntityHistoryFilter = new EntityHistoryFilter();
-    entityHistoryFilter.nbOfQueries = 208;
-    this.mongoApiClientService.findWithFilterEntitiesHistories(entityHistoryFilter).subscribe(entitiesHistories => {
-      if (entitiesHistories) {
-        entitiesHistories.forEach(entityHistory => console.log(`Entity history name: ${entityHistory.name}`));
+    const entityHistory: EntityHistory = new EntityHistory(
+      'abodart',
+      new Date(),
+      1,
+      0,
+      17,
+      3,
+      7,
+      5,
+      2);
+    this.mongoApiClientService.insertOneEntityHistory(entityHistory).subscribe(result => {
+      if (result) {
+        console.log(`insertOneEntityHistory result: ${JSON.stringify(result)}`);
       }
     });
-    const modelFilter: ModelFilter = new ModelFilter();
-    modelFilter.version = 1;
-    this.mongoApiClientService.findWithFilterModels(modelFilter).subscribe(models => {
-      if (models) {
-        models.forEach(model => console.log(`Model date: ${model.date}`));
+    const model: Model = new Model(1, new Date());
+    this.mongoApiClientService.insertOneModel(model).subscribe(result => {
+      if (result) {
+        console.log(`insertOneModel result: ${JSON.stringify(result)}`);
       }
     });
   }

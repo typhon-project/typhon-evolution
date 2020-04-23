@@ -9,6 +9,6 @@ mongoApiRouter.get('/find/:collection', MongoApiController.findAll);
 mongoApiRouter.post('/insert/:collection', MongoApiController.insertOne); //json object in the body
 mongoApiRouter.post('/insert/many/:collection', MongoApiController.insertMany); //json array in the body
 mongoApiRouter.put('/update/:collection', MongoApiController.updateOne); //json object containing the 'filter' and the 'document' in the body
-mongoApiRouter.delete('/delete/:collection', MongoApiController.deleteOne); //json object containing the 'filter' in the body
+mongoApiRouter.put('/delete/:collection', MongoApiController.deleteOne); //json object containing the 'filter' in the body
 
 export {mongoApiRouter};

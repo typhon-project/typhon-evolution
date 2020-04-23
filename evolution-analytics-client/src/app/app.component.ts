@@ -53,11 +53,11 @@ export class AppComponent implements OnInit {
     //     models.forEach(model => console.log(`Model version: ${model.version}`));
     //   }
     // });
-    // this.mongoApiClientService.findOneNormalizedQuery('5e8f0cbd7ccb4924f78ccb4c').subscribe(normalizedQuery => {
-    //   if (normalizedQuery) {
-    //     console.log(`Normalized query: ${normalizedQuery.normalizedForm}`);
-    //   }
-    // });
+    this.mongoApiClientService.findOneNormalizedQuery('5e8f0cbd7ccb4924f78ccb4c').subscribe(normalizedQuery => {
+      if (normalizedQuery) {
+        console.log(`Normalized query: ${normalizedQuery.normalizedForm}`);
+      }
+    });
     // this.mongoApiClientService.findOneQuery('5e8f0cbd7ccb4924f78ccb4d').subscribe(query => {
     //   if (query) {
     //     console.log(`Query: ${query.query}`);
@@ -78,15 +78,15 @@ export class AppComponent implements OnInit {
     //     console.log(`Model version: ${model.version}`);
     //   }
     // });
-    // const normalizedQueryFilter: NormalizedQueryFilter = new NormalizedQueryFilter();
-    // normalizedQueryFilter.normalizedForm = 'fromOrderProductx0selectx0wherex0.id=="?"';
-    // this.mongoApiClientService.findWithFilterNormalizedQueries(normalizedQueryFilter).subscribe(normalizedQueries => {
-    //   if (normalizedQueries) {
-    //     normalizedQueries.forEach(
-    //       normalizedQuery => console.log(`Normalized query displayable form: ${normalizedQuery.displayableForm}`)
-    //     );
-    //   }
-    // });
+    const normalizedQueryFilter: NormalizedQueryFilter = new NormalizedQueryFilter();
+    normalizedQueryFilter.normalizedForm = 'updateReviewx0wherex0.id=="?"set{id:"?"}';
+    this.mongoApiClientService.findWithFilterNormalizedQueries(normalizedQueryFilter).subscribe(results => {
+      if (results) {
+        results.forEach(
+          result => console.log(`Normalized query displayable form: ${result.displayableForm}`)
+        );
+      }
+    });
     // const queryFilter: QueryFilter = new QueryFilter();
     // queryFilter.query = 'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"';
     // this.mongoApiClientService.findWithFilterQueries(queryFilter).subscribe(queries => {
@@ -167,58 +167,141 @@ export class AppComponent implements OnInit {
     //     console.log(`insertOneModel result: ${JSON.stringify(result)}`);
     //   }
     // });
-    const normalizedQueries: NormalizedQuery[] = [new NormalizedQuery(
-      'fromOrderProductx0selectx0wherex0.id=="?"',
-      'from OrderProduct x0 select x0 where x0.id == "?"',
-      3
-    )];
-    this.mongoApiClientService.insertManyNormalizedQueries(normalizedQueries).subscribe(result => {
+    // const normalizedQueries: NormalizedQuery[] = [new NormalizedQuery(
+    //   'fromOrderProductx0selectx0wherex0.id=="?"',
+    //   'from OrderProduct x0 select x0 where x0.id == "?"',
+    //   3
+    // )];
+    // this.mongoApiClientService.insertManyNormalizedQueries(normalizedQueries).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertManyNormalizedQueries result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const queries: Query[] = [new Query(
+    //   '5e8f0cbd7ccb4924f78ccb4c',
+    //   'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"',
+    //   'SELECT',
+    //   new Date(),
+    //   new Date(),
+    //   1,
+    //   ['OrderProduct'],
+    //   [new Selector('OrderProduct', 'id', 'WHERE')]
+    // )];
+    // this.mongoApiClientService.insertManyQueries(queries).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertManyQueries result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const entities: Entity[] = [new Entity('abodart', 1, [1])];
+    // this.mongoApiClientService.insertManyEntities(entities).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertManyEntities result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const entitiesHistories: EntityHistory[] = [new EntityHistory(
+    //   'abodart',
+    //   new Date(),
+    //   1,
+    //   0,
+    //   17,
+    //   3,
+    //   7,
+    //   5,
+    //   2
+    // )];
+    // this.mongoApiClientService.insertManyEntitiesHistories(entitiesHistories).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertManyEntitiesHistories result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const models: Model[] = [new Model(1, new Date())];
+    // this.mongoApiClientService.insertManyModels(models).subscribe(result => {
+    //   if (result) {
+    //     console.log(`insertManyModels result: ${JSON.stringify(result)}`);
+    //   }
+    // });
+    // const normalizedQueryFilter: NormalizedQueryFilter = new NormalizedQueryFilter();
+    // normalizedQueryFilter.normalizedForm = 'fromOrderProductx0selectx0wherex0.id=="?"';
+    // const normalizedQueryUpdate: NormalizedQueryFilter = new NormalizedQueryFilter();
+    // normalizedQueryUpdate.count = 5;
+    // this.mongoApiClientService.updateOneNormalizedQuery(normalizedQueryFilter, normalizedQueryUpdate).subscribe(result => {
+    //   if (result) {
+    //     console.log(`${result.modifiedCount} document(s) updated`);
+    //   }
+    // }, error => {
+    //   console.log(error);
+    // });
+    // const queryFilter: QueryFilter = new QueryFilter();
+    // queryFilter.query = 'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"';
+    // this.mongoApiClientService.findWithFilterQueries(queryFilter).subscribe(queries => {
+    //   if (queries) {
+    //     queries.forEach(query => console.log(`Query type: ${query.type}`));
+    //   }
+    // });
+    // const entityFilter: EntityFilter = new EntityFilter();
+    // entityFilter.name = 'Review';
+    // this.mongoApiClientService.findWithFilterEntities(entityFilter).subscribe(entities => {
+    //   if (entities) {
+    //     entities.forEach(entity => console.log(`Entity lastest version: ${entity.latestVersion}`));
+    //   }
+    // });
+    // const entityHistoryFilter: EntityHistoryFilter = new EntityHistoryFilter();
+    // entityHistoryFilter.nbOfQueries = 208;
+    // this.mongoApiClientService.findWithFilterEntitiesHistories(entityHistoryFilter).subscribe(entitiesHistories => {
+    //   if (entitiesHistories) {
+    //     entitiesHistories.forEach(entityHistory => console.log(`Entity history name: ${entityHistory.name}`));
+    //   }
+    // });
+    // const modelFilter: ModelFilter = new ModelFilter();
+    // modelFilter.version = 1;
+    // this.mongoApiClientService.findWithFilterModels(modelFilter).subscribe(models => {
+    //   if (models) {
+    //     models.forEach(model => console.log(`Model date: ${model.date}`));
+    //   }
+    // });
+    normalizedQueryFilter.normalizedForm = 'fromOrderProductx0selectx0wherex0.id=="?"';
+    this.mongoApiClientService.deleteOneNormalizedQuery(normalizedQueryFilter).subscribe(result => {
       if (result) {
-        console.log(`insertManyNormalizedQueries result: ${JSON.stringify(result)}`);
+        console.log(`${result.deletedCount} document(s) deleted`);
       }
+    }, error => {
+      console.log(error);
     });
-    const queries: Query[] = [new Query(
-      '5e8f0cbd7ccb4924f78ccb4c',
-      'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"',
-      'SELECT',
-      new Date(),
-      new Date(),
-      1,
-      ['OrderProduct'],
-      [new Selector('OrderProduct', 'id', 'WHERE')]
-    )];
-    this.mongoApiClientService.insertManyQueries(queries).subscribe(result => {
+    const queryFilter: QueryFilter = new QueryFilter();
+    queryFilter.query = 'from OrderProduct x0 select x0 where x0.id == "ZWLPj0f1w"';
+    this.mongoApiClientService.deleteOneQuery(queryFilter).subscribe(result => {
       if (result) {
-        console.log(`insertManyQueries result: ${JSON.stringify(result)}`);
+        console.log(`${result.deletedCount} document(s) deleted`);
       }
+    }, error => {
+      console.log(error);
     });
-    const entities: Entity[] = [new Entity('abodart', 1, [1])];
-    this.mongoApiClientService.insertManyEntities(entities).subscribe(result => {
+    const entityFilter: EntityFilter = new EntityFilter();
+    entityFilter.name = 'Review';
+    this.mongoApiClientService.deleteOneEntity(entityFilter).subscribe(result => {
       if (result) {
-        console.log(`insertManyEntities result: ${JSON.stringify(result)}`);
+        console.log(`${result.deletedCount} document(s) deleted`);
       }
+    }, error => {
+      console.log(error);
     });
-    const entitiesHistories: EntityHistory[] = [new EntityHistory(
-      'abodart',
-      new Date(),
-      1,
-      0,
-      17,
-      3,
-      7,
-      5,
-      2
-    )];
-    this.mongoApiClientService.insertManyEntitiesHistories(entitiesHistories).subscribe(result => {
+    const entityHistoryFilter: EntityHistoryFilter = new EntityHistoryFilter();
+    entityHistoryFilter.nbOfQueries = 208;
+    this.mongoApiClientService.deleteOneEntityHistory(entityHistoryFilter).subscribe(result => {
       if (result) {
-        console.log(`insertManyEntitiesHistories result: ${JSON.stringify(result)}`);
+        console.log(`${result.deletedCount} document(s) deleted`);
       }
+    }, error => {
+      console.log(error);
     });
-    const models: Model[] = [new Model(1, new Date())];
-    this.mongoApiClientService.insertManyModels(models).subscribe(result => {
+    const modelFilter: ModelFilter = new ModelFilter();
+    modelFilter.version = 1;
+    this.mongoApiClientService.deleteOneModel(modelFilter).subscribe(result => {
       if (result) {
-        console.log(`insertManyModels result: ${JSON.stringify(result)}`);
+        console.log(`${result.deletedCount} document(s) deleted`);
       }
+    }, error => {
+      console.log(error);
     });
   }
 }

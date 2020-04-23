@@ -7,6 +7,8 @@ import {mongoApiRouter} from './api/routers/mongo.api.router';
 import {config} from 'dotenv';
 import {Db} from 'mongodb';
 import {createServer} from 'http';
+import e from "cors";
+
 
 //Import .env configuration file
 config();
@@ -14,11 +16,14 @@ config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
+//Cors configuration for access control for webservices: authorize all clients to use the webservices, all methods (get, put, ...), headers, ...
+app.use(e());
+// app.use(function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+//     next();
+// });
 //API routers
 app.use('/', mongoApiRouter);
 

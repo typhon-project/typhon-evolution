@@ -6,3 +6,39 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .invisible {
   display: none;
 }
+
+.node {
+  fill: transparent;
+  cursor: pointer;
+  stroke: #0F7DC2;
+  stroke-width: 2px;
+}
+
+.node:hover {
+  stroke-width: 3px;
+}
+
+.node--leaf {
+  fill: blue;
+  stroke-width: 1px;
+}
+
+.node--leaf:hover {
+  stroke-width: 3px;
+}
+
+.label {
+  font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+}
+
+label {
+  margin-bottom: 0 !important;
+}
+
+.label,
+.node--root {
+  pointer-events: none;
+}
+

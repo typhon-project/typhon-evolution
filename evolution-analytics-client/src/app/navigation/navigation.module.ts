@@ -7,6 +7,8 @@ import {ChartsModule} from '../charts/charts.module';
 import {TimeradiobuttonModule} from '../timeradiobutton/timeradiobutton.module';
 import {LineChartModule} from '../line-chart/line-chart.module';
 import {QueryTableModule} from '../query-table/query-table.module';
+import {AppAreaChartModule} from '../app-area-chart/app-area-chart.module';
+import {D3ChartsModule} from '../d3-charts/d3-charts.module';
 
 
 
@@ -22,7 +24,9 @@ import {QueryTableModule} from '../query-table/query-table.module';
     ChartsModule,
     TimeradiobuttonModule,
     LineChartModule,
-    QueryTableModule
+    QueryTableModule,
+    AppAreaChartModule,
+    D3ChartsModule
   ]
 })
 export class NavigationModule { }

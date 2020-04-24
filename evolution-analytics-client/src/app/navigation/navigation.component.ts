@@ -1,7 +1,10 @@
-import {Component} from '@angular/core';
+import {AfterContentInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AreaChartComponent} from '../app-area-chart/app-area-chart.component';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-navigation',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './navigation.component.html',
   styles: [`
     .close {
@@ -17,7 +20,14 @@ import {Component} from '@angular/core';
     }
   `]
 })
-export class NgbdNavDynamicComponent {
+export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
+  @ViewChild('areaChart', { static: true }) chart: AreaChartComponent;
+
+  chartData = [];
+
+
+
+
   ENTITY_OBJECT = 0;
   CRUD_OBJECT = 1;
 
@@ -69,4 +79,62 @@ export class NgbdNavDynamicComponent {
     this.tabs.push(this.counter++);
     /*TODO call WS*/
   }
+
+  ngOnInit(): void {
+  }
+
+  ngAfterContentInit(): void {
+    this.generateData();
+    console.log('init nav:' + this.chartData);
+  }
+
+  generateData() {
+    this.chartData = [];
+    const meanPrepTime = randomInt(10, 11);
+    const meanWaitTime = randomInt(8, 9);
+    const meanTransitTime = randomInt(9, 10);
+
+    const meanTotalTime = meanPrepTime + meanWaitTime + meanTransitTime;
+
+    const sigmaPrepTime = randomInt(1, 1);
+    const sigmaWaitTime = randomInt(2, 3);
+    const sigmaTransitTime = randomInt(1, 2);
+
+    const sigmaTotalTime = Math.floor(
+      Math.sqrt(Math.pow(sigmaPrepTime, 2) +
+        Math.pow(sigmaWaitTime, 2) +
+        Math.pow(sigmaTransitTime, 2))
+    );
+
+    const prandomizer = d3.randomNormal(meanPrepTime, sigmaPrepTime);
+    const wrandomizer = d3.randomNormal(meanWaitTime, sigmaWaitTime);
+    const trandomizer = d3.randomNormal(meanTransitTime, sigmaTransitTime);
+
+    const ptimes = [];
+    const wtimes = [];
+    const ttimes = [];
+    const totaltimes = [];
+    for (let i = 0; i < 500; i++) {
+      const p = Math.floor(prandomizer());
+      const w = Math.floor(wrandomizer());
+      const t = Math.floor(trandomizer());
+      const total = p + w + t;
+      ptimes.push(p);
+      wtimes.push(w);
+      ttimes.push(t);
+      totaltimes.push(total);
+    }
+    this.chartData.push(ptimes);
+    this.chartData.push(wtimes);
+    this.chartData.push(ttimes);
+    this.chartData.push(totaltimes);
+  }
+
+  getTabComp() {
+    return this;
+  }
+}
+
+export function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

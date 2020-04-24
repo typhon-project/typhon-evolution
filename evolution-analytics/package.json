@@ -19,6 +19,7 @@
   "author": "UNamur",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "evolution-analytics-model": "file:../evolution-analytics-model",
     "express": "^4.17.1",
@@ -26,6 +27,7 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.3",
     "@types/mongodb": "^3.5.2",
     "@types/node": "^13.9.3",

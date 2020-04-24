@@ -92,91 +92,92 @@ export class MongoApiClientService {
   /**
    * Insert one methods (the observable contains the result status number 0-1)
    */
-  public insertOneNormalizedQuery(body: NormalizedQuery): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, body);
+  public insertOneNormalizedQuery(body: NormalizedQuery): Observable<NormalizedQuery> {
+    return this.http.post<NormalizedQuery>(this.END_POINT + this.INSERT + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, body);
   }
-  public insertOneQuery(body: Query): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT + MongoCollection.QUERY_COLLECTION_NAME, body);
+  public insertOneQuery(body: Query): Observable<Query> {
+    return this.http.post<Query>(this.END_POINT + this.INSERT + MongoCollection.QUERY_COLLECTION_NAME, body);
   }
-  public insertOneEntity(body: Entity): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT + MongoCollection.ENTITY_COLLECTION_NAME, body);
+  public insertOneEntity(body: Entity): Observable<Entity> {
+    return this.http.post<Entity>(this.END_POINT + this.INSERT + MongoCollection.ENTITY_COLLECTION_NAME, body);
   }
-  public insertOneEntityHistory(body: EntityHistory): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, body);
+  public insertOneEntityHistory(body: EntityHistory): Observable<EntityHistory> {
+    return this.http.post<EntityHistory>(this.END_POINT + this.INSERT + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, body);
   }
-  public insertOneModel(body: Model): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT + MongoCollection.MODEL_COLLECTION_NAME, body);
+  public insertOneModel(body: Model): Observable<Model> {
+    return this.http.post<Model>(this.END_POINT + this.INSERT + MongoCollection.MODEL_COLLECTION_NAME, body);
   }
 
   /**
    * Insert many methods (the observable contains the result status number 0-1)
    */
-  public insertManyNormalizedQueries(body: NormalizedQuery[]): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT_MANY + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, body);
+  public insertManyNormalizedQueries(body: NormalizedQuery[]): Observable<NormalizedQuery[]> {
+    return this.http.post<NormalizedQuery[]>(this.END_POINT + this.INSERT_MANY + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, body);
   }
-  public insertManyQueries(body: Query[]): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT_MANY + MongoCollection.QUERY_COLLECTION_NAME, body);
+  public insertManyQueries(body: Query[]): Observable<Query[]> {
+    return this.http.post<Query[]>(this.END_POINT + this.INSERT_MANY + MongoCollection.QUERY_COLLECTION_NAME, body);
   }
-  public insertManyEntities(body: Entity[]): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT_MANY + MongoCollection.ENTITY_COLLECTION_NAME, body);
+  public insertManyEntities(body: Entity[]): Observable<Entity[]> {
+    return this.http.post<Entity[]>(this.END_POINT + this.INSERT_MANY + MongoCollection.ENTITY_COLLECTION_NAME, body);
   }
-  public insertManyEntitiesHistories(body: EntityHistory[]): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT_MANY + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, body);
+  public insertManyEntitiesHistories(body: EntityHistory[]): Observable<EntityHistory[]> {
+    return this.http.post<EntityHistory[]>(this.END_POINT + this.INSERT_MANY + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, body);
   }
-  public insertManyModels(body: Model[]): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.INSERT_MANY + MongoCollection.MODEL_COLLECTION_NAME, body);
+  public insertManyModels(body: Model[]): Observable<Model[]> {
+    return this.http.post<Model[]>(this.END_POINT + this.INSERT_MANY + MongoCollection.MODEL_COLLECTION_NAME, body);
   }
 
   /**
-   * Update one methods (the observable contains the result status number 0-1)
+   * Update one methods
    */
-  public updateOneNormalizedQuery(filter: NormalizedQueryFilter, document: NormalizedQuery): Observable<number> {
-    return this.http.post<number>(
+  public updateOneNormalizedQuery(normalizedQueryFilter: NormalizedQueryFilter, normalizedQueryDocument: NormalizedQueryFilter)
+    : Observable<any> {
+    return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME,
-      `{ filter: ${JSON.stringify(filter)}, document: ${JSON.stringify(document)}`
+      { filter: normalizedQueryFilter, document: normalizedQueryDocument }
     );
   }
-  public updateOneQuery(filter: QueryFilter, document: Query): Observable<number> {
-    return this.http.post<number>(
+  public updateOneQuery(queryFilter: QueryFilter, queryDocument: QueryFilter): Observable<any> {
+    return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.QUERY_COLLECTION_NAME,
-      `{ filter: ${JSON.stringify(filter)}, document: ${JSON.stringify(document)}`
+      { filter: queryFilter, document: queryDocument }
     );
   }
-  public updateOneEntity(filter: EntityFilter, document: Entity): Observable<number> {
-    return this.http.post<number>(
+  public updateOneEntity(entityFilter: EntityFilter, entityDocument: EntityFilter): Observable<any> {
+    return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.ENTITY_COLLECTION_NAME,
-      `{ filter: ${JSON.stringify(filter)}, document: ${JSON.stringify(document)}`
+      { filter: entityFilter, document: entityDocument }
     );
   }
-  public updateOneEntityHistory(filter: EntityHistoryFilter, document: EntityHistory): Observable<number> {
-    return this.http.post<number>(
+  public updateOneEntityHistory(entityHistoryFilter: EntityHistoryFilter, entityHistoryDocument: EntityHistoryFilter): Observable<any> {
+    return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME,
-      `{ filter: ${JSON.stringify(filter)}, document: ${JSON.stringify(document)}`
+      { filter: entityHistoryFilter, document: entityHistoryDocument }
     );
   }
-  public updateOneModel(filter: ModelFilter, document: Model): Observable<number> {
-    return this.http.post<number>(
+  public updateOneModel(modelFilter: ModelFilter, modelDocument: ModelFilter): Observable<any> {
+    return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.MODEL_COLLECTION_NAME,
-      `{ filter: ${JSON.stringify(filter)}, document: ${JSON.stringify(document)}`
+      { filter: modelFilter, document: modelDocument }
     );
   }
 
   /**
-   * Delete one methods (the observable contains the result status number 0-1)
+   * Delete one methods
    */
-  public deleteOneNormalizedQuery(filter: NormalizedQueryFilter): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.DELETE + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, filter);
+  public deleteOneNormalizedQuery(filter: NormalizedQueryFilter): Observable<any> {
+    return this.http.put<any>(this.END_POINT + this.DELETE + MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME, filter);
   }
-  public deleteOneQuery(filter: QueryFilter): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.DELETE + MongoCollection.QUERY_COLLECTION_NAME, filter);
+  public deleteOneQuery(filter: QueryFilter): Observable<any> {
+    return this.http.put<any>(this.END_POINT + this.DELETE + MongoCollection.QUERY_COLLECTION_NAME, filter);
   }
-  public deleteOneEntity(filter: EntityFilter): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.DELETE + MongoCollection.ENTITY_COLLECTION_NAME, filter);
+  public deleteOneEntity(filter: EntityFilter): Observable<any> {
+    return this.http.put<any>(this.END_POINT + this.DELETE + MongoCollection.ENTITY_COLLECTION_NAME, filter);
   }
-  public deleteOneEntityHistory(filter: EntityHistoryFilter): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.DELETE + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, filter);
+  public deleteOneEntityHistory(filter: EntityHistoryFilter): Observable<any> {
+    return this.http.put<any>(this.END_POINT + this.DELETE + MongoCollection.ENTITY_HISTORY_COLLECTION_NAME, filter);
   }
-  public deleteOneModel(filter: ModelFilter): Observable<number> {
-    return this.http.post<number>(this.END_POINT + this.DELETE + MongoCollection.MODEL_COLLECTION_NAME, filter);
+  public deleteOneModel(filter: ModelFilter): Observable<any> {
+    return this.http.put<any>(this.END_POINT + this.DELETE + MongoCollection.MODEL_COLLECTION_NAME, filter);
   }
 }

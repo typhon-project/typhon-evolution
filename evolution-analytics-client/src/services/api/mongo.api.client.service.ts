@@ -137,7 +137,7 @@ export class MongoApiClientService {
       { filter: normalizedQueryFilter, document: normalizedQueryDocument }
     );
   }
-  public updateOneQuery(queryFilter: QueryFilter, queryDocument: QueryFilter): Observable<string> {
+  public updateOneQuery(queryFilter: QueryFilter, queryDocument: QueryFilter): Observable<any> {
     return this.http.put<any>(
       this.END_POINT + this.UPDATE + MongoCollection.QUERY_COLLECTION_NAME,
       { filter: queryFilter, document: queryDocument }

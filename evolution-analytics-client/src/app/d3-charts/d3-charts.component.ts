@@ -83,7 +83,8 @@ export class D3ChartsComponent implements OnInit {
       .append('div')
       .style('position', 'absolute')
       .style('z-index', '10')
-      .style('visibility', 'hidden');
+      .style('visibility', 'hidden')
+      .style('margin-left', '20px');
 
 
     const data = this.loadData();
@@ -139,7 +140,8 @@ export class D3ChartsComponent implements OnInit {
       (root as d3.HierarchyCircularNode<any>).r * 2 + margin]);
 
     function zoom(d) {
-
+      console.log(d);
+      console.log(d.data.size);
       const focus0 = focus;
       focus = d;
 
@@ -157,16 +159,19 @@ export class D3ChartsComponent implements OnInit {
 
       transition.selectAll('text')
         .filter(function(n) {
-          return (n as d3.HierarchyCircularNode<unknown>).parent === focus || (this as any).style.display === 'inline';
+
+          return (n === focus && (n as any).data.size)
+            || (n as d3.HierarchyCircularNode<unknown>).parent === focus || (this as any).style.display === 'inline';
         })
-        .style('fill-opacity', n => (n as d3.HierarchyCircularNode<unknown>).parent === focus ? 1 : 0)
+        .style('fill-opacity', n => (n as d3.HierarchyCircularNode<unknown>).parent === focus ||
+        (n === focus && (n as any).data.size) ? 1 : 0)
         .on('start', function(n) {
-          if ((n as d3.HierarchyCircularNode<unknown>).parent === focus) {
+          if ((n as d3.HierarchyCircularNode<unknown>).parent === focus || (n === focus && (n as any).data.size)) {
             (this as any).style.display = 'inline';
           }
         })
         .on('end', function(n) {
-          if ((n as d3.HierarchyCircularNode<unknown>).parent !== focus) {
+          if ((n as d3.HierarchyCircularNode<unknown>).parent !== focus && (n !== focus || !(n as any).data.size)) {
             (this as any).style.display = 'none';
           }
         });

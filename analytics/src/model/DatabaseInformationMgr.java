@@ -44,7 +44,35 @@ import typhonml.RelationalDB;
 
 public class DatabaseInformationMgr {
 	private static Logger logger = Logger.getLogger(TyphonModel.class);
-	private static final String GET_DATABASES = "api/databases";
+	public static final String GET_DATABASES = "api/databases";
+	public static final String RELATIONALDB = "RELATIONALDB";
+	public static final String DOCUMENTDB = "DOCUMENTDB";
+	public static final String GRAPHDB = "GRAPHDB";
+	public static final String COLUMNDB = "COLUMNDB";
+	public static final String KEYVALUEDB = "KEYVALUEDB";
+	
+	public static String getDatatbaseType(Database database) {
+		if(database != null) {
+			if (database instanceof RelationalDB) {
+				return RELATIONALDB;
+			}
+			if (database instanceof DocumentDB) {
+				return DOCUMENTDB;
+			}
+			if (database instanceof GraphDB) {
+				return GRAPHDB;
+
+			}
+			if (database instanceof ColumnDB) {
+				return COLUMNDB;
+			}
+			if (database instanceof KeyValueDB) {
+				return KEYVALUEDB;
+			}
+		}
+		
+		return null;
+	}
 
 	public static Map<String, Long> getCurrentModelWithStats(TyphonModel m, WebTarget target, String auth) {
 

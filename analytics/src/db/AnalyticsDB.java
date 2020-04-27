@@ -35,7 +35,9 @@ import capture.mains.ConsumePostEvents;
 import capture.mains.Insert;
 import capture.mains.Join;
 import capture.mains.Query;
+import model.DatabaseInformationMgr;
 import model.TyphonModel;
+import typhonml.Database;
 import typhonml.Entity;
 
 import org.apache.log4j.Logger;
@@ -57,7 +59,7 @@ public class AnalyticsDB {
 		logger.info("New Typhon model was loaded: " + newModel.getVersion());
 
 		MongoCollection<Document> coll = database.getCollection(TYPHON_MODEL_COLLECTION);
-		
+
 		Document document = new Document();
 		document.put("version", newModel.getVersion());
 		document.put("date", new Date().getTime());
@@ -79,9 +81,13 @@ public class AnalyticsDB {
 //					   { _id: 1 },
 //					   { $push: { scores: 89 } }
 //					)
+			Database db = newModel.getEntityDatabase(entityName);
+			String dbName = db.getName();
+			String dbType = DatabaseInformationMgr.getDatatbaseType(db);
 
 			BasicDBObject updateQuery = (BasicDBObject) JSON.parse("{ $push: { versions: " + newModel.getVersion()
-					+ " }, $set: {latestVersion: " + newModel.getVersion() + "} }");
+					+ " }, $set: {latestVersion: " + newModel.getVersion() + "}, $set: {dbName: '" + dbName
+					+ "'} , $set: {dbType: '" + dbType + "'}}");
 			UpdateResult ur = entityColl.updateOne(searchQuery, updateQuery);
 			long nbOfModifiedDocs = ur.getModifiedCount();
 
@@ -90,6 +96,8 @@ public class AnalyticsDB {
 				Document entityDoc = new Document();
 				entityDoc.put("name", entityName);
 				entityDoc.put("latestVersion", newModel.getVersion());
+				entityDoc.put("dbName", dbName);
+				entityDoc.put("dbType", dbType);
 				List<Integer> versions = new ArrayList<Integer>();
 				versions.add(newModel.getVersion());
 				entityDoc.put("versions", versions);
@@ -111,23 +119,22 @@ public class AnalyticsDB {
 		}
 
 	}
-	
+
 	private static void createIndex(MongoCollection<Document> coll, boolean unique, String... attributes) {
-		
-		
+
 		String index = "{";
 		int i = 0;
-		for(String attr : attributes) {
-			if(i > 0)
+		for (String attr : attributes) {
+			if (i > 0)
 				index += ", ";
 			index += attr + ": 1";
 			i++;
 		}
-		
+
 		index += "}";
-		if(unique)
+		if (unique)
 			index += ", {unique: true}";
-		
+
 		logger.debug("Created index: " + index);
 		coll.createIndex((BasicDBObject) JSON.parse(index));
 	}
@@ -141,25 +148,25 @@ public class AnalyticsDB {
 			mongoClient = new MongoClient(uri);
 			database = mongoClient.getDatabase(dbName);
 			logger.info("Connected to Analytics DB");
-			
+
 			MongoCollection<Document> coll = database.getCollection(TYPHON_MODEL_COLLECTION);
 			createIndex(coll, true, "version");
-			
+
 			coll = database.getCollection(TYPHON_ENTITY_COLLECTION);
 			createIndex(coll, true, "name");
-			
+
 			coll = database.getCollection(TYPHON_ENTITY_HISTORY_COLLECTION);
 			createIndex(coll, true, "name", "updateDate");
 			createIndex(coll, false, "name");
 			createIndex(coll, false, "updateDate");
-			
+
 			coll = database.getCollection(QL_NORMALIZED_QUERY_COLLECTION);
 			createIndex(coll, true, "normalizedForm");
-			
+
 			coll = database.getCollection(QL_QUERY_COLLECTION);
 			createIndex(coll, false, "normalizedQueryId");
 			createIndex(coll, false, "executionDate");
-			
+
 			return true;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to connect the Analytics DB\nCause:");
@@ -394,7 +401,7 @@ public class AnalyticsDB {
 
 	private static void checkIfModelIsUpToDate() {
 		TyphonModel.getCurrentModelWithStats(false);
-		
+
 	}
 
 	private static Document getEntityHistory(MongoCollection<Document> coll, String entityName, int version) {

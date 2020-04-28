@@ -18,7 +18,15 @@ export class MongoAnalyticsApiController {
         mongoHelper.connect(MONGO_DB_URL).then(() => {
             const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
             const mongoService = new MongoService();
-            return result.send(mongoService.getSchema(db));
+            mongoService.getSchema(db).then(schema => {
+                if (schema != null) {
+                    result.send(schema);
+                } else {
+                    result.send('Error while getting the polystore schema. Check backend logs')
+                }
+            }).catch(exception => {
+                console.error(exception)
+            });
         }).catch(exception => {
             console.error(exception)
         }).finally(function () {

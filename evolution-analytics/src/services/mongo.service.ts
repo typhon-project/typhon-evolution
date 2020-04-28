@@ -66,37 +66,28 @@ export class MongoService {
         let entityCollection: Collection = db.collection(MongoCollection.ENTITY_COLLECTION_NAME);
         let entityHistoryCollection: Collection = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME);
         //Retrieve the latest version of the model
-        this.getModelLatestVersion(modelCollection).then(model => {
-            if (model != null) {
-                let modelLatestVersion = model.version;
-                console.log(`Latest model version: ${modelLatestVersion}`);
-                //Retrieve the entities with the latest version of the model
-                this.getEntitiesByVersion(entityCollection, modelLatestVersion).then(entities => {
-                    if (entities != null) {
-                        //Retrieve the entities histories with the latest version of the model
-                        this.getEntitiesHistoryByNamesAndVersion(entityHistoryCollection, entities.map(entity => entity.name), modelLatestVersion).then(entitiesHistory => {
-                            if (entitiesHistory != null) {
-                                //Build the polystore schema
-                                return this.buildSchema(entities, entitiesHistory);
-                            } else {
-                                console.log(`No entities history found for entity names '${entities.map(entity => entity.name)}' and model version: ${modelLatestVersion}`);
-                            }
-                        }).catch(exception => {
-                            console.log(exception);
-                        });
-                    } else {
-                        console.log(`No entities found for model version: ${modelLatestVersion}`);
-                    }
-                }).catch(exception => {
-                    console.log(exception);
-                });
+        const model: Model = await this.getModelLatestVersion(modelCollection);
+        if (model != null) {
+            const modelLatestVersion = model.version;
+            console.log(`Latest model version: ${modelLatestVersion}`);
+            //Retrieve the entities with the latest version of the model
+            const entities: Entity[] = await this.getEntitiesByVersion(entityCollection, modelLatestVersion);
+            if (entities != null) {
+                //Retrieve the entities histories with the latest version of the model
+                const entitiesHistory: EntityHistory[] = await this.getEntitiesHistoryByNamesAndVersion(entityHistoryCollection, entities.map(entity => entity.name), modelLatestVersion);
+                if (entitiesHistory != null) {
+                    //Build the polystore schema
+                    return await this.buildSchema(entities, entitiesHistory);
+                } else {
+                    console.log(`No entities history found for entity names '${entities.map(entity => entity.name)}' and model version: ${modelLatestVersion}`);
+                }
             } else {
-                console.log(`No model version found in ${modelCollection} collection`);
+                console.log(`No entities found for model version: ${modelLatestVersion}`);
             }
-            return [];
-        }).catch(exception => {
-            console.log(exception);
-        });
+        } else {
+            console.log(`No model version found in ${modelCollection} collection`);
+        }
+        return [];
     }
 
     public async getModelLatestVersion(modelCollection: Collection): Promise<Model> {
@@ -149,7 +140,7 @@ export class MongoService {
             console.log(schema);
             console.log('With entities details:');
             schema.forEach(entity => { console.log(`name: ${entity.name}, type: ${entity.type}, entities: ${JSON.stringify(entity.entities)}`)});
-            return schema;
+            return await schema;
         }
         return null;
     }

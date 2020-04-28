@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     this.socketService.setupSocketConnection();
     // this.testMongoApiClientService();
     this.mongoApiClientService.getDatabaseSchema().subscribe(schema => {
-      console.log(`Schema`);
+      console.log('Schema:');
       console.log(schema);
     });
   }

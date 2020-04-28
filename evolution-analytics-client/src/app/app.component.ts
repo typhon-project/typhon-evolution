@@ -20,8 +20,6 @@ import {MongoApiClientService} from '../services/api/mongo.api.client.service';
 })
 export class AppComponent implements OnInit {
   title = 'Evolution Analytics';
-  userData = [423, 473, 523, 573, 623, 673, 723];
-  orderData = [463, 513, 563, 613, 663, 713, 763];
 
   constructor(private mongoApiClientService: MongoApiClientService, private socketService: SocketioService) {
   }
@@ -29,6 +27,10 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.socketService.setupSocketConnection();
     // this.testMongoApiClientService();
+    this.mongoApiClientService.getDatabaseSchema().subscribe(schema => {
+      console.log(`Schema`);
+      console.log(schema);
+    });
   }
 
   private testMongoApiClientService() {
@@ -150,7 +152,7 @@ export class AppComponent implements OnInit {
         console.log(`insertOneQuery result: ${JSON.stringify(insertOneQuery)}`);
       }
     });
-    const entity: Entity = new Entity('abodart', 1, [1]);
+    const entity: Entity = new Entity('abodart', 1, 'DocumentDatabase', '', [1]);
     this.mongoApiClientService.insertOneEntity(entity).subscribe(insertOneEntity => {
       if (insertOneEntity) {
         console.log(`insertOneEntity result: ${JSON.stringify(insertOneEntity)}`);
@@ -202,7 +204,7 @@ export class AppComponent implements OnInit {
         console.log(`insertManyQueries result: ${JSON.stringify(insertManyQueries)}`);
       }
     });
-    const entities: Entity[] = [new Entity('abodart', 1, [1])];
+    const entities: Entity[] = [new Entity('abodart', 1, 'DocumentDatabase', '', [1])];
     this.mongoApiClientService.insertManyEntities(entities).subscribe(insertManyEntities => {
       if (insertManyEntities) {
         console.log(`insertManyEntities result: ${JSON.stringify(insertManyEntities)}`);

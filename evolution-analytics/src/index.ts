@@ -3,7 +3,8 @@ import SocketIOStatic from 'socket.io';
 import {MongoHelper} from './helpers/mongo.helper';
 import {MongoService} from './services/mongo.service';
 import {SocketService} from './services/socket.service';
-import {mongoApiRouter} from './api/routers/mongo.api.router';
+import {mongoCrudApiRouter} from './api/routers/mongo.crud.api.router';
+import {mongoAnalyticsApiRouter} from "./api/routers/mongo.analytics.api.router";
 import {config} from 'dotenv';
 import {Db} from 'mongodb';
 import {createServer} from 'http';
@@ -18,14 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 //Cors configuration for access control for webservices: authorize all clients to use the webservices, all methods (get, put, ...), headers, ...
 app.use(e());
-// app.use(function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-//     next();
-// });
 //API routers
-app.use('/', mongoApiRouter);
+app.use('/', mongoCrudApiRouter);
+app.use('/', mongoAnalyticsApiRouter);
 
 const httpServer = createServer(app);
 const io = SocketIOStatic(httpServer);

@@ -12,18 +12,19 @@ import {SocketioService} from '../../services/socket/socketio.service';
 })
 export class D3ChartsComponent implements OnInit {
   @Input() screenPercentage: number;
+  @Input() svgId: string;
+  waitingDiv: boolean;
 
   constructor(private mongoApiClientService: MongoApiClientService) {
+    this.waitingDiv = false;
   }
 
   ngOnInit() {
+
     const width = window.innerWidth * (this.screenPercentage / 100);
 
-    document.getElementById('typhonSchema').setAttribute('width', width + '');
-    document.getElementById('typhonSchema').setAttribute('height', width + '');
-
-
-
+    document.getElementById(this.svgId).setAttribute('width', width + '');
+    document.getElementById(this.svgId).setAttribute('height', width + '');
 
     this.drawCirclePacking();
   }
@@ -47,7 +48,7 @@ export class D3ChartsComponent implements OnInit {
   drawCirclePacking() {
 
 
-    const svg = d3.select('svg');
+    const svg = d3.select('svg#' + this.svgId);
     const margin = 20;
     const diameter = +svg.attr('width');
     const g = svg.append('g')
@@ -81,6 +82,7 @@ export class D3ChartsComponent implements OnInit {
       const data = {name: 'test', children: schema};
 
       this.createChart(data, pack, g, tooltip, svg, margin, diameter);
+      this.waitingDiv = true;
     });
 
 

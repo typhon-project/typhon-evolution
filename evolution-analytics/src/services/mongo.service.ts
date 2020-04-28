@@ -77,7 +77,7 @@ export class MongoService {
                 const entitiesHistory: EntityHistory[] = await this.getEntitiesHistoryByNamesAndVersion(entityHistoryCollection, entities.map(entity => entity.name), modelLatestVersion);
                 if (entitiesHistory != null) {
                     //Build the polystore schema
-                    return await this.buildSchema(entities, entitiesHistory);
+                    return this.buildSchema(entities, entitiesHistory);
                 } else {
                     console.log(`No entities history found for entity names '${entities.map(entity => entity.name)}' and model version: ${modelLatestVersion}`);
                 }
@@ -120,7 +120,7 @@ export class MongoService {
         return null;
     }
 
-    private async buildSchema(entities: Entity[], entitiesHistory: EntityHistory[]) {
+    private buildSchema(entities: Entity[], entitiesHistory: EntityHistory[]) {
         if (entities != null && entitiesHistory != null) {
             let dbs = entities
                 .filter((entity, index) => {
@@ -140,7 +140,7 @@ export class MongoService {
             console.log(schema);
             console.log('With entities details:');
             schema.forEach(entity => { console.log(`name: ${entity.name}, type: ${entity.type}, entities: ${JSON.stringify(entity.entities)}`)});
-            return await schema;
+            return schema;
         }
         return null;
     }

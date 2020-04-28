@@ -1,7 +1,7 @@
 import {MongoService} from '../../services/mongo.service';
 import {Request, Response} from 'express';
 import {MongoHelper} from '../../helpers/mongo.helper';
-import {Db} from 'mongodb';
+import {Db, MongoClientOptions} from 'mongodb';
 import {config} from 'dotenv';
 
 //Import .env configuration file
@@ -10,13 +10,18 @@ config();
 //Retrieve environment variables from .env file
 const MONGO_DB_URL = process.env.MONGO_DB_URL;
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+const MONGO_DB_USERNAME = process.env.MONGO_DB_USERNAME;
+const MONGO_DB_PWD = process.env.MONGO_DB_PWD;
 
 export class MongoAnalyticsApiController {
 
     public static getSchema = (request: Request, result: Response) => {
+        const options: MongoClientOptions =  {auth: {user: 'username', password: 'password'}};
         const mongoHelper = new MongoHelper();
-        mongoHelper.connect(MONGO_DB_URL).then(() => {
+        mongoHelper.connectWithAuthentification(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD).then(() => {
+            console.log('after auth');
             const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+            console.log('db retrieved:' + db);
             const mongoService = new MongoService();
             mongoService.getSchema(db).then(schema => {
                 if (schema != null) {

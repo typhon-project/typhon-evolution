@@ -33,9 +33,11 @@ const socketService = new SocketService();
 //Retrieve environment variables from .env file
 const MONGO_DB_URL = process.env.MONGO_DB_URL;
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+const MONGO_DB_USERNAME = process.env.MONGO_DB_USERNAME;
+const MONGO_DB_PWD = process.env.MONGO_DB_PWD;
 const PORT = process.env.SERVER_PORT;
 
-mongoHelper.connect(MONGO_DB_URL).then(async () => {
+mongoHelper.connectWithAuthentification(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD).then(async () => {
     const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
     // const collection: mongodb.Collection = mongoService.getCollection(db, MONGO_COLLECTION_NAME);
     //mongoService.insertOne(collection, {id: 1, query: 'from User u, Order o select u.orders where u.id = ?'});

@@ -62,9 +62,9 @@ export class MongoService {
      */
     public async getSchema(db: Db) {
         console.log('Get the latest version of the polystore schema');
-        let modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
-        let entityCollection: Collection = db.collection(MongoCollection.ENTITY_COLLECTION_NAME);
-        let entityHistoryCollection: Collection = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME);
+        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+        const entityCollection: Collection = db.collection(MongoCollection.ENTITY_COLLECTION_NAME);
+        const entityHistoryCollection: Collection = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME);
         //Retrieve the latest version of the model
         const model: Model = await this.getModelLatestVersion(modelCollection);
         if (model != null) {
@@ -87,7 +87,7 @@ export class MongoService {
         } else {
             console.log(`No model version found in ${modelCollection} collection`);
         }
-        return [];
+        return null;
     }
 
     public async getModelLatestVersion(modelCollection: Collection): Promise<Model> {

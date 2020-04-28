@@ -11,6 +11,7 @@ export class PieChartComponent implements OnInit {
   @Input() public chartTitle: string;
   @Input() private navigationTab: NgbdNavDynamicComponent;
   @Input() public objectType: number;
+  @Input() public size = 5;
 
   public chartType = 'pie';
 
@@ -22,8 +23,8 @@ export class PieChartComponent implements OnInit {
 
   public chartColors: Array<any> = [
     {
-      backgroundColor: ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-      hoverBackgroundColor: ['#FF5A5E', '#5AD3D1', '#FFC870', '#A8B3C5', '#616774'],
+      backgroundColor: this.getColors(this.size),
+      hoverBackgroundColor: this.getColors(this.size + 1).slice(1),
       borderWidth: 2,
     }
   ];
@@ -49,6 +50,20 @@ export class PieChartComponent implements OnInit {
   }
 
   public chartHovered(e: any): void {
+  }
+
+  getColors(size) {
+    const colors = [];
+    let i = 0;
+    const minGreen = 30;
+    const maxGreen = 95;
+    const interval = Math.round((maxGreen - minGreen) / size);
+    while (i < size) {
+      const green = 30 + (interval * i);
+      colors.push('hsl(194, 100%, ' + green + '%)');
+      i++;
+    }
+    return colors;
   }
 
 

@@ -86,7 +86,6 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
   ngAfterContentInit(): void {
     this.generateData();
-    console.log('init nav:' + this.chartData);
   }
 
   generateData() {

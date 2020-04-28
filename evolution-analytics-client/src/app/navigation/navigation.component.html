@@ -5,20 +5,28 @@
       Schema
     </a>
     <ng-template ngbNavContent>
-      <div style="position: absolute; display:inline-block; width: 60%; height: 100%; border-right: 3px dotted black; vertical-align: top;">
+      <div style="position: absolute; display:inline-block; width: 60%; border-right: 2px solid #dee2e6; vertical-align: top;">
         <app-time-radio-button [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
-
-        <div [ngClass]="{'invisible': timeEvolutionMode}" style="text-align:center; margin-top: 50px;">
-          <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
-          <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
-          <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+        <div [ngClass]="{'invisible': timeEvolutionMode}">
+          <div style="text-align:center; margin-top: 50px;">
+            <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+          </div>
+          <div style="text-align:center; margin-top: 20px;">
+            <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+          </div>
         </div>
 
-        <div [ngClass]="{'invisible': !timeEvolutionMode}" style="text-align:center; margin-top: 50px;">
-          <app-line-chart [chartTitle]="'Entity size over time'"></app-line-chart>
-          <app-line-chart [chartTitle]="'CRUD operation distribution over time'"></app-line-chart>
-          <app-line-chart [chartTitle]="'Proportion of queried entities over time'"></app-line-chart>
+        <div [ngClass]="{'invisible': !timeEvolutionMode}">
+          <div style="text-align:center; margin-top: 50px;">
+            <app-line-chart [chartTitle]="'Entity size over time'"></app-line-chart>
+            <app-line-chart [chartTitle]="'CRUD operation distribution over time'"></app-line-chart>
+          </div>
+          <div style="text-align:center; margin-top: 20px;">
+            <app-line-chart [chartTitle]="'Proportion of queried entities over time'"></app-line-chart>
+          </div>
         </div>
+
       </div>
       <div id="chartContainer" style="display:inline-block; width: 40%; margin-left: 60%; padding-left: 20px">
         <app-d3-charts [screenPercentage]=40></app-d3-charts>

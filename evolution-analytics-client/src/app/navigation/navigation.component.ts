@@ -6,6 +6,7 @@ import * as d3 from 'd3';
   selector: 'app-navigation',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.scss'],
   styles: [`
     .close {
       font-size: 1.4rem;

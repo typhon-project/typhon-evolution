@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import * as d3 from 'd3';
 import {randomInt} from '../navigation/navigation.component';
+import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+import {SocketioService} from '../../services/socket/socketio.service';
 
 @Component({
   selector: 'app-d3-charts',
@@ -10,15 +12,19 @@ import {randomInt} from '../navigation/navigation.component';
 })
 export class D3ChartsComponent implements OnInit {
   @Input() screenPercentage: number;
+  @Input() svgId: string;
+  waitingDiv: boolean;
+
+  constructor(private mongoApiClientService: MongoApiClientService) {
+    this.waitingDiv = false;
+  }
 
   ngOnInit() {
+
     const width = window.innerWidth * (this.screenPercentage / 100);
 
-    document.getElementById('typhonSchema').setAttribute('width', width + '');
-    document.getElementById('typhonSchema').setAttribute('height', width + '');
-
-
-
+    document.getElementById(this.svgId).setAttribute('width', width + '');
+    document.getElementById(this.svgId).setAttribute('height', width + '');
 
     this.drawCirclePacking();
   }
@@ -39,35 +45,10 @@ export class D3ChartsComponent implements OnInit {
 
   }
 
-  loadData() {
-    const dbs = randomInt(1, 10);
-    const res = {name: 'test', children: []};
-
-
-    let i = 0;
-    while (i < dbs) {
-      const dbName = 'db_' + i;
-      const tables = randomInt(2, 50);
-      const db = {name: dbName, children: []};
-      res.children.push(db);
-      let j = 0;
-      while ( j < tables) {
-        const s = randomInt(1, 1000);
-        const table = {name: 'table' + i + '_' + j, size: s};
-        db.children.push(table);
-        j++;
-      }
-      i++;
-    }
-
-    return res;
-
-  }
-
   drawCirclePacking() {
 
 
-    const svg = d3.select('svg');
+    const svg = d3.select('svg#' + this.svgId);
     const margin = 20;
     const diameter = +svg.attr('width');
     const g = svg.append('g')
@@ -87,8 +68,22 @@ export class D3ChartsComponent implements OnInit {
       .style('margin-left', '20px');
 
 
-    const data = this.loadData();
-    this.createChart(data, pack, g, tooltip, svg, margin, diameter);
+
+    this.mongoApiClientService.getDatabaseSchema().subscribe(schema => {
+
+      for (const db of schema) {
+       db.children = db.entities;
+       delete db.entities;
+       for (const table of db.children) {
+         table.size = table.size + 1;
+       }
+      }
+
+      const data = {name: 'test', children: schema};
+
+      this.createChart(data, pack, g, tooltip, svg, margin, diameter);
+      this.waitingDiv = true;
+    });
 
 
   }
@@ -115,7 +110,18 @@ export class D3ChartsComponent implements OnInit {
         }
       })
       .on('mouseover', (d: any) => {
-        return tooltip.text(d.data.name).style('visibility', 'visible');
+        let name: string;
+        name = d.data.name;
+        if (d.data.size) {
+          name += ' (' + (d.data.size - 1) + ' records)';
+        }
+
+        if (d.data.type) {
+          name += ' (' + d.data.type + ')';
+        }
+
+
+        return tooltip.text(name).style('visibility', 'visible');
       })
       .on('mouseout', () => {
         return tooltip.style('visibility', 'hidden');

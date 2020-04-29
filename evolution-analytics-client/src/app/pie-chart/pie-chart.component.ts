@@ -1,5 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
+import {AppComponent} from '../app.component';
+import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+
 
 @Component({
   selector: 'app-pie-chart',
@@ -12,6 +15,8 @@ export class PieChartComponent implements OnInit {
   @Input() private navigationTab: NgbdNavDynamicComponent;
   @Input() public objectType: number;
   @Input() public size = 5;
+  @Input() public type;
+
 
   public chartType = 'pie';
 
@@ -21,17 +26,26 @@ export class PieChartComponent implements OnInit {
 
   public chartLabels: Array<any> = ['Red', 'Green', 'Yellow', 'Grey', 'Dark Grey'];
 
-  public chartColors: Array<any> = [
-    {
-      backgroundColor: this.getColors(this.size),
-      hoverBackgroundColor: this.getColors(this.size + 1).slice(1),
-      borderWidth: 2,
-    }
-  ];
+  public chartColors: Array<any> = this.getChartColors();
 
   public chartOptions: any = {
     responsive: true
   };
+
+  static SIZE(): string { return 'SIZE'; }
+
+  constructor(private mongoApiClientService: MongoApiClientService) {
+  }
+
+  getChartColors() {
+    return [
+      {
+        backgroundColor: this.getColors(this.size),
+        hoverBackgroundColor: this.getColors(this.size + 1).slice(1),
+        borderWidth: 2,
+      }
+    ];
+  }
 
   public chartClicked(e: any): void {
     if (e.active.length > 0) {
@@ -68,7 +82,62 @@ export class PieChartComponent implements OnInit {
 
 
   ngOnInit() {
-    this.navigationTab.charts.push(this);
+    if (this.objectType === this.navigationTab.CRUD_OBJECT) {
+      this.chartDatasets = [{data: [], label: this.chartTitle}];
+      this.chartLabels = ['Select', 'Insert', 'Update', 'Delete'];
+
+      this.mongoApiClientService.getCRUDOperationDistribution(0, Number.MAX_SAFE_INTEGER).subscribe(cruds => {
+        console.log('CRUDS:' + JSON.stringify(cruds));
+        const datasets = [{data: [], label: this.chartTitle}];
+
+        if (cruds != null && cruds.length === 1) {
+          datasets[0].data.push(cruds[0].selects);
+          datasets[0].data.push(cruds[0].inserts);
+          datasets[0].data.push(cruds[0].updates);
+          datasets[0].data.push(cruds[0].deletes);
+          console.log(JSON.stringify(datasets));
+
+          this.chartDatasets = datasets;
+          this.size = this.chartLabels.length;
+          this.chartColors = this.getChartColors();
+        }
+
+      });
+
+    } else {
+
+      if (this.type === PieChartComponent.SIZE() &&
+        this.objectType === this.navigationTab.ENTITY_OBJECT) {
+        this.chartDatasets = [{data: [], label: this.chartTitle}];
+        this.chartLabels = [];
+
+        this.mongoApiClientService.getDatabaseSchema().subscribe(schema => {
+
+          const datasets = [{data: [], label: this.chartTitle}];
+          const labels = [];
+          for (const db of schema) {
+            for (const entity of db.entities) {
+              const entityName = entity.name;
+              const entitySize = entity.size;
+
+
+              if (entitySize > 0) {
+                datasets[0].data.push(entitySize);
+                labels.push(entityName);
+              }
+            }
+          }
+
+          this.chartDatasets = datasets;
+          this.chartLabels = labels;
+          this.size = labels.length;
+          this.chartColors = this.getChartColors();
+        });
+
+      } else {
+        this.navigationTab.charts.push(this);
+      }
+    }
   }
 
 

@@ -53,6 +53,45 @@ export class MongoService {
     }
 
     /**
+     * @deprecated
+     * Retrieves the polystore schema in the latest version, and builds a JSON array as below:
+     * [
+     *     {name: RelationalDatabase, type: RELATIONALDB, entities: [{"name":"Product","size":0},{"name":"OrderProduct","size":0},{"name":"User","size":0},{"name":"CreditCard","size":0}]}
+     *     {name: 'DocumentDatabase' type: 'DOCUMENTDB', entities: [{"name":"Review","size":0},{"name":"Comment","size":0}]}
+     * ]
+     * @param db the database containing the polystore schema
+     */
+    // public async getSchema(db: Db) {
+    //     console.log('Get the latest version of the polystore schema');
+    //     const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+    //     const entityCollection: Collection = db.collection(MongoCollection.ENTITY_COLLECTION_NAME);
+    //     const entityHistoryCollection: Collection = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME);
+    //     //Retrieve the latest version of the model
+    //     const model: Model = await this.getModelLatestVersion(modelCollection);
+    //     if (model != null) {
+    //         const modelLatestVersion = model.version;
+    //         console.log(`Latest model version: ${modelLatestVersion}`);
+    //         //Retrieve the entities with the latest version of the model
+    //         const entities: Entity[] = await this.getEntitiesByVersion(entityCollection, modelLatestVersion);
+    //         if (entities != null) {
+    //             //Retrieve the entities histories with the latest version of the model
+    //             const entitiesHistory: EntityHistory[] = await this.getEntitiesHistoryByNamesAndVersion(entityHistoryCollection, entities.map(entity => entity.name), modelLatestVersion);
+    //             if (entitiesHistory != null) {
+    //                 //Build the polystore schema
+    //                 return this.buildSchema(entities, entitiesHistory);
+    //             } else {
+    //                 console.log(`No entities history found for entity names '${entities.map(entity => entity.name)}' and model version: ${modelLatestVersion}`);
+    //             }
+    //         } else {
+    //             console.log(`No entities found for model version: ${modelLatestVersion}`);
+    //         }
+    //     } else {
+    //         console.log(`No model version found in ${modelCollection} collection`);
+    //     }
+    //     return null;
+    // }
+
+    /**
      * Retrieves the polystore schema in the latest version, and builds a JSON array as below:
      * [
      *     {name: RelationalDatabase, type: RELATIONALDB, entities: [{"name":"Product","size":0},{"name":"OrderProduct","size":0},{"name":"User","size":0},{"name":"CreditCard","size":0}]}
@@ -63,27 +102,15 @@ export class MongoService {
     public async getSchema(db: Db) {
         console.log('Get the latest version of the polystore schema');
         const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
-        const entityCollection: Collection = db.collection(MongoCollection.ENTITY_COLLECTION_NAME);
-        const entityHistoryCollection: Collection = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME);
         //Retrieve the latest version of the model
         const model: Model = await this.getModelLatestVersion(modelCollection);
         if (model != null) {
             const modelLatestVersion = model.version;
             console.log(`Latest model version: ${modelLatestVersion}`);
-            //Retrieve the entities with the latest version of the model
-            const entities: Entity[] = await this.getEntitiesByVersion(entityCollection, modelLatestVersion);
-            if (entities != null) {
-                //Retrieve the entities histories with the latest version of the model
-                const entitiesHistory: EntityHistory[] = await this.getEntitiesHistoryByNamesAndVersion(entityHistoryCollection, entities.map(entity => entity.name), modelLatestVersion);
-                if (entitiesHistory != null) {
-                    //Build the polystore schema
-                    return this.buildSchema(entities, entitiesHistory);
-                } else {
-                    console.log(`No entities history found for entity names '${entities.map(entity => entity.name)}' and model version: ${modelLatestVersion}`);
-                }
-            } else {
-                console.log(`No entities found for model version: ${modelLatestVersion}`);
-            }
+            //Retrieve the latest version of the entities and their history
+            const databasesEntities = await this.getDatabasesEntitiesByVersion(db, modelLatestVersion);
+            //Build the polystore schema
+            return this.buildSchema(databasesEntities);
         } else {
             console.log(`No model version found in ${modelCollection} collection`);
         }
@@ -92,7 +119,7 @@ export class MongoService {
 
     public async getModelLatestVersion(modelCollection: Collection): Promise<Model> {
         if (modelCollection) {
-            let model: Cursor<Model> = modelCollection.find<Model>().sort({version: -1}).limit(1);
+            let model: Cursor<Model> = modelCollection.find<Model>({}).sort({version: -1}).limit(1);
             if (await model.hasNext()) {
                 return await model.next();
             }
@@ -112,7 +139,10 @@ export class MongoService {
 
     public async getEntitiesHistoryByNamesAndVersion(entityhistoryCollection: Collection, entityNames: string[], modelLatestVersion: number) {
         if (entityhistoryCollection) {
-            let entitiesHistory: Cursor<EntityHistory> = entityhistoryCollection.find<EntityHistory>({ name: { $in: entityNames }, 'modelVersion': modelLatestVersion });
+            let entitiesHistory: Cursor<EntityHistory> = entityhistoryCollection.find<EntityHistory>({
+                name: {$in: entityNames},
+                'modelVersion': modelLatestVersion
+            });
             if (await entitiesHistory.hasNext()) {
                 return await entitiesHistory.toArray();
             }
@@ -120,39 +150,79 @@ export class MongoService {
         return null;
     }
 
-    private buildSchema(entities: Entity[], entitiesHistory: EntityHistory[]) {
-        if (entities != null && entitiesHistory != null) {
-            let dbs = entities
-                .filter((entity, index) => {
-                    const dbType = entity.dbType;
-                    return index === entities.findIndex(obj => {
-                        return obj.dbType === dbType;
-                    });
-                })
-                .map(entity => { return { dbName: entity.dbName, dbType: entity.dbType }});
-            console.log('Polystore databases:');
-            console.log(dbs);
+    public async getDatabasesEntitiesByVersion(db, modelLatestVersion: number) {
+        const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
+            {$match: {latestVersion: modelLatestVersion}},
+            {
+                $lookup: {
+                    from: db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).collectionName,
+                    let: {entityVersion: '$latestVersion', entityName: '$name'},
+                    pipeline: [
+                        {
+                            $match:
+                                {
+                                    $expr:
+                                        {
+                                            $and:
+                                                [
+                                                    {$eq: ['$modelVersion', '$$entityVersion']},
+                                                    {$eq: ['$name', '$$entityName']}
+                                                ]
+                                        }
+                                }
+                        },
+                        {$sort: {'updateDate': -1}},
+                        {$limit: 1},
+                        {$project: {'dataSize': 1, 'modelVersion': 1, 'updateDate': 1}}
+                    ],
+                    as: 'entitieshistories'
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {$arrayElemAt: ["$entitieshistories", 0]}, "$$ROOT"
+                        ]
+                    }
+                }
+            },
+            {$project: {entitieshistories: 0, versions: 0, modelVersion: 0}},
+            {
+                $group: {
+                    _id: {dbName: '$dbName', dbType: '$dbType'},
+                    entities: {$push: "$$ROOT"}
+                }
+            }
+        ]);
+        if (await databaseEntities.hasNext()) {
+            return await databaseEntities.toArray();
+        }
+    }
+
+    private buildSchema(databaseEntities: any[]) {
+        if (databaseEntities != null) {
             let schema = [];
-            dbs.forEach(db => {
-                schema.push({name: db.dbName, type: db.dbType, entities: this.buildSchemaEntities(db, entities, entitiesHistory)});
+            databaseEntities.forEach(db => {
+                schema.push({
+                    name: db._id.dbName,
+                    type: db._id.dbType,
+                    entities: db.entities.map(entity => {
+                        return {
+                            name: entity.name,
+                            size: entity.dataSize
+                        }
+                    })
+                });
             });
             console.log('Polystore schema in the latest version:');
             console.log(schema);
             console.log('With entities details:');
-            schema.forEach(entity => { console.log(`name: ${entity.name}, type: ${entity.type}, entities: ${JSON.stringify(entity.entities)}`)});
+            schema.forEach(entity => {
+                console.log(`name: ${entity.name}, type: ${entity.type}, entities: ${JSON.stringify(entity.entities)}`)
+            });
             return schema;
         }
         return null;
-    }
-
-    private buildSchemaEntities(db, entities: Entity[], entitiesHistory: EntityHistory[]) {
-        return entities.filter((entity) => {
-            return entity.dbType === db.dbType
-        }).map(entity => {
-            return {
-                name: entity.name,
-                size: entitiesHistory.find(entityHistory => entityHistory.name === entity.name).dataSize
-            }
-        });
     }
 }

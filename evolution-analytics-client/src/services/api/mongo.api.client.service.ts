@@ -29,7 +29,7 @@ export class MongoApiClientService {
   UPDATE = '/update/'; /*json containing the 'filter' and the 'document' in the body*/
   DELETE = '/delete/'; /*object filter in the body*/
 
-  SCHEMA = '/schema/';
+  SCHEMA = '/schema';
 
   constructor(private http: HttpClient) {
   }

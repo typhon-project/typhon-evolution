@@ -191,18 +191,13 @@ export class MongoService {
     public async getDatabasesEntitiesByVersion(db, modelLatestVersion: number) {
         const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
             {$match: {latestVersion: modelLatestVersion}},
-            {
-                $lookup: {
+            {$lookup: {
                     from: db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).collectionName,
                     let: {entityVersion: '$latestVersion', entityName: '$name'},
-                    pipeline: [
-                        {
-                            $match:
-                                {
-                                    $expr:
-                                        {
-                                            $and:
-                                                [
+                    pipeline: [{
+                            $match: {
+                                    $expr: {
+                                            $and: [
                                                     {$eq: ['$modelVersion', '$$entityVersion']},
                                                     {$eq: ['$name', '$$entityName']}
                                                 ]
@@ -236,6 +231,7 @@ export class MongoService {
         if (await databaseEntities.hasNext()) {
             return await databaseEntities.toArray();
         }
+        return null;
     }
 
     private buildSchema(databaseEntities: any[]) {

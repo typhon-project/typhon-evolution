@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {MongoCollection} from 'evolution-analytics-model/dist/model/MongoCollection';
 import {NormalizedQuery} from 'evolution-analytics-model/dist/model/NormalizedQuery';
@@ -30,6 +30,7 @@ export class MongoApiClientService {
   DELETE = '/delete/'; /*object filter in the body*/
 
   SCHEMA = '/schema';
+  CRUD = '/cruds/';
 
   constructor(private http: HttpClient) {
   }
@@ -216,5 +217,9 @@ export class MongoApiClientService {
    */
   public getDatabaseSchema(): Observable<any> {
     return this.http.get<any>(this.END_POINT + this.SCHEMA);
+  }
+
+  public getCRUDOperationDistribution(minDate: number, maxDate: number): Observable<any> {
+    return this.http.get<any>(this.END_POINT + this.CRUD + minDate + '/' + maxDate);
   }
 }

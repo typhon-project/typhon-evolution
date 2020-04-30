@@ -9,7 +9,7 @@
         <app-time-radio-button [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
         <div [ngClass]="{'invisible': timeEvolutionMode}">
           <div style="text-align:center; margin-top: 50px;">
-            <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
             <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">

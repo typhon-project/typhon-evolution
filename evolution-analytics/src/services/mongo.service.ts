@@ -150,6 +150,44 @@ export class MongoService {
         return null;
     }
 
+    public async getCRUDOperationDistributionByPeriod(db, minDate: number, maxDate: number) {
+        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+        //Retrieve the latest version of the model
+        const model: Model = await this.getModelLatestVersion(modelCollection);
+        if (model != null) {
+            // return {_id: null, selects: ?, deletes: ?, updates: ?, inserts: ?}
+
+            const modelVersion = model.version;
+            const cruds =
+                db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate([
+                    {
+                        $match: {
+                            $and: [
+                                {modelVersion: modelVersion},
+                                {updateDate: {$gte: minDate}},
+                                {updateDate: {$lte: maxDate}}
+                            ]
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            selects: {$sum: "$nbOfSelect"},
+                            deletes: {$sum: "$nbOfDelete"},
+                            updates: {$sum: "$nbOfUpdate"},
+                            inserts: {$sum: "$nbOfInsert"}
+                        }
+                    }]);
+            if (await cruds.hasNext()) {
+                return await cruds.toArray();
+            } else
+                return {selects: 0, deletes: 0, updates: 0, inserts: 0};
+        }
+
+        return null;
+
+    }
+
     public async getDatabasesEntitiesByVersion(db, modelLatestVersion: number) {
         const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
             {$match: {latestVersion: modelLatestVersion}},

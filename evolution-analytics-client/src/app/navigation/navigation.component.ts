@@ -29,14 +29,17 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
 
 
-  ENTITY_OBJECT = 0;
+
   CRUD_OBJECT = 1;
+  ENTITY_OBJECT = 0;
 
   tabs = [1, 2, 3, 4, 5];
   counter = this.tabs.length + 1;
   active;
   timeEvolutionMode = false;
   public charts: Array<any> = [];
+
+
 
   close(event: MouseEvent, toRemove: number) {
     this.tabs = this.tabs.filter(id => id !== toRemove);
@@ -133,6 +136,7 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   getTabComp() {
     return this;
   }
+
 }
 
 export function randomInt(min, max) {

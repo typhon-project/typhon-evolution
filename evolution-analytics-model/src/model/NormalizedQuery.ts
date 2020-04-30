@@ -42,6 +42,6 @@ export class NormalizedQuery extends MongoCollection {
     }
 
     toString(): string {
-        return `{ _id: ${this._id}, _normalizedForm: ${this._normalizedForm}, _displayableForm: ${this._displayableForm}, _count: ${this._count} }`;
+        return `{ id: ${this.id}, normalizedForm: ${this.normalizedForm}, displayableForm: ${this.displayableForm}, count: ${this.count} }`;
     }
 }

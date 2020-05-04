@@ -31,7 +31,7 @@ export class MongoAnalyticsApiController {
         await mongoHelper.disconnect();
     };
 
-    public static getCRUDOperationDistributionByPeriod = async (request: Request, result: Response) => {
+    public static getEntitiesSizeByPeriod = async (request: Request, result: Response) => {
         const mongoHelper = new MongoHelper();
         await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
         const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
@@ -39,7 +39,43 @@ export class MongoAnalyticsApiController {
         const minDate = parseInt(request.params.minDate);
         const maxDate = parseInt(request.params.maxDate);
 
-        console.log('minDate:' + minDate + '=>' + maxDate);
+        const sizes = await mongoService.getSchemaByPeriod(db, minDate, maxDate);
+        if (sizes != null) {
+            console.log('getEntitiesSizeByPeriod successfully executed');
+            result.send(sizes);
+        } else {
+            console.log('Error while getting the entities size');
+            result.send('Error while getting the entities size. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    }
+
+    public static getQueriedEntitiesProportionByPeriod = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+        const minDate = parseInt(request.params.minDate);
+        const maxDate = parseInt(request.params.maxDate);
+
+        const prop = await mongoService.getQueriedEntitiesProportionByPeriod(db, minDate, maxDate);
+        if (prop != null) {
+            console.log('getQueriedEntitiesProportionByPeriod successfully executed');
+            result.send(prop);
+        } else {
+            console.log('Error while getting the queried entities proportion');
+            result.send('Error while getting the queried entities proportion distribution. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    }
+
+    public static getCRUDOperationDistributionByPeriod = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+        const minDate = parseInt(request.params.minDate);
+        const maxDate = parseInt(request.params.maxDate);
 
         const cruds = await mongoService.getCRUDOperationDistributionByPeriod(db, minDate, maxDate);
         if (cruds != null) {

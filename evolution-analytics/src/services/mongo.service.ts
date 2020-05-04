@@ -117,9 +117,39 @@ export class MongoService {
         return null;
     }
 
+    public async getSchemaByPeriod(db: Db, minDate: number, maxDate: number) {
+        console.log('Get the latest version of the polystore schema');
+        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+        //Retrieve the latest version of the model
+        const model: Model = await this.getModelVersion(modelCollection, minDate, maxDate);
+        if (model != null) {
+            const modelLatestVersion = model.version;
+            console.log(`Model version: ${modelLatestVersion}`);
+            //Retrieve the latest version of the entities and their history
+            const databasesEntities = await this.getSchemaByPeriod_(db, modelLatestVersion, minDate, maxDate);
+            //Build the polystore schema
+            return this.buildSchema(databasesEntities);
+        } else {
+            console.log(`No model version found in ${modelCollection} collection`);
+        }
+        return null;
+    }
+
     public async getModelLatestVersion(modelCollection: Collection): Promise<Model> {
         if (modelCollection) {
             let model: Cursor<Model> = modelCollection.find<Model>({}).sort({version: -1}).limit(1);
+            if (await model.hasNext()) {
+                return await model.next();
+            }
+        }
+        return null;
+    }
+
+    public async getModelVersion(modelCollection: Collection, minDate: number, maxDate: number): Promise<Model> {
+        if (modelCollection) {
+            let model: Cursor<Model> = modelCollection.find<Model>(
+                {$and: [ {date: {$lte: maxDate}}, {date: {$gte: minDate}} ]})
+                .sort({version: -1}).limit(1);
             if (await model.hasNext()) {
                 return await model.next();
             }
@@ -147,6 +177,65 @@ export class MongoService {
                 return await entitiesHistory.toArray();
             }
         }
+        return null;
+    }
+
+    public async getEntitiesSizeByPeriod(db, maxDate: number) {
+        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+
+        const prop =
+                db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate([
+                    {
+                        $match: {
+                            updateDate: {$lte: maxDate}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: {name: "$name", date: "$updateDate"}
+                        }
+                    },
+                    { $sort: { date: -1 } },
+                    {$limit: 1}]);
+        if (await prop.hasNext()) {
+            return await prop.toArray();
+        } else
+            return [];
+
+    }
+
+    public async getQueriedEntitiesProportionByPeriod(db, minDate: number, maxDate: number) {
+        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+        //Retrieve the latest version of the model
+        const model: Model = await this.getModelLatestVersion(modelCollection);
+        if (model != null) {
+            // return {_id: entityName, nbOfQueries: ?}
+
+            const modelVersion = model.version;
+            const prop =
+                db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate([
+                    {
+                        $match: {
+                            $and: [
+                                {modelVersion: modelVersion},
+                                {updateDate: {$gte: minDate}},
+                                {updateDate: {$lte: maxDate}}
+                            ]
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$name",
+                            nbOfQueries: {$sum: "$nbOfQueries"}
+                        }
+                    },
+                    { $sort: { nbOfQueries: -1 } }]);
+            if (await prop.hasNext()) {
+                return await prop.toArray();
+            } else
+                return [];
+        }
+
         return null;
     }
 
@@ -181,12 +270,61 @@ export class MongoService {
             if (await cruds.hasNext()) {
                 return await cruds.toArray();
             } else
-                return {selects: 0, deletes: 0, updates: 0, inserts: 0};
+                return [];
         }
 
         return null;
 
     }
+
+    public async getSchemaByPeriod_(db, modelLatestVersion: number, minDate: number, maxDate: number) {
+        const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
+            {$match: {latestVersion: modelLatestVersion}},
+            {$lookup: {
+                    from: db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).collectionName,
+                    let: {entityVersion: '$latestVersion', entityName: '$name'},
+                    pipeline: [{
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    {$eq: ['$modelVersion', '$$entityVersion']},
+                                    {$eq: ['$name', '$$entityName']},
+                                    {$lte: ['$updateDate', maxDate]},
+                                    {$gte: ['$updateDate', minDate]}
+                                ]
+                            }
+                        }
+                    },
+                        {$sort: {'updateDate': -1}},
+                        {$limit: 1},
+                        {$project: {'dataSize': 1, 'modelVersion': 1, 'updateDate': 1}}
+                    ],
+                    as: 'entitieshistories'
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {$arrayElemAt: ["$entitieshistories", 0]}, "$$ROOT"
+                        ]
+                    }
+                }
+            },
+            {$project: {entitieshistories: 0, versions: 0, modelVersion: 0}},
+            {
+                $group: {
+                    _id: {dbName: '$dbName', dbType: '$dbType'},
+                    entities: {$push: "$$ROOT"}
+                }
+            }
+        ]);
+        if (await databaseEntities.hasNext()) {
+            return await databaseEntities.toArray();
+        }
+        return null;
+    }
+
 
     public async getDatabasesEntitiesByVersion(db, modelLatestVersion: number) {
         const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
@@ -233,6 +371,7 @@ export class MongoService {
         }
         return null;
     }
+
 
     private buildSchema(databaseEntities: any[]) {
         if (databaseEntities != null) {

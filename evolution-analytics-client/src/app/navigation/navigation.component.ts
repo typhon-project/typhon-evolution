@@ -56,22 +56,19 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     this.timeEvolutionMode = !this.timeEvolutionMode;
   }
 
-  filterCharts(fromDate: Date, toDate: Date) {
-    console.log('filter:' + fromDate + ' ' + toDate);
+  filterCharts(fromDate, toDate) {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
 
     this.charts.forEach( (chart) => {
-      /*TODO remplacer par l'appel au WS */
-      chart.randomDatasets();
+      chart.loadParticularPeriod(from, to);
     });
 
   }
 
   loadCompleteHistory() {
-    console.log('complete history');
-
     this.charts.forEach( (chart) => {
-      /*TODO remplacer par l'appel au WS */
-      chart.randomDatasets();
+      chart.loadCompleteHistory();
     });
   }
 

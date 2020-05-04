@@ -31,6 +31,8 @@ export class MongoApiClientService {
 
   SCHEMA = '/schema';
   CRUD = '/cruds/';
+  ENTITIES_SIZE_BY_PERIOD = '/entitiesSize/';
+  QUERIES_ENTITIES_PROPORTION = '/queriedEntities/';
 
   constructor(private http: HttpClient) {
   }
@@ -219,7 +221,16 @@ export class MongoApiClientService {
     return this.http.get<any>(this.END_POINT + this.SCHEMA);
   }
 
+  public getEntitiesSizeByPeriod(minDate: number, maxDate: number): Observable<any> {
+    console.log(this.END_POINT + this.ENTITIES_SIZE_BY_PERIOD + minDate + '/' + maxDate);
+    return this.http.get<any>(this.END_POINT + this.ENTITIES_SIZE_BY_PERIOD + minDate + '/' + maxDate);
+  }
+
   public getCRUDOperationDistribution(minDate: number, maxDate: number): Observable<any> {
     return this.http.get<any>(this.END_POINT + this.CRUD + minDate + '/' + maxDate);
+  }
+
+  public getQueriedEntitiesPropertion(minDate: number, maxDate: number): Observable<any> {
+    return this.http.get<any>(this.END_POINT + this.QUERIES_ENTITIES_PROPORTION + minDate + '/' + maxDate);
   }
 }

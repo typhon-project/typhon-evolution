@@ -13,7 +13,7 @@
             <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">
-            <app-pie-chart [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
           </div>
         </div>
 

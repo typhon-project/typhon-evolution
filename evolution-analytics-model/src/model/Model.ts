@@ -32,6 +32,6 @@ export class Model extends MongoCollection {
     }
 
     toString(): string {
-        return `{ _id: ${this._id}, _version: ${this._version}, _date: ${this._date} }`;
+        return `{ id: ${this.id}, version: ${this.version}, date: ${this.date} }`;
     }
 }

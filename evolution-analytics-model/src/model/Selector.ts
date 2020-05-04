@@ -35,7 +35,7 @@ export class Selector {
     }
 
     toString(): string {
-        return `{ _entity: ${this._entity}, _attribute: ${this._attribute}, _operator: ${this._operator} }`;
+        return `{ entity: ${this.entity}, attribute: ${this.attribute}, operator: ${this.operator} }`;
     }
 
 }

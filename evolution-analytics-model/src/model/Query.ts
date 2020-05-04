@@ -115,6 +115,6 @@ export class Query extends MongoCollection {
     }
 
     toString(): string {
-        return `{ _id: ${this._id}, _normalizedQueryId: ${this._normalizedQueryId}, _query: ${this._query}, _type: ${this._type}, _executionDate: ${this._executionDate}, _executionTime: ${this._executionTime}, _modelVersion: ${this._modelVersion}, _mainEntities: ${this._mainEntities}, _selectors: ${this._selectors}, _joins: ${this._joins}, _implicitInsertedEntities: ${this._implicitInsertedEntities}  }`;
+        return `{ id: ${this.id}, normalizedQueryId: ${this.normalizedQueryId}, query: ${this.query}, type: ${this.type}, executionDate: ${this.executionDate}, executionTime: ${this.executionTime}, modelVersion: ${this.modelVersion}, mainEntities: ${this.mainEntities}, selectors: ${this.selectors}, joins: ${this.joins}, implicitInsertedEntities: ${this.implicitInsertedEntities}  }`;
     }
 }

@@ -45,7 +45,7 @@ export class Join {
     }
 
     toString(): string {
-        return `{ _entity1: ${this._entity1}, _entity2: ${this._entity2}, _relation1: ${this._relation1}, _relation2: ${this._relation2} }`;
+        return `{ entity1: ${this.entity1}, entity2: ${this.entity2}, relation1: ${this.relation1}, relation2: ${this.relation2} }`;
     }
 
 }

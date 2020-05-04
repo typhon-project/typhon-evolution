@@ -62,6 +62,6 @@ export class Entity extends MongoCollection {
     }
 
     toString(): string {
-        return `{ _id: ${this._id}, _name: ${this._name}, _latestVersion: ${this._latestVersion}, _dbName: ${this._dbName}, _dbType: ${this._dbType}, _versions: ${this._versions} }`;
+        return `{ id: ${this.id}, name: ${this.name}, latestVersion: ${this.latestVersion}, dbName: ${this.dbName}, dbType: ${this.dbType}, versions: ${this.versions} }`;
     }
 }

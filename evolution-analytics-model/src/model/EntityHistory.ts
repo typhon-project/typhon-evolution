@@ -102,6 +102,6 @@ export class EntityHistory extends MongoCollection{
     }
 
     toString(): string {
-        return `{ _id: ${this._id}, _name: ${this._name}, _updateDate: ${this._name}, _modelVersion: ${this._name}, _dataSize: ${this._name}, _nbOfQueries: ${this._name}, _nbOfSelect: ${this._name}, _nbOfInsert: ${this._name}, _nbOfUpdate: ${this._name}, _nbOfDelete: ${this._name} }`;
+        return `{ id: ${this.id}, name: ${this.name}, updateDate: ${this.name}, modelVersion: ${this.name}, dataSize: ${this.name}, nbOfQueries: ${this.name}, nbOfSelect: ${this.name}, nbOfInsert: ${this.name}, nbOfUpdate: ${this.name}, nbOfDelete: ${this.name} }`;
     }
 }

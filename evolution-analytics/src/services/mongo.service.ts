@@ -147,8 +147,7 @@ export class MongoService {
 
     public async getModelVersion(modelCollection: Collection, minDate: number, maxDate: number): Promise<Model> {
         if (modelCollection) {
-            let model: Cursor<Model> = modelCollection.find<Model>(
-                {$and: [ {date: {$lte: maxDate}}, {date: {$gte: minDate}} ]})
+            let model: Cursor<Model> = modelCollection.find<Model>( {date: {$lte: maxDate}})
                 .sort({version: -1}).limit(1);
             if (await model.hasNext()) {
                 return await model.next();
@@ -180,25 +179,67 @@ export class MongoService {
         return null;
     }
 
-    public async getEntitiesSizeByPeriod(db, maxDate: number) {
-        const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
+    public async  getEntitiesSizeOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+        let minBound = minDate;
+        let maxBound = minDate;
+        let i = 0;
+        let map = new Map();
+        const dates = [];
+        console.log('interval length:' + intervalLength);
+        while (i < (intervalLength + 1)) {
+            const sizes: any[] = await this.getEntitiesSizeByPeriod(db, minBound, maxBound);
 
-        const prop =
-                db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate([
+            console.log('intermediate:' + minBound + '--' + maxBound + '::' + sizes);
+
+            for( const size of sizes) {
+                const entityName = size._id;
+                const entitySize = size.size;
+
+                let history = map.get(entityName);
+                if(!history || history == null) {
+                    history = [];
+                    map.set(entityName, history);
+                }
+
+                history.push(entitySize);
+            }
+
+            dates.push(maxBound);
+
+            minBound = maxBound + 1;
+            maxBound += msInterval;
+            i++;
+        }
+
+        const res = {dates: dates, entities: []};
+        for (const [key, value] of map.entries()) {
+            res.entities.push({entityName: key, history: value});
+        }
+
+        return res;
+    }
+
+    private async getEntitiesSizeByPeriod(db, minDate: number, maxDate: number) {
+
+        const sizes =
+            db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate(
+                [
                     {
-                        $match: {
-                            updateDate: {$lte: maxDate}
-                        }
+                        $match: {updateDate: {$lte: maxDate} }
                     },
+                    { $sort: { "name": 1, "updateDate": -1 } },
                     {
-                        $group: {
-                            _id: {name: "$name", date: "$updateDate"}
-                        }
-                    },
-                    { $sort: { date: -1 } },
-                    {$limit: 1}]);
-        if (await prop.hasNext()) {
-            return await prop.toArray();
+                        $group:
+                            {
+                                _id: "$name",
+                                updateDate: { $first: "$updateDate" },
+                                size: {$first: "$dataSize"}
+                            }
+                    }
+                ]
+            );
+        if (await sizes.hasNext()) {
+            return await sizes.toArray();
         } else
             return [];
 
@@ -217,9 +258,8 @@ export class MongoService {
                     {
                         $match: {
                             $and: [
-                                {modelVersion: modelVersion},
-                                {updateDate: {$gte: minDate}},
-                                {updateDate: {$lte: maxDate}}
+                                {updateDate: {$lte: maxDate}},
+                                {updateDate: {$gte: minDate}}
                             ]
                         }
                     },
@@ -239,6 +279,61 @@ export class MongoService {
         return null;
     }
 
+    public async getExtremeDates(db) {
+
+        const res = db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate(
+            [
+                {
+                    $group:
+                        {
+                            _id: null,
+                            minDate: { $min: "$updateDate" },
+                            maxDate: { $max: "$updateDate" }
+                        }
+                }
+            ]
+        );
+
+        if (await res.hasNext()) {
+            return await res.toArray();
+        } else
+            return [];
+    }
+
+    public async getCRUDOperationDistributionByPeriodOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+
+        const timeArray = [];
+        const valueArray = [];
+        let minBound = minDate;
+        let maxBound = minDate;
+        let i = 0;
+        console.log('interval length:' + intervalLength);
+        while (i < (intervalLength + 1)) {
+            const cruds: any[] = await this.getCRUDOperationDistributionByPeriod(db, minBound, maxBound);
+            let selects = 0;
+            let updates = 0;
+            let deletes = 0;
+            let inserts = 0;
+            if(cruds && cruds != null && cruds.length > 0) {
+                selects = cruds[0].selects;
+                updates = cruds[0].updates;
+                deletes = cruds[0].deletes;
+                inserts = cruds[0].inserts;
+            }
+
+            valueArray.push({selects: selects, updates: updates, deletes: deletes, inserts: inserts});
+            timeArray.push(maxBound);
+            console.log('push:' + maxBound);
+
+            minBound = maxBound + 1;
+            maxBound += msInterval;
+            i++;
+        }
+
+
+        return [{time: timeArray, values: valueArray}];
+    }
+
     public async getCRUDOperationDistributionByPeriod(db, minDate: number, maxDate: number) {
         const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
         //Retrieve the latest version of the model
@@ -253,8 +348,8 @@ export class MongoService {
                         $match: {
                             $and: [
                                 {modelVersion: modelVersion},
-                                {updateDate: {$gte: minDate}},
-                                {updateDate: {$lte: maxDate}}
+                                {updateDate: {$lte: maxDate}},
+                                {updateDate: {$gte: minDate}}
                             ]
                         }
                     },
@@ -289,8 +384,7 @@ export class MongoService {
                                 $and: [
                                     {$eq: ['$modelVersion', '$$entityVersion']},
                                     {$eq: ['$name', '$$entityName']},
-                                    {$lte: ['$updateDate', maxDate]},
-                                    {$gte: ['$updateDate', minDate]}
+                                    {$lte: ['$updateDate', maxDate]}
                                 ]
                             }
                         }

@@ -19,11 +19,11 @@
 
         <div [ngClass]="{'invisible': !timeEvolutionMode}">
           <div style="text-align:center; margin-top: 50px;">
-            <app-line-chart [chartTitle]="'Entity size over time'"></app-line-chart>
-            <app-line-chart [chartTitle]="'CRUD operation distribution over time'"></app-line-chart>
+            <app-line-chart [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+            <app-line-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">
-            <app-line-chart [chartTitle]="'Proportion of queried entities over time'"></app-line-chart>
+            <app-line-chart [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
         </div>
 

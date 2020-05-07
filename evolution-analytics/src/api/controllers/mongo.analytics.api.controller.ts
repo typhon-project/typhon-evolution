@@ -88,6 +88,42 @@ export class MongoAnalyticsApiController {
         await mongoHelper.disconnect();
     };
 
+    public static getQueriedEntitiesProportionByPeriodOverTime = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+        let minDate = parseInt(request.params.minDate);
+        let maxDate = parseInt(request.params.maxDate);
+
+        if(minDate === -1 || maxDate === -1) {
+            const maxInterval: any[] = await mongoService.getExtremeDates(db);
+            console.log('class:'  + maxInterval.constructor.name);
+            if(minDate === -1) {
+                minDate = maxInterval[0].minDate;
+            }
+            if(maxDate === -1) {
+                maxDate = maxInterval[0].maxDate;
+            }
+        }
+
+        const intervalSize = parseInt(request.params.intervalLength);
+
+        const intervalMS = MongoAnalyticsApiController.getMillisecondInterval(minDate, maxDate, intervalSize);
+        if(intervalMS === 0)
+            result.send('Error: bad date interval');
+
+        const sizes = await mongoService.getQueriedEntitiesProportionOverTime(db, minDate, maxDate, intervalMS, intervalSize);
+        if (sizes != null) {
+            console.log('getQueriedEntitiesProportionByPeriodOverTime successfully executed');
+            result.send(sizes);
+        } else {
+            console.log('Error while getting the queried entities proportion evolution');
+            result.send('Error while getting the queried entities proportion evolution. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    };
+
     public static getEntitiesSizeByPeriodOverTime = async (request: Request, result: Response) => {
         const mongoHelper = new MongoHelper();
         await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
@@ -167,6 +203,44 @@ export class MongoAnalyticsApiController {
         return diff / interval;
 
     }
+
+    public static getSlowestQueries = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+        let minDate = parseInt(request.params.minDate);
+        let maxDate = parseInt(request.params.maxDate);
+
+        const queries = await mongoService.getSlowestQueries(db, minDate, maxDate);
+        if (queries != null) {
+            console.log('getSlowestQueries successfully executed');
+            result.send(queries);
+        } else {
+            console.log('Error while getting the slowest queries');
+            result.send('Error while getting the slowest queries. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    };
+
+    public static getMostFrequentQueries = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+        let minDate = parseInt(request.params.minDate);
+        let maxDate = parseInt(request.params.maxDate);
+
+        const queries = await mongoService.getMostFrequentQueries(db, minDate, maxDate);
+        if (queries != null) {
+            console.log('getMostFrequentQueries successfully executed');
+            result.send(queries);
+        } else {
+            console.log('Error while getting the most frequent queries');
+            result.send('Error while getting the most frequent queries. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    };
 
     // public static getEntitiesSize = (request: Request, result: Response) => {
     // };

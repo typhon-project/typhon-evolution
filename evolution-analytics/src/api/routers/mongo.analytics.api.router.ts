@@ -9,8 +9,11 @@ mongoAnalyticsApiRouter.get('/queriedEntities/:minDate/:maxDate', MongoAnalytics
 mongoAnalyticsApiRouter.get('/entitiesSize/:minDate/:maxDate', MongoAnalyticsApiController.getEntitiesSizeByPeriod);
 
 mongoAnalyticsApiRouter.get('/cruds2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getCRUDOperationDistributionByPeriodOverTime);
-//mongoAnalyticsApiRouter.get('/queriedEntities2/:minDate/:maxDate', MongoAnalyticsApiController.getQueriedEntitiesProportionByPeriodOverTime);
+mongoAnalyticsApiRouter.get('/queriedEntities2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getQueriedEntitiesProportionByPeriodOverTime);
 mongoAnalyticsApiRouter.get('/entitiesSize2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getEntitiesSizeByPeriodOverTime);
 // mongoAnalyticsApiRouter.get('/entities/size/:fromDate/:toDate', MongoAnalyticsApiController.getEntitiesSize);
+
+mongoAnalyticsApiRouter.get('/mostFrequentQueries/:minDate/:maxDate', MongoAnalyticsApiController.getMostFrequentQueries);
+mongoAnalyticsApiRouter.get('/slowestQueries/:minDate/:maxDate', MongoAnalyticsApiController.getSlowestQueries);
 
 export {mongoAnalyticsApiRouter};

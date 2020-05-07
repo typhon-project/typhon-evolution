@@ -179,21 +179,19 @@ export class MongoService {
         return null;
     }
 
-    public async  getEntitiesSizeOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+    public async getQueriedEntitiesProportionOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+
         let minBound = minDate;
         let maxBound = minDate;
         let i = 0;
         let map = new Map();
         const dates = [];
-        console.log('interval length:' + intervalLength);
         while (i < (intervalLength + 1)) {
-            const sizes: any[] = await this.getEntitiesSizeByPeriod(db, minBound, maxBound);
+            const queriedEntities: any[] = await this.getQueriedEntitiesProportionByPeriod(db, minBound, maxBound);
 
-            console.log('intermediate:' + minBound + '--' + maxBound + '::' + sizes);
-
-            for( const size of sizes) {
-                const entityName = size._id;
-                const entitySize = size.size;
+            for (const entity of queriedEntities) {
+                const entityName = entity._id;
+                const nbOfQueries = entity.nbOfQueries;
 
                 let history = map.get(entityName);
                 if(!history || history == null) {
@@ -201,7 +199,7 @@ export class MongoService {
                     map.set(entityName, history);
                 }
 
-                history.push(entitySize);
+                history.push({date: maxBound, value: nbOfQueries});
             }
 
             dates.push(maxBound);
@@ -213,7 +211,75 @@ export class MongoService {
 
         const res = {dates: dates, entities: []};
         for (const [key, value] of map.entries()) {
-            res.entities.push({entityName: key, history: value});
+            const values: number[] = this.fillArrayWithNullValuesIfNeeded(dates, value);
+            res.entities.push({entityName: key, history: values});
+        }
+
+        return res;
+    }
+
+    private fillArrayWithNullValuesIfNeeded(dates: number[], history: any[]) {
+        const res = [];
+
+        let i = 0;
+        let j = 0;
+
+        while ( i < dates.length && j < history.length) {
+            const date1 = dates[i];
+            const date2 = history[j].date;
+            if(date1 !== date2) {
+                res.push(0);
+            } else {
+                res.push(history[j].value);
+                j++;
+            }
+
+            i++;
+        }
+
+        while( i < dates.length) {
+            res.push(0);
+            i++;
+        }
+
+        return res;
+    }
+
+    public async  getEntitiesSizeOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+        let minBound = minDate;
+        let maxBound = minDate;
+        let i = 0;
+        let map = new Map();
+        const dates = [];
+        console.log('interval length:' + intervalLength);
+        while (i < (intervalLength + 1)) {
+            const sizes: any[] = await this.getEntitiesSizeByPeriod(db, minBound, maxBound);
+
+
+            for( const size of sizes) {
+                const entityName = size._id;
+                const entitySize = size.size;
+
+                let history = map.get(entityName);
+                if(!history || history == null) {
+                    history = [];
+                    map.set(entityName, history);
+                }
+
+                history.push({date: maxBound, value: entitySize});
+            }
+
+            dates.push(maxBound);
+
+            minBound = maxBound + 1;
+            maxBound += msInterval;
+            i++;
+        }
+
+        const res = {dates: dates, entities: []};
+        for (const [key, value] of map.entries()) {
+            const values: number[] = this.fillArrayWithNullValuesIfNeeded(dates, value);
+            res.entities.push({entityName: key, history: values});
         }
 
         return res;
@@ -244,6 +310,7 @@ export class MongoService {
             return [];
 
     }
+
 
     public async getQueriedEntitiesProportionByPeriod(db, minDate: number, maxDate: number) {
         const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
@@ -419,6 +486,70 @@ export class MongoService {
         return null;
     }
 
+    public async getSlowestQueries(db, minDate: number, maxDate: number) {
+        const queries =
+            db.collection(MongoCollection.QUERY_COLLECTION_NAME).aggregate([
+                {$match: {
+                        $and: [
+                            {executionDate: {$lte: maxDate}},
+                            {executionDate: {$gte: minDate}}
+                        ]
+                    }},
+
+                { $sort: { executionTime: -1 } }
+            ]);
+        if (await queries.hasNext()) {
+            return await queries.toArray();
+        } else {
+            return [];
+        }
+
+
+    }
+
+    public async getMostFrequentQueries(db, minDate: number, maxDate: number) {
+        const queries =
+                db.collection(MongoCollection.QUERY_COLLECTION_NAME).aggregate([
+                    {$match: {
+                            $and: [
+                                {executionDate: {$lte: maxDate}},
+                                {executionDate: {$gte: minDate}}
+                            ]
+                        }},
+                    {$lookup: {
+                            from: db.collection(MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME).collectionName,
+                            localField: 'normalizedQueryId',
+                            foreignField: '_id',
+                            as: 'normalizedqueries'
+                        }
+                    },
+                    {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    {$arrayElemAt: ["$normalizedqueries", 0]}, "$$ROOT"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: '$normalizedQueryId',
+                            count: {$sum: 1},
+                            query:  {$first: '$displayableForm' }
+                        }
+                    },
+                    { $sort: { count: -1 } }
+                ]);
+            if (await queries.hasNext()) {
+                return await queries.toArray();
+            } else {
+                return [];
+            }
+
+
+    }
+
 
     public async getDatabasesEntitiesByVersion(db, modelLatestVersion: number) {
         const databaseEntities = db.collection(MongoCollection.ENTITY_COLLECTION_NAME).aggregate([
@@ -493,4 +624,5 @@ export class MongoService {
         }
         return null;
     }
+
 }

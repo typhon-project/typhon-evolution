@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef, Input} from '@angular/core';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
+import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
 
 @Component({
   selector: 'app-table-pagination',
@@ -7,6 +8,9 @@ import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstra
   styleUrls: ['./query-table.component.scss']
 })
 export class TablePaginationComponent implements OnInit, AfterViewInit  {
+  @Input() public type: number;
+  @Input() public limit = 50;
+  @Input() public chartTitle: string;
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
@@ -17,20 +21,59 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   searchText = '';
   previous: string;
 
+  MOST_FREQUENT = 0;
+  SLOWEST = 1;
+
   @HostListener('input') oninput() {
     this.searchItems();
   }
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef, private mongoApiClientService: MongoApiClientService) { }
 
   ngOnInit() {
-    for (let i = 1; i <= 10; i++) {
-      const occu = this.randomInt(0, 10);
-      this.elements.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
+
+    if (this.type === this.MOST_FREQUENT) {
+
+      this.mongoApiClientService.getMostFrequentQueries(0, 10000000000000, this.limit)
+        .subscribe(queries => {
+          console.log(JSON.stringify(queries));
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.count, query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+      });
+
+
     }
-    this.mdbTable.setDataSource(this.elements);
-    this.elements = this.mdbTable.getDataSource();
-    this.previous = this.mdbTable.getDataSource();
+
+    if (this.type === this.SLOWEST) {
+      this.mongoApiClientService.getSlowestQueries(0, 10000000000000, this.limit)
+        .subscribe(queries => {
+          console.log(JSON.stringify(queries));
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.executionTime, query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+        });
+    }
+
+
   }
 
   ngAfterViewInit() {
@@ -63,5 +106,24 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  private getMostFrequentQueries() {
+    const res = [];
+    for (let i = 1; i <= 10; i++) {
+      const occu = this.randomInt(0, 10);
+      res.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
+    }
+
+    return res;
+  }
+
+  private getSlowestQueries() {
+    const res = [];
+    for (let i = 1; i <= 10; i++) {
+      const occu = this.randomInt(0, 10);
+      res.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
+    }
+
+    return res;
+  }
 }
 

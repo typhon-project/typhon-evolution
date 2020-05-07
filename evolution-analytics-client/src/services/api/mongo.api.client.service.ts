@@ -37,6 +37,8 @@ export class MongoApiClientService {
   CRUD_OVER_TIME = '/cruds2/';
   ENTITIES_SIZE_OVER_TIME = '/entitiesSize2/';
   QUERIES_ENTITIES_PROPORTION_OVER_TIME = '/queriedEntities2/';
+  MOST_FREQUENT_QUERIES = '/mostFrequentQueries/';
+  SLOWEST_QUERIES = '/slowestQueries/';
 
   constructor(private http: HttpClient) {
   }
@@ -244,6 +246,18 @@ export class MongoApiClientService {
 
   public getEntitiesSizePeriodOverTime(minDate: number, maxDate: number, intervalLength: number): Observable<any> {
     return this.http.get<any>(this.END_POINT + this.ENTITIES_SIZE_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength);
+  }
+
+  public getQueriedEntitiesPeriodOverTime(minDate: number, maxDate: number, intervalLength: number): Observable<any> {
+    return this.http.get<any>(this.END_POINT + this.QUERIES_ENTITIES_PROPORTION_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength);
+  }
+
+  public getMostFrequentQueries(minDate: number, maxDate: number, limit: number) {
+    return this.http.get<any>(this.END_POINT + this.MOST_FREQUENT_QUERIES + minDate + '/' + maxDate);
+  }
+
+  public getSlowestQueries(minDate: number, maxDate: number, limit: number) {
+    return this.http.get<any>(this.END_POINT + this.SLOWEST_QUERIES + minDate + '/' + maxDate);
   }
 
 }

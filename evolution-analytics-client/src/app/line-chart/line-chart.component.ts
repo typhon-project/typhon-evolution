@@ -103,7 +103,7 @@ export class LineChartComponent  implements OnInit {
       this.chartLabels = [];
 
       this.mongoApiClientService.getCRUDOperationDistributionOverTime(fromDate, toDate, this.size).subscribe(cruds => {
-        console.log('CRUDS:' + JSON.stringify(cruds));
+
         const datasets: Array<any> = [
           { data: [], label: 'Select' },
           { data: [], label: 'Delete' },
@@ -165,7 +165,35 @@ export class LineChartComponent  implements OnInit {
 
 
       } else {
-      }
+
+        if (this.type === LineChartComponent.NBOFQUERIES() &&
+          this.objectType === this.navigationTab.ENTITY_OBJECT) {
+          this.chartDatasets = [];
+          this.chartLabels = [];
+
+          this.mongoApiClientService.getQueriedEntitiesPeriodOverTime(fromDate, toDate, this.size).subscribe(entities => {
+            console.log('entities:' + JSON.stringify(entities));
+
+            const datasets: Array<any> = [];
+
+            const dateArray: number[] = entities.dates;
+            const labels = this.transformDate(dateArray);
+
+            const entityArray = entities.entities;
+
+            for (const entity of entityArray) {
+              datasets.push({ data: entity.history, label: entity.entityName });
+            }
+
+            this.chartDatasets = datasets;
+            this.chartLabels = labels;
+
+            this.chartColors = this.getChartColors();
+
+          });
+        }
+
+        }
     }
   }
 

@@ -39,7 +39,10 @@
       Queries
     </a>
     <ng-template ngbNavContent>
-      <app-table-pagination></app-table-pagination>
+      <div style="text-align:center;">
+        <app-table-pagination [chartTitle]="'Most frequent queries'" [type]="0"></app-table-pagination>
+        <app-table-pagination [chartTitle]="'Slowest queries'" [type]="1"></app-table-pagination>
+      </div>
     </ng-template>
   </li>
 

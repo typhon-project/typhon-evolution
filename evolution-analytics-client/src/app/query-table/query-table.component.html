@@ -1,52 +1,55 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 mx-auto">
-      <div class="md-form">
-        <input
-          type="text"
-          [(ngModel)]="searchText"
-          class="form-control"
-          id="search"
-          mdbInput
-        />
-        <label for="search">Search</label>
+<div style="display:inline-block; width: 50%">
+  <h3 style="text-decoration: underline; margin-bottom: 0px">{{chartTitle}}</h3>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mx-auto">
+        <div class="md-form">
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            class="form-control"
+            id="search"
+            mdbInput
+          />
+          <label for="search">Search</label>
+        </div>
       </div>
     </div>
+    <table id="tableSortExample" mdbTable class="z-depth-1">
+      <thead>
+      <tr>
+        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[0]">{{titleElements[0] | titlecase}}
+          <mdb-icon fas icon="sort"></mdb-icon>
+        </th>
+        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[1]">{{titleElements[1] | titlecase}}
+          <mdb-icon fas icon="sort"></mdb-icon>
+        </th>
+        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[2]">{{titleElements[2] | titlecase}}
+          <mdb-icon fas icon="sort"></mdb-icon>
+        </th>
+        <th aria-controls="tableSortExample" scope="col">{{titleElements[3] | titlecase}}
+
+        </th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let el of elements; let i = index">
+        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"
+            scope="row">{{el.position}}</th>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.occ}}</td>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.query}}</td>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><button (click)="openQueryDetails(el.id)" mdbBtn color="indigo" size="sm" mdbWavesEffect type="button" class="m-0">Button</button></td>
+      </tr>
+
+      </tbody>
+      <tfoot class="grey lighten-5 w-100">
+      <tr>
+        <td colspan="4">
+          <mdb-table-pagination [tableEl]="mdbTable" [searchDataSource]="elements"></mdb-table-pagination>
+        </td>
+      </tr>
+      </tfoot>
+    </table>
   </div>
-  <table id="tableSortExample" mdbTable class="z-depth-1">
-    <thead>
-    <tr>
-      <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[0]">{{titleElements[0] | titlecase}}
-        <mdb-icon fas icon="sort"></mdb-icon>
-      </th>
-      <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[1]">{{titleElements[1] | titlecase}}
-        <mdb-icon fas icon="sort"></mdb-icon>
-      </th>
-      <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[2]">{{titleElements[2] | titlecase}}
-        <mdb-icon fas icon="sort"></mdb-icon>
-      </th>
-      <th aria-controls="tableSortExample" scope="col">{{titleElements[3] | titlecase}}
-
-      </th>
-
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let el of elements; let i = index">
-      <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"
-          scope="row">{{el.position}}</th>
-      <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.occ}}</td>
-      <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.query}}</td>
-      <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><button (click)="openQueryDetails(el.id)" mdbBtn color="indigo" size="sm" mdbWavesEffect type="button" class="m-0">Button</button></td>
-    </tr>
-
-    </tbody>
-    <tfoot class="grey lighten-5 w-100">
-    <tr>
-      <td colspan="4">
-        <mdb-table-pagination [tableEl]="mdbTable" [searchDataSource]="elements"></mdb-table-pagination>
-      </td>
-    </tr>
-    </tfoot>
-  </table>
 </div>

@@ -1,6 +1,7 @@
 import {AfterContentInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AreaChartComponent} from '../app-area-chart/app-area-chart.component';
 import * as d3 from 'd3';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-navigation',
@@ -37,9 +38,19 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   counter = this.tabs.length + 1;
   active;
   timeEvolutionMode = false;
-  public charts: Array<any> = [];
+  public charts = new Map();
 
+  lastChartsId: string;
 
+  addChart(chart, UUID: string) {
+    let array: any[] = this.charts.get(UUID);
+    if (!array || array == null) {
+      array = [];
+      this.charts.set(UUID, array);
+    }
+
+    array.push(chart);
+  }
 
   close(event: MouseEvent, toRemove: number) {
     this.tabs = this.tabs.filter(id => id !== toRemove);
@@ -56,18 +67,22 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     this.timeEvolutionMode = !this.timeEvolutionMode;
   }
 
-  filterCharts(fromDate, toDate) {
+  filterCharts(UUID: string, fromDate, toDate) {
     const from = new Date(fromDate);
     const to = new Date(toDate);
 
-    this.charts.forEach( (chart) => {
-      chart.loadParticularPeriod(from, to);
-    });
+    const arrays = this.charts.get(UUID);
+
+    if (arrays && arrays.length > 0) {
+      arrays.forEach((chart) => {
+        chart.loadParticularPeriod(from, to);
+      });
+    }
 
   }
 
-  loadCompleteHistory() {
-    this.charts.forEach( (chart) => {
+  loadCompleteHistory(UUID: string) {
+    this.charts.get(UUID).forEach( (chart) => {
       chart.loadCompleteHistory();
     });
   }
@@ -134,6 +149,14 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     return this;
   }
 
+  generateNewChartsId() {
+    this.lastChartsId = '0000';
+    return this.lastChartsId;
+  }
+
+  getLastChartsId() {
+    return this.lastChartsId;
+  }
 }
 
 export function randomInt(min, max) {

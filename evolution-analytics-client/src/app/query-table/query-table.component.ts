@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef, Input} from '@angular/core';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
 
 @Component({
   selector: 'app-table-pagination',
@@ -11,6 +12,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   @Input() public type: number;
   @Input() public limit = 50;
   @Input() public chartTitle: string;
+  @Input() public chartsId: string;
+  @Input() private navigationTab: NgbdNavDynamicComponent;
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
@@ -31,48 +34,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   constructor(private cdRef: ChangeDetectorRef, private mongoApiClientService: MongoApiClientService) { }
 
   ngOnInit() {
-
-    if (this.type === this.MOST_FREQUENT) {
-
-      this.mongoApiClientService.getMostFrequentQueries(0, 10000000000000, this.limit)
-        .subscribe(queries => {
-          console.log(JSON.stringify(queries));
-          const array = [];
-          let i = 0;
-          for (const query of queries) {
-            array.push({ position: (i + 1), id: query._id, occ: query.count, query: query.query, handle: 'Handle ' + i });
-            i++;
-          }
-
-          this.elements = array;
-          this.mdbTable.setDataSource(this.elements);
-          this.elements = this.mdbTable.getDataSource();
-          this.previous = this.mdbTable.getDataSource();
-
-      });
-
-
-    }
-
-    if (this.type === this.SLOWEST) {
-      this.mongoApiClientService.getSlowestQueries(0, 10000000000000, this.limit)
-        .subscribe(queries => {
-          console.log(JSON.stringify(queries));
-          const array = [];
-          let i = 0;
-          for (const query of queries) {
-            array.push({ position: (i + 1), id: query._id, occ: query.executionTime, query: query.query, handle: 'Handle ' + i });
-            i++;
-          }
-
-          this.elements = array;
-          this.mdbTable.setDataSource(this.elements);
-          this.elements = this.mdbTable.getDataSource();
-          this.previous = this.mdbTable.getDataSource();
-
-        });
-    }
-
+    this.navigationTab.addChart(this, this.chartsId);
+    this.loadCompleteHistory();
 
   }
 
@@ -85,7 +48,6 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   }
 
   searchItems() {
-    console.log('test:' + this.searchText);
     const prev = this.mdbTable.getDataSource();
     if (!this.searchText) {
       this.mdbTable.setDataSource(this.previous);
@@ -124,6 +86,57 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     }
 
     return res;
+  }
+
+  loadParticularPeriod(fromDate: Date, toDate: Date) {
+    this.load(fromDate.getTime(), toDate.getTime());
+  }
+
+  loadCompleteHistory() {
+    this.load(0, Number.MAX_SAFE_INTEGER);
+  }
+
+  load(fromDate: number, toDate: number) {
+    if (this.type === this.MOST_FREQUENT) {
+
+      this.mongoApiClientService.getMostFrequentQueries(fromDate, toDate, this.limit)
+        .subscribe(queries => {
+          console.log(JSON.stringify(queries));
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.count, query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+        });
+
+
+    }
+
+    if (this.type === this.SLOWEST) {
+      this.mongoApiClientService.getSlowestQueries(fromDate, toDate, this.limit)
+        .subscribe(queries => {
+          console.log(JSON.stringify(queries));
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.executionTime, query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+        });
+    }
   }
 }
 

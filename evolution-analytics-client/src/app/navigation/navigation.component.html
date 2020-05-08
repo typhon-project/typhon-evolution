@@ -6,24 +6,24 @@
     </a>
     <ng-template ngbNavContent>
       <div style="position: absolute; display:inline-block; width: 60%; border-right: 2px solid #dee2e6; vertical-align: top;">
-        <app-time-radio-button [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
+        <app-time-radio-button [chartsId]="'0'" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
         <div [ngClass]="{'invisible': timeEvolutionMode}">
           <div style="text-align:center; margin-top: 50px;">
-            <app-pie-chart [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
-            <app-pie-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [chartsId]="'0'" [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [chartsId]="'0'" [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">
-            <app-pie-chart [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
+            <app-pie-chart [chartsId]="'0'" [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities'" [navigationTab]="getNavigationComponent()"></app-pie-chart>
           </div>
         </div>
 
         <div [ngClass]="{'invisible': !timeEvolutionMode}">
           <div style="text-align:center; margin-top: 50px;">
-            <app-line-chart [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
-            <app-line-chart [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+            <app-line-chart [chartsId]="'0'" [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+            <app-line-chart [chartsId]="'0'" [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">
-            <app-line-chart [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+            <app-line-chart [chartsId]="'0'" [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
         </div>
 
@@ -39,9 +39,10 @@
       Queries
     </a>
     <ng-template ngbNavContent>
-      <div style="text-align:center;">
-        <app-table-pagination [chartTitle]="'Most frequent queries'" [type]="0"></app-table-pagination>
-        <app-table-pagination [chartTitle]="'Slowest queries'" [type]="1"></app-table-pagination>
+      <app-time-radio-button [invisible]="true" [chartsId]="'1'" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
+      <div style="text-align:center; margin-top: 20px;">
+        <app-table-pagination [chartsId]="'1'" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination [chartsId]="'1'" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
       </div>
     </ng-template>
   </li>

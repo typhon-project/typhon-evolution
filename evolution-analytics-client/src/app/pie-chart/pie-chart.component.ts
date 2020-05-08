@@ -17,6 +17,7 @@ export class PieChartComponent implements OnInit {
   @Input() public objectType: number;
   @Input() public size = 5;
   @Input() public type;
+  @Input() public chartsId;
 
 
   public chartType = 'pie';
@@ -52,7 +53,6 @@ export class PieChartComponent implements OnInit {
   public chartClicked(e: any): void {
     if (e.active.length > 0) {
       const index: number = e.active[0]._index;
-      console.log(this.objectType + 'ok');
       if (this.objectType === this.navigationTab.ENTITY_OBJECT) {
         console.log('ici');
         const entityName: string = this.chartLabels[index];
@@ -181,7 +181,7 @@ export class PieChartComponent implements OnInit {
 
 
   ngOnInit() {
-    this.navigationTab.charts.push(this);
+    this.navigationTab.addChart(this, this.chartsId);
     this.loadCompleteHistory();
   }
 

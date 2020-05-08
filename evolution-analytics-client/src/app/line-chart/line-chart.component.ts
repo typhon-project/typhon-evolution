@@ -13,6 +13,7 @@ export class LineChartComponent  implements OnInit {
   @Input() public objectType: number;
   @Input() public size = 10;
   @Input() public type;
+  @Input() public chartsId;
 
   public chartType = 'line';
 
@@ -84,7 +85,7 @@ export class LineChartComponent  implements OnInit {
   }
 
   ngOnInit() {
-    this.navigationTab.charts.push(this);
+    this.navigationTab.addChart(this, this.chartsId);
     this.loadCompleteHistory();
   }
 

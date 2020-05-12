@@ -14,6 +14,9 @@ export class LineChartComponent  implements OnInit {
   @Input() public size = 10;
   @Input() public type;
   @Input() public chartsId;
+  @Input() public entityName;
+  @Input() public qlQueryUUID: string;
+  @Input() public normalizedQueryUUID: string;
 
   public chartType = 'line';
 
@@ -90,20 +93,20 @@ export class LineChartComponent  implements OnInit {
   }
 
   loadParticularPeriod(fromDate: Date, toDate: Date) {
-    this.load(fromDate.getTime(), toDate.getTime());
+    this.load(this.entityName, fromDate.getTime(), toDate.getTime());
   }
 
   loadCompleteHistory() {
-    this.load(-1, -1);
+    this.load(this.entityName, -1, -1);
   }
 
-  load(fromDate: number, toDate: number) {
+  load(entityName: string, fromDate: number, toDate: number) {
 
     if (this.objectType === this.navigationTab.CRUD_OBJECT) {
       this.chartDatasets = [];
       this.chartLabels = [];
 
-      this.mongoApiClientService.getCRUDOperationDistributionOverTime(fromDate, toDate, this.size).subscribe(cruds => {
+      this.mongoApiClientService.getCRUDOperationDistributionOverTime(entityName, fromDate, toDate, this.size).subscribe(cruds => {
 
         const datasets: Array<any> = [
           { data: [], label: 'Select' },
@@ -142,7 +145,7 @@ export class LineChartComponent  implements OnInit {
         this.chartDatasets = [];
         this.chartLabels = [];
 
-        this.mongoApiClientService.getEntitiesSizePeriodOverTime(fromDate, toDate, this.size).subscribe(sizes => {
+        this.mongoApiClientService.getEntitiesSizePeriodOverTime(entityName, fromDate, toDate, this.size).subscribe(sizes => {
           console.log('sizes:' + JSON.stringify(sizes));
 
           const datasets: Array<any> = [];
@@ -153,7 +156,7 @@ export class LineChartComponent  implements OnInit {
           const entityArray = sizes.entities;
 
           for (const entity of entityArray) {
-            datasets.push({ data: entity.history, label: entity.entityName });
+            datasets.push({data: entity.history, label: entity.entityName});
           }
 
           this.chartDatasets = datasets;
@@ -164,7 +167,6 @@ export class LineChartComponent  implements OnInit {
         });
 
 
-
       } else {
 
         if (this.type === LineChartComponent.NBOFQUERIES() &&
@@ -172,9 +174,7 @@ export class LineChartComponent  implements OnInit {
           this.chartDatasets = [];
           this.chartLabels = [];
 
-          this.mongoApiClientService.getQueriedEntitiesPeriodOverTime(fromDate, toDate, this.size).subscribe(entities => {
-            console.log('entities:' + JSON.stringify(entities));
-
+          this.mongoApiClientService.getQueriedEntitiesPeriodOverTime(entityName, fromDate, toDate, this.size).subscribe(entities => {
             const datasets: Array<any> = [];
 
             const dateArray: number[] = entities.dates;
@@ -183,7 +183,7 @@ export class LineChartComponent  implements OnInit {
             const entityArray = entities.entities;
 
             for (const entity of entityArray) {
-              datasets.push({ data: entity.history, label: entity.entityName });
+              datasets.push({data: entity.history, label: entity.entityName});
             }
 
             this.chartDatasets = datasets;
@@ -192,9 +192,46 @@ export class LineChartComponent  implements OnInit {
             this.chartColors = this.getChartColors();
 
           });
-        }
+        } else {
+          if (this.objectType === this.navigationTab.QUERY_OBJECT) {
 
+            if (fromDate === -1) {
+              fromDate = 0;
+            }
+
+            if (toDate === -1) {
+               toDate = Number.MAX_SAFE_INTEGER;
+            }
+
+            this.chartDatasets = [];
+            this.chartLabels = [];
+
+            this.mongoApiClientService.getQueryExecutionTimeOverTime(this.normalizedQueryUUID,
+              this.qlQueryUUID, fromDate, toDate).subscribe(times => {
+
+
+
+                const datasets: Array<any> = [{data: [], label: 'Time in ms'}];
+                const dateArray: number[] = [];
+
+                for (const time of times) {
+                  const executionDate = time.executionDate;
+                  const executionTime = time.executionTime;
+                  dateArray.push(executionDate);
+                  datasets[0].data.push(executionTime);
+                }
+
+                const labels = this.transformDate(dateArray);
+
+                this.chartDatasets = datasets;
+                this.chartLabels = labels;
+
+                this.chartColors = this.getChartColors();
+            });
+
+          }
         }
+      }
     }
   }
 

@@ -27,20 +27,19 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
   chartData = [];
 
-
-
-
-
   CRUD_OBJECT = 1;
   ENTITY_OBJECT = 0;
+  QUERY_OBJECT = 2;
 
-  tabs = [1, 2, 3, 4, 5];
+  tabs = [];
   counter = this.tabs.length + 1;
   active;
   timeEvolutionMode = false;
   public charts = new Map();
 
   lastChartsId: string;
+  entityTabs = [];
+  queryTabs: any[] = [];
 
   addChart(chart, UUID: string) {
     let array: any[] = this.charts.get(UUID);
@@ -50,6 +49,18 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     }
 
     array.push(chart);
+  }
+
+  closeEntityTab(event: MouseEvent, toRemove: string) {
+    this.entityTabs = this.entityTabs.filter(entityName => entityName !== toRemove);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  closeQueryTab(event: MouseEvent, toRemove: string) {
+    this.queryTabs = this.queryTabs.filter(query => query.uuid !== toRemove);
+    event.preventDefault();
+    event.stopImmediatePropagation();
   }
 
   close(event: MouseEvent, toRemove: number) {
@@ -92,7 +103,9 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   }
 
   openEntityTab(entityName: string) {
-    this.tabs.push(this.counter++);
+    // this.tabs.push(this.counter++);
+    this.entityTabs.push(entityName);
+
     /*TODO call WS*/
   }
 
@@ -156,6 +169,19 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
   getLastChartsId() {
     return this.lastChartsId;
+  }
+
+  openQueryTab(id: string, q: string, queryType: number) {
+    this.queryTabs.push( {uuid: id, query: q, type: queryType} );
+  }
+
+  formatTabTitle(tabName: string) {
+    const lengthLimit = 20;
+    if (tabName.length > lengthLimit) {
+      tabName = tabName.substring(0, lengthLimit) + '...';
+    }
+
+    return tabName;
   }
 }
 

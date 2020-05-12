@@ -54,7 +54,6 @@ export class PieChartComponent implements OnInit {
     if (e.active.length > 0) {
       const index: number = e.active[0]._index;
       if (this.objectType === this.navigationTab.ENTITY_OBJECT) {
-        console.log('ici');
         const entityName: string = this.chartLabels[index];
         this.navigationTab.openEntityTab(entityName);
       }

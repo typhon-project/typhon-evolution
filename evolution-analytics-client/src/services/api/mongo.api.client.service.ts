@@ -39,6 +39,8 @@ export class MongoApiClientService {
   QUERIES_ENTITIES_PROPORTION_OVER_TIME = '/queriedEntities2/';
   MOST_FREQUENT_QUERIES = '/mostFrequentQueries/';
   SLOWEST_QUERIES = '/slowestQueries/';
+  NORMALIZED_QUERY_EVOLUTION = '/normalizedQuery/';
+  QUERY_EVOLUTION = '/query/';
 
   constructor(private http: HttpClient) {
   }
@@ -240,24 +242,42 @@ export class MongoApiClientService {
     return this.http.get<any>(this.END_POINT + this.QUERIES_ENTITIES_PROPORTION + minDate + '/' + maxDate);
   }
 
-  public getCRUDOperationDistributionOverTime(minDate: number, maxDate: number, intervalLength: number): Observable<any> {
-    return this.http.get<any>(this.END_POINT + this.CRUD_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength);
+  public getCRUDOperationDistributionOverTime(entityName: string, minDate: number, maxDate: number,
+                                              intervalLength: number): Observable<any> {
+    return this.http.get<any>(this.END_POINT + this.CRUD_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength + '/'
+      + (entityName && entityName != null ? entityName : ''));
+
   }
 
-  public getEntitiesSizePeriodOverTime(minDate: number, maxDate: number, intervalLength: number): Observable<any> {
-    return this.http.get<any>(this.END_POINT + this.ENTITIES_SIZE_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength);
+  public getEntitiesSizePeriodOverTime(entityName: string, minDate: number, maxDate: number, intervalLength: number): Observable<any> {
+    return this.http.get<any>(this.END_POINT + this.ENTITIES_SIZE_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength + '/'
+      + (entityName && entityName != null ? entityName : ''));
+
   }
 
-  public getQueriedEntitiesPeriodOverTime(minDate: number, maxDate: number, intervalLength: number): Observable<any> {
-    return this.http.get<any>(this.END_POINT + this.QUERIES_ENTITIES_PROPORTION_OVER_TIME + minDate + '/' + maxDate + '/' + intervalLength);
+  public getQueriedEntitiesPeriodOverTime(entityName: string, minDate: number, maxDate: number, intervalLength: number): Observable<any> {
+      return this.http.get<any>(this.END_POINT + this.QUERIES_ENTITIES_PROPORTION_OVER_TIME + minDate + '/' + maxDate + '/'
+        + intervalLength + '/' + (entityName && entityName != null ? entityName : ''));
   }
 
-  public getMostFrequentQueries(minDate: number, maxDate: number, limit: number) {
-    return this.http.get<any>(this.END_POINT + this.MOST_FREQUENT_QUERIES + minDate + '/' + maxDate);
+  public getMostFrequentQueries(entityName: string, minDate: number, maxDate: number, limit: number) {
+    return this.http.get<any>(this.END_POINT + this.MOST_FREQUENT_QUERIES + minDate + '/' + maxDate
+    + '/' + (entityName && entityName != null ? entityName : ''));
   }
 
-  public getSlowestQueries(minDate: number, maxDate: number, limit: number) {
-    return this.http.get<any>(this.END_POINT + this.SLOWEST_QUERIES + minDate + '/' + maxDate);
+  public getSlowestQueries(entityName: string, minDate: number, maxDate: number, limit: number) {
+    return this.http.get<any>(this.END_POINT + this.SLOWEST_QUERIES + minDate + '/' + maxDate
+      + '/' + (entityName && entityName != null ? entityName : ''));
+  }
+
+  public getQueryExecutionTimeOverTime(normalizedQueryUUID: string, qlQueryUUID: string, minDate: number, maxDate: number) {
+    if (normalizedQueryUUID && normalizedQueryUUID != null) {
+      return this.http.get<any>(this.END_POINT + this.NORMALIZED_QUERY_EVOLUTION + minDate + '/' + maxDate
+        + '/' + normalizedQueryUUID);
+    } else {
+      return this.http.get<any>(this.END_POINT + this.QUERY_EVOLUTION + minDate + '/' + maxDate
+        + '/' + qlQueryUUID);
+    }
   }
 
 }

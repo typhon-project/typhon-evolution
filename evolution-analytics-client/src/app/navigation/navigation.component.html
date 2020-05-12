@@ -23,7 +23,7 @@
             <app-line-chart [chartsId]="'0'" [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation distribution over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
           <div style="text-align:center; margin-top: 20px;">
-            <app-line-chart [chartsId]="'0'" [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Proportion of queried entities over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+            <app-line-chart [chartsId]="'0'" [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Nb of queries over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
           </div>
         </div>
 
@@ -41,21 +41,57 @@
     <ng-template ngbNavContent>
       <app-time-radio-button [invisible]="true" [chartsId]="'1'" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
       <div style="text-align:center; margin-top: 20px;">
-        <app-table-pagination [chartsId]="'1'" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
-        <app-table-pagination [chartsId]="'1'" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination [secondColumnName]="'Occ.'" [chartsId]="'1'" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination [secondColumnName]="'Time(ms)'" [chartsId]="'1'" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
       </div>
     </ng-template>
   </li>
 
-  <li *ngFor="let id of tabs" [ngbNavItem]="id">
+  <li *ngFor="let query of queryTabs" [ngbNavItem]="query.uuid">
     <a ngbNavLink>
-      Tab {{ id }}
-      <span class="close position-relative pl-2 font-weight-light" (click)="close($event, id)">×</span>
+      Query <i>{{ formatTabTitle(query.query) }}</i>
+      <span class="close position-relative pl-2 font-weight-light" (click)="closeQueryTab($event, query.uuid)">×</span>
     </a>
     <ng-template ngbNavContent>
-      <p>Tab {{ id }} content</p>
+      <h2>Query: <i>{{ query.query }}</i></h2>
+      <app-time-radio-button [invisible]="true" [chartsId]="query.uuid" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
+      <div style="text-align:center; margin-top: 50px;">
+        <app-line-chart [normalizedQueryUUID]="query.type === 0 ? query.uuid: null" [qlQueryUUID]="query.type === 1 ? query.uuid: null" [chartsId]="query.uuid" [objectType]="QUERY_OBJECT" [chartTitle]="'Execution time over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+      </div>
     </ng-template>
   </li>
+
+  <li *ngFor="let entityName of entityTabs" [ngbNavItem]="entityName">
+    <a ngbNavLink>
+      Entity <i>{{ formatTabTitle(entityName) }}</i>
+      <span class="close position-relative pl-2 font-weight-light" (click)="closeEntityTab($event, entityName)">×</span>
+    </a>
+    <ng-template ngbNavContent>
+      <h2>Entity: <i>{{ entityName }}</i></h2>
+      <app-time-radio-button [invisible]="true" [chartsId]="entityName" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
+      <div style="border-bottom: 2px solid #dee2e6; vertical-align: top;">
+        <div style="text-align:center; margin-top: 50px;">
+          <div style="display:inline-block; width: 50%">
+            <app-line-chart [entityName]="entityName" [chartsId]="entityName" [type]="'SIZE'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Entity size over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+          </div>
+          <div style="display:inline-block; width: 50%">
+            <app-line-chart [entityName]="entityName" [chartsId]="entityName" [type]="'NB_OF_QUERIES'" [objectType]="ENTITY_OBJECT" [chartTitle]="'Nb of queries over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+          </div>
+          </div>
+        <div style="text-align:center; margin-top: 20px;">
+          <div style="display:inline-block; width: 50%">
+            <app-line-chart [entityName]="entityName" [chartsId]="entityName" [objectType]="CRUD_OBJECT" [chartTitle]="'CRUD operation over time'" [navigationTab]="getNavigationComponent()"></app-line-chart>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top: 20px;">
+        <app-table-pagination [entityName]="entityName" [secondColumnName]="'Occ.'" [chartsId]="entityName" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination [entityName]="entityName" [secondColumnName]="'Time(ms)'" [chartsId]="entityName" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+      </div>
+    </ng-template>
+  </li>
+
+
   <li class="nav-item">
     <a class="nav-link" href (click)="add($event)">...</a>
   </li>

@@ -39,7 +39,7 @@
             scope="row">{{el.position}}</th>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.occ}}</td>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.query}}</td>
-        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><button (click)="openQueryDetails(el.id)" mdbBtn color="indigo" size="sm" mdbWavesEffect type="button" class="m-0">Button</button></td>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><button (click)="openQueryDetails(el.id, el.query)" mdbBtn color="indigo" size="sm" mdbWavesEffect type="button" class="m-0">Details</button></td>
       </tr>
 
       </tbody>

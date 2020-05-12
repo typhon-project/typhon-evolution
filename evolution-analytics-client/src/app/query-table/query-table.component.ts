@@ -14,6 +14,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   @Input() public chartTitle: string;
   @Input() public chartsId: string;
   @Input() private navigationTab: NgbdNavDynamicComponent;
+  @Input() private secondColumnName: string;
+  @Input() private entityName: string;
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
@@ -34,6 +36,7 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   constructor(private cdRef: ChangeDetectorRef, private mongoApiClientService: MongoApiClientService) { }
 
   ngOnInit() {
+    this.titleElements[1] = this.secondColumnName;
     this.navigationTab.addChart(this, this.chartsId);
     this.loadCompleteHistory();
 
@@ -60,32 +63,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     }
   }
 
-  openQueryDetails(id) {
-    console.log('query id:' + id + '=>' + this.randomInt(0, 10));
-  }
-
-  randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  private getMostFrequentQueries() {
-    const res = [];
-    for (let i = 1; i <= 10; i++) {
-      const occu = this.randomInt(0, 10);
-      res.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
-    }
-
-    return res;
-  }
-
-  private getSlowestQueries() {
-    const res = [];
-    for (let i = 1; i <= 10; i++) {
-      const occu = this.randomInt(0, 10);
-      res.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
-    }
-
-    return res;
+  openQueryDetails(id, query) {
+    this.navigationTab.openQueryTab(id, query, this.type);
   }
 
   loadParticularPeriod(fromDate: Date, toDate: Date) {
@@ -99,9 +78,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   load(fromDate: number, toDate: number) {
     if (this.type === this.MOST_FREQUENT) {
 
-      this.mongoApiClientService.getMostFrequentQueries(fromDate, toDate, this.limit)
+      this.mongoApiClientService.getMostFrequentQueries(this.entityName, fromDate, toDate, this.limit)
         .subscribe(queries => {
-          console.log(JSON.stringify(queries));
           const array = [];
           let i = 0;
           for (const query of queries) {
@@ -120,9 +98,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     }
 
     if (this.type === this.SLOWEST) {
-      this.mongoApiClientService.getSlowestQueries(fromDate, toDate, this.limit)
+      this.mongoApiClientService.getSlowestQueries(this.entityName, fromDate, toDate, this.limit)
         .subscribe(queries => {
-          console.log(JSON.stringify(queries));
           const array = [];
           let i = 0;
           for (const query of queries) {

@@ -1,7 +1,9 @@
 package capture.mains;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.TyphonModel;
 
@@ -18,6 +20,8 @@ public class Query {
 	private List<Join> joins = new ArrayList<Join>();
 	private List<AttributeSelector> attributeSelectors = new ArrayList<AttributeSelector>();
 	private List<Insert> inserts = new ArrayList<Insert>();
+	
+	private Set<String> allEntities = new HashSet<String>();
 
 	public TyphonModel getModel() {
 		return model;
@@ -219,5 +223,13 @@ public class Query {
 
 	public void setMainEntities(List<String> mainEntities) {
 		this.mainEntities = mainEntities;
+	}
+
+	public Set<String> getAllEntities() {
+		return allEntities;
+	}
+
+	public void setAllEntities(Set<String> allEntities) {
+		this.allEntities = allEntities;
 	}
 }

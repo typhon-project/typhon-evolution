@@ -9,11 +9,24 @@ mongoAnalyticsApiRouter.get('/queriedEntities/:minDate/:maxDate', MongoAnalytics
 mongoAnalyticsApiRouter.get('/entitiesSize/:minDate/:maxDate', MongoAnalyticsApiController.getEntitiesSizeByPeriod);
 
 mongoAnalyticsApiRouter.get('/cruds2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getCRUDOperationDistributionByPeriodOverTime);
+mongoAnalyticsApiRouter.get('/cruds2/:minDate/:maxDate/:intervalLength/:entityName', MongoAnalyticsApiController.getCRUDOperationDistributionByPeriodOverTime);
+
 mongoAnalyticsApiRouter.get('/queriedEntities2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getQueriedEntitiesProportionByPeriodOverTime);
+mongoAnalyticsApiRouter.get('/queriedEntities2/:minDate/:maxDate/:intervalLength/:entityName', MongoAnalyticsApiController.getQueriedEntitiesProportionByPeriodOverTime);
 mongoAnalyticsApiRouter.get('/entitiesSize2/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getEntitiesSizeByPeriodOverTime);
+mongoAnalyticsApiRouter.get('/entitiesSize2/:minDate/:maxDate/:intervalLength/:entityName', MongoAnalyticsApiController.getEntitiesSizeByPeriodOverTime);
+
+
+// mongoAnalyticsApiRouter.get('/cruds2Entity/:entityName/:minDate/:maxDate/:intervalLength', MongoAnalyticsApiController.getCRUDOperationDistributionPerformedOnGivenEntityOverTime);
+
 // mongoAnalyticsApiRouter.get('/entities/size/:fromDate/:toDate', MongoAnalyticsApiController.getEntitiesSize);
 
 mongoAnalyticsApiRouter.get('/mostFrequentQueries/:minDate/:maxDate', MongoAnalyticsApiController.getMostFrequentQueries);
+mongoAnalyticsApiRouter.get('/mostFrequentQueries/:minDate/:maxDate/:entityName', MongoAnalyticsApiController.getMostFrequentQueries);
 mongoAnalyticsApiRouter.get('/slowestQueries/:minDate/:maxDate', MongoAnalyticsApiController.getSlowestQueries);
+mongoAnalyticsApiRouter.get('/slowestQueries/:minDate/:maxDate/:entityName', MongoAnalyticsApiController.getSlowestQueries);
+
+mongoAnalyticsApiRouter.get('/query/:minDate/:maxDate/:queryUUID', MongoAnalyticsApiController.getQueryEvolution);
+mongoAnalyticsApiRouter.get('/normalizedQuery/:minDate/:maxDate/:normalizedQueryUUID', MongoAnalyticsApiController.getNormalizedQueryEvolution);
 
 export {mongoAnalyticsApiRouter};

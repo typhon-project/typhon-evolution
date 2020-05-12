@@ -179,7 +179,7 @@ export class MongoService {
         return null;
     }
 
-    public async getQueriedEntitiesProportionOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+    public async getQueriedEntitiesProportionOverTime(db, entityName: string, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
 
         let minBound = minDate;
         let maxBound = minDate;
@@ -187,7 +187,7 @@ export class MongoService {
         let map = new Map();
         const dates = [];
         while (i < (intervalLength + 1)) {
-            const queriedEntities: any[] = await this.getQueriedEntitiesProportionByPeriod(db, minBound, maxBound);
+            const queriedEntities: any[] = await this.getQueriedEntitiesProportionByPeriod(db, entityName, minBound, maxBound);
 
             for (const entity of queriedEntities) {
                 const entityName = entity._id;
@@ -245,7 +245,8 @@ export class MongoService {
         return res;
     }
 
-    public async  getEntitiesSizeOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+
+    public async  getEntitiesSizeOverTime(db, entityName: string, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
         let minBound = minDate;
         let maxBound = minDate;
         let i = 0;
@@ -253,7 +254,7 @@ export class MongoService {
         const dates = [];
         console.log('interval length:' + intervalLength);
         while (i < (intervalLength + 1)) {
-            const sizes: any[] = await this.getEntitiesSizeByPeriod(db, minBound, maxBound);
+            const sizes: any[] = await this.getEntitiesSizeByPeriod(db, entityName, minBound, maxBound);
 
 
             for( const size of sizes) {
@@ -285,13 +286,47 @@ export class MongoService {
         return res;
     }
 
-    private async getEntitiesSizeByPeriod(db, minDate: number, maxDate: number) {
+    private async getEntitySizeByPeriod(db, entityName: string, minDate: number, maxDate: number) {
+        const sizes =
+            db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate(
+                [
+                    {
+                        $match: {
+                            $and: [
+                                {name: {$eq: entityName}},
+                                {updateDate: {$lte: maxDate}}
+                            ]
+                        }
+                    },
+                    { $sort: { "name": 1, "updateDate": -1 } },
+                    {
+                        $group:
+                            {
+                                _id: "$name",
+                                updateDate: { $first: "$updateDate" },
+                                size: {$first: "$dataSize"}
+                            }
+                    }
+                ]
+            );
+        if (await sizes.hasNext()) {
+            return await sizes.toArray();
+        } else
+            return [];
+    }
+
+    private async getEntitiesSizeByPeriod(db, entityName: string, minDate: number, maxDate: number) {
 
         const sizes =
             db.collection(MongoCollection.ENTITY_HISTORY_COLLECTION_NAME).aggregate(
                 [
                     {
-                        $match: {updateDate: {$lte: maxDate} }
+                        $match: {
+                            $and: [
+                                (entityName && entityName != null ? {name: {$eq: entityName}} : {}),
+                                {updateDate: {$lte: maxDate}}
+                            ]
+                        }
                     },
                     { $sort: { "name": 1, "updateDate": -1 } },
                     {
@@ -311,8 +346,7 @@ export class MongoService {
 
     }
 
-
-    public async getQueriedEntitiesProportionByPeriod(db, minDate: number, maxDate: number) {
+    public async getQueriedEntitiesProportionByPeriod(db, entityName: string, minDate: number, maxDate: number) {
         const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
         //Retrieve the latest version of the model
         const model: Model = await this.getModelLatestVersion(modelCollection);
@@ -325,6 +359,7 @@ export class MongoService {
                     {
                         $match: {
                             $and: [
+                                (entityName && entityName != null ? {name: {$eq: entityName}} : {}),
                                 {updateDate: {$lte: maxDate}},
                                 {updateDate: {$gte: minDate}}
                             ]
@@ -367,7 +402,7 @@ export class MongoService {
             return [];
     }
 
-    public async getCRUDOperationDistributionByPeriodOverTime(db, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
+    public async getCRUDOperationDistributionByPeriodOverTime(db, entityName: string, minDate: number, maxDate: number, msInterval: number, intervalLength: number) {
 
         const timeArray = [];
         const valueArray = [];
@@ -376,7 +411,7 @@ export class MongoService {
         let i = 0;
         console.log('interval length:' + intervalLength);
         while (i < (intervalLength + 1)) {
-            const cruds: any[] = await this.getCRUDOperationDistributionByPeriod(db, minBound, maxBound);
+            const cruds: any[] = await this.getCRUDOperationDistributionByPeriod(db, entityName, minBound, maxBound);
             let selects = 0;
             let updates = 0;
             let deletes = 0;
@@ -401,7 +436,7 @@ export class MongoService {
         return [{time: timeArray, values: valueArray}];
     }
 
-    public async getCRUDOperationDistributionByPeriod(db, minDate: number, maxDate: number) {
+    public async getCRUDOperationDistributionByPeriod(db, entityName: string, minDate: number, maxDate: number) {
         const modelCollection: Collection = db.collection(MongoCollection.MODEL_COLLECTION_NAME);
         //Retrieve the latest version of the model
         const model: Model = await this.getModelLatestVersion(modelCollection);
@@ -414,6 +449,7 @@ export class MongoService {
                     {
                         $match: {
                             $and: [
+                                (entityName && entityName != null ? {name: {$eq: entityName}} : {}),
                                 {modelVersion: modelVersion},
                                 {updateDate: {$lte: maxDate}},
                                 {updateDate: {$gte: minDate}}
@@ -486,11 +522,12 @@ export class MongoService {
         return null;
     }
 
-    public async getSlowestQueries(db, minDate: number, maxDate: number) {
+    public async getSlowestQueries(db, entityName: string, minDate: number, maxDate: number) {
         const queries =
             db.collection(MongoCollection.QUERY_COLLECTION_NAME).aggregate([
                 {$match: {
                         $and: [
+                            (entityName && entityName != null ? {allEntities: entityName} : {}),
                             {executionDate: {$lte: maxDate}},
                             {executionDate: {$gte: minDate}}
                         ]
@@ -507,11 +544,12 @@ export class MongoService {
 
     }
 
-    public async getMostFrequentQueries(db, minDate: number, maxDate: number) {
+    public async getMostFrequentQueries(db, entityName: string, minDate: number, maxDate: number) {
         const queries =
                 db.collection(MongoCollection.QUERY_COLLECTION_NAME).aggregate([
                     {$match: {
                             $and: [
+                                (entityName && entityName != null ? {allEntities: entityName} : {}),
                                 {executionDate: {$lte: maxDate}},
                                 {executionDate: {$gte: minDate}}
                             ]
@@ -548,6 +586,44 @@ export class MongoService {
             }
 
 
+    }
+
+    public async getQueryExecutionTimeEvolution(db, queryUUID: string, minDate: number, maxDate: number) {
+        const normalizedQueryUUID = await this.getNormalizedQueryUUID(db, queryUUID);
+        if (normalizedQueryUUID.length === 0)
+            return [];
+        const uuid = normalizedQueryUUID[0].normalizedQueryId;
+        return this.getNormalizedQueryExecutionTimeEvolution(db, uuid, minDate, maxDate);
+    }
+
+    private async getNormalizedQueryUUID(db, queryUUID: string) {
+        var ObjectID = require('mongodb').ObjectID;
+        var objectId = new ObjectID(queryUUID);
+        const queries =
+            db.collection(MongoCollection.QUERY_COLLECTION_NAME).find(
+                {_id: objectId})
+                .sort({normalizedQueryId: 1});
+        if (await queries.hasNext()) {
+            return await queries.toArray();
+        } else {
+            return [];
+        }
+    }
+
+    public async getNormalizedQueryExecutionTimeEvolution(db, normalizedQueryUUID: string, minDate: number, maxDate: number) {
+       var ObjectID = require('mongodb').ObjectID;
+       var objectId = new ObjectID(normalizedQueryUUID);
+
+        const queries =
+            db.collection(MongoCollection.QUERY_COLLECTION_NAME).find(
+                {normalizedQueryId: objectId, executionDate: {$lte: maxDate, $gte: minDate}},
+                {executionDate: 1, executionTime: 1})
+                .sort({executionDate: 1});
+        if (await queries.hasNext()) {
+            return await queries.toArray();
+        } else {
+            return [];
+        }
     }
 
 

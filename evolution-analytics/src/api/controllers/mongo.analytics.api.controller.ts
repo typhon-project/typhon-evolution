@@ -271,6 +271,29 @@ export class MongoAnalyticsApiController {
         await mongoHelper.disconnect();
     };
 
+    public static getNormalizedQueryUUID = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+
+        const queryUUID = request.params.queryUUID;
+
+        const normalizedQueryUUID = await mongoService.getNormalizedQueryUUID(db, queryUUID);
+
+        if (normalizedQueryUUID != null) {
+            console.log('getNormalizedQueryUUID successfully executed');
+            result.send(normalizedQueryUUID);
+        } else {
+            console.log('Error while getting the normalized query id');
+            result.send('Error while getting the normalized query id. Check backend logs')
+        }
+
+
+        await mongoHelper.disconnect();
+    };
+
+
     public static getQueryEvolution = async (request: Request, result: Response) => {
         const mongoHelper = new MongoHelper();
         await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
@@ -288,6 +311,25 @@ export class MongoAnalyticsApiController {
         } else {
             console.log('Error while getting the query execution time evolution');
             result.send('Error while getting the query execution time evolution. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    };
+
+    public static getLatestExecutedQuery = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+
+        const queryUUID = request.params.normalizedQueryUUID;
+
+        const query = await mongoService.getLatestExecutedQuery(db, queryUUID);
+        if (query != null) {
+            console.log('getLatestExecutedQuery successfully executed');
+            result.send(query);
+        } else {
+            console.log('Error while getting the latest executed query');
+            result.send('Error while getting the latest executed query. Check backend logs')
         }
         await mongoHelper.disconnect();
     };

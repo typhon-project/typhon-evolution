@@ -596,13 +596,28 @@ export class MongoService {
         return this.getNormalizedQueryExecutionTimeEvolution(db, uuid, minDate, maxDate);
     }
 
-    private async getNormalizedQueryUUID(db, queryUUID: string) {
+    public async getNormalizedQueryUUID(db, queryUUID: string) {
         var ObjectID = require('mongodb').ObjectID;
         var objectId = new ObjectID(queryUUID);
         const queries =
             db.collection(MongoCollection.QUERY_COLLECTION_NAME).find(
                 {_id: objectId})
                 .sort({normalizedQueryId: 1});
+        if (await queries.hasNext()) {
+            return await queries.toArray();
+        } else {
+            return [];
+        }
+    }
+
+    public async getLatestExecutedQuery(db, queryUUID: string) {
+        var ObjectID = require('mongodb').ObjectID;
+        var objectId = new ObjectID(queryUUID);
+        const queries =
+            db.collection(MongoCollection.QUERY_COLLECTION_NAME).find(
+                {normalizedQueryId: objectId})
+                .sort({executionDate: -1})
+                .limit(1);
         if (await queries.hasNext()) {
             return await queries.toArray();
         } else {

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 import * as d3 from 'd3';
-import {randomInt} from '../navigation/navigation.component';
+import {NgbdNavDynamicComponent, randomInt} from '../navigation/navigation.component';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
 import {SocketioService} from '../../services/socket/socketio.service';
 
@@ -14,6 +14,8 @@ export class D3ChartsComponent implements OnInit {
   @Input() screenPercentage: number;
   @Input() svgId: string;
   waitingDiv: boolean;
+
+  @Input() private navigationTab: NgbdNavDynamicComponent;
 
   constructor(private mongoApiClientService: MongoApiClientService) {
     this.waitingDiv = false;
@@ -104,6 +106,10 @@ export class D3ChartsComponent implements OnInit {
       .attr('class', d => d.parent ? d.children ? 'node' : 'node node--leaf' : 'node node--root')
       .style('fill', d => d.children ? 'transparent' : 'rgb(179, 236, 255)')
       .on('click', d => {
+        if (!d.children) {
+          this.openEntityTab(d.data.name);
+        }
+
         if (focus !== d) {
           zoom(d);
           d3.event.stopPropagation();
@@ -194,5 +200,9 @@ export class D3ChartsComponent implements OnInit {
         + ((d as d3.HierarchyCircularNode<unknown>).y - v[1]) * k + ')' );
       circle.attr('r', d => d.r * k);
     }
+  }
+
+  private openEntityTab(entityName: string) {
+    this.navigationTab.openEntityTab(entityName);
   }
 }

@@ -41,6 +41,7 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   entityTabs = [];
   queryTabs: any[] = [];
 
+
   addChart(chart, UUID: string) {
     let array: any[] = this.charts.get(UUID);
     if (!array || array == null) {

@@ -41,6 +41,8 @@ export class MongoApiClientService {
   SLOWEST_QUERIES = '/slowestQueries/';
   NORMALIZED_QUERY_EVOLUTION = '/normalizedQuery/';
   QUERY_EVOLUTION = '/query/';
+  LATEST_QUERY = '/latestQuery/';
+  NORMALIZED_QUERY_ID = '/normalizedQueryId/';
 
   constructor(private http: HttpClient) {
   }
@@ -280,4 +282,11 @@ export class MongoApiClientService {
     }
   }
 
+  getLatestExecutedQuery(normalizedQueryUUID: string) {
+    return this.http.get<any>(this.END_POINT + this.LATEST_QUERY + normalizedQueryUUID);
+  }
+
+  getNormalizedQueryId(qlQueryUUID: string) {
+    return this.http.get<any>(this.END_POINT + this.NORMALIZED_QUERY_ID + qlQueryUUID);
+  }
 }

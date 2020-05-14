@@ -249,6 +249,25 @@ export class MongoAnalyticsApiController {
         await mongoHelper.disconnect();
     };
 
+    public static getNormalizedQuery = async (request: Request, result: Response) => {
+        const mongoHelper = new MongoHelper();
+        await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);
+        const db: Db = mongoHelper.client.db(MONGO_DB_NAME);
+        const mongoService = new MongoService();
+
+        const queryUUID = request.params.queryUUID;
+        console.log('query: ' + queryUUID);
+        const queries = await mongoService.getNormalizedQuery(db, queryUUID);
+        if (queries != null) {
+            console.log('getNormalizedQuery successfully executed');
+            result.send(queries);
+        } else {
+            console.log('Error while getting the normalized query');
+            result.send('Error while getting the normalized query. Check backend logs')
+        }
+        await mongoHelper.disconnect();
+    };
+
     public static getNormalizedQueryEvolution = async (request: Request, result: Response) => {
         const mongoHelper = new MongoHelper();
         await mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);

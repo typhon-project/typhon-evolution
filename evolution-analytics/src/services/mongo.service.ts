@@ -574,6 +574,7 @@ export class MongoService {
                         $group: {
                             _id: '$normalizedQueryId',
                             count: {$sum: 1},
+                            avgExecutionTime: {$avg: '$executionTime'},
                             query:  {$first: '$displayableForm' }
                         }
                     },
@@ -639,6 +640,25 @@ export class MongoService {
         } else {
             return [];
         }
+    }
+
+    public async getNormalizedQuery(db, qlQueryUUID: string) {
+        const queries = await this.getNormalizedQueryUUID(db, qlQueryUUID);
+        if (!queries || queries.length !== 1)
+            return[];
+        const normalizedQueryId = queries[0].normalizedQueryId;
+        console.log('iic:' + normalizedQueryId);
+        var ObjectID = require('mongodb').ObjectID;
+        var objectId = new ObjectID(normalizedQueryId);
+        const res =
+            db.collection(MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME).find(
+                {_id: objectId});
+        if (await res.hasNext()) {
+            return await res.toArray();
+        } else {
+            return [];
+        }
+
     }
 
 

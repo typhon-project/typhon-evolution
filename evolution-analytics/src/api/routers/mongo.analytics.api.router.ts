@@ -28,6 +28,8 @@ mongoAnalyticsApiRouter.get('/slowestQueries/:minDate/:maxDate/:entityName', Mon
 
 mongoAnalyticsApiRouter.get('/query/:minDate/:maxDate/:queryUUID', MongoAnalyticsApiController.getQueryEvolution);
 mongoAnalyticsApiRouter.get('/normalizedQuery/:minDate/:maxDate/:normalizedQueryUUID', MongoAnalyticsApiController.getNormalizedQueryEvolution);
+mongoAnalyticsApiRouter.get('/normalizedQuery/:queryUUID', MongoAnalyticsApiController.getNormalizedQuery);
+
 
 mongoAnalyticsApiRouter.get('/latestQuery/:normalizedQueryUUID', MongoAnalyticsApiController.getLatestExecutedQuery);
 

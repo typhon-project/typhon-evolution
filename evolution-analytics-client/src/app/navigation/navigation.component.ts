@@ -2,6 +2,7 @@ import {AfterContentInit, Component, OnInit, ViewChild, ViewEncapsulation} from 
 import {AreaChartComponent} from '../app-area-chart/app-area-chart.component';
 import * as d3 from 'd3';
 import * as uuid from 'uuid';
+import {query} from '@angular/animations';
 
 @Component({
   selector: 'app-navigation',

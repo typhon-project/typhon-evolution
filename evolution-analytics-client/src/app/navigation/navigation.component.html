@@ -61,7 +61,7 @@
         </div>
       </div>
       <div style="display:inline-block; width: 40%; margin-left: 60%; padding-left: 60px">
-        <app-query-details [normalizedQueryUUID]="query.type === 0 ? query.uuid: null" [qlQueryUUID]="query.type === 1 ? query.uuid: null"></app-query-details>
+        <app-query-details [nav]="getNavigationComponent()" [normalizedQueryUUID]="query.type === 0 ? query.uuid: null" [qlQueryUUID]="query.type === 1 ? query.uuid: null"></app-query-details>
       </div>
     </ng-template>
   </li>
@@ -97,9 +97,6 @@
   </li>
 
 
-  <li class="nav-item">
-    <a class="nav-link" href (click)="add($event)">...</a>
-  </li>
 </ul>
 
 <div [ngbNavOutlet]="nav" class="mt-2"></div>

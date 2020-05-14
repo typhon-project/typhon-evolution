@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetecto
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
 import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
+import {QueryDetailsModule} from '../query-details/query-details.module';
 
 @Component({
   selector: 'app-table-pagination',
@@ -21,8 +22,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
 
   elements: any = [];
-  titleElements = ['position', 'occ.', 'query', ''];
-  headElements = ['position', 'occ', 'query', 'handle'];
+  titleElements = [];
+  headElements = [];
   searchText = '';
   previous: string;
 
@@ -36,7 +37,17 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   constructor(private cdRef: ChangeDetectorRef, private mongoApiClientService: MongoApiClientService) { }
 
   ngOnInit() {
-    this.titleElements[1] = this.secondColumnName;
+
+    if (this.type === this.MOST_FREQUENT) {
+      this.titleElements = ['position', this.secondColumnName, 'avg.(ms)', 'query', ''];
+      this.headElements = ['position', 'occ', 'avg', 'query', 'handle'];
+    }
+
+    if (this.type === this.SLOWEST) {
+      this.titleElements = ['position', this.secondColumnName, 'query', ''];
+      this.headElements = ['position', 'occ', 'query', 'handle'];
+    }
+
     this.navigationTab.addChart(this, this.chartsId);
     this.loadCompleteHistory();
 
@@ -64,7 +75,17 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   }
 
   openQueryDetails(id, query) {
-    this.navigationTab.openQueryTab(id, query, this.type);
+    if (this.type === this.SLOWEST) {
+      this.mongoApiClientService.getNormalizedQuery(id)
+        .subscribe(q => {
+          if (q && q != null && (q as any[]).length === 1) {
+            query = q[0].displayableForm;
+            this.navigationTab.openQueryTab(id, query, this.type);
+          }
+        });
+    } else {
+        this.navigationTab.openQueryTab(id, query, this.type);
+      }
   }
 
   loadParticularPeriod(fromDate: Date, toDate: Date) {
@@ -83,7 +104,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
           const array = [];
           let i = 0;
           for (const query of queries) {
-            array.push({ position: (i + 1), id: query._id, occ: query.count, query: query.query, handle: 'Handle ' + i });
+            array.push({ position: (i + 1), id: query._id, occ: query.count, avg: Math.round(query.avgExecutionTime),
+              query: query.query, handle: 'Handle ' + i });
             i++;
           }
 

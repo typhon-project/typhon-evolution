@@ -18,18 +18,10 @@
     <table id="tableSortExample" mdbTable class="z-depth-1">
       <thead>
       <tr>
-        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[0]">{{titleElements[0] | titlecase}}
+        <th *ngFor="let el of headElements.slice(0, headElements.length - 1); let i = index" aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="el">{{titleElements[i] | titlecase}}
           <mdb-icon fas icon="sort"></mdb-icon>
         </th>
-        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[1]">{{titleElements[1] | titlecase}}
-          <mdb-icon fas icon="sort"></mdb-icon>
-        </th>
-        <th aria-controls="tableSortExample" scope="col" [mdbTableSort]="elements" [sortBy]="headElements[2]">{{titleElements[2] | titlecase}}
-          <mdb-icon fas icon="sort"></mdb-icon>
-        </th>
-        <th aria-controls="tableSortExample" scope="col">{{titleElements[3] | titlecase}}
-
-        </th>
+        <th></th>
 
       </tr>
       </thead>
@@ -38,6 +30,7 @@
         <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"
             scope="row">{{el.position}}</th>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.occ}}</td>
+        <td *ngIf="el.avg && i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.avg}}</td>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.query}}</td>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><button (click)="openQueryDetails(el.id, el.query)" mdbBtn color="indigo" size="sm" mdbWavesEffect type="button" class="m-0">Details</button></td>
       </tr>

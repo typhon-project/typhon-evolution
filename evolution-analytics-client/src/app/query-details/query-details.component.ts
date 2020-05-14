@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
 
 @Component({
   selector: 'app-query-details',
@@ -9,12 +10,13 @@ import {MongoApiClientService} from '../../services/api/mongo.api.client.service
 export class QueryDetailsComponent implements OnInit {
   @Input() public normalizedQueryUUID;
   @Input() public qlQueryUUID;
+  @Input() public nav: NgbdNavDynamicComponent;
 
   public latestExecutionDate: string;
   public latestExecutionTime: number;
   public queryType: string;
   public concernedEntities: string[];
-  public joinEntities: string;
+  public joinEntities: any[];
   public implicitInsertedEntities: string[];
 
   constructor(private mongoApiClientService: MongoApiClientService) { }
@@ -47,28 +49,24 @@ export class QueryDetailsComponent implements OnInit {
         this.latestExecutionDate = new Date(query.executionDate).toLocaleString();
         this.latestExecutionTime = query.executionTime;
         this.queryType = query.type;
-        this.concernedEntities = query.allEntities ? query.allEntities : '-';
+        this.concernedEntities = query.allEntities;
 
-
+        this.joinEntities = [];
         const joins = query.joins;
         if (joins) {
-          let i = 0;
-          this.joinEntities = '';
           for (const join of joins) {
-            if (i > 0) {
-              this.joinEntities += ', ';
-            }
-            this.joinEntities += '(' + join.entity1 + '<->' + join.entity2 + ')';
-            i++;
+            this.joinEntities.push({e1: join.entity1, e2: join.entity2});
           }
-        } else {
-          this.joinEntities = '-';
         }
 
-        this.implicitInsertedEntities = query.implicitInsertedEntities ? query.implicitInsertedEntities : '-';
+        this.implicitInsertedEntities = query.implicitInsertedEntities;
 
       });
 
 
+  }
+
+  openEntityTab(entity: string) {
+    this.nav.openEntityTab(entity);
   }
 }

@@ -43,6 +43,7 @@ export class MongoApiClientService {
   QUERY_EVOLUTION = '/query/';
   LATEST_QUERY = '/latestQuery/';
   NORMALIZED_QUERY_ID = '/normalizedQueryId/';
+  NORMALIZED_QUERY = '/normalizedQuery/';
 
   constructor(private http: HttpClient) {
   }
@@ -288,5 +289,9 @@ export class MongoApiClientService {
 
   getNormalizedQueryId(qlQueryUUID: string) {
     return this.http.get<any>(this.END_POINT + this.NORMALIZED_QUERY_ID + qlQueryUUID);
+  }
+
+  getNormalizedQuery(qlQueryUUID: string) {
+    return this.http.get<any>(this.END_POINT + this.NORMALIZED_QUERY + qlQueryUUID);
   }
 }

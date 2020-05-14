@@ -7,13 +7,34 @@
   {{queryType}}
 
   <h3>Concerned entities:</h3>
-  {{concernedEntities}}
+  <div>
+    <div style="display:inline-block;" *ngFor="let entity of concernedEntities; let i = index">
+      <label *ngIf="i > 0">,&nbsp;</label>
+      <a  (click)="openEntityTab(entity);">{{entity}}</a>
+    </div>
+  </div>
 
   <h3>Joins between entities:</h3>
-  {{joinEntities}}
+  <div>
+    <label *ngIf="!joinEntities || joinEntities.length === 0">-</label>
+    <div style="display:inline-block;" *ngFor="let entity of joinEntities; let i = index">
+      <label *ngIf="i > 0">,&nbsp;</label>
+      (
+      <a  (click)="openEntityTab(entity.e1);">{{entity.e1}}</a>
+      &#8853;
+      <a  (click)="openEntityTab(entity.e2);">{{entity.e2}}</a>
+      )
+    </div>
+  </div>
 
   <h3>Entities implicitly inserted</h3>
-  {{implicitInsertedEntities}}
+  <div>
+    <label *ngIf="!implicitInsertedEntities || implicitInsertedEntities.length === 0">-</label>
+    <div style="display:inline-block;" *ngFor="let entity of implicitInsertedEntities; let i = index">
+      <label *ngIf="i > 0">,&nbsp;</label>
+      <a  (click)="openEntityTab(entity);">{{entity}}</a>
+    </div>
+  </div>
 
   <div class="evolutionButton">
     <button mdbBtn type="button" color="indigo" mdbWavesEffect>

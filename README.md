@@ -1,17 +1,29 @@
 [![Build Status](http://typhon.clmsuk.com:8080/buildStatus/icon?job=TyphonEvolution)](http://typhon.clmsuk.com:8080/job/TyphonEvolution)
 
-# Typhon evolution tool
+# Typhon evolution tools
 
-## How to run
+This repository provides a set of tools helping you to evolve the polystore schema. The tools are the following : 
 
-Main Spring Boot App class : Run `com.typhon.evolutiontool.EvolutionToolApplication` 
+- [Evolution CLI](##-Evolution-CLI) : A command line tool enabling you to change the schema deploied in the polystore,
+- [Query Evolution Plugin](##-Query-Evolution-Plugin) : An eclipse plugin helping you to translate TyphonQL queries for the new schema,
+- [Injection Tool](##-Injection-Tool) : Allows you to inject an external database to the polystore schema,
+- [Analytics Tool](##-Analytics-Tool) : An interface enabling you to visualize the performance of the polystore.
 
-Default running address : http://localhost:8000 (Can be changed in `application.properties`)
+The instruction for installing and using each of these tools are explicited in the following sections.
 
-## How to use
+## Evolution CLI
 
-- Send a HTTP POST request to http://localhost:8000/evolve. It requires two string parameters :
-    * initialModelPath : Represents a path to an xmi file containing the TyphonML models with ChangeOperators. (exemple : "resources/tml_removeEntityChangeOp.xmi" OR "resources/tml_removeAndRenameChangeOp.xmi")
-    *  finalModelPath : Represents a path and file name where the final model will be saved. (ex: resources/finalModel.xmi)
- 
- 
+The evolution CLI evolve the schema of your polystore accordingly to the change operators mentionned in your TML file.
+
+### Installation
+
+
+
+### Usage
+
+## Query Evolution Plugin
+
+## Injection Tool
+
+
+## Analytics Tool

@@ -17,7 +17,21 @@ The evolution CLI evolve the schema of your polystore accordingly to the changeo
 
 ### Installation
 
+First, you need to clone the evolution tool repository with the following command :
 
+```
+git clone git@github.com:typhon-project/typhon-evolution.git
+```
+
+and move to the folder called "backend".
+
+The first step of the installation is to add jar to your maven repository. You just need to execute the file called `mvn.cmd`located at `src/main/ressources/libs`.
+
+Once the dependencies are successfully installed, you can go back to the root of the `backend` folder and run :
+
+```
+mvn install
+```
 
 ### Usage
 

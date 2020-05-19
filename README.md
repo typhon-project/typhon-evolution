@@ -4,10 +4,10 @@
 
 This repository provides a set of tools helping you to evolve the polystore schema. The tools are the following : 
 
-- [Evolution CLI](##-Evolution-CLI) : A command line tool enabling you to change the schema deploied in the polystore,
-- [Query Evolution Plugin](##-Query-Evolution-Plugin) : An eclipse plugin helping you to translate TyphonQL queries for the new schema,
-- [Injection Tool](##-Injection-Tool) : Allows you to inject an external database to the polystore schema,
-- [Analytics Tool](##-Analytics-Tool) : An interface enabling you to visualize the performance of the polystore.
+- [Evolution CLI](#evolution-cli) : A command line tool enabling you to change the schema deploied in the polystore,
+- [Query Evolution Plugin](#query-evolution-plugin) : An eclipse plugin helping you to translate TyphonQL queries for the new schema,
+- [Injection Tool](#injection-tool) : Allows you to inject an external database to the polystore schema,
+- [Analytics Tool](#analytics-tool) : An interface enabling you to visualize the performance of the polystore.
 
 The instruction for installing and using each of these tools are explicited in the following sections.
 

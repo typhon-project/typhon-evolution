@@ -13,7 +13,7 @@ The instruction for installing and using each of these tools are explicited in t
 
 ## Evolution CLI
 
-The evolution CLI evolve the schema of your polystore accordingly to the change operators mentionned in your TML file.
+The evolution CLI evolve the schema of your polystore accordingly to the changeoperators of the new tml file.
 
 ### Installation
 
@@ -21,7 +21,60 @@ The evolution CLI evolve the schema of your polystore accordingly to the change 
 
 ### Usage
 
+The command line is waiting for the adresse of the polystore API and the new tml schema with the change operators.
+
 ## Query Evolution Plugin
+
+The Eclipse plugin allows you to translate typhonQL queries to make them works with a new version of the schema enabling the programmer to quickly update their applications to the new polystore.
+
+### Installation
+
+### Usage
+
+The plugin introduce a new file format with the extension .qevo. The structure of the file is the following :
+
+- Schema import : A line specifying the .tml file with the change operators applied to the schema,
+- Queries : A set of queries separated by a comma. Those queries will be transformed accordingly to the changeOperators contained in the .tml file.
+
+Here is an example of .qevo file :
+
+```
+import /src/schema.xmi ;
+
+from Product p select p,
+
+from User u, Order o select o where u.orders == o, u.id == "324",
+
+from User u select u.orders where u.id == "324",
+
+from User u select u.orders.paidWith,
+
+
+from Product p select p.review,
+
+from Review r select r where r.product.id == "product_id",
+
+insert
+    @pp User { name: "Pablo", reviews: badradio },
+    @radio Product {name: "Radio", description: "Wireless", reviews: badradio },
+    @badradio Review { contents: "Bad radio",product: radio,user: pp},
+    
+delete Item p where p.name == "Half Life 3"
+```
+
+The path of the .tml file is relative to the eclipse project where the .qevo file is created. 
+To transform the queries, the user should right click on the .qevo file and select the transform option
+
+%TODO : add screenshot
+
+A status is assigned to each transformed queries : 
+
+- **Unchanged** : The query is not impacted by the change operators and is unchanged
+- **Modified** : The query is impacted by one of the change operators and was modified. The result set returned by the query is unchanged
+- **Warning** : The query is impacted by one of the change operators and was modified. However, the result set returned by the query may not have the same shape as before.
+- **Broken** : The query is impacted by one of the change operators and could not work anymore on the new schema. 
+
+An explanation of why the query is set as *Warning* or *Broken* is also provided to help the developper to assess the issue.
 
 ## Injection Tool
 

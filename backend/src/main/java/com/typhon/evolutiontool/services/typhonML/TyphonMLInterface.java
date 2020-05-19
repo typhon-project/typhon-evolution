@@ -2,7 +2,10 @@ package com.typhon.evolutiontool.services.typhonML;
 
 
 import com.typhon.evolutiontool.entities.*;
-import typhonml.*;
+import typhonml.Database;
+import typhonml.Entity;
+import typhonml.Model;
+import typhonml.Relation;
 
 /**
  * Interface to access TyphonML.
@@ -17,7 +20,7 @@ public interface TyphonMLInterface {
      * @param model
      * @return
      */
-    Entity getEntityTypeFromName(String entityid, Model model);
+    Entity getEntityByName(String entityid, Model model);
 
     /**
      * Asks TyphonML module if the given entity name @param entityname is involved (as source or target) in a relationship.
@@ -32,8 +35,6 @@ public interface TyphonMLInterface {
     String getEntityNameInDatabase(String entityName, Model model);
 
     Relation getRelationFromNameInEntity(String relationname, String entityname, Model model);
-
-    DataType getDataTypeFromName(String dataTypeName, Model model);
 
     Model createEntityType(Model sourceModel, EntityDO newEntity);
 

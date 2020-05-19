@@ -11,7 +11,9 @@ public class DataTypeDOFactory {
 
     public static DataTypeDO buildInstance(DataType dataType) {
         if (dataType != null) {
-            return new DataTypeDOImpl(dataType.getName(), dataType.getImportedNamespace());
+            //TODO: deprecated getNewType? see SMOAdapter
+//            return new DataTypeDOImpl(dataType.getName(), dataType.getImportedNamespace());
+            return new DataTypeDOImpl("StringType");
         }
         return null;
     }

@@ -27,7 +27,7 @@ import model.TyphonModel;
 public class ConsumePostEvents {
 	private static Logger logger = Logger.getLogger(ConsumePostEvents.class);
 
-	private static final long WAKEUP_TIME_MS_FREQUENCY = 5000000;
+	private static final long WAKEUP_TIME_MS_FREQUENCY = 10000;
 	private static final String KAFKA_CHANNEL_IP = "192.168.1.15";
 	private static final String KAFKA_CHANNEL_PORT = "29092";
 	static final String WEBSERVICE_URL = "http://localhost:8080/";

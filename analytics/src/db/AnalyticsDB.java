@@ -275,6 +275,8 @@ public class AnalyticsDB {
 		query.put("executionDate", startDate.getTime());
 		query.put("executionTime", executionTime);
 		query.put("modelVersion", q.getModel().getVersion());
+		
+		query.put("allEntities", new ArrayList<String>(q.getAllEntities()));
 		if (q.getMainEntities().size() > 0)
 			query.put("mainEntities", q.getMainEntities());
 

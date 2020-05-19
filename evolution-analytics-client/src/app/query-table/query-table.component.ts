@@ -1,5 +1,8 @@
-import { Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef, Input} from '@angular/core';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
+import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
+import {QueryDetailsModule} from '../query-details/query-details.module';
 
 @Component({
   selector: 'app-table-pagination',
@@ -7,30 +10,47 @@ import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstra
   styleUrls: ['./query-table.component.scss']
 })
 export class TablePaginationComponent implements OnInit, AfterViewInit  {
+  @Input() public type: number;
+  @Input() public limit = 50;
+  @Input() public chartTitle: string;
+  @Input() public chartsId: string;
+  @Input() private navigationTab: NgbdNavDynamicComponent;
+  @Input() private secondColumnName: string;
+  @Input() private entityName: string;
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
 
   elements: any = [];
-  titleElements = ['position', 'occ.', 'query', ''];
-  headElements = ['position', 'occ', 'query', 'handle'];
+  titleElements = [];
+  headElements = [];
   searchText = '';
   previous: string;
+
+  MOST_FREQUENT = 0;
+  SLOWEST = 1;
 
   @HostListener('input') oninput() {
     this.searchItems();
   }
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef, private mongoApiClientService: MongoApiClientService) { }
 
   ngOnInit() {
-    for (let i = 1; i <= 10; i++) {
-      const occu = this.randomInt(0, 10);
-      this.elements.push({ position: i, id: 'ID_' + this.randomInt(0, 1000), occ: occu, query: 'Last ' + i, handle: 'Handle ' + i });
+
+    if (this.type === this.MOST_FREQUENT) {
+      this.titleElements = ['position', this.secondColumnName, 'avg.(ms)', 'query', ''];
+      this.headElements = ['position', 'occ', 'avg', 'query', 'handle'];
     }
-    this.mdbTable.setDataSource(this.elements);
-    this.elements = this.mdbTable.getDataSource();
-    this.previous = this.mdbTable.getDataSource();
+
+    if (this.type === this.SLOWEST) {
+      this.titleElements = ['position', this.secondColumnName, 'query', ''];
+      this.headElements = ['position', 'occ', 'query', 'handle'];
+    }
+
+    this.navigationTab.addChart(this, this.chartsId);
+    this.loadCompleteHistory();
+
   }
 
   ngAfterViewInit() {
@@ -42,7 +62,6 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
   }
 
   searchItems() {
-    console.log('test:' + this.searchText);
     const prev = this.mdbTable.getDataSource();
     if (!this.searchText) {
       this.mdbTable.setDataSource(this.previous);
@@ -55,13 +74,68 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     }
   }
 
-  openQueryDetails(id) {
-    console.log('query id:' + id + '=>' + this.randomInt(0, 10));
+  openQueryDetails(id, query) {
+    if (this.type === this.SLOWEST) {
+      this.mongoApiClientService.getNormalizedQuery(id)
+        .subscribe(q => {
+          if (q && q != null && (q as any[]).length === 1) {
+            query = q[0].displayableForm;
+            this.navigationTab.openQueryTab(id, query, this.type);
+          }
+        });
+    } else {
+        this.navigationTab.openQueryTab(id, query, this.type);
+      }
   }
 
-  randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  loadParticularPeriod(fromDate: Date, toDate: Date) {
+    this.load(fromDate.getTime(), toDate.getTime());
   }
 
+  loadCompleteHistory() {
+    this.load(0, Number.MAX_SAFE_INTEGER);
+  }
+
+  load(fromDate: number, toDate: number) {
+    if (this.type === this.MOST_FREQUENT) {
+
+      this.mongoApiClientService.getMostFrequentQueries(this.entityName, fromDate, toDate, this.limit)
+        .subscribe(queries => {
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.count, avg: Math.round(query.avgExecutionTime),
+              query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+        });
+
+
+    }
+
+    if (this.type === this.SLOWEST) {
+      this.mongoApiClientService.getSlowestQueries(this.entityName, fromDate, toDate, this.limit)
+        .subscribe(queries => {
+          const array = [];
+          let i = 0;
+          for (const query of queries) {
+            array.push({ position: (i + 1), id: query._id, occ: query.executionTime, query: query.query, handle: 'Handle ' + i });
+            i++;
+          }
+
+          this.elements = array;
+          this.mdbTable.setDataSource(this.elements);
+          this.elements = this.mdbTable.getDataSource();
+          this.previous = this.mdbTable.getDataSource();
+
+        });
+    }
+  }
 }
 

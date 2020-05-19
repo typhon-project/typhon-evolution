@@ -18,6 +18,6 @@
       <button [ngClass]="{'filterButton': true, 'disabled': !fromBoundDate || !toBoundDate, 'disabledButton': !fromBoundDate || !toBoundDate}" (click)="filter()" mat-raised-button color="primary">Filter</button>
     </div>
   </div>
-  <div style="position: absolute; display:inline-block; right: 20px">
+  <div [ngClass]="{'invisible': invisible}" style="position: absolute; display:inline-block; right: 20px">
     <mat-slide-toggle color="primary" (change)="changeChartMode()">Evolution over time</mat-slide-toggle>
 </div>

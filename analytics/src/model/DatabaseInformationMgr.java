@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -106,6 +107,13 @@ public class DatabaseInformationMgr {
 					nb = getNbOfXXXInKeyValueElement(kDB, entity.getName(), infos);
 				}
 			}
+			
+			////////////////////////
+			///TO REMOVE
+			
+			//nb = new Long(new Random().nextInt(1000000));
+			
+			///////////////////////
 			
 			
 			nb = nb == null ? 0 : nb;

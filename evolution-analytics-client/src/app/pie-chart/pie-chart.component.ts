@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
 import {AppComponent} from '../app.component';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
+import {from} from 'rxjs';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class PieChartComponent implements OnInit {
   @Input() public objectType: number;
   @Input() public size = 5;
   @Input() public type;
+  @Input() public chartsId;
 
 
   public chartType = 'pie';
@@ -33,6 +35,7 @@ export class PieChartComponent implements OnInit {
   };
 
   static SIZE(): string { return 'SIZE'; }
+  static NBOFQUERIES(): string {return 'NB_OF_QUERIES'; }
 
   constructor(private mongoApiClientService: MongoApiClientService) {
   }
@@ -50,9 +53,7 @@ export class PieChartComponent implements OnInit {
   public chartClicked(e: any): void {
     if (e.active.length > 0) {
       const index: number = e.active[0]._index;
-      console.log(this.objectType + 'ok');
       if (this.objectType === this.navigationTab.ENTITY_OBJECT) {
-        console.log('ici');
         const entityName: string = this.chartLabels[index];
         this.navigationTab.openEntityTab(entityName);
       }
@@ -80,13 +81,13 @@ export class PieChartComponent implements OnInit {
     return colors;
   }
 
+  load(fromDate: number, toDate: number) {
 
-  ngOnInit() {
     if (this.objectType === this.navigationTab.CRUD_OBJECT) {
       this.chartDatasets = [{data: [], label: this.chartTitle}];
       this.chartLabels = ['Select', 'Insert', 'Update', 'Delete'];
 
-      this.mongoApiClientService.getCRUDOperationDistribution(0, Number.MAX_SAFE_INTEGER).subscribe(cruds => {
+      this.mongoApiClientService.getCRUDOperationDistribution(fromDate, toDate).subscribe(cruds => {
         console.log('CRUDS:' + JSON.stringify(cruds));
         const datasets = [{data: [], label: this.chartTitle}];
 
@@ -111,8 +112,7 @@ export class PieChartComponent implements OnInit {
         this.chartDatasets = [{data: [], label: this.chartTitle}];
         this.chartLabels = [];
 
-        this.mongoApiClientService.getDatabaseSchema().subscribe(schema => {
-
+        this.mongoApiClientService.getEntitiesSizeByPeriod(fromDate, toDate).subscribe(schema => {
           const datasets = [{data: [], label: this.chartTitle}];
           const labels = [];
           for (const db of schema) {
@@ -135,9 +135,53 @@ export class PieChartComponent implements OnInit {
         });
 
       } else {
-        this.navigationTab.charts.push(this);
+        if (this.type === PieChartComponent.NBOFQUERIES() &&
+          this.objectType === this.navigationTab.ENTITY_OBJECT) {
+
+          this.chartDatasets = [{data: [], label: this.chartTitle}];
+          this.chartLabels = [];
+
+          this.mongoApiClientService.getQueriedEntitiesPropertion(fromDate, toDate).subscribe(prop => {
+
+            console.log('QUERIED ENTITIES PROPORTION:' + JSON.stringify(prop));
+            const datasets = [{data: [], label: this.chartTitle}];
+            const labels = [];
+
+            if (prop != null) {
+              for (const entity of prop) {
+                const entityName = entity._id;
+                const nbOfQueries = entity.nbOfQueries;
+                datasets[0].data.push(nbOfQueries);
+                labels.push(entityName);
+              }
+            }
+
+            this.chartDatasets = datasets;
+            this.chartLabels = labels;
+            this.size = this.chartLabels.length;
+            this.chartColors = this.getChartColors();
+
+          });
+
+        }
       }
     }
+  }
+
+  loadParticularPeriod(fromDate: Date, toDate: Date) {
+    this.load(fromDate.getTime(), toDate.getTime());
+  }
+
+  loadCompleteHistory() {
+    const fromDate = 0;
+    const toDate = Number.MAX_SAFE_INTEGER;
+    this.load(fromDate, toDate);
+  }
+
+
+  ngOnInit() {
+    this.navigationTab.addChart(this, this.chartsId);
+    this.loadCompleteHistory();
   }
 
 

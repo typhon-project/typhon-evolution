@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -36,7 +38,6 @@ public class QueryParsing {
 	private static IValueFactory vf = null;
 
 	static Logger logger = Logger.getLogger(QueryParsing.class);
-
 
 	public static boolean init() {
 
@@ -182,6 +183,9 @@ public class QueryParsing {
 		Query res = new Query();
 		res.setModel(m);
 
+		Set<String> allEntities = new HashSet<String>();
+		res.setAllEntities(allEntities);
+
 		ITuple tuple = (ITuple) v;
 
 		ITuple queryMetadata = (ITuple) tuple.get(0);
@@ -198,6 +202,7 @@ public class QueryParsing {
 		ITuple queryData = (ITuple) tuple.get(1);
 		List<String> mainEntities = getList(queryData.get(0));
 		res.setMainEntities(mainEntities);
+		allEntities.addAll(mainEntities);
 
 		Iterator<IValue> joinIterator = ((IList) queryData.get(1)).iterator();
 		while (joinIterator.hasNext()) {
@@ -208,6 +213,11 @@ public class QueryParsing {
 			List<String> attrs2 = getList(join.get(3));
 			Join j = new Join(entityName1, attrs1, entityName2, attrs2);
 			res.addJoin(j);
+
+			if (entityName1 != null)
+				allEntities.add(entityName1);
+			if (entityName2 != null)
+				allEntities.add(entityName2);
 		}
 
 		Iterator<IValue> attrSelectorIterator = ((IList) queryData.get(2)).iterator();
@@ -217,10 +227,16 @@ public class QueryParsing {
 			List<String> attrs = getList(comp.get(1));
 			AttributeSelector ac = new AttributeSelector(entityName, attrs);
 			res.addAttributeSelector(ac);
+			if (entityName != null)
+				allEntities.add(entityName);
 		}
 
 		IList insertList = ((IList) queryData.get(3));
 		res.setInserts(getInserts(insertList));
+
+		for (Insert i : res.getInserts())
+			if (i.getEntityName() != null)
+				allEntities.add(i.getEntityName());
 
 		return res;
 	}
@@ -261,7 +277,6 @@ public class QueryParsing {
 
 }
 
-
 class Couple<X, Y> {
 	private X x;
 	private Y y;
@@ -287,4 +302,3 @@ class Couple<X, Y> {
 		this.y = y;
 	}
 }
-

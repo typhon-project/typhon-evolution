@@ -20,6 +20,8 @@ export class TimeradiobuttonComponent {
   toBoundDate: Date;
 
   @Input() navigationTab: NgbdNavDynamicComponent;
+  @Input() chartsId: string;
+  @Input() invisible = false;
 
   changePeriodMode() {
     if (this.periodMode === TimeradiobuttonComponent.PARTICULAR_PERIOD) {
@@ -27,7 +29,7 @@ export class TimeradiobuttonComponent {
     } else {
         this.particularPeriodFilterVisible = false;
         if (this.periodMode === TimeradiobuttonComponent.COMPLETE_HISTORY) {
-          this.navigationTab.loadCompleteHistory();
+          this.navigationTab.loadCompleteHistory(this.chartsId);
         }
     }
   }
@@ -37,7 +39,7 @@ export class TimeradiobuttonComponent {
   }
 
   filter() {
-    this.navigationTab.filterCharts(this.fromBoundDate, this.toBoundDate);
+    this.navigationTab.filterCharts(this.chartsId, this.fromBoundDate, this.toBoundDate);
   }
 
   changeChartMode() {

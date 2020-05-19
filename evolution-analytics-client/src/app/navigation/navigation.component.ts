@@ -1,6 +1,8 @@
 import {AfterContentInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AreaChartComponent} from '../app-area-chart/app-area-chart.component';
 import * as d3 from 'd3';
+import * as uuid from 'uuid';
+import {query} from '@angular/animations';
 
 @Component({
   selector: 'app-navigation',
@@ -26,20 +28,42 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
   chartData = [];
 
-
-
-
-
   CRUD_OBJECT = 1;
   ENTITY_OBJECT = 0;
+  QUERY_OBJECT = 2;
 
-  tabs = [1, 2, 3, 4, 5];
+  tabs = [];
   counter = this.tabs.length + 1;
   active;
   timeEvolutionMode = false;
-  public charts: Array<any> = [];
+  public charts = new Map();
+
+  lastChartsId: string;
+  entityTabs = [];
+  queryTabs: any[] = [];
 
 
+  addChart(chart, UUID: string) {
+    let array: any[] = this.charts.get(UUID);
+    if (!array || array == null) {
+      array = [];
+      this.charts.set(UUID, array);
+    }
+
+    array.push(chart);
+  }
+
+  closeEntityTab(event: MouseEvent, toRemove: string) {
+    this.entityTabs = this.entityTabs.filter(entityName => entityName !== toRemove);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  closeQueryTab(event: MouseEvent, toRemove: string) {
+    this.queryTabs = this.queryTabs.filter(query => query.uuid !== toRemove);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
 
   close(event: MouseEvent, toRemove: number) {
     this.tabs = this.tabs.filter(id => id !== toRemove);
@@ -56,22 +80,23 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     this.timeEvolutionMode = !this.timeEvolutionMode;
   }
 
-  filterCharts(fromDate: Date, toDate: Date) {
-    console.log('filter:' + fromDate + ' ' + toDate);
+  filterCharts(UUID: string, fromDate, toDate) {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
 
-    this.charts.forEach( (chart) => {
-      /*TODO remplacer par l'appel au WS */
-      chart.randomDatasets();
-    });
+    const arrays = this.charts.get(UUID);
+
+    if (arrays && arrays.length > 0) {
+      arrays.forEach((chart) => {
+        chart.loadParticularPeriod(from, to);
+      });
+    }
 
   }
 
-  loadCompleteHistory() {
-    console.log('complete history');
-
-    this.charts.forEach( (chart) => {
-      /*TODO remplacer par l'appel au WS */
-      chart.randomDatasets();
+  loadCompleteHistory(UUID: string) {
+    this.charts.get(UUID).forEach( (chart) => {
+      chart.loadCompleteHistory();
     });
   }
 
@@ -80,7 +105,9 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   }
 
   openEntityTab(entityName: string) {
-    this.tabs.push(this.counter++);
+    // this.tabs.push(this.counter++);
+    this.entityTabs.push(entityName);
+
     /*TODO call WS*/
   }
 
@@ -137,6 +164,27 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
     return this;
   }
 
+  generateNewChartsId() {
+    this.lastChartsId = '0000';
+    return this.lastChartsId;
+  }
+
+  getLastChartsId() {
+    return this.lastChartsId;
+  }
+
+  openQueryTab(id: string, q: string, queryType: number) {
+    this.queryTabs.push( {uuid: id, query: q, type: queryType} );
+  }
+
+  formatTabTitle(tabName: string) {
+    const lengthLimit = 20;
+    if (tabName.length > lengthLimit) {
+      tabName = tabName.substring(0, lengthLimit) + '...';
+    }
+
+    return tabName;
+  }
 }
 
 export function randomInt(min, max) {

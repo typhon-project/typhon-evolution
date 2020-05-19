@@ -9,6 +9,7 @@ import {LineChartModule} from '../line-chart/line-chart.module';
 import {QueryTableModule} from '../query-table/query-table.module';
 import {AppAreaChartModule} from '../app-area-chart/app-area-chart.module';
 import {D3ChartsModule} from '../d3-charts/d3-charts.module';
+import {QueryDetailsModule} from '../query-details/query-details.module';
 
 
 
@@ -26,7 +27,8 @@ import {D3ChartsModule} from '../d3-charts/d3-charts.module';
     LineChartModule,
     QueryTableModule,
     AppAreaChartModule,
-    D3ChartsModule
+    D3ChartsModule,
+    QueryDetailsModule
   ]
 })
 export class NavigationModule { }

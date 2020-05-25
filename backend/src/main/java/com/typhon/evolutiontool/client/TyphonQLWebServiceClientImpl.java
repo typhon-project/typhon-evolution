@@ -1,5 +1,6 @@
 package com.typhon.evolutiontool.client;
 
+import com.typhon.evolutiontool.utils.ApplicationProperties;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -17,30 +18,34 @@ import java.util.Base64;
 
 public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
 
-    private static final String LOCALHOST_URL = "http://localhost:8080/";
-    private static final String H2020_URL = "http://h2020.info.fundp.ac.be:8080/";
-    private static final String RESET_DATABASES_URL = "api/resetdatabases";
-    private static final String GET_USERS_URL = "users";
-    private static final String QUERY_URL = "api/query";
-    private static final String UPDATE_URL = "api/update";
-    private static final String GET_ML_MODEL_URL = "api/model/ml/";
-    private static final String GET_ML_MODELS_URL = "api/models/ml";
-    private static final String UPLOAD_ML_MODEL_URL = "api/model/ml";
+    private static final String POLYSTORE_API_URL = "POLYSTORE_API_URL";
+    private static final String POLYSTORE_API_USER_PASSWORD = "POLYSTORE_API_USER_PASSWORD";
+    private static final String API_RESET_DATABASES_URL = "API_RESET_DATABASES_URL";
+    private static final String API_GET_USERS_URL = "API_GET_USERS_URL";
+    private static final String API_QUERY_URL = "API_QUERY_URL";
+    private static final String API_UPDATE_URL = "API_UPDATE_URL";
+    private static final String API_GET_ML_MODEL_URL = "API_GET_ML_MODEL_URL";
+    private static final String API_GET_ML_MODELS_URL = "API_GET_ML_MODELS_URL";
+    private static final String API_UPLOAD_ML_MODEL_URL = "API_UPLOAD_ML_MODEL_URL";
 
-    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
     private static final JerseyClient restClient = JerseyClientBuilder.createClient();
 
+    private ApplicationProperties applicationProperties;
     private Logger logger = LoggerFactory.getLogger(TyphonQLWebServiceClientImpl.class);
+
+    public TyphonQLWebServiceClientImpl() {
+        this.applicationProperties = ApplicationProperties.getInstance();
+    }
 
     @Override
     public void uploadModel(String schemaContent) {
         logger.info("Querying TyphonQL web service to upload a new version of the TyphonML model : {}", schemaContent);
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(UPLOAD_ML_MODEL_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_UPLOAD_ML_MODEL_URL));
         String escapedDoubleQuotesContent = schemaContent.replaceAll("\"", "\\\\\"");
         String json = "{\"name\":\"newTyphonMLModel\",\"contents\":\"" + escapedDoubleQuotesContent + "\"}";
         Response response = webTarget
                 .request()
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .post(Entity.entity(json, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
@@ -51,24 +56,24 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     @Override
     public void resetDatabases() {
         logger.info("Querying TyphonQL web service to reset the polystore databases");
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(RESET_DATABASES_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_RESET_DATABASES_URL));
         Boolean result = webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .get(Boolean.class);
-        logger.info(RESET_DATABASES_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_RESET_DATABASES_URL) + " result: " + result);
         logger.info("Reset of polystore databases successful");
     }
 
     @Override
     public void getUsers() {
         logger.info("Querying TyphonQL web service to get the polystore users");
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(GET_USERS_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_GET_USERS_URL));
         String result = webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .get(String.class);
-        logger.info(GET_USERS_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_GET_USERS_URL) + " result: " + result);
         logger.info("Get polytstore users successful");
     }
 
@@ -78,17 +83,17 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     @Override
     public String query(String query) {
         logger.info("Querying TyphonQL web service to execute a DML query: {}", query);
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(QUERY_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_QUERY_URL));
 //        String query = "from User u select u";
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .post(Entity.entity(query, MediaType.TEXT_PLAIN));
         if (response.getStatus() != 200) {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        logger.info(QUERY_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_QUERY_URL) + " result: " + result);
         logger.info("DML query for the polystore successful");
         return result;
     }
@@ -99,16 +104,16 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     @Override
     public void update(String query) {
         logger.info("Querying TyphonQL web service to execute a DDL query: {}", query);
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(UPDATE_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_UPDATE_URL));
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .post(Entity.entity(query, MediaType.TEXT_PLAIN));
         if (response.getStatus() != 200) {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        logger.info(UPDATE_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_UPDATE_URL) + " result: " + result);
         logger.info("DDL query for the polystore successful");
     }
 
@@ -120,12 +125,12 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     @Override
     public Model getModel(Integer typhonMLModelVersion) {
         logger.info("Querying TyphonQL web service to get version '{}' of the TyphonML model", typhonMLModelVersion);
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(GET_ML_MODEL_URL + (typhonMLModelVersion != null ? typhonMLModelVersion : -1));
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_GET_ML_MODEL_URL) + (typhonMLModelVersion != null ? typhonMLModelVersion : -1));
         String result = webTarget
                 .request(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .get(String.class);
-        logger.info(GET_ML_MODEL_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_GET_ML_MODEL_URL) + " result: " + result);
         try (PrintWriter out = new PrintWriter("xmi.xmi")) {
             out.println(result);
         } catch (FileNotFoundException e) {
@@ -141,12 +146,12 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
     @Override
     public void getModels() {
         logger.info("Querying TyphonQL web service to get all the versions of the TyphonML models");
-        WebTarget webTarget = restClient.target(LOCALHOST_URL).path(GET_ML_MODELS_URL);
+        WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_GET_ML_MODELS_URL));
         String result = webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Basic " + authStringEnc)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
                 .get(String.class);
-        logger.info(GET_ML_MODELS_URL + " result: " + result);
+        logger.info(applicationProperties.getValue(API_GET_ML_MODELS_URL) + " result: " + result);
         try (PrintWriter out = new PrintWriter("xmis.xmi")) {
             out.println(result);
         } catch (FileNotFoundException e) {

@@ -9,6 +9,11 @@ public class Main {
     	// Settings the command lines options 
     	Options options = new Options();
     	
+    	// Help 
+    	Option help = new Option("h", "help", false,  "Display command line usage");
+    	help.setRequired(false);
+    	options.addOption(help);
+    	
     	// Input file Required :
     	Option input = new Option("i", "input", true,  "Path to the XMI file containing the change operators to apply");
     	input.setRequired(true);
@@ -27,6 +32,11 @@ public class Main {
     	try {
     		cmd = parser.parse(options, args);
     		EvolutionTool evolutionTool = new EvolutionTool();
+    		
+    		if(cmd.hasOption("help")) {
+    			formatter.printHelp("typhon-evolution", options);
+    			System.exit(0);
+    		}
             
             String modelInitialPath = cmd.getOptionValue("input");
             String modelFinalPath = cmd.getOptionValue("output");

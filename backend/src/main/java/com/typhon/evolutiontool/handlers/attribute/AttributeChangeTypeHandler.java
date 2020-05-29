@@ -10,7 +10,6 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.AttributeDOFactory;
 import typhonml.Attribute;
-import typhonml.DataType;
 import typhonml.Model;
 
 import java.util.Arrays;
@@ -26,7 +25,9 @@ public class AttributeChangeTypeHandler extends BaseHandler {
         if (containParameters(smo, Arrays.asList(ChangeOperatorParameter.ATTRIBUTE, ChangeOperatorParameter.ATTRIBUTE_TYPE))) {
             AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
             String entityName = attributeDO.getEntity().getName();
-            String dataTypeName = ((DataType) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE_TYPE)).getName();
+            //TODO: deprecated getNewType? see SMOAdapter
+//            String dataTypeName = ((DataType) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE_TYPE)).getName();
+            String dataTypeName = "StringType";
 
             //TyphonQL
             typhonQLInterface.changeTypeAttribute(attributeDO.getName(), dataTypeName, entityName);

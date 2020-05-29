@@ -171,7 +171,8 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
                 inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
-                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeAttributeType) changeOperator).getNewType());
+                //TODO: deprecated getNewType?
+//                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeAttributeType) changeOperator).getNewType());
             }
         }
     }

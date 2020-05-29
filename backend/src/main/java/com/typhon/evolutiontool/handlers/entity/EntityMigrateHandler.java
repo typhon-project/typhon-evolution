@@ -7,30 +7,13 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
-import org.glassfish.jersey.client.JerseyClient;
-import org.glassfish.jersey.client.JerseyClientBuilder;
 import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
 
 import java.util.Arrays;
-import java.util.Base64;
 
 public class EntityMigrateHandler extends BaseHandler {
-
-
-    private static final String LOCALHOST_URL = "http://localhost:8080/";
-    private static final String H2020_URL = "http://h2020.info.fundp.ac.be:8080/";
-    private static final String RESET_DATABASES_URL = "api/resetdatabases";
-    private static final String GET_USERS_URL = "users";
-    private static final String QUERY_URL = "api/query";
-    private static final String UPDATE_URL = "api/update";
-    private static final String GET_ML_MODEL_URL = "api/model/ml/";
-    private static final String GET_ML_MODELS_URL = "api/models/ml";
-    private static final String UPLOAD_ML_MODEL_URL = "api/model/ml";
-
-    private static final String authStringEnc = Base64.getEncoder().encodeToString(("admin:admin1@").getBytes());
-    private static final JerseyClient restClient = JerseyClientBuilder.createClient();
 
     public EntityMigrateHandler(TyphonDLInterface tdl, TyphonMLInterface tml, TyphonQLInterface tql) {
         super(tdl, tml, tql);

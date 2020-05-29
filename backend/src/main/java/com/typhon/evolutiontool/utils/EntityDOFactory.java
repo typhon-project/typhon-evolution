@@ -6,6 +6,7 @@ import com.typhon.evolutiontool.entities.EntityDOImpl;
 import com.typhon.evolutiontool.entities.RelationDO;
 import typhonml.Attribute;
 import typhonml.Entity;
+import typhonml.EntityAttributeKind;
 import typhonml.Relation;
 
 import java.util.ArrayList;
@@ -27,12 +28,14 @@ public class EntityDOFactory {
                     relationsDO.add(RelationDOFactory.buildInstance(relation, initialized));
                 }
             }
-            List<Attribute> entityAttributes = entity.getAttributes();
+            List<EntityAttributeKind> entityAttributes = entity.getAttributes();
             Map<String, DataTypeDO> attributes = new HashMap<>();
             if (entityAttributes != null) {
-                for (Attribute attribute : entityAttributes) {
+                for (EntityAttributeKind attribute : entityAttributes) {
                     if (attribute != null) {
-                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType()));
+                        //TODO: deprecated getNewType? see SMOAdapter
+//                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType()));
+                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(((Attribute) attribute).getType()));
                     }
                 }
             }

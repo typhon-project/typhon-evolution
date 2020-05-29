@@ -6,7 +6,6 @@ import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.utils.SMOFactory;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
-import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 import typhonml.*;
 

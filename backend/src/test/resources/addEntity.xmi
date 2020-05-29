@@ -32,9 +32,7 @@
       </tables>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="NewEntityDB" entity="//@changeOperators.0"/>
   </databases>
-  <changeOperators xsi:type="typhonml:AddEntity" name="NewEntity"/>
 </typhonml:Model>
 
 

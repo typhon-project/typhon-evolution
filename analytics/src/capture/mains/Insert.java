@@ -1,9 +1,10 @@
 package capture.mains;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Insert {
+public class Insert implements Serializable {
 	private String entityName;
 	private List<Insert> children = new ArrayList<Insert>();
 
@@ -12,6 +13,14 @@ public class Insert {
 		setChildren(children);
 	}
 
+	public Insert clone() {
+		List<Insert> children = new ArrayList<Insert>();
+		for(Insert i : this.children)
+			children.add(i.clone());
+		Insert res = new Insert(entityName, children);
+		return res;
+	}
+	
 	public String getEntityName() {
 		return entityName;
 	}

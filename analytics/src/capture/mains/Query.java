@@ -1,5 +1,6 @@
 package capture.mains;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,28 +8,42 @@ import java.util.Set;
 
 import model.TyphonModel;
 
-public class Query {
-	private TyphonModel model = null;
+public class Query implements Serializable{
+	protected Object model = null;
 
-	private String originalQuery;
-	private String normalizedQuery;
-	private String displayableQuery;
-	private String queryType;
-
-	private List<String> mainEntities = new ArrayList<String>();
-
-	private List<Join> joins = new ArrayList<Join>();
-	private List<AttributeSelector> attributeSelectors = new ArrayList<AttributeSelector>();
-	private List<Insert> inserts = new ArrayList<Insert>();
+	private String serializedQuery;
 	
-	private Set<String> allEntities = new HashSet<String>();
+	protected String originalQuery;
+	protected String normalizedQuery;
+	protected String displayableQuery;
+	protected String queryType;
+
+	protected List<String> mainEntities = new ArrayList<String>();
+
+	protected List<Join> joins = new ArrayList<Join>();
+	protected List<AttributeSelector> attributeSelectors = new ArrayList<AttributeSelector>();
+	protected List<Insert> inserts = new ArrayList<Insert>();
+
+	protected Set<String> allEntities = new HashSet<String>();
 
 	public TyphonModel getModel() {
-		return model;
+		return (TyphonModel) model;
 	}
-	
+
 	public void setModel(TyphonModel m) {
 		this.model = m;
+
+		List<Join> joins = this.joins;
+		this.joins = new ArrayList<Join>();
+		for (Join j : joins)
+			this.addJoin(j);
+		
+		
+		List<AttributeSelector> sels = this.attributeSelectors;
+		this.attributeSelectors = new ArrayList<AttributeSelector>();
+		for(AttributeSelector s : sels)
+			this.addAttributeSelector(s);
+
 	}
 
 	public List<Join> getAllJoins() {
@@ -43,6 +58,10 @@ public class Query {
 		}
 
 		return res;
+	}
+
+	public int getModelVersion() {
+		return ((TyphonModel) model).getVersion();
 	}
 
 	public List<AttributeSelector> getAllAttributeSelectors() {
@@ -184,7 +203,8 @@ public class Query {
 	}
 
 	public void addJoin(Join join) {
-		QueryParsing.analyzeJoin(join, getModel());
+		if (getModel() != null)
+			QueryParsing.analyzeJoin(join, getModel());
 		joins.add(join);
 	}
 
@@ -197,7 +217,8 @@ public class Query {
 	}
 
 	public void addAttributeSelector(AttributeSelector sel) {
-		QueryParsing.analyzeAtttributeSelector(sel, getModel());
+		if (getModel() != null)
+			QueryParsing.analyzeAtttributeSelector(sel, getModel());
 		attributeSelectors.add(sel);
 	}
 
@@ -231,5 +252,13 @@ public class Query {
 
 	public void setAllEntities(Set<String> allEntities) {
 		this.allEntities = allEntities;
+	}
+
+	public String getSerializedQuery() {
+		return serializedQuery;
+	}
+
+	public void setSerializedQuery(String serializedQuery) {
+		this.serializedQuery = serializedQuery;
 	}
 }

@@ -50,7 +50,14 @@ public class TyphonModel {
 	private static WebTarget webTarget;
 
 	private static ResourceSet resourceSet = new ResourceSetImpl();
-	private static TyphonModel currentModel = AnalyticsDB.loadLatestRegisteredTyphonModel();
+	private static TyphonModel currentModel;
+	static {
+		try {
+			currentModel = AnalyticsDB.loadLatestRegisteredTyphonModel();
+		} catch (Exception | Error e) {
+			currentModel = new TyphonModel(-1, null);
+		}
+	}
 
 	static {
 		typhonMLPackageRegistering();

@@ -11,14 +11,11 @@ import lang::typhonevo::handlers::RelationEvolution;
 import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
-
-import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonevo::utils::EvolveStatus;
 
 
 EvoSyntax evolve(EvoSyntax x, loc location){
-	operators = extract_op(x);
-	
+
 	str xmi = readFile(location + "<extract_path(x)>");
 	Model m = xmiString2Model(xmi);
 	Schema s = model2schema(m);
@@ -28,9 +25,9 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 		case EvoQuery q => setStatusUnchanged(q)
 	};
 
-	for ( EvoChangeOp op <- operators){	
+	for ( ChangeOp op <- s.changeOperators){
 		x = visit(x){
-			case EvoQuery q => transform(q, op.op, s)
+			case EvoQuery q => transform(q, op, s)
 		};
 	};
 	
@@ -40,9 +37,27 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 EvoQuery transform(q:(EvoQuery)`BROKEN  <QlQuery _>`, _, _) = q;
 EvoQuery transform(q:(EvoQuery)`BROKEN <Annotation+ _>  <QlQuery _>`, _, _) = q;
 
-EvoQuery transform(EvoQuery evoq, EntityOperation op, Schema s) = evolve_entity(evoq, op, s);
-EvoQuery transform(EvoQuery evoq, AttributesOperations op, Schema s) = evolve_attribute(evoq, op, s);
-EvoQuery transform(EvoQuery evoq, RelationOperations op, Schema s) = evolve_relation(evoq, op, s);
+// Listing all the change operators
+
+// ENTITIES (/!\ manque split)
+EvoQuery transform(EvoQuery q, <"addEntity", _>, Schema s) = q;
+EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s) = entity_rename(q, old_name, new_name);
+EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
+EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, new_name]>, Schema s) = entity_merge(q, new_name, e1, e2, s);
+EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
+
+// ATTRIBUTES
+EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);
+EvoQuery transform(EvoQuery q, <"removeAttribute", [entity, attr]>, Schema s) = attribute_remove(q, entity, attr, s);
+EvoQuery transform(EvoQuery q, <"changeAttributeType", [entity, attr, t]>, Schema s) = attribute_type_change(q, entity, attr, t, s);
+EvoQuery transform(EvoQuery q, <"addAttribute", [entity, attr, t]>, Schema s) = attribute_add(q, attr, entity);
+
+// RELATIONS
+EvoQuery transform(EvoQuery q, <"renameRelation", [entity, old_name, new_name]>, Schema s) = rename_relation(q, entity, old_name, new_name);
+EvoQuery transform(EvoQuery q, <"removeRelation", [entity, name]>, Schema s) = remove_relation(q, entity, name);
+EvoQuery transform(EvoQuery q, <"changeRelationContainement", [name, containment]>, Schema s) = change_containment(q, name, containment);
+EvoQuery transform(EvoQuery q, <"changeRelationCardinality", [name, cardinality]>, Schema s) = change_cardinality(q, name, cardinality);
+
 
 
 list[EvoChangeOp] extract_op(EvoSyntax x) = [ c | /EvoChangeOp c := x];

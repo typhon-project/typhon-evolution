@@ -10,30 +10,11 @@ import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
 import lang::typhonevo::utils::QueryManipulation;
 
-// DISPATCHERS
-
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `rename attribute  <Id old_id> from <EId entity> as <Id new_id>`, Schema s)
-	= attribute_rename(q, old_id, new_id, s);
-	
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `remove attribute <Id attribute>`, Schema s)
-	= attribute_remove(q, attribute, s);
-	
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `change attribute <Id attribute> type <EId t>`, Schema s)
-	= attribute_type_change(q, attribute, t, s);
-
-EvoQuery evolve_attribute(EvoQuery q, (AttributesOperations) `add attribute <Id name> : <EId typ> to <EId entity>`, Schema s)
-	= attribute_add(q, name, entity);
-
-default EvoQuery evolve_attribute(EvoQuery q, _, _) = q;
-
 
 // HANDLERS 
 
-EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name, Schema s){
-	
-	// Select the first entity containing the attributes. will be updated when the parsing 
-	// of the change operators in the xmi will be completed
-	entity = top(toList({from | <from, "<old_name>", _>  <- s.attrs}));
+EvoQuery attribute_rename(EvoQuery q, str entity, Id old_name, Id new_name, Schema s){
+
 	eid = parse(#EId, entity);
 	
 	if(use_entity(q, eid)){
@@ -50,10 +31,9 @@ EvoQuery attribute_rename(EvoQuery q, Id old_name, Id new_name, Schema s){
 	return q;
 }
 
-EvoQuery attribute_remove(EvoQuery q, Id name, Schema s){
+EvoQuery attribute_remove(EvoQuery q, str entity, Id name, Schema s){
 	//TODO check if the attribute is called explicitly. 
 	
-	entity = top(toList({from | <from, "<name>", _>  <- s.attrs}));
 	eid = parse(#EId, entity);
 	
 	if(use_entity(q, eid)){
@@ -69,11 +49,10 @@ EvoQuery attribute_remove(EvoQuery q, Id name, Schema s){
 	return q;
 }
 
-EvoQuery attribute_type_change(EvoQuery q, Id name, EId t, Schema s){
+EvoQuery attribute_type_change(EvoQuery q, str entity, Id name, EId t, Schema s){
 
 	// Select the first entity containing the attributes. will be updated when the parsing 
 	// of the change operators in the xmi will be completed
-	entity = top(toList({from | <from, "<name>", _>  <- s.attrs}));
 	eid = parse(#EId, entity);
 	
 	

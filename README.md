@@ -33,15 +33,19 @@ Once the dependencies are successfully installed, you can go back to the root of
 mvn install
 ```
 
+
 ### Usage
 
-The command line is waiting for the adresse of the polystore API and the new tml schema with the change operators.
+The usage could be seen by running `java -jar command`
+
 
 ## Query Evolution Plugin
 
 The Eclipse plugin allows you to translate typhonQL queries to make them works with a new version of the schema enabling the programmer to quickly update their applications to the new polystore.
 
 ### Installation
+
+
 
 ### Usage
 

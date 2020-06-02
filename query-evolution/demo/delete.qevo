@@ -1,10 +1,5 @@
-import /src/schema.xmi ;
+apply /src/schema.xmi ;
 
-changeOperators [ 
-	remove entity Review
-	rename entity Review as Bleh
-	rename entity Product as Item
-]
 
 from Product p select p,
 

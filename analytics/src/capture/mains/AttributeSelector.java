@@ -1,13 +1,16 @@
 package capture.mains;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AttributeSelector {
+public class AttributeSelector implements Serializable{
 	private String entityName;
 	private List<String> attributes;
 
 	private List<Join> implicitJoins;
 	private AttributeSelector implicitSel;
+	
 
 	public AttributeSelector(String entityName, List<String> attributes) {
 		this.entityName = entityName;

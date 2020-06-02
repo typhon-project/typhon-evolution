@@ -1,11 +1,12 @@
 package capture.mains;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Join {
+public class Join implements Serializable{
 	private String entityName1;
 	private List<String> attributes1;
 	private String entityName2;
@@ -15,7 +16,7 @@ public class Join {
 	private AttributeSelector implicitAttributeSelector1;
 	private List<Join> implicitJoins2;
 	private AttributeSelector implicitAttributeSelector2;
-
+	
 	public List<Join> getAllJoins() {
 		List<Join> res = new ArrayList<Join>();
 

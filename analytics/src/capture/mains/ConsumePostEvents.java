@@ -1,6 +1,11 @@
 package capture.mains;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -46,6 +51,34 @@ public class ConsumePostEvents {
 	}
 
 	public static void main(String[] args) throws Exception {
+//		args = new String[] { (
+//				"rO0ABXNyABNjYXB0dXJlLm1haW5zLlF1ZXJ5+3Ewr9ipd4YCAAtMAAthbGxFbnRpdGllc3QAD0xqYXZhL3V0aWwvU2V0O0wAEmF0dHJpYnV0ZVNlbGVjdG9yc3QAEExqYXZhL3V0aWwvTGlzdDtMABBkaXNwbGF5YWJsZVF1ZXJ5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAHaW5zZXJ0c3EAfgACTAAFam9pbnNxAH4AAkwADG1haW5FbnRpdGllc3EAfgACTAAFbW9kZWx0ABJMamF2YS9sYW5nL09iamVjdDtMAA9ub3JtYWxpemVkUXVlcnlxAH4AA0wADW9yaWdpbmFsUXVlcnlxAH4AA0wACXF1ZXJ5VHlwZXEAfgADTAAPc2VyaWFsaXplZFF1ZXJ5cQB+AAN4cHNyABFqYXZhLnV0aWwuSGFzaFNldLpEhZWWuLc0AwAAeHB3DAAAABA/QAAAAAAAAXQADE9yZGVyUHJvZHVjdHhzcgATamF2YS51dGlsLkFycmF5TGlzdHiB0h2Zx2GdAwABSQAEc2l6ZXhwAAAAAXcEAAAAAXNyAB9jYXB0dXJlLm1haW5zLkF0dHJpYnV0ZVNlbGVjdG9yBfHuCWYzyZICAARMAAphdHRyaWJ1dGVzcQB+AAJMAAplbnRpdHlOYW1lcQB+AANMAA1pbXBsaWNpdEpvaW5zcQB+AAJMAAtpbXBsaWNpdFNlbHQAIUxjYXB0dXJlL21haW5zL0F0dHJpYnV0ZVNlbGVjdG9yO3hwc3EAfgAJAAAAAXcEAAAAAXQADHByb2R1Y3RfZGF0ZXhxAH4ACHBweHQAVHVwZGF0ZSBPcmRlclByb2R1Y3QgeDAgd2hlcmUgeDAucHJvZHVjdF9kYXRlID09ICI/IiBzZXQge3Byb2R1Y3RfZGF0ZTogIj8iLCBpZDogIj8ifXNxAH4ACQAAAAB3BAAAAAB4c3EAfgAJAAAAAHcEAAAAAHhzcQB+AAkAAAABdwQAAAABcQB+AAh4cHQASXVwZGF0ZU9yZGVyUHJvZHVjdHgwd2hlcmV4MC5wcm9kdWN0X2RhdGU9PSI/InNldHtwcm9kdWN0X2RhdGU6Ij8iLGlkOiI/In10AGx1cGRhdGUgT3JkZXJQcm9kdWN0IHgwIHdoZXJlIHgwLnByb2R1Y3RfZGF0ZSA9PSAiWXNPV3NlaUlKIiBzZXQge3Byb2R1Y3RfZGF0ZTogIk9iQktJTk5XIiwgaWQ6ICJ1QTZlNzBqb2JtIn10AAZVUERBVEVw") };
+
+		if (args == null || args.length == 0) {
+			startService();
+		} else {
+			recommendQueryImprovements(args[0]);
+		}
+
+	}
+
+	private static void recommendQueryImprovements(String file) throws IOException, ClassNotFoundException {
+		String serializedQuery = new String(Files.readAllBytes(Paths.get(file)));
+		System.out.println("My file: " + serializedQuery);
+
+		Query q = QueryParsing.deserializeQuery(serializedQuery);
+		System.out.println(q.getDisplayableQuery());
+
+		TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD);
+		TyphonModel m = TyphonModel.getCurrentModel();
+		q.setModel(m);
+		
+		
+		Files.write(Paths.get(file), "{ok: 'true'}".getBytes());
+
+	}
+
+	private static void startService() throws Exception {
 		if (!initializeQueryParsingPlugin())
 			System.exit(1);
 
@@ -54,7 +87,7 @@ public class ConsumePostEvents {
 			System.exit(1);
 
 		TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD);
-
+		
 		startSavingGeneralInformationThread();
 
 		logger.info("Creating new kafka consumer ...");
@@ -91,7 +124,10 @@ public class ConsumePostEvents {
 
 					if (event instanceof PostEvent) {
 						PostEvent postEvent = (PostEvent) event;
-						if (postEvent.getSuccess() != null && postEvent.getSuccess() == true) {
+						//TODO currently, success is always equal to NULL. One needs to check if resultset is equal to null
+						boolean success = postEvent.getSuccess() == null ? postEvent.getResultSet() != null : postEvent.getSuccess();
+						if (success) {
+							logger.debug("Captured query: " + postEvent.getPreEvent().getQuery());
 							captureQuery(postEvent);
 						}
 					}
@@ -107,7 +143,6 @@ public class ConsumePostEvents {
 
 		logger.info("Kafka consumer created");
 		env.execute();
-
 	}
 
 	private static void startSavingGeneralInformationThread() {
@@ -139,16 +174,15 @@ public class ConsumePostEvents {
 	}
 
 	protected static void captureQuery(PostEvent postEvent) {
-		if (postEvent.getStartTime() == null)
-			postEvent.setStartTime(new Date());
-		if (postEvent.getEndTime() == null)
-			postEvent.setEndTime(new Date(postEvent.getStartTime().getTime() + new Random().nextInt(1000)));
+//		if (postEvent.getStartTime() == null)
+//			postEvent.setStartTime(new Date());
+//		if (postEvent.getEndTime() == null)
+//			postEvent.setEndTime(new Date(postEvent.getStartTime().getTime() + new Random().nextInt(1000)));
 
-		String query = postEvent.getQuery();
+		String query = postEvent.getPreEvent().getQuery();
 		Date startDate = postEvent.getStartTime();
 		Date endDate = postEvent.getEndTime();
 		long diff = endDate.getTime() - startDate.getTime();
-
 		TyphonModel m = TyphonModel.checkIfNewModelWasLoaded();
 
 		Query q = QueryParsing.eval(query, m);

@@ -1,4 +1,4 @@
-module lang::typhonevo::handlers::EntityEvolution
+ module lang::typhonevo::handlers::EntityEvolution
 
 import IO;
 import ParseTree;
@@ -25,7 +25,11 @@ default EvoQuery evolve_entity(EvoQuery q, _, _) = q;
 
 // HANDLERS
 
-EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
+EvoQuery entity_rename(EvoQuery q, str old, str new){
+	
+	old_name = parse(#EId, old);
+	new_name = parse(#EId, new);
+	
 	
 	EvoQuery e = visit(q){
 		case old_name => new_name
@@ -38,7 +42,9 @@ EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 }
 
 
-EvoQuery entity_remove(EvoQuery q, EId name){
+EvoQuery entity_remove(EvoQuery q, str n){
+	
+	name = parse(#EId, n);
 	
 	QlQuery query;
 	matched = false;

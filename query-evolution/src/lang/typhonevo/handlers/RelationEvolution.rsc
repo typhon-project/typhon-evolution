@@ -8,12 +8,6 @@ import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonml::Util;
 
 
-EvoQuery evolve_relation(EvoQuery q, (RelationOperations) `change cardinality <Id relation> as <Cardinality c>`, Schema s)
-	= change_cardinality(q, relation, c);
-
-default EvoQuery evolve_relation(EvoQuery q, _, _) = q;
-
-
 EvoQuery rename_relation(EvoQuery q, str entity, Id old_name, Id new_name){
 
 	EvoQuery res = visit(q){
@@ -32,7 +26,9 @@ EvoQuery rename_relation(EvoQuery q, str entity, Id old_name, Id new_name){
 }
 
 
-EvoQuery remove_relation(EvoQuery q, str entity, Id to_remove){
+EvoQuery remove_relation(EvoQuery q, str entity, str to_rm){
+	
+	to_remove = parse(#Id, to_rm);
 	
 	if(query_use_relation(q, to_remove)){
 		q = setStatusBroken(q, "The relation <to_remove> was removed");
@@ -42,7 +38,9 @@ EvoQuery remove_relation(EvoQuery q, str entity, Id to_remove){
 }
 
 
-EvoQuery change_containment(EvoQuery q, Id relation, str containment){
+EvoQuery change_containment(EvoQuery q, str rela, str containment){
+	
+	relation = parse(#Id, rela);
 	
 	if(query_use_relation(q, relation)){
 		q = setStatusChanged(q);
@@ -52,7 +50,10 @@ EvoQuery change_containment(EvoQuery q, Id relation, str containment){
 }
 
 
-EvoQuery change_cardinality(EvoQuery q, Id relation, Cardinality c){
+EvoQuery change_cardinality(EvoQuery q, Id rela, str card){
+	
+	c = parse(#Cardinality, card);
+	relation = parse(#Id, rela);
 	
 	if(query_use_relation(q, relation)){
 		q = setStatusWarn(q, "Cardinality of relation <relation> as changed to <c>");

@@ -31,10 +31,10 @@ EvoQuery attribute_rename(EvoQuery q, str entity, Id old_name, Id new_name, Sche
 	return q;
 }
 
-EvoQuery attribute_remove(EvoQuery q, str entity, Id name, Schema s){
-	//TODO check if the attribute is called explicitly. 
-	
+EvoQuery attribute_remove(EvoQuery q, str entity, str n, Schema s){
+
 	eid = parse(#EId, entity);
+	name = parse(#Id, n);
 	
 	if(use_entity(q, eid)){
 		

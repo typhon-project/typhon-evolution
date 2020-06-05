@@ -8,21 +8,33 @@ import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonml::Util;
 
 
-EvoQuery rename_relation(EvoQuery q, str entity, Id old_name, Id new_name){
-
-	EvoQuery res = visit(q){
-		case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new_name>`
-		case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new_name>.<{Id"."}+ r>`
-		when c := old_name
-	};
+EvoQuery rename_relation(EvoQuery q, str entity, str old_name, str new_name){
 	
-	if(res := q){
-		return q;
+	old = parse(#Id, old_name);
+	new = parse(#Id, new_name);
+	e = parse(#EId, entity);
+		
+	for(/(Binding) `<EId found_e> <VId bind>` := q){
+		if(found_e := e){
+			println("found");
+		
+			EvoQuery res = visit(q){
+				case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new>`
+				when c := old && v := bind
+				case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new>.<{Id"."}+ r>`
+				when c := old && v := bind
+			};
+			
+			if(res := q){
+				return q;
+			}
+			
+			res = setStatusChanged(res);
+			return res;
+		}
 	}
 	
-	res = setStatusChanged(res);
-	
-	return res;
+	return q;
 }
 
 

@@ -1,8 +1,6 @@
 module lang::typhonevo::EvoCompiler
 
 import IO;
-import ParseTree;
-import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::handlers::EntityEvolution;
 import lang::typhonevo::handlers::AttributeEvolution;

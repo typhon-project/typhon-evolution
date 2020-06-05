@@ -13,19 +13,36 @@ import lang::typhonevo::utils::QueryManipulation;
 
 // HANDLERS 
 
-EvoQuery attribute_rename(EvoQuery q, str entity, Id old_name, Id new_name, Schema s){
+EvoQuery attribute_rename(EvoQuery q, str entity, str old_name, str new_name, Schema s){
 
-	eid = parse(#EId, entity);
+	e = parse(#EId, entity);
+	old = parse(#Id, old_name);
+	new = parse(#Id, new_name);
 	
-	if(use_entity(q, eid)){
-		req = visit(q){
-			case old_name => new_name
-		};
+	if(!use_entity(q, eid)){
+		return q;
+	}
+	
+	for(/(Binding) `<EId found_e> <VId bind>` := q){
+		if(found_e := e){
+			println("found");
 		
-		if(req := q)
-			return q;
-		
-		return setStatusChanged(req);
+			EvoQuery res = visit(q){
+				case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new>`
+				when c := old && v := bind
+				case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new>.<{Id"."}+ r>`
+				when c := old && v := bind
+				case (KeyVal) `<Id c> : <Expr e>` => (KeyVal) `<Id new> : <Expr e>`
+				when c := old
+			};
+			
+			if(res := q){
+				return q;
+			}
+			
+			res = setStatusChanged(res);
+			return res;
+		}
 	}
 	
 	return q;
@@ -64,7 +81,10 @@ EvoQuery attribute_type_change(EvoQuery q, str entity, Id name, EId t, Schema s)
 }
 
 
-EvoQuery attribute_add(EvoQuery q, Id attr, EId entity){
+EvoQuery attribute_add(EvoQuery q, str attribute, str ent){
+
+	attr = parse(#Id, attribute);
+	entity = parse(#EId, ent);
 
 	switch(q.q.query){
 		case s:(Statement) `insert <{Obj ","}* obj>`:{

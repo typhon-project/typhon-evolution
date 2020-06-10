@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {MongoCollection} from 'evolution-analytics-model/dist/model/MongoCollection';
 import {NormalizedQuery} from 'evolution-analytics-model/dist/model/NormalizedQuery';
@@ -44,6 +44,7 @@ export class MongoApiClientService {
   LATEST_QUERY = '/latestQuery/';
   NORMALIZED_QUERY_ID = '/normalizedQueryId/';
   NORMALIZED_QUERY = '/normalizedQuery/';
+  RECOMMENDATIONS = '/recommendations/';
 
   constructor(private http: HttpClient) {
   }
@@ -293,5 +294,9 @@ export class MongoApiClientService {
 
   getNormalizedQuery(qlQueryUUID: string) {
     return this.http.get<any>(this.END_POINT + this.NORMALIZED_QUERY + qlQueryUUID);
+  }
+
+  recommend(normalizedQueryUUID: string) {
+    return this.http.get(this.END_POINT + this.RECOMMENDATIONS + normalizedQueryUUID, {responseType: 'text'});
   }
 }

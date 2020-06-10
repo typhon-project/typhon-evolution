@@ -51,9 +51,9 @@ public class DatabaseInformationMgr {
 	public static final String GRAPHDB = "GRAPHDB";
 	public static final String COLUMNDB = "COLUMNDB";
 	public static final String KEYVALUEDB = "KEYVALUEDB";
-	
+
 	public static String getDatatbaseType(Database database) {
-		if(database != null) {
+		if (database != null) {
 			if (database instanceof RelationalDB) {
 				return RELATIONALDB;
 			}
@@ -71,57 +71,59 @@ public class DatabaseInformationMgr {
 				return KEYVALUEDB;
 			}
 		}
-		
+
 		return null;
 	}
 
 	public static Map<String, Long> getCurrentModelWithStats(TyphonModel m, WebTarget target, String auth) {
 
 		Map<String, Long> res = new HashMap<String, Long>();
-		
+
 		List<ConnectionInfo> infos = getDatabasesInfo(target, auth);
 
-		for (Entity entity : m.getEntities()) {
-			Long nb = null;
-			Database database = m.getEntityDatabase(entity.getName());
-			if (database != null) {
-				if (database instanceof RelationalDB) {
-					RelationalDB rDB = (RelationalDB) database;
-					nb = getNbOfRowsInRelationalTable(rDB, entity.getName(), infos);
-				}
-				if (database instanceof DocumentDB) {
-					DocumentDB dDB = (DocumentDB) database;
-					nb = getNbOfDocumentsInDocumentCollection(dDB, entity.getName(), infos);
-				}
-				if (database instanceof GraphDB) {
-					GraphDB gDB = (GraphDB) database;
-					nb = getNbOfXXXInGraphNode(gDB, entity.getName(), infos);
+		try {
 
+			for (Entity entity : m.getEntities()) {
+				Long nb = null;
+				Database database = m.getEntityDatabase(entity.getName());
+				if (database != null) {
+					if (database instanceof RelationalDB) {
+						RelationalDB rDB = (RelationalDB) database;
+						nb = getNbOfRowsInRelationalTable(rDB, entity.getName(), infos);
+					}
+					if (database instanceof DocumentDB) {
+						DocumentDB dDB = (DocumentDB) database;
+						nb = getNbOfDocumentsInDocumentCollection(dDB, entity.getName(), infos);
+					}
+					if (database instanceof GraphDB) {
+						GraphDB gDB = (GraphDB) database;
+						nb = getNbOfXXXInGraphNode(gDB, entity.getName(), infos);
+
+					}
+					if (database instanceof ColumnDB) {
+						ColumnDB cDB = (ColumnDB) database;
+						nb = getNbOfXXXInColumn(cDB, entity.getName(), infos);
+					}
+					if (database instanceof KeyValueDB) {
+						KeyValueDB kDB = (KeyValueDB) database;
+						nb = getNbOfXXXInKeyValueElement(kDB, entity.getName(), infos);
+					}
 				}
-				if (database instanceof ColumnDB) {
-					ColumnDB cDB = (ColumnDB) database;
-					nb = getNbOfXXXInColumn(cDB, entity.getName(), infos);
-				}
-				if (database instanceof KeyValueDB) {
-					KeyValueDB kDB = (KeyValueDB) database;
-					nb = getNbOfXXXInKeyValueElement(kDB, entity.getName(), infos);
-				}
+
+				////////////////////////
+				/// TO REMOVE
+
+				// nb = new Long(new Random().nextInt(1000000));
+
+				///////////////////////
+
+				nb = nb == null ? 0 : nb;
+				res.put(entity.getName(), nb);
 			}
-			
-			////////////////////////
-			///TO REMOVE
-			
-			//nb = new Long(new Random().nextInt(1000000));
-			
-			///////////////////////
-			
-			
-			nb = nb == null ? 0 : nb;
-			res.put(entity.getName(), nb);
+		} finally {
+			closeConnections(infos);
 		}
 
-		closeConnections(infos);
-		
 		return res;
 
 	}
@@ -132,6 +134,7 @@ public class DatabaseInformationMgr {
 			if (info.getJDBCConn() != null) {
 				try {
 					info.getJDBCConn().close();
+					logger.info("Relational db connection closed:" + info.getDatabaseInfo().getDbName());
 				} catch (Exception | Error e) {
 				}
 			}
@@ -139,6 +142,7 @@ public class DatabaseInformationMgr {
 			if (info.getMongoDBConn() != null) {
 				try {
 					info.getMongoDBConn().close();
+					logger.info("Document db connection closed:" + info.getDatabaseInfo().getDbName());
 				} catch (Exception | Error e) {
 
 				}
@@ -177,7 +181,7 @@ public class DatabaseInformationMgr {
 
 						String url = "mongodb://" + di.getUser() + ":" + di.getPassword() + "@" + di.getHost() + ":"
 								+ di.getPort();
-						
+
 						MongoClientURI uri = new MongoClientURI(url);
 
 						mongoClient = new MongoClient(uri);

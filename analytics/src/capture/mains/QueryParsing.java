@@ -35,6 +35,9 @@ import io.usethesource.vallang.ITuple;
 import io.usethesource.vallang.IValue;
 import io.usethesource.vallang.IValueFactory;
 import model.TyphonModel;
+import query.Insert;
+import query.Join;
+import query.Query;
 import typhonml.Attribute;
 import typhonml.Entity;
 import typhonml.EntityAttributeKind;
@@ -50,7 +53,7 @@ public class QueryParsing {
 
 	}
 	
-	static Logger logger = Logger.getLogger(QueryParsing.class);
+	public static Logger logger = Logger.getLogger(QueryParsing.class);
 
 	public static boolean init() {
 		try {
@@ -112,7 +115,7 @@ public class QueryParsing {
 
 	}
 
-	static void analyzeJoin(Join join, TyphonModel model) {
+	public static void analyzeJoin(Join join, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple1 = getImplicitJoins(join.getEntityName1(), join.getAttributes1(),
 				model);
 		Couple<List<Join>, AttributeSelector> couple2 = getImplicitJoins(join.getEntityName2(), join.getAttributes2(),
@@ -172,7 +175,7 @@ public class QueryParsing {
 		return res;
 	}
 
-	static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
+	public static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple = getImplicitJoins(sel.getEntityName(), sel.getAttributes(),
 				model);
 		

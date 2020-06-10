@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import query.Join;
+
 public class AttributeSelector implements Serializable{
 	private String entityName;
 	private List<String> attributes;

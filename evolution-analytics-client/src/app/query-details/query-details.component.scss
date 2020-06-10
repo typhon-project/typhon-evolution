@@ -13,9 +13,29 @@ div.evolutionButton {
 }
 
 .queryDetails a {
-  color: #007bff;
+  color: #007bff !important;
 }
 
 .queryDetails a:hover {
-  color: indigo;
+  color: indigo !important;
+}
+
+.recommendation input {
+  margin-right: 10px;
+}
+
+.recommendationDiv {
+  box-sizing: content-box;
+  border: solid #3f51b5 3px;
+  padding: 10px;
+}
+
+input:not(:checked) + div.recommendationDiv {
+  opacity: 0.33;
+  pointer-events: none;
+}
+
+input:not(:checked) + label + div.recommendationDiv {
+  opacity: 0.33;
+  pointer-events: none;
 }

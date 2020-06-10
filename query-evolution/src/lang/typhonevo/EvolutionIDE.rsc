@@ -1,7 +1,6 @@
 module lang::typhonevo::EvolutionIDE
 
 import ParseTree;
-import Prelude;
 import util::IDE; 
 import util::ValueUI;
 import IO;
@@ -54,24 +53,10 @@ public set[Contribution] languageContrib = {
   	)
 };
 
-public void generateEvolutionScript(Tree t, loc l){
-	text("youpie");
-}
 
-public set[Contribution] xmiContrib = {
-	popup(
-		menu("TyphonEvolution",[
-		    action("Generate Script", generateEvolutionScript)
-	    ])
-  	)
-};
 
 
 void setEvoIDE(){
-
 	registerLanguage(languageName, extQL, parser);
 	registerContributions(languageName, languageContrib);
-	
-	str xmi_editor = "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart";
-	registerNonRascalContributions(xmi_editor, xmiContrib);
 }

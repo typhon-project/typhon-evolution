@@ -1,4 +1,4 @@
-module lang::typhonevo::handlers::EntityEvolution
+ module lang::typhonevo::handlers::EntityEvolution
 
 import IO;
 import ParseTree;
@@ -12,21 +12,10 @@ import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
 
 // DISPATCHER
-
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `rename entity  <EId old_id> as <EId new_id>`, Schema s)
-	= entity_rename(q, old_id, new_id);
-	
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `remove entity <EId entity>`, Schema s)
-	= entity_remove(q, entity);
 	
 EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`, Schema s)
 	= entity_split(q, name, entity1, entity2);
 	
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `merge entities <EId entity1> <EId entity2> as <EId new_name>`, Schema s)
-	= entity_merge(q, new_name, entity1, entity2, s);
-	
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `migrate entity <EId entity> to <EId db>`, Schema s)
-	= entity_migration(q, entity);
 	
 EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `split entity vertical <EId entity1> to <EId entity2> attributes : [ <{Expr ","}+ expr> ]`, Schema s)
 	= entity_split(q, entity1, entity1, entity2);
@@ -36,7 +25,11 @@ default EvoQuery evolve_entity(EvoQuery q, _, _) = q;
 
 // HANDLERS
 
-EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
+EvoQuery entity_rename(EvoQuery q, str old, str new){
+	
+	old_name = parse(#EId, old);
+	new_name = parse(#EId, new);
+	
 	
 	EvoQuery e = visit(q){
 		case old_name => new_name
@@ -49,7 +42,9 @@ EvoQuery entity_rename(EvoQuery q, EId old_name, EId new_name){
 }
 
 
-EvoQuery entity_remove(EvoQuery q, EId name){
+EvoQuery entity_remove(EvoQuery q, str n){
+	
+	name = parse(#EId, n);
 	
 	QlQuery query;
 	matched = false;

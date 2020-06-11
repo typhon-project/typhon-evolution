@@ -32,11 +32,11 @@ import com.mongodb.util.JSON;
 
 import capture.mains.AttributeSelector;
 import capture.mains.ConsumePostEvents;
-import capture.mains.Insert;
-import capture.mains.Join;
-import capture.mains.Query;
 import model.DatabaseInformationMgr;
 import model.TyphonModel;
+import query.Insert;
+import query.Join;
+import query.Query;
 import typhonml.Database;
 import typhonml.Entity;
 

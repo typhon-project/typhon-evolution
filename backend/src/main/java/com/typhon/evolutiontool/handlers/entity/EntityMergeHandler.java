@@ -57,8 +57,8 @@ public class EntityMergeHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data
-            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName(), null, null);
-            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName(), null, null);
+            WorkingSet firstWs = typhonQLInterface.selectEntityData(firstNewEntity.getName(), firstNewEntity.getAttributes().keySet(), null, null);
+            WorkingSet secondWs = typhonQLInterface.selectEntityData(secondNewEntity.getName(), secondNewEntity.getAttributes().keySet(), null, null);
             //Manipulate the source entities data (modify the entities names, to the new entity name)
             typhonQLInterface.updateEntityNameInSourceEntityData(firstWs, firstNewEntity.getName(), newEntityName);
             typhonQLInterface.updateEntityNameInSourceEntityData(secondWs, secondNewEntity.getName(), newEntityName);

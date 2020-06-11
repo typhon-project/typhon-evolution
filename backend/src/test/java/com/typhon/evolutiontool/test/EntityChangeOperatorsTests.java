@@ -1,6 +1,5 @@
 package com.typhon.evolutiontool.test;
 
-
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;

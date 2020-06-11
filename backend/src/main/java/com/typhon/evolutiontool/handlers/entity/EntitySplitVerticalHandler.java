@@ -1,18 +1,17 @@
 package com.typhon.evolutiontool.handlers.entity;
 
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.handlers.BaseHandler;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
-import com.typhon.evolutiontool.utils.DataTypeDOFactory;
 import com.typhon.evolutiontool.utils.EntityDOFactory;
 import com.typhon.evolutiontool.utils.RelationDOFactory;
 import typhonml.*;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +46,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data for the attribute and the value
-            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName(), null, null);
+            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName(), firstEntityDO.getAttributes().keySet(), null, null);
             //Manipulate the source entity data (keep only the new entity attributes)
             typhonQLInterface.removeUselessAttributesInSourceEntityData(entityData, firstEntityDO.getName(), entityAttributes.keySet());
             //Manipulate the source entity data (modify the entity name, to the new entity name)
@@ -81,12 +80,6 @@ public class EntitySplitVerticalHandler extends BaseHandler {
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.ENTITY + ", " + ChangeOperatorParameter.NEW_ENTITY_NAME + ", " + ChangeOperatorParameter.NEW_ENTITY_ATTRIBUTES + ", " + ChangeOperatorParameter.NEW_ENTITY_RELATIONS + "]");
         }
-    }
-
-    private Map<String, DataTypeDO> buildEntityAttributes(List<Attribute> attributes) {
-        Map<String, DataTypeDO> entityAttributes = new HashMap<>();
-        attributes.forEach(attribute -> entityAttributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType())));
-        return entityAttributes;
     }
 
 

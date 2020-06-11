@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -375,6 +376,146 @@ public class TyphonModel {
 			AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
 		}
 
+	}
+
+	public Relation getOpposite(Relation rel) {
+		if (rel.getOpposite() != null)
+			return rel.getOpposite();
+
+		for (Entity e : getEntities())
+			for (Relation r : e.getRelations()) {
+				if (r.getOpposite() == rel)
+					return r;
+			}
+
+		return null;
+
+	}
+
+	public Database getPhysicalDatabase(Entity ent) {
+		String entityName = ent.getName();
+
+		for (Database d : getModel().getDatabases()) {
+			if (d instanceof RelationalDB) {
+				RelationalDB db = (RelationalDB) d;
+				for (Table table : db.getTables()) {
+					Entity entity = table.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return d;
+					}
+
+				}
+			}
+
+			if (d instanceof DocumentDB) {
+				DocumentDB db = (DocumentDB) d;
+				for (typhonml.Collection collection : db.getCollections()) {
+					Entity entity = collection.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return d;
+					}
+				}
+			}
+
+			if (d instanceof KeyValueDB) {
+				KeyValueDB k = (KeyValueDB) d;
+				for (KeyValueElement el : k.getElements()) {
+					Entity entity = el.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return d;
+					}
+				}
+			}
+
+			if (d instanceof GraphDB) {
+				GraphDB g = (GraphDB) d;
+				for (GraphNode n : g.getNodes()) {
+					Entity entity = n.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return d;
+					}
+				}
+
+			}
+		}
+
+		return null;
+	}
+
+	public NamedElement getPhysicalEntity(Entity ent) {
+		String entityName = ent.getName();
+
+		for (Database d : getModel().getDatabases()) {
+			if (d instanceof RelationalDB) {
+				RelationalDB db = (RelationalDB) d;
+				for (Table table : db.getTables()) {
+					Entity entity = table.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return table;
+					}
+
+				}
+			}
+
+			if (d instanceof DocumentDB) {
+				DocumentDB db = (DocumentDB) d;
+				for (typhonml.Collection collection : db.getCollections()) {
+					Entity entity = collection.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return collection;
+					}
+				}
+			}
+
+			if (d instanceof KeyValueDB) {
+				KeyValueDB k = (KeyValueDB) d;
+				for (KeyValueElement el : k.getElements()) {
+					Entity entity = el.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return el;
+					}
+				}
+			}
+
+			if (d instanceof GraphDB) {
+				GraphDB g = (GraphDB) d;
+				for (GraphNode n : g.getNodes()) {
+					Entity entity = n.getEntity();
+					if (entity.getName().equals(entityName)) {
+						return n;
+					}
+				}
+
+			}
+		}
+
+		return null;
+	}
+	
+	public boolean isContainmentRelation(Relation rel) {
+		if(rel != null) {
+			return rel.getIsContainment() != null && rel.getIsContainment().booleanValue();
+		}
+		
+		return false;
+	}
+
+	public boolean hasOtherRelations(TyphonModel model, Entity ent, Relation rel, Relation opposite) {
+		// must check the list of relations defined in entity ent AND relations
+		// referring to entity ent
+
+		for (Relation r : ent.getRelations())
+			if (r != rel)
+				return true;
+
+		for (Entity e : model.getEntities())
+			if (e != ent) {
+				for (Relation r : e.getRelations())
+					if (r.getType() == ent && r != opposite)
+						return true;
+			}
+
+		return false;
 	}
 
 }

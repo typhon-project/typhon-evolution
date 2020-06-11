@@ -27,6 +27,7 @@
 evolution-analytics/node_modules/
 evolution-analytics/dist/
 evolution-analytics/.idea/
+evolution-analytics/.env
 evolution-analytics-client/node_modules/
 evolution-analytics-client/dist/
 evolution-analytics-client/.idea/

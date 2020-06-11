@@ -642,12 +642,28 @@ export class MongoService {
         }
     }
 
+    public async getSerializedQueryValue(db, normalizedQueryUUID: string) {
+        var ObjectID = require('mongodb').ObjectID;
+        var objectId = new ObjectID(normalizedQueryUUID);
+        const res =
+            db.collection(MongoCollection.NORMALIZED_QUERY_COLLECTION_NAME).find(
+                {_id: objectId});
+        if (await res.hasNext()) {
+            const array = await res.toArray();
+            if (array.length > 0) {
+                return array[0].serialization;
+            }
+
+        }
+
+        return null;
+    }
+
     public async getNormalizedQuery(db, qlQueryUUID: string) {
         const queries = await this.getNormalizedQueryUUID(db, qlQueryUUID);
         if (!queries || queries.length !== 1)
             return[];
         const normalizedQueryId = queries[0].normalizedQueryId;
-        console.log('iic:' + normalizedQueryId);
         var ObjectID = require('mongodb').ObjectID;
         var objectId = new ObjectID(normalizedQueryId);
         const res =

@@ -1,10 +1,12 @@
-package capture.mains;
+package query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import capture.mains.AttributeSelector;
 
 public class Join implements Serializable{
 	private String entityName1;

@@ -1,4 +1,4 @@
-package capture.mains;
+package query;
 
 import java.io.Serializable;
 import java.util.ArrayList;

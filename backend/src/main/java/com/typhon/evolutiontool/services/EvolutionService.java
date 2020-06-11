@@ -13,6 +13,8 @@ public interface EvolutionService {
 
     Model evolveAttribute(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
+    Model evolveIndex(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
+
     String addIdentifier(SMO smo, Model model);
 
     String addComponentToIdentifier(SMO smo, Model model);

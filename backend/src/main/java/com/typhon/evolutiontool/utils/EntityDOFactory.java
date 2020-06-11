@@ -1,6 +1,6 @@
 package com.typhon.evolutiontool.utils;
 
-import com.typhon.evolutiontool.entities.DataTypeDO;
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
 import com.typhon.evolutiontool.entities.EntityDO;
 import com.typhon.evolutiontool.entities.EntityDOImpl;
 import com.typhon.evolutiontool.entities.RelationDO;
@@ -33,9 +33,9 @@ public class EntityDOFactory {
             if (entityAttributes != null) {
                 for (EntityAttributeKind attribute : entityAttributes) {
                     if (attribute != null) {
-                        //TODO: deprecated getNewType? see SMOAdapter
-//                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(attribute.getType()));
-                        attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(((Attribute) attribute).getType()));
+                        if (attribute instanceof Attribute) {
+                            attributes.put(attribute.getName(), DataTypeDOFactory.buildInstance(((Attribute) attribute).getType()));
+                        }
                     }
                 }
             }

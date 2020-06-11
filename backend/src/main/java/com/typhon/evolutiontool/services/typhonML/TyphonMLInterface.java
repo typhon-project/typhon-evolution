@@ -1,11 +1,16 @@
 package com.typhon.evolutiontool.services.typhonML;
 
 
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
 import com.typhon.evolutiontool.entities.*;
 import typhonml.Database;
 import typhonml.Entity;
 import typhonml.Model;
 import typhonml.Relation;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface to access TyphonML.
@@ -29,6 +34,28 @@ public interface TyphonMLInterface {
      * @return
      */
     boolean hasRelationship(String entityname, Model model);
+
+    /**
+     * Add a list of attributes to the index list of a table in the ML model
+     * @param databaseName the name of the database containing the table
+     * @param tableName the name of the table containing the existing index list
+     * @param entityName the name of the entity containing the attributes to add to the index
+     * @param entityAttributesNames the attributes names to add to the index list of the table
+     * @param sourceModel the current ML model to update
+     * @return the updated ML model
+     */
+
+    Model addTableIndex(String databaseName, String tableName, String entityName, Set<String> entityAttributesNames, Model sourceModel);
+    /**
+     * Add a list of attributes to the index list of a collection in the ML model
+     * @param databaseName the name of the database containing the collection
+     * @param collectionName the name of the collection containing the existing index list
+     * @param entityName the name of the entity containing the attributes to add to the index
+     * @param entityAttributesNames the attributes names to add to the index list of the collection
+     * @param sourceModel the current ML model to update
+     * @return the updated ML model
+     */
+    Model addCollectionIndex(String databaseName, String collectionName, String entityName, Set<String> entityAttributesNames, Model sourceModel);
 
     Database getEntityDatabase(String entityName, Model model);
 

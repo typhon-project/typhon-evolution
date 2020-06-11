@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="ASCII"?>
-<typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+<typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <entities name="Order">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="productDate">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="totalAmount">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+  </entities>
+  <entities name="User">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="name">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <relations name="orders" type="//@entities.0" cardinality="zero_many" isContainment="true"/>
+  </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="CreditCardDB" entity="//@dataTypes.3">
-      <indexSpec name="creditCardIndex" attributes="//@dataTypes.3/@attributes.1"/>
-      <idSpec attributes="//@dataTypes.3/@attributes.1"/>
+    <tables name="OrderDB" entity="//@entities.0">
+      <indexSpec name="orderIndex" attributes="//@entities.0/@attributes.0"/>
+      <idSpec attributes="//@entities.0/@attributes.0"/>
+    </tables>
+    <tables name="UserDB" entity="//@entities.1">
+      <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
+      <idSpec attributes="//@entities.1/@attributes.1"/>
     </tables>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="UserDB" entity="//@dataTypes.2"/>
-  </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="Date"/>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:Entity" name="User">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="name" type="//@dataTypes.1"/>
-    <relations name="paymentsDetails" type="//@dataTypes.3" cardinality="zero_many" isContainment="false"/>
-  </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="CreditCard">
-    <attributes name="id" type="//@dataTypes.1"/>
-    <attributes name="number" type="//@dataTypes.1"/>
-    <attributes name="expiryDate" type="//@dataTypes.0"/>
-  </dataTypes>
-  <changeOperators xsi:type="typhonml:EnableRelationContainment" relation="//@dataTypes.2/@relations.0"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
+  <changeOperators xsi:type="typhonml:EnableRelationContainment" relation="//@entities.1/@relations.0" />
 </typhonml:Model>

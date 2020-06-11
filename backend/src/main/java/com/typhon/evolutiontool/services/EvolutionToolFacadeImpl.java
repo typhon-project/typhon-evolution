@@ -34,6 +34,9 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade {
             if (smo.getTyphonObject() == TyphonMLObject.ATTRIBUTE) {
                 model = evolutionService.evolveAttribute(smo, model);
             }
+            if (smo.getTyphonObject() == TyphonMLObject.INDEX) {
+                model = evolutionService.evolveIndex(smo, model);
+            }
             //...
 
             //TODO : Saving the ChangeOperator or SMO to a Database

@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <entities name="Order">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="productDate">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="totalAmount">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <relations name="users" type="//@entities.1" cardinality="one" opposite="//@entities.0/@relations.0"/>
+  </entities>
+  <entities name="User">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="name">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <relations name="orders" type="//@entities.0" cardinality="zero_many"/>
+  </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="Order" entity="//@dataTypes.2">
-      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
+    <tables name="OrderDB" entity="//@entities.0">
+      <indexSpec name="orderIndex" attributes="//@entities.0/@attributes.0"/>
+      <idSpec attributes="//@entities.0/@attributes.0"/>
     </tables>
-    <tables name="User" entity="//@dataTypes.3">
-      <indexSpec name="userIndex" attributes="//@dataTypes.3/@attributes.0"/>
-      <idSpec attributes="//@dataTypes.3/@attributes.0"/>
+    <tables name="UserDB" entity="//@entities.1">
+      <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
+      <idSpec attributes="//@entities.1/@attributes.1"/>
     </tables>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-  </databases>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
-  <dataTypes xsi:type="typhonml:Entity" name="Order">
-    <attributes name="id" type="//@dataTypes.0"/>
-    <attributes name="number" type="//@dataTypes.1"/>
-    <relations name="user" type="//@dataTypes.3" cardinality="one"/>
-  </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="User">
-    <attributes name="id" type="//@dataTypes.0"/>
-    <attributes name="name" type="//@dataTypes.0"/>
-  </dataTypes>
-  <changeOperators xsi:type="typhonml:AddAttribute" name="address" type="//@dataTypes.0" ownerEntity="//@dataTypes.3"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
+  <changeOperators xsi:type="typhonml:AddAttribute" name="lastname" type="typhonml:StringType" ownerEntity="//@entities.1"/>
 </typhonml:Model>

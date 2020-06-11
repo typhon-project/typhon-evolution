@@ -52,6 +52,10 @@ public class SMOAdapter implements SMO {
                 || changeOperator instanceof ChangeAttributeType) {
             typhonMLObject = TyphonMLObject.ATTRIBUTE;
         }
+        if (changeOperator instanceof AddIndex
+                || changeOperator instanceof AddCollectionIndex) {
+            typhonMLObject = TyphonMLObject.INDEX;
+        }
     }
 
     private void initializeEvolutionOperatorAttribute() {
@@ -83,6 +87,10 @@ public class SMOAdapter implements SMO {
             evolutionOperator = EvolutionOperator.CHANGECARDINALITY;
         if (changeOperator instanceof ChangeAttributeType)
             evolutionOperator = EvolutionOperator.CHANGETYPE;
+        if (changeOperator instanceof AddIndex)
+            evolutionOperator = EvolutionOperator.ADD_TABLE_INDEX;
+        if (changeOperator instanceof AddCollectionIndex)
+            evolutionOperator = EvolutionOperator.ADD_COLLECTION_INDEX;
     }
 
     private void initializeInputParameterAttribute() {
@@ -173,6 +181,17 @@ public class SMOAdapter implements SMO {
                 inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
                 //TODO: deprecated getNewType?
 //                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeAttributeType) changeOperator).getNewType());
+            }
+        }
+        //INDEX
+        if (typhonMLObject == TyphonMLObject.INDEX) {
+            if (evolutionOperator == EvolutionOperator.ADD_TABLE_INDEX) {
+                inputParameter.put(ChangeOperatorParameter.TABLE, ((AddIndex) changeOperator).getTable());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTES, ((AddIndex) changeOperator).getAttributes());
+            }
+            if (evolutionOperator == EvolutionOperator.ADD_COLLECTION_INDEX) {
+                inputParameter.put(ChangeOperatorParameter.COLLECTION, ((AddCollectionIndex) changeOperator).getCollection());
+                inputParameter.put(ChangeOperatorParameter.ATTRIBUTES, ((AddCollectionIndex) changeOperator).getAttributes());
             }
         }
     }

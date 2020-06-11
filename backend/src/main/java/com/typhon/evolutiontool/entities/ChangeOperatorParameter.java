@@ -22,7 +22,10 @@ public enum ChangeOperatorParameter {
     NEW_ENTITY_ATTRIBUTES("newEntityAttributes"),
     NEW_ENTITY_RELATIONS("newEntityRelations"),
     ENTITY_SPLIT_ATTRIBUTE("entitySplitAttribute"),
-    ENTITY_SPLIT_EXPRESSION("entitySplitExpression");
+    ENTITY_SPLIT_EXPRESSION("entitySplitExpression"),
+    TABLE("table"),
+    COLLECTION("collection"),
+    ATTRIBUTES("attributes");
 
     private String parameterKey;
 

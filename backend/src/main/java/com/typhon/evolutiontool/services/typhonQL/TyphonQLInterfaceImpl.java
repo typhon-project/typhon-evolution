@@ -2,13 +2,14 @@ package com.typhon.evolutiontool.services.typhonQL;
 
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClient;
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClientImpl;
+import com.typhon.evolutiontool.datatypes.*;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import typhonml.Model;
+import typhonml.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,8 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String RENAME = "rename ";
     private static final String CHANGE = "change ";
     private static final String DROP = "drop ";
+    private static final String DROP_RELATION = DROP + "relation ";
+    private static final String DROP_ATTRIBUTE = DROP + "attribute ";
     private static final String AT = " at ";
     private static final String TO = " to ";
     private static final String CARDINALITY_ZERO_ONE = "[0..1]";
@@ -83,7 +86,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         if (!databaseName.equals("DocumentDatabase")) {
             if (entity.getAttributes() != null && !entity.getAttributes().isEmpty()) {
                 for (String attributeName : entity.getAttributes().keySet()) {
-                    createEntityAttribute(entity.getName(), attributeName, entity.getAttributes().get(attributeName).getName());
+                    createEntityAttribute(entity.getName(), attributeName, entity.getAttributes().get(attributeName));
                 }
             }
         }
@@ -104,9 +107,9 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public String createEntityAttribute(String entityName, String attributeName, String attributeTypeName) {
-        logger.debug("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, attributeTypeName, entityName);
-        String tql = new StringBuilder(CREATE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(attributeTypeName)).toString();
+    public String createEntityAttribute(String entityName, String attributeName, DataTypeDO dataType) {
+        logger.debug("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, dataType, entityName);
+        String tql = new StringBuilder(CREATE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(dataType)).toString();
         getTyphonQLWebServiceClient().update(tql);
         return tql;
     }
@@ -120,33 +123,38 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public WorkingSet selectEntityData(String entityName, String attributeName, String attributeValue) {
+    public WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, String attributeToFilterOn, String attributeToFilterOnValue) {
         logger.debug("Select data for entity [{}] TyphonQL query", entityName);
         StringBuilder query = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase());
-        if (attributeName != null && attributeValue != null) {
-            query.append(BLANK).append(WHERE).append(entityName.toLowerCase()).append(DOT).append(attributeName).append(EQUALS).append("\"").append(attributeValue).append("\"");
+        String[] attributesNames = null;
+        if (attributesToSelect != null && !attributesToSelect.isEmpty()) {
+            query.append(attributesToSelect.stream().map(attribute -> entityName.toLowerCase() + DOT + attribute).collect(Collectors.joining(COMMA, COMMA, "")));
+        }
+        if (attributeToFilterOn != null && attributeToFilterOnValue != null) {
+            query.append(BLANK).append(WHERE).append(entityName.toLowerCase()).append(DOT).append(attributeToFilterOn).append(EQUALS).append("\"").append(attributeToFilterOnValue).append("\"");
         }
         String tql = query.toString();
-        String result = getTyphonQLWebServiceClient().query(tql);
-        String data = result.substring(15, result.length() - 3);
-        JSONArray entities = new JSONObject(data).getJSONArray(entityName);
-        logger.info("Selected entities: {}", entities);
+        JSONObject result = new JSONObject(getTyphonQLWebServiceClient().query(tql));
+        logger.info("Result: {}", result);
+        JSONArray attributes = result.getJSONArray("columnNames");
+        JSONArray attributesValues = result.getJSONArray("values");
+        logger.info("Selected attributes: {}", attributes);
+        logger.info("Selected entities values: {}", attributesValues);
         WorkingSet ws = new WorkingSetImpl();
-        if (entities != null && !entities.isEmpty()) {
+        if (attributesValues != null && !attributesValues.isEmpty()) {
             List<EntityInstance> instances = new ArrayList<>();
-            for (int index = 0; index < entities.length(); index++) {
-                JSONObject entity = entities.getJSONObject(index);
-                EntityInstance instance = new EntityInstance((String) entity.get("uuid"));
-                Map<String, Object> fields = entity.getJSONObject("fields").toMap();
-                if (fields != null && !fields.isEmpty()) {
-                    for (String fieldName : fields.keySet()) {
-                        Object fieldValue = fields.get(fieldName);
-                        //For relations, the field value is a Map containing the key "uuid" and its value
-                        if (fieldValue instanceof Map) {
-                            instance.addAttribute(fieldName, "#" + ((Map) fieldValue).get("uuid"));
-                        } else {
-                            instance.addAttribute(fieldName, fieldValue);
-                        }
+            for (int index = 0; index < attributesValues.length(); index++) {
+                JSONArray entity = (JSONArray) attributesValues.get(index);
+                EntityInstance instance = new EntityInstance((String) entity.get(0));
+                for (int attributeIndex = 1; attributeIndex < entity.length(); attributeIndex++) {
+                    String attributeName = (String) attributes.get(attributeIndex);
+                    attributeName = attributeName.substring(attributeName.indexOf(".") + 1);
+                    Object attributeValue = entity.get(attributeIndex);
+                    //For relations, the field value is a Map containing the key "uuid" and its value
+                    if (attributeValue instanceof Map) {
+                        instance.addAttribute(attributeName, "#" + ((Map) attributeValue).get("uuid"));
+                    } else {
+                        instance.addAttribute(attributeName, attributeValue);
                     }
                 }
                 instances.add(instance);
@@ -229,7 +237,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void deleteRelationshipInEntity(String relationname, String entityname) {
         logger.debug("Delete Relationship [{}] in [{}] via TyphonQL on TyphonML model", relationname, entityname);
-        String tql = new StringBuilder(DROP).append(entityname).append(DOT).append(relationname).toString();
+        String tql = new StringBuilder(DROP_RELATION).append(entityname).append(DOT).append(relationname).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
@@ -257,7 +265,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void addAttribute(AttributeDO attributeDO, String entityname) {
         logger.debug("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model", attributeDO.getName(), entityname);
-        String tql = createEntityAttribute(entityname, attributeDO.getName(), attributeDO.getDataTypeDO().getName());
+        String tql = createEntityAttribute(entityname, attributeDO.getName(), attributeDO.getDataTypeDO());
         getTyphonQLWebServiceClient().update(tql);
     }
 
@@ -284,7 +292,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
     @Override
     public void removeAttribute(String entityName, String attribute) {
-        String tql = new StringBuilder(DROP).append(entityName).append(DOT).append(attribute).toString();
+        String tql = new StringBuilder(DROP_ATTRIBUTE).append(entityName).append(DOT).append(attribute).toString();
         logger.debug("Delete attributes [{}] via TyphonQL DDL on TyphonML model", entityName);
         getTyphonQLWebServiceClient().update(tql);
     }
@@ -311,32 +319,76 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         return "";
     }
 
-    private String covertMLTypeToQLType(String mlType) {
-        if (mlType != null && !mlType.isEmpty()) {
-            switch (mlType) {
-                case "String":
-                case "Date":
-                    return "str";
-                case "int":
-                    return "int";
-                case "Real":
-                    return "float";
+    private String covertMLTypeToQLType(DataTypeDO dataType) {
+        if (dataType != null) {
+            if (dataType instanceof BigintType) {
+                return "bigint";
+            }
+            if (dataType instanceof BlobType) {
+                return "blob";
+            }
+            if (dataType instanceof BoolType) {
+                return "bool";
+            }
+            if (dataType instanceof DatetimeType) {
+                return "datetime";
+            }
+            if (dataType instanceof DateType) {
+                return "date";
+            }
+            if (dataType instanceof FloatType) {
+                return "float";
+            }
+            if (dataType instanceof FreetextType) {
+                return "freetext[" + ((FreetextType) dataType).getTasks() + "]";
+            }
+            if (dataType instanceof IntType) {
+                return "int";
+            }
+            if (dataType instanceof PointType) {
+                return "point";
+            }
+            if (dataType instanceof PolygonType) {
+                return "polygon";
+            }
+            if (dataType instanceof StringType) {
+                return "string(" + ((StringType) dataType).getMaxSize() + ")";
+            }
+            if (dataType instanceof TextType) {
+                return "text";
             }
         }
-        return "";
+        return null;
     }
 
     private String getAttributeValueByType(Map.Entry attribute, EntityDO entityDO) {
         Map<String, DataTypeDO> attributes = entityDO.getAttributes();
         Optional<DataTypeDO> attributeDataType = attributes.keySet().stream().filter(attributeType -> attributeType.equals(attribute.getKey())).map(attributes::get).findFirst();
         if (attributeDataType.isPresent()) {
-            switch (attributeDataType.get().getName()) {
-                case "String":
-                case "Date":
-                    return "\"" + attribute.getValue() + "\"";
-                case "int":
-                case "Real":
-                    return attribute.getValue().toString();
+            if (attributeDataType.get() instanceof IntTypeDO || attributeDataType.get() instanceof BigIntTypeDO || attributeDataType.get() instanceof FloatTypeDO) {
+                return attribute.getValue().toString();
+            }
+            if (attributeDataType.get() instanceof StringTypeDO || attributeDataType.get() instanceof TextTypeDO || attributeDataType.get() instanceof FreetextTypeDO) {
+                return "\"" + attribute.getValue() + "\"";
+            }
+            //TODO: check how to return the value according to the following DataType instance classes
+            if (attributeDataType.get() instanceof BlobTypeDO) {
+                return attribute.getValue().toString();
+            }
+            if (attributeDataType.get() instanceof BoolTypeDO) {
+                return attribute.getValue().toString();
+            }
+            if (attributeDataType.get() instanceof DatetimeTypeDO) {
+                return "\"" + attribute.getValue() + "\"";
+            }
+            if (attributeDataType.get() instanceof DateTypeDO) {
+                return "\"" + attribute.getValue() + "\"";
+            }
+            if (attributeDataType.get() instanceof PointTypeDO) {
+                return attribute.getValue().toString();
+            }
+            if (attributeDataType.get() instanceof PolygonTypeDO) {
+                return attribute.getValue().toString();
             }
         }
         return attribute.getValue().toString();

@@ -11,6 +11,8 @@ import com.typhon.evolutiontool.handlers.attribute.AttributeChangeTypeHandler;
 import com.typhon.evolutiontool.handlers.attribute.AttributeRemoveHandler;
 import com.typhon.evolutiontool.handlers.attribute.AttributeRenameHandler;
 import com.typhon.evolutiontool.handlers.entity.*;
+import com.typhon.evolutiontool.handlers.index.AddCollectionIndexHandler;
+import com.typhon.evolutiontool.handlers.index.AddTableIndexHandler;
 import com.typhon.evolutiontool.handlers.relation.*;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterfaceImpl;
@@ -44,6 +46,7 @@ public class EvolutionServiceImpl implements EvolutionService {
     private Map<EvolutionOperator, Handler> entityHandlers;
     private Map<EvolutionOperator, Handler> relationHandlers;
     private Map<EvolutionOperator, Handler> attributeHandlers;
+    private Map<EvolutionOperator, Handler> indexHandlers;
 
 
     public EvolutionServiceImpl() {
@@ -76,6 +79,10 @@ public class EvolutionServiceImpl implements EvolutionService {
         attributeHandlers.put(EvolutionOperator.REMOVE, new AttributeRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         attributeHandlers.put(EvolutionOperator.RENAME, new AttributeRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         attributeHandlers.put(EvolutionOperator.CHANGETYPE, new AttributeChangeTypeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+
+        indexHandlers = new EnumMap<>(EvolutionOperator.class);
+        indexHandlers.put(EvolutionOperator.ADD_TABLE_INDEX, new AddTableIndexHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        indexHandlers.put(EvolutionOperator.ADD_COLLECTION_INDEX, new AddCollectionIndexHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
     }
 
     @Override
@@ -93,6 +100,12 @@ public class EvolutionServiceImpl implements EvolutionService {
     @Override
     public Model evolveAttribute(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
         Handler operation = attributeHandlers.get(smo.getEvolutionOperator());
+        return executeHandlers(operation, smo, model);
+    }
+
+    @Override
+    public Model evolveIndex(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported {
+        Handler operation = indexHandlers.get(smo.getEvolutionOperator());
         return executeHandlers(operation, smo, model);
     }
 

@@ -1,6 +1,5 @@
 package com.typhon.evolutiontool.test;
 
-
 import com.typhon.evolutiontool.entities.SMOAdapter;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
@@ -13,6 +12,7 @@ import typhonml.*;
 public class AttributeChangeOperatorsTests extends InitialTest {
 
     @Test
+    //TODO: test the evolution operator after TyphonML has uncommented it (problem with the type)
     public void testAddAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addAttributeChangeOperator.xmi");
         AddAttribute addAttribute = (AddAttribute) sourceModel.getChangeOperators().get(0);
@@ -54,6 +54,7 @@ public class AttributeChangeOperatorsTests extends InitialTest {
     }
 
     @Test
+    //TODO: test the evolution operator after TyphonML has uncommented it (problem with the type)
     public void testChangeTypeAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeTypeAttributeChangeOperator.xmi");
         ChangeAttributeType changeAttributeType = (ChangeAttributeType) sourceModel.getChangeOperators().get(0);

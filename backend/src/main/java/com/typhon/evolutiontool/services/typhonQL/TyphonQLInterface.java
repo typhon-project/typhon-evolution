@@ -1,8 +1,10 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
 import com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface TyphonQLInterface {
@@ -35,10 +37,10 @@ public interface TyphonQLInterface {
      *
      * @param entityName        the name of the entity
      * @param attributeName     the name of the attribute
-     * @param attributeTypeName the type name of the attribute
+     * @param dataType          the type of the attribute
      * @return the TyphonQL query
      */
-    String createEntityAttribute(String entityName, String attributeName, String attributeTypeName);
+    String createEntityAttribute(String entityName, String attributeName, DataTypeDO dataType);
 
     /**
      * Create a new relation for the entity in the polystore using a TyphonQL query
@@ -56,11 +58,12 @@ public interface TyphonQLInterface {
      * Select the entity data from the polystore using a TyphonQL query
      *
      * @param entityName     the name of the entity
-     * @param attributeName  the name of the entity attribute for the "where" clause
-     * @param attributeValue the value of the entity attribute for the "where" clause
+     * @param attributesToSelect     the attributes to select from the entity
+     * @param attributeToFilterOn  the name of the entity attribute for the "where" clause
+     * @param attributeToFilterOnValue the value of the entity attribute for the "where" clause
      * @return the WorkingSet results
      */
-    WorkingSet selectEntityData(String entityName, String attributeName, String attributeValue);
+    WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, String attributeToFilterOn, String attributeToFilterOnValue);
 
     /**
      * Update the entity name in the source entity data
@@ -141,9 +144,9 @@ public interface TyphonQLInterface {
     /**
      * Change the attribute type in the polystore using a TyphonQL query
      *
-     * @param attributeName the name of the attribute
+     * @param attributeName     the name of the attribute
      * @param attributeTypeName the name of the attribute type
-     * @param entityName the name of the entity containing the attribute
+     * @param entityName        the name of the entity containing the attribute
      */
     void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName);
 }

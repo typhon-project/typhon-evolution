@@ -16,6 +16,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>analytics_id</id>
+			<name>analytics repository</name>
+			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
@@ -36,6 +44,14 @@
 			<artifactId>jersey-hk2</artifactId>
 			<version>2.29.1</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-connector-kafka_2.12</artifactId>
+			<version>1.10.0</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
@@ -63,6 +79,15 @@
 			<version>2.5.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.w3c/dom -->
+		<dependency>
+			<groupId>org.w3c</groupId>
+			<artifactId>dom</artifactId>
+			<version>2.3.0-jaxb-1.0.6</version>
+		</dependency>
+
+
+
 		<!-- Dependencies for analytics -->
 
 		<dependency>
@@ -75,7 +100,7 @@
 			<artifactId>jersey-client</artifactId>
 			<version>1.19.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>typhon</groupId>
 			<artifactId>ac.york.typhon.analytics</artifactId>
@@ -90,19 +115,25 @@
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql</groupId>
 			<artifactId>nl.cwi.swat.typhonql</artifactId>
-			<version>0.1.0.202004031707</version>
+			<version>0.1.0.202005201434</version>
 		</dependency>
 
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql-ide</groupId>
 			<artifactId>nl.cwi.swat.typhonql-ide</artifactId>
-			<version>0.1.0.202004031707</version>
+			<version>0.1.0.202005201434</version>
 		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>rascal</groupId> -->
+		<!-- <artifactId>rascal</artifactId> -->
+		<!-- <version>1.0.0-SNAPSHOT</version> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>rascal</groupId>
 			<artifactId>rascal</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>0.18</version>
 		</dependency>
 
 		<dependency>
@@ -126,7 +157,7 @@
 		<dependency>
 			<groupId>it.univaq.disim.typhonml</groupId>
 			<artifactId>it.univaq.disim.typhonml</artifactId>
-			<version>1.0.0.202004031140</version>
+			<version>1.0.0.202005251732</version>
 		</dependency>
 
 		<dependency>

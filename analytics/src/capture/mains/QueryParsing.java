@@ -1,10 +1,17 @@
 package capture.mains;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +35,9 @@ import io.usethesource.vallang.ITuple;
 import io.usethesource.vallang.IValue;
 import io.usethesource.vallang.IValueFactory;
 import model.TyphonModel;
+import query.Insert;
+import query.Join;
+import query.Query;
 import typhonml.Attribute;
 import typhonml.Entity;
 import typhonml.EntityAttributeKind;
@@ -37,20 +47,26 @@ public class QueryParsing {
 	private static Evaluator evaluator = null;
 	private static IValueFactory vf = null;
 
-	static Logger logger = Logger.getLogger(QueryParsing.class);
+	static {
+		PropertyConfigurator.configure(
+				System.getProperty("user.dir") + File.separator + "resources" + File.separator + "log4j.properties");
+
+	}
+	
+	public static Logger logger = Logger.getLogger(QueryParsing.class);
 
 	public static boolean init() {
-
 		try {
 			ISourceLocation root = URIUtil.createFileLocation(
 					QueryParsing.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-
 			PathConfig pcfg = PathConfig.fromSourceProjectRascalManifest(root);
-
+			
 			GlobalEnvironment heap = new GlobalEnvironment();
-			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), new PrintWriter(System.err, true),
-					new PrintWriter(System.out, false), new ModuleEnvironment("$typhonql$", heap), heap);
-
+//			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), new PrintWriter(System.err, true),
+//					new PrintWriter(System.out, false), new ModuleEnvironment("$typhonql$", heap), heap);
+			
+			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), null, new PrintStream(System.err, true), new PrintStream(System.out, true), new ModuleEnvironment("$typhonql$", heap), heap);
+			
 			evaluator.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
 
 			for (IValue path : pcfg.getJavaCompilerPath()) {
@@ -69,19 +85,24 @@ public class QueryParsing {
 			logger.info("Plugin imported with success");
 			return true;
 		} catch (Exception | Error e) {
+			e.printStackTrace();
 			logger.error("Impossible to initialize the QueryParsing plugin\nCause:\n" + e.getCause());
 			return false;
 		}
 	}
 
 	public static void main(String[] args) throws URISyntaxException, IOException {
+		logger.info("Query parsing");
 		if (!init()) {
 			logger.error("Query Parsing plugin exit");
 			return;
 		}
-
+		System.out.println("WB Init...");
+		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME, ConsumePostEvents.WEBSERVICE_PASSWORD);
+		System.out.println("Initialized!");
 		Scanner in = new Scanner(System.in);
 		while (true) {
+			System.out.println("Enter your query:");
 			String query = in.nextLine();
 
 			try {
@@ -94,7 +115,7 @@ public class QueryParsing {
 
 	}
 
-	static void analyzeJoin(Join join, TyphonModel model) {
+	public static void analyzeJoin(Join join, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple1 = getImplicitJoins(join.getEntityName1(), join.getAttributes1(),
 				model);
 		Couple<List<Join>, AttributeSelector> couple2 = getImplicitJoins(join.getEntityName2(), join.getAttributes2(),
@@ -103,7 +124,6 @@ public class QueryParsing {
 		if (couple1 != null) {
 			List<Join> joins = couple1.getX();
 			AttributeSelector as = couple1.getY();
-
 			join.setImplicitJoins1(joins);
 			join.setImplicitAttributeSelector1(as);
 
@@ -155,9 +175,10 @@ public class QueryParsing {
 		return res;
 	}
 
-	static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
+	public static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple = getImplicitJoins(sel.getEntityName(), sel.getAttributes(),
 				model);
+		
 		if (couple == null)
 			return;
 
@@ -171,18 +192,57 @@ public class QueryParsing {
 
 	}
 
-	public static Query eval(String query, TyphonModel m) {
-		IValue v = evaluator.getEvaluator().call("parseQuery", vf.string(query));
-		Query q = parseResult(v, m);
-		logger.info("Query analyzed: " + query);
-//		q.print();
-		return q;
+	public static Query deserializeQuery(String s) throws IOException, ClassNotFoundException {
+		try {
+			byte[] data = Base64.getDecoder().decode(s);
+			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+			Object o = ois.readObject();
+			ois.close();
+			return (Query) o;
+		} catch (Exception | Error e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	private static Query parseResult(IValue v, TyphonModel m) {
-		Query res = new Query();
-		res.setModel(m);
+	private static String serializeQuery(Query q) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(q);
+			oos.close();
+			return Base64.getEncoder().encodeToString(baos.toByteArray());
+		} catch (Exception | Error e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
+	public static Query eval(String query, TyphonModel m) {
+		logger.debug("Eval:" + query);
+		IValue v = evaluator.getEvaluator().call("parseQuery", vf.string(query));
+		logger.debug("Eval done");
+//		Query q = parseResult(v, m);
+		Query q2 = new Query();
+		parseResult(v, q2);
+		String serializedQuery = serializeQuery(q2);
+		q2.setSerializedQuery(serializedQuery);
+		q2.setModel(m);
+
+		logger.info("Query analyzed: " + query);
+		q2.print();
+		return q2;
+	}
+
+	private static String toString(Serializable o) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(o);
+		oos.close();
+		return Base64.getEncoder().encodeToString(baos.toByteArray());
+	}
+
+	private static Query parseResult(IValue v, Query res) {
 		Set<String> allEntities = new HashSet<String>();
 		res.setAllEntities(allEntities);
 
@@ -237,6 +297,15 @@ public class QueryParsing {
 		for (Insert i : res.getInserts())
 			if (i.getEntityName() != null)
 				allEntities.add(i.getEntityName());
+
+		return res;
+	}
+
+	private static Query parseResult(IValue v, TyphonModel m) {
+
+		Query res = new Query();
+		res.setModel(m);
+		parseResult(v, res);
 
 		return res;
 	}

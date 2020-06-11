@@ -7,40 +7,40 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonml::Util;
 
-EvoQuery evolve_relation(EvoQuery q, (RelationOperations) `rename relation <Id old_name> as <Id new_name>`, Schema s)
-	= rename_relation(q, old_name, new_name);
 
-EvoQuery evolve_relation(EvoQuery q, (RelationOperations) `remove relation <Id to_remove>`, Schema s)
-	= remove_relation(q, to_remove);
-
-EvoQuery evolve_relation(EvoQuery q, (RelationOperations) `change containment <Id relation> as <Bool b>`, Schema s)
-	= change_containment(q, relation);
-
-EvoQuery evolve_relation(EvoQuery q, (RelationOperations) `change cardinality <Id relation> as <Cardinality c>`, Schema s)
-	= change_cardinality(q, relation, c);
-
-default EvoQuery evolve_relation(EvoQuery q, _, _) = q;
-
-
-EvoQuery rename_relation(EvoQuery q, Id old_name, Id new_name){
-
-	EvoQuery res = visit(q){
-		case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new_name>`
-		case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new_name>.<{Id"."}+ r>`
-		when c := old_name
-	};
+EvoQuery rename_relation(EvoQuery q, str entity, str old_name, str new_name){
 	
-	if(res := q){
-		return q;
+	old = parse(#Id, old_name);
+	new = parse(#Id, new_name);
+	e = parse(#EId, entity);
+		
+	for(/(Binding) `<EId found_e> <VId bind>` := q){
+		if(found_e := e){
+			println("found");
+		
+			EvoQuery res = visit(q){
+				case (Expr) `<VId v>.<Id c>` => (Expr) `<VId v>.<Id new>`
+				when c := old && v := bind
+				case (Expr) `<VId v>.<Id c>.<{Id"."}+ r>` => (Expr) `<VId v>.<Id new>.<{Id"."}+ r>`
+				when c := old && v := bind
+			};
+			
+			if(res := q){
+				return q;
+			}
+			
+			res = setStatusChanged(res);
+			return res;
+		}
 	}
 	
-	res = setStatusChanged(res);
-	
-	return res;
+	return q;
 }
 
 
-EvoQuery remove_relation(EvoQuery q, Id to_remove){
+EvoQuery remove_relation(EvoQuery q, str entity, str to_rm){
+	
+	to_remove = parse(#Id, to_rm);
 	
 	if(query_use_relation(q, to_remove)){
 		q = setStatusBroken(q, "The relation <to_remove> was removed");
@@ -50,7 +50,9 @@ EvoQuery remove_relation(EvoQuery q, Id to_remove){
 }
 
 
-EvoQuery change_containment(EvoQuery q, Id relation){
+EvoQuery change_containment(EvoQuery q, str rela, str containment){
+	
+	relation = parse(#Id, rela);
 	
 	if(query_use_relation(q, relation)){
 		q = setStatusChanged(q);
@@ -60,7 +62,10 @@ EvoQuery change_containment(EvoQuery q, Id relation){
 }
 
 
-EvoQuery change_cardinality(EvoQuery q, Id relation, Cardinality c){
+EvoQuery change_cardinality(EvoQuery q, Id rela, str card){
+	
+	c = parse(#Cardinality, card);
+	relation = parse(#Id, rela);
 	
 	if(query_use_relation(q, relation)){
 		q = setStatusWarn(q, "Cardinality of relation <relation> as changed to <c>");

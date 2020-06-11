@@ -32,11 +32,11 @@ import com.mongodb.util.JSON;
 
 import capture.mains.AttributeSelector;
 import capture.mains.ConsumePostEvents;
-import capture.mains.Insert;
-import capture.mains.Join;
-import capture.mains.Query;
 import model.DatabaseInformationMgr;
 import model.TyphonModel;
+import query.Insert;
+import query.Join;
+import query.Query;
 import typhonml.Database;
 import typhonml.Entity;
 
@@ -246,6 +246,7 @@ public class AnalyticsDB {
 	public static void saveExecutedQuery(Query q, Date startDate, long executionTime) {
 		String normalizedQuery = q.getNormalizedQuery();
 		String displayableQuery = q.getDisplayableQuery();
+		String serialization = q.getSerializedQuery();
 		MongoCollection<Document> coll = database.getCollection(QL_NORMALIZED_QUERY_COLLECTION);
 
 		BasicDBObject searchQuery = new BasicDBObject();
@@ -259,6 +260,7 @@ public class AnalyticsDB {
 			queryTempl = new Document();
 			queryTempl.put("normalizedForm", normalizedQuery);
 			queryTempl.put("displayableForm", displayableQuery);
+			queryTempl.put("serialization", serialization);
 			queryTempl.put("count", 1);
 			coll.insertOne(queryTempl);
 		}
@@ -274,7 +276,7 @@ public class AnalyticsDB {
 		query.put("type", q.getQueryType());
 		query.put("executionDate", startDate.getTime());
 		query.put("executionTime", executionTime);
-		query.put("modelVersion", q.getModel().getVersion());
+		query.put("modelVersion", q.getModelVersion());
 		
 		query.put("allEntities", new ArrayList<String>(q.getAllEntities()));
 		if (q.getMainEntities().size() > 0)

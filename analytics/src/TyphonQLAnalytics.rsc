@@ -389,15 +389,15 @@ public ImplicitInsert visitKeyVal((KeyVal)`@id : <Expr e>`, ImplicitInsert ii) {
 public ImplicitInsert visitKeyValExpr((Expr) `<Obj obj>`, ImplicitInsert ii) = visitKeyValExpr(obj, ii);
 public ImplicitInsert visitKeyValExpr(Obj obj, ImplicitInsert ii) = visitInsertObject(false, obj, ii);
 
-public ImplicitInsert visitKeyValExpr((Expr) `[ <{Obj ","}* entries> ]`, ImplicitInsert ii) {
-	ImplicitInsert res = implicitInsert(ii.entityName, ii.children);
-	for(Obj obj <- entries) {
-		ImplicitInsert ii2 = visitInsertObject(false, obj, ii);
-		res.children += ii2.children;
-	}
-	
-	return res;
-}
+// public ImplicitInsert visitKeyValExpr((Expr) `[ <{Obj ","}* entries> ]`, ImplicitInsert ii) {
+//	ImplicitInsert res = implicitInsert(ii.entityName, ii.children);
+//	for(Obj obj <- entries) {
+//		ImplicitInsert ii2 = visitInsertObject(false, obj, ii);
+//		res.children += ii2.children;
+//	}
+//	
+//	return res;
+// }
 
 public ImplicitInsert visitKeyValExpr((Expr) `( <Expr e> )`, ImplicitInsert ii) = visitKeyValExpr(e, ii);
 

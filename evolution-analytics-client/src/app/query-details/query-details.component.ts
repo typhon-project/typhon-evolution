@@ -1,11 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {MongoApiClientService} from '../../services/api/mongo.api.client.service';
 import {NgbdNavDynamicComponent} from '../navigation/navigation.component';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-query-details',
   templateUrl: './query-details.component.html',
-  styleUrls: ['./query-details.component.scss']
+  styleUrls: ['./query-details.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class QueryDetailsComponent implements OnInit {
   @Input() public normalizedQueryUUID;
@@ -15,11 +18,16 @@ export class QueryDetailsComponent implements OnInit {
   public latestExecutionDate: string;
   public latestExecutionTime: number;
   public queryType: string;
+  @Input() public query: string;
   public concernedEntities: string[];
   public joinEntities: any[];
   public implicitInsertedEntities: string[];
 
-  constructor(private mongoApiClientService: MongoApiClientService) { }
+  closeResult = '';
+  recommendations: any;
+
+
+  constructor(private mongoApiClientService: MongoApiClientService, private modalService: NgbModal, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     if (this.qlQueryUUID && this.qlQueryUUID != null) {
@@ -49,6 +57,7 @@ export class QueryDetailsComponent implements OnInit {
         this.latestExecutionDate = new Date(query.executionDate).toLocaleString();
         this.latestExecutionTime = query.executionTime;
         this.queryType = query.type;
+        this.query = query.displayableForm;
         this.concernedEntities = query.allEntities;
 
         this.joinEntities = [];
@@ -68,5 +77,30 @@ export class QueryDetailsComponent implements OnInit {
 
   openEntityTab(entity: string) {
     this.nav.openEntityTab(entity);
+  }
+
+  openRecommendationsPanel(content) {
+    const uuid = this.normalizedQueryUUID;
+    this.mongoApiClientService.recommend(uuid).subscribe( recommendations => {
+      console.log(recommendations);
+      this.recommendations = this.sanitizer.bypassSecurityTrustHtml(recommendations);
+
+    });
+
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 }

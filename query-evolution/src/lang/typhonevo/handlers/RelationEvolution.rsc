@@ -1,8 +1,6 @@
 module lang::typhonevo::handlers::RelationEvolution
 
 import IO;
-import ParseTree;
-import List;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonml::Util;

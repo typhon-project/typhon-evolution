@@ -44,7 +44,7 @@ public class EntitySplitHorizontalHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data for the attribute and the value
-            WorkingSet dataSource = typhonQLInterface.selectEntityData(firstEntityDO.getName(), splitAttributeName, splitAttributeValue);
+            WorkingSet dataSource = typhonQLInterface.selectEntityData(firstEntityDO.getName(), firstEntityDO.getAttributes().keySet(), splitAttributeName, splitAttributeValue);
             //Create a working set containing the source entity data adapted for the new entity
             WorkingSet dataTarget = new WorkingSetImpl();
             dataTarget.addEntityRows(secondEntityDO.getName(), dataSource.getEntityRows(firstEntityDO.getName()));

@@ -1,5 +1,7 @@
 package com.typhon.evolutiontool.entities;
 
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
+
 public class AttributeDOImpl implements AttributeDO {
 
     private String name;

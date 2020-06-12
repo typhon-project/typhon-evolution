@@ -1,5 +1,7 @@
 package com.typhon.evolutiontool.entities;
 
+import com.typhon.evolutiontool.datatypes.DataTypeDO;
+
 import java.util.List;
 import java.util.Map;
 

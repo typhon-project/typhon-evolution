@@ -45,7 +45,7 @@ public class EntityMigrateHandler extends BaseHandler {
             //Typhon QL
             try {
                 //Select the source entity data
-                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, null, null);
+                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, entityDO.getAttributes().keySet(), null, null);
                 //Manipulate the source entity data (modify the entity name, to the new entity name)
                 typhonQLInterface.updateEntityNameInSourceEntityData(entityData, sourceEntityName, targetEntityName);
                 //Upload the new XMI to the polystore
@@ -54,11 +54,11 @@ public class EntityMigrateHandler extends BaseHandler {
                 typhonQLInterface.createEntity(entityDO, database.getName());
                 //Drop the source entity relationships
                 //TODO Drop relation is not yet implemented in TyphonQL
-//                if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
-//                    for (RelationDO relationDO : entityDO.getRelations()) {
-//                        typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), sourceEntityName);
-//                    }
-//                }
+                if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {
+                    for (RelationDO relationDO : entityDO.getRelations()) {
+                        typhonQLInterface.deleteRelationshipInEntity(relationDO.getName(), sourceEntityName);
+                    }
+                }
                 //Insert the source entity data into the target entity
                 typhonQLInterface.insertEntityData(targetEntityName, entityData, entityDO);
                 //Delete the source entity
@@ -70,6 +70,7 @@ public class EntityMigrateHandler extends BaseHandler {
                 //Upload the new XMI to the polystore
                 typhonQLInterface.uploadSchema(targetModel);
             } catch (Exception exception) {
+                logger.error("Error while migrating the entity. Reverting the migration...");
                 //Revert Typhon QL operations
                 typhonQLInterface.dropEntity(targetEntityName);
                 //Reset the source XMI to the polystore

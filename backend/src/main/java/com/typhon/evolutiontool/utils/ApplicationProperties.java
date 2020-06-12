@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 public class ApplicationProperties {
@@ -12,9 +13,16 @@ public class ApplicationProperties {
     private Properties properties;
 
     protected ApplicationProperties() throws IOException {
-        InputStream file = new FileInputStream(new File("application.properties")) ;
-        properties = new Properties();
-        properties.load(file);
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        URL resource = classLoader.getResource("configuration/application.properties");
+        if (resource == null) {
+            throw new IllegalArgumentException("Application configuration file not found");
+        } else {
+            InputStream file = new FileInputStream(new File(resource.getFile())) ;
+            properties = new Properties();
+            properties.load(file);
+        }
     }
 
     public static ApplicationProperties getInstance() {

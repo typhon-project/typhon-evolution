@@ -1,15 +1,18 @@
 package com.typhon.evolutiontool.services.typhonML;
 
+import com.typhon.evolutiontool.datatypes.*;
 import com.typhon.evolutiontool.entities.*;
 import com.typhon.evolutiontool.services.EvolutionServiceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Collection;
-import typhonml.Table;
 import typhonml.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
 
@@ -19,6 +22,71 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     public boolean hasRelationship(String entityname, Model model) {
         Entity entity = this.getEntityByEntityName(entityname, model);
         return entity != null && !entity.getRelations().isEmpty();
+    }
+
+    @Override
+    public Model addTableIndex(String databaseName, String tableName, String entityName, Set<String> entityAttributesNames, Model sourceModel) {
+        logger.info("Add attributes to table '{}' index list in TyphonML model database '{}'", tableName, databaseName);
+        Model newModel = EcoreUtil.copy(sourceModel);
+        Entity entity = this.getEntityByEntityName(entityName, newModel);
+        List<Attribute> attributesToAddToIndex = getEntityAttributes(entity, entityAttributesNames);
+        List<Database> databases = newModel.getDatabases();
+        if (databases != null) {
+            for (Database database : databases) {
+                if (database instanceof RelationalDB && databaseName.equals(database.getName())) {
+                    List<Table> tables = ((RelationalDB) database).getTables();
+                    if (tables != null) {
+                        for (Table table : tables) {
+                            if (tableName.equals(table.getName())) {
+                                IdSpec idSpec = table.getIdSpec();
+                                if (idSpec == null) {
+                                    idSpec = TyphonmlFactory.eINSTANCE.createIdSpec();
+                                }
+                                List<Attribute> attributes = idSpec.getAttributes();
+                                if (attributes == null) {
+                                    attributes = new ArrayList<>();
+                                }
+                                attributes.addAll(attributesToAddToIndex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return newModel;
+    }
+
+    @Override
+    public Model addCollectionIndex(String databaseName, String collectionName, String entityName, Set<String> entityAttributesNames, Model sourceModel) {
+        logger.info("Add attributes to collection '{}' index list in TyphonML model database '{}'", collectionName, databaseName);
+        Model newModel = EcoreUtil.copy(sourceModel);
+        Entity entity = this.getEntityByEntityName(entityName, newModel);
+        List<Attribute> attributesToAddToIndex = getEntityAttributes(entity, entityAttributesNames);
+        List<Database> databases = newModel.getDatabases();
+        if (databases != null) {
+            for (Database database : databases) {
+                if (database instanceof DocumentDB && databaseName.equals(database.getName())) {
+                    List<Collection> collections = ((DocumentDB) database).getCollections();
+                    if (collections != null) {
+                        for (Collection collection : collections) {
+                            if (collectionName.equals(collection.getName())) {
+                                //TODO: build the IdSpecDO when ML and QL have implemented the change operator
+//                                IdSpec idSpec = collection.getIdSpec();
+//                                if (idSpec == null) {
+//                                    idSpec = TyphonmlFactory.eINSTANCE.createIdSpec();
+//                                }
+//                                List<Attribute> attributes = idSpec.getAttributes();
+//                                if (attributes == null) {
+//                                    attributes = new ArrayList<>();
+//                                }
+//                                attributes.addAll(attributesToAddToIndex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return newModel;
     }
 
     @Override
@@ -178,7 +246,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
         newModel.getEntities().add(entity);
-        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type.getName(), newModel)));
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type, newModel)));
         newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         return newModel;
     }
@@ -269,7 +337,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(attributeDO.getName());
         attribute.setImportedNamespace(attributeDO.getImportedNamespace());
-        attribute.setType(getAttributeTypeFromTypeName(attributeDO.getDataTypeDO().getName(), newModel));
+        attribute.setType(getDataType(attributeDO.getDataTypeDO()));
         entity.getAttributes().add(attribute);
         return newModel;
     }
@@ -311,7 +379,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         if (entity.getAttributes() != null) {
             for (EntityAttributeKind attribute : entity.getAttributes()) {
                 if (attribute.getName().equals(attributeDO.getName())) {
-                    //TODO: deprecated getNewType? see SMOAdapter.java
+//                    TODO: deprecated getNewType? see SMOAdapter.java
 //                    attribute.setType(getAttributeDataTypeFromDataTypeName(dataTypeName, newModel));
                     break;
                 }
@@ -584,11 +652,62 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return relation;
     }
 
-    private Attribute createAttribute(String name, String dataTypeName, Model targetModel) {
-        //TODO Handling of dataTypes
+    private Attribute createAttribute(String name, DataTypeDO dataType, Model targetModel) {
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
-        attribute.setType(getAttributeTypeFromTypeName(dataTypeName, targetModel));
+        attribute.setType(getDataType(dataType));
         return attribute;
+    }
+
+    private DataType getDataType(DataTypeDO dataType) {
+        if (dataType != null) {
+            if (dataType instanceof BigIntTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createBigintType();
+            }
+            if (dataType instanceof BlobTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createBlobType();
+            }
+            if (dataType instanceof BoolTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createBoolType();
+            }
+            if (dataType instanceof DatetimeTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createDatetimeType();
+            }
+            if (dataType instanceof DateTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createDateType();
+            }
+            if (dataType instanceof FloatTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createFloatType();
+            }
+            if (dataType instanceof FreetextTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createFreetextType();
+            }
+            if (dataType instanceof IntTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createIntType();
+            }
+            if (dataType instanceof PointTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createPointType();
+            }
+            if (dataType instanceof PolygonTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createPolygonType();
+            }
+            if (dataType instanceof StringTypeDO) {
+                StringType stringType = TyphonmlFactory.eINSTANCE.createStringType();
+                stringType.setMaxSize(((StringTypeDO) dataType).getMaxSize());
+                return stringType;
+            }
+            if (dataType instanceof TextTypeDO) {
+                return TyphonmlFactory.eINSTANCE.createTextType();
+            }
+        }
+        return null;
+    }
+
+    private List<Attribute> getEntityAttributes(Entity entity, Set<String> entityAttributesNames) {
+        List<Attribute> attributes = new ArrayList<>();
+        if (entity != null && entityAttributesNames != null && !entityAttributesNames.isEmpty()) {
+            attributes = entity.getAttributes().stream().map(attribute -> (Attribute) attribute).filter(attribute -> entityAttributesNames.contains(attribute.getName())).collect(Collectors.toList());
+        }
+        return attributes;
     }
 }

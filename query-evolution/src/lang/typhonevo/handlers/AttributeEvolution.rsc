@@ -9,6 +9,7 @@ import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonml::Util;
 import lang::typhonevo::utils::QueryManipulation;
+import lang::typhonevo::utils::Util;
 
 
 // HANDLERS 
@@ -66,14 +67,14 @@ EvoQuery attribute_remove(EvoQuery q, str entity, str n, Schema s){
 	return q;
 }
 
-EvoQuery attribute_type_change(EvoQuery q, str entity, Id name, EId t, Schema s){
+EvoQuery attribute_type_change(EvoQuery q, str entity, str attr_name, str attr_t, Schema s){
 
 	// Select the first entity containing the attributes. will be updated when the parsing 
 	// of the change operators in the xmi will be completed
 	eid = parse(#EId, entity);
+	name = parse(#Id, attr_name);
 	
-	
-	if(use_entity(q, eid)){
+	if(QueryUseAttribut(q, eid, name)){
 		return setStatusWarn(q, "The type of the attribute <name> from <eid> changed");
 	}
 	

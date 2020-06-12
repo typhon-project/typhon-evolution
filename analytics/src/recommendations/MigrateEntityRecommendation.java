@@ -56,47 +56,104 @@ public class MigrateEntityRecommendation extends Recommendation {
 
 	@Override
 	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
-		Element res = null;
-		if (radioName != null) {
-			// XOR recommendation
-//			<div>
-//			  <input type="radio" id="huey" name="radioName" value="huey"
-//			         checked>
-//			  <label for="huey">Huey</label>
-//			</div>
+		Element res = document.createElement("div");
 
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-			Element input = document.createElement("input");
+		Element input = document.createElement("input");
+		input.setAttribute("value", getChangeOperator());
+		res.appendChild(input);
+
+		Element label = document.createElement("label");
+		res.appendChild(label);
+
+		label.appendChild(document.createTextNode(getHumanReadableDescription()));
+		label.appendChild(getInformationLabel(document));
+
+		if (radioName != null) {
 			input.setAttribute("type", "radio");
 			input.setAttribute("id", getId() + "");
 			input.setAttribute("name", radioName);
-			input.setAttribute("value", getId() + "");
-			Element label = document.createElement("label");
 			label.setAttribute("for", getId() + "");
-			label.appendChild(document.createTextNode("migrate " + entity.getName() + " to " + destDatabase.getName()));
-			res.appendChild(input);
-			res.appendChild(label);
-
-		} else {
-//			<div><label><input type="checkbox"><span>some text</span></label></div>
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-
-			Element label = document.createElement("label");
-			res.appendChild(label);
-
-			if (!andRecommendation) {
-				Element input = document.createElement("input");
-				input.setAttribute("type", "checkbox");
-				input.appendChild(
-						document.createTextNode("migrate " + entity.getName() + " to " + destDatabase.getName()));
-				label.appendChild(input);
-			}
-
-		}
+		} else if (andRecommendation) {
+			input.setAttribute("type", "hidden");
+		} else
+			input.setAttribute("type", "checkbox");
 
 		return res;
+	}
+	
+	private Element getInformationLabel(Document document) {
+		Element infoLabel = document.createElement("label");
+		infoLabel.setAttribute("class", "info");
+		infoLabel.setAttribute("title", getExplanation());
+		infoLabel.appendChild(document.createTextNode(" "));
+		return infoLabel;
+	}
+
+	private String getExplanation() {
+		return "Performing joins between two entities stored in a different database can be time-consuming. Migrating one to the same database as the other one will speed up these joins.";
+	}
+
+//	@Override
+//	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
+//		Element res = null;
+//		if (radioName != null) {
+//			// XOR recommendation
+////			<div>
+////			  <input type="radio" id="huey" name="radioName" value="huey"
+////			         checked>
+////			  <label for="huey">Huey</label>
+////			</div>
+//
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//			Element input = document.createElement("input");
+//			input.setAttribute("type", "radio");
+//			input.setAttribute("id", getId() + "");
+//			input.setAttribute("name", radioName);
+//			input.setAttribute("value", getChangeOperator());
+//			Element label = document.createElement("label");
+//			label.setAttribute("for", getId() + "");
+//			label.appendChild(document.createTextNode(getHumanReadableDescription()));
+//			res.appendChild(input);
+//			
+//			res.appendChild(label);
+//
+//		} else {
+////			<div><label><input type="checkbox"><span>some text</span></label></div>
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//
+//			Element label = document.createElement("label");
+//			res.appendChild(label);
+//			label.appendChild(
+//					document.createTextNode(getHumanReadableDescription()));
+//
+//			if (!andRecommendation) {
+//				Element input = document.createElement("input");
+//				input.setAttribute("type", "checkbox");
+//				input.appendChild(
+//						document.createTextNode(getHumanReadableDescription()));
+//				label.appendChild(input);
+//				
+//				Element hiddenInput = document.createElement("input");
+//				hiddenInput.setAttribute("class", "changeOperator");
+//				hiddenInput.setAttribute("type", "hidden");
+//				hiddenInput.setAttribute("value", getChangeOperator());
+//				label.appendChild(hiddenInput);
+//				
+//			}
+//
+//		}
+//
+//		return res;
+//	}
+
+	private String getChangeOperator() {
+		return "migrate " + entity.getName() + " to " + destDatabase.getName();
+	}
+
+	private String getHumanReadableDescription() {
+		return "Migrating entity " + entity.getName() + " to database '" + destDatabase.getName() + "'";
 	}
 
 }

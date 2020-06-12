@@ -54,23 +54,23 @@ public class RandomRecommendationGenerator {
 	private static final int AND = 4;
 	
 	
-	public static void main(String[] args) throws ParserConfigurationException, TransformerException {
-		RandomRecommendationGenerator g = new RandomRecommendationGenerator();
-		Recommendation[] list = g.randomRecommendationList(0);
-		List<Recommendation> r = Arrays.asList(list);
-		Document document = ConsumePostEvents.getHtml(r);
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource domSource = new DOMSource(document);
-		StreamResult streamResult = new StreamResult(new File("C:\\Users\\lmeurice\\Desktop\\test.txtok"));
-
-		// If you use
-		// StreamResult result = new StreamResult(System.out);
-		// the output will be pushed to the standard output ...
-		// You can use that for debugging
-
-		transformer.transform(domSource, streamResult);
-	}
+//	public static void main(String[] args) throws ParserConfigurationException, TransformerException {
+//		RandomRecommendationGenerator g = new RandomRecommendationGenerator();
+//		Recommendation[] list = g.randomRecommendationList(0);
+//		List<Recommendation> r = Arrays.asList(list);
+//		Document document = ConsumePostEvents.getHtml(r);
+//		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//		Transformer transformer = transformerFactory.newTransformer();
+//		DOMSource domSource = new DOMSource(document);
+//		StreamResult streamResult = new StreamResult(new File("C:\\Users\\lmeurice\\Desktop\\test.txtok"));
+//
+//		// If you use
+//		// StreamResult result = new StreamResult(System.out);
+//		// the output will be pushed to the standard output ...
+//		// You can use that for debugging
+//
+//		transformer.transform(domSource, streamResult);
+//	}
 	
 	public Recommendation randomRecommendation(int depth) {
 		int type = randomType(depth);

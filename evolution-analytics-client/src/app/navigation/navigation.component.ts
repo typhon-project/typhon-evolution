@@ -106,9 +106,10 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
 
   openEntityTab(entityName: string) {
     // this.tabs.push(this.counter++);
-    this.entityTabs.push(entityName);
+    if ( !this.entityTabs.includes(entityName)) {
+      this.entityTabs.push(entityName);
+    }
 
-    /*TODO call WS*/
   }
 
   ngOnInit(): void {
@@ -174,7 +175,18 @@ export class NgbdNavDynamicComponent implements OnInit, AfterContentInit  {
   }
 
   openQueryTab(id: string, q: string, queryType: number) {
-    this.queryTabs.push( {uuid: id, query: q, type: queryType} );
+    let included = false;
+    for (const el of this.queryTabs) {
+      if (el.uuid === id) {
+        included = true;
+        break;
+      }
+    }
+
+
+    if (!included) {
+        this.queryTabs.push({uuid: id, query: q, type: queryType});
+    }
   }
 
   formatTabTitle(tabName: string) {

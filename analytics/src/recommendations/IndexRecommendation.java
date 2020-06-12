@@ -3,6 +3,7 @@ package recommendations;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class IndexRecommendation extends Recommendation {
 
@@ -50,51 +51,114 @@ public class IndexRecommendation extends Recommendation {
 		res.put("addIndex", o);
 		return res;
 	}
-
+	
 	@Override
 	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
-		Element res = null;
-		if (radioName != null) {
-			// XOR recommendation
-//			<div>
-//			  <input type="radio" id="huey" name="radioName" value="huey"
-//			         checked>
-//			  <label for="huey">Huey</label>
-//			</div>
-
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-			Element input = document.createElement("input");
+		Element res = document.createElement("div");
+		
+		Element input = document.createElement("input");
+		input.setAttribute("value", getChangeOperator());
+		res.appendChild(input);
+		Element label = document.createElement("label");
+		res.appendChild(label);
+		
+		
+		label.appendChild(document.createTextNode(getHumanReadableDescription()));
+		label.appendChild(getInformationLabel(document));
+		
+		if(radioName != null) {
 			input.setAttribute("type", "radio");
 			input.setAttribute("id", getId() + "");
 			input.setAttribute("name", radioName);
-			input.setAttribute("value", getId() + "");
-			Element label = document.createElement("label");
 			label.setAttribute("for", getId() + "");
-			label.appendChild(
-					document.createTextNode("AddIndex {table '" + tableName + "' attributes ('" + attribute + "'}"));
-			res.appendChild(input);
-			res.appendChild(label);
-
-		} else {
-//			<div><label><input type="checkbox"><span>some text</span></label></div>
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-
-			Element label = document.createElement("label");
-			res.appendChild(label);
-
-			if (!andRecommendation) {
-				Element input = document.createElement("input");
+		} else
+			if(andRecommendation) {
+				input.setAttribute("type", "hidden");
+			} else
 				input.setAttribute("type", "checkbox");
-				input.appendChild(document
-						.createTextNode("AddIndex {table '" + tableName + "' attributes ('" + attribute + "'}"));
-				label.appendChild(input);
-			}
-
-		}
-
+		
 		return res;
+	}
+
+//	@Override
+//	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
+//		Element res = null;
+//		if (radioName != null) {
+//			// XOR recommendation
+////			<div>
+////			  <input type="radio" id="huey" name="radioName" value="huey"
+////			         checked>
+////			  <label for="huey">Huey</label>
+////			</div>
+//
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//			Element input = document.createElement("input");
+//			input.setAttribute("type", "radio");
+//			input.setAttribute("id", getId() + "");
+//			input.setAttribute("name", radioName);
+//			input.setAttribute("value", getId() + "");
+//			Element label = document.createElement("label");
+//			label.setAttribute("for", getId() + "");
+//			label.appendChild(
+//					document.createTextNode(getHumanReadableDescription()));
+//			res.appendChild(input);
+//			
+//			
+//			Element hiddenInput = document.createElement("input");
+//			hiddenInput.setAttribute("class", "changeOperator");
+//			hiddenInput.setAttribute("type", "hidden");
+//			hiddenInput.setAttribute("value", getChangeOperator());
+//			res.appendChild(hiddenInput);
+//			
+//			res.appendChild(label);
+//
+//		} else {
+////			<div><label><input type="checkbox"><span>some text</span></label></div>
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//
+//			Element label = document.createElement("label");
+//			res.appendChild(label);
+//
+//			if (!andRecommendation) {
+//				Element input = document.createElement("input");
+//				input.setAttribute("type", "checkbox");
+//				input.appendChild(document
+//						.createTextNode(getHumanReadableDescription()));
+//				
+//				Element hiddenInput = document.createElement("input");
+//				hiddenInput.setAttribute("class", "changeOperator");
+//				hiddenInput.setAttribute("type", "hidden");
+//				hiddenInput.setAttribute("value", getChangeOperator());
+//				
+//				label.appendChild(input);
+//				label.appendChild(hiddenInput);
+//			}
+//
+//		}
+//
+//		return res;
+//	}
+	
+	private Element getInformationLabel(Document document) {
+		Element infoLabel = document.createElement("label");
+		infoLabel.setAttribute("class", "info");
+		infoLabel.setAttribute("title", getExplanation());
+		infoLabel.appendChild(document.createTextNode(" "));
+		return infoLabel;
+	}
+
+	private String getExplanation() {
+		return "Adding an index will improve the search performance on this attribute";
+	}
+
+	private String getHumanReadableDescription() {
+		return "Adding an index to " + tableName + "[" + attribute + "]";
+	}
+
+	private String getChangeOperator() {
+		return "AddIndex {table '" + tableName + "' attributes ('" + attribute + "') }";
 	}
 
 }

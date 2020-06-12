@@ -35,22 +35,22 @@ public class RandomQueryGenerator {
 
 	private TyphonModel model = null;
 
-	public static void main(String[] args) {
-		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
-				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
-				ConsumePostEvents.ANALYTICS_DB_NAME))
-			System.exit(1);
-		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME,
-				ConsumePostEvents.WEBSERVICE_PASSWORD);
-		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
-
-		for (int i = 0; i < 1000; i++) {
-			String query = g.randomQuery();
-			if (query != null)
-				System.out.println(query);
-		}
-
-	}
+//	public static void main(String[] args) {
+//		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
+//				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
+//				ConsumePostEvents.ANALYTICS_DB_NAME))
+//			System.exit(1);
+//		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME,
+//				ConsumePostEvents.WEBSERVICE_PASSWORD);
+//		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
+//
+//		for (int i = 0; i < 1000; i++) {
+//			String query = g.randomQuery();
+//			if (query != null)
+//				System.out.println(query);
+//		}
+//
+//	}
 
 	public RandomQueryGenerator(TyphonModel model) {
 		this.model = model;

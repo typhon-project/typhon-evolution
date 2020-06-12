@@ -31,7 +31,6 @@ import com.mongodb.client.result.UpdateResult;
 import com.mongodb.util.JSON;
 
 import capture.mains.AttributeSelector;
-import capture.mains.ConsumePostEvents;
 import model.DatabaseInformationMgr;
 import model.TyphonModel;
 import query.Insert;

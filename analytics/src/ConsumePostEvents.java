@@ -1,4 +1,4 @@
-package capture.mains;
+
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 import ac.york.typhon.analytics.commons.datatypes.events.Event;
 import ac.york.typhon.analytics.commons.datatypes.events.PostEvent;
 import ac.york.typhon.analytics.commons.serialization.EventSchema;
+import capture.mains.QueryParsing;
 
 //import capture.commons.Event;
 //import capture.commons.EventSchema;

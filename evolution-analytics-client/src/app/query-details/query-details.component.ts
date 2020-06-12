@@ -81,6 +81,7 @@ export class QueryDetailsComponent implements OnInit {
 
   openRecommendationsPanel(content) {
     const uuid = this.normalizedQueryUUID;
+    this.recommendations = this.sanitizer.bypassSecurityTrustHtml('<div class="loader"></div>');
     this.mongoApiClientService.recommend(uuid).subscribe( recommendations => {
       console.log(recommendations);
       this.recommendations = this.sanitizer.bypassSecurityTrustHtml(recommendations);
@@ -103,4 +104,78 @@ export class QueryDetailsComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
+  public copyClipboard(event) {
+    let res: Array<string> = [];
+
+    const target = event.target || event.srcElement || event.currentTarget;
+
+    const recommendationList: Element = target.closest('.modal-content').getElementsByClassName('recommendationList').item(0);
+    if (recommendationList) {
+      const firstRecommendationDiv: Element = recommendationList.firstElementChild;
+
+      res = this.getRecommendationsFromRecommendationDiv(firstRecommendationDiv);
+
+    }
+
+    console.log('copied: ' + res);
+
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    let content = 'changeOperators  [';
+    let i = 0;
+    for (const str of res) {
+      if ( i > 0) {
+        content += ',';
+      }
+
+      content += '\n   ' + str;
+      i++;
+    }
+    if ( i > 0) {
+      content += '\n';
+    }
+    content += ']';
+
+    selBox.value = content;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+
+  }
+
+  private getRecommendationsFromRecommendationDiv(firstRecommendationDiv: Element) {
+    let res: Array<string> = [];
+
+    if (firstRecommendationDiv) {
+      const recommendations: HTMLCollection = firstRecommendationDiv.children;
+      let i = 0;
+      while ( i < recommendations.length) {
+        const div: Element = recommendations.item(i);
+        const input: any = div.firstElementChild;
+        const inputValue: string = input.getAttribute('value');
+        const checked = input.checked;
+        if (input.getAttribute('type') === 'hidden' || (checked && checked === true)) {
+          const recommendationStr = input.nodeValue;
+          if (inputValue && inputValue !== '') {
+            res.push(inputValue);
+          }
+          const subRecommendationList: Element = input.nextSibling.nextSibling;
+          const res2: Array<string> = this.getRecommendationsFromRecommendationDiv(subRecommendationList);
+          res = res.concat(res2);
+
+        }
+
+        i++;
+      }
+    }
+
+    return res;
+  }
+
 }

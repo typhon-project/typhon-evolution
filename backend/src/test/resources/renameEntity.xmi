@@ -21,7 +21,7 @@
     </attributes>
     <relations name="orders" type="//@entities.0" cardinality="zero_many"/>
   </entities>
-  <entities name="NewEntity2">
+  <entities name="NewEntity">
     <attributes xsi:type="typhonml:Attribute" name="id">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
@@ -42,3 +42,5 @@
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
 </typhonml:Model>
+
+

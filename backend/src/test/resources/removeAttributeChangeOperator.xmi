@@ -19,10 +19,15 @@
     <attributes xsi:type="typhonml:Attribute" name="name">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="number">
+    <relations name="orders" type="//@entities.0" cardinality="zero_many"/>
+  </entities>
+  <entities name="NewEntity">
+    <attributes xsi:type="typhonml:Attribute" name="id">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="orders" type="//@entities.0" cardinality="zero_many"/>
+    <attributes xsi:type="typhonml:Attribute" name="test">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
   </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
     <tables name="OrderDB" entity="//@entities.0">
@@ -33,7 +38,8 @@
       <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
       <idSpec attributes="//@entities.1/@attributes.1"/>
     </tables>
+    <tables name="NewEntityDB" entity="//@entities.2"/>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
-  <changeOperators xsi:type="typhonml:RemoveAttribute" attributeToRemove="//@entities.1/@attributes.2"/>
+  <changeOperators xsi:type="typhonml:RemoveAttribute" attributeToRemove="//@entities.2/@attributes.1"/>
 </typhonml:Model>

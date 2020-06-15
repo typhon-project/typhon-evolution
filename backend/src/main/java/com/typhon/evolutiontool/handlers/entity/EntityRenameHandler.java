@@ -24,7 +24,6 @@ public class EntityRenameHandler extends BaseHandler {
             String newEntityName = String.valueOf(smo.getInputParameter().get(ChangeOperatorParameter.NEW_ENTITY_NAME));
 
             //TyphonQL
-            //TODO not implemented yet by TyphonQL
             typhonQLInterface.renameEntity(oldEntityName, newEntityName);
 
             //TyphonML

@@ -26,7 +26,7 @@ div.evolutionButton {
 
 .recommendationDiv {
   box-sizing: content-box;
-  border: solid #3f51b5 3px;
+  border: solid #3f51b5 2px;
   padding: 10px;
 }
 
@@ -38,4 +38,36 @@ input:not(:checked) + div.recommendationDiv {
 input:not(:checked) + label + div.recommendationDiv {
   opacity: 0.33;
   pointer-events: none;
+}
+
+.btn-outline-dark:hover {
+  color: #3f51b5 !important;
+}
+
+.loader {
+  border: 12px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 12px solid #3498db;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+label.info:after {
+  content: "\1F6C8";
+  color: darkblue;
+  margin-left: 10px;
+  font-size: 120%;
 }

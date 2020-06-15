@@ -91,29 +91,29 @@ public class QueryParsing {
 		}
 	}
 
-	public static void main(String[] args) throws URISyntaxException, IOException {
-		logger.info("Query parsing");
-		if (!init()) {
-			logger.error("Query Parsing plugin exit");
-			return;
-		}
-		System.out.println("WB Init...");
-		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME, ConsumePostEvents.WEBSERVICE_PASSWORD);
-		System.out.println("Initialized!");
-		Scanner in = new Scanner(System.in);
-		while (true) {
-			System.out.println("Enter your query:");
-			String query = in.nextLine();
-
-			try {
-				eval(query, TyphonModel.getCurrentModel());
-			} catch (Exception | Error e) {
-				logger.error("Problem when analyzing: " + query);
-				e.printStackTrace();
-			}
-		}
-
-	}
+//	public static void main(String[] args) throws URISyntaxException, IOException {
+//		logger.info("Query parsing");
+//		if (!init()) {
+//			logger.error("Query Parsing plugin exit");
+//			return;
+//		}
+//		System.out.println("WB Init...");
+//		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME, ConsumePostEvents.WEBSERVICE_PASSWORD);
+//		System.out.println("Initialized!");
+//		Scanner in = new Scanner(System.in);
+//		while (true) {
+//			System.out.println("Enter your query:");
+//			String query = in.nextLine();
+//
+//			try {
+//				eval(query, TyphonModel.getCurrentModel());
+//			} catch (Exception | Error e) {
+//				logger.error("Problem when analyzing: " + query);
+//				e.printStackTrace();
+//			}
+//		}
+//
+//	}
 
 	public static void analyzeJoin(Join join, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple1 = getImplicitJoins(join.getEntityName1(), join.getAttributes1(),

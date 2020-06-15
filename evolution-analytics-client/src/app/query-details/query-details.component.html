@@ -46,7 +46,7 @@
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h2 class="modal-title" id="modal-basic-title">Query recommendations to improve execution time</h2>
+    <h2 class="modal-title" id="modal-basic-title">Schema evolution recommendations</h2>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -56,11 +56,11 @@
       <div class="form-group recommendation">
         <h3><b>{{query}}</b></h3>
 
-        <div [innerHtml]="recommendations"></div>
+        <div class="recommendationList" [innerHtml]="recommendations"></div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="copyClipboard($event)">Copy change operators to clipboard</button>
   </div>
 </ng-template>

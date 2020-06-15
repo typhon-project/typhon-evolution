@@ -168,8 +168,18 @@ public class RecommendationMgr {
 		if (el1 == null || el2 == null)
 			return res;
 
-		if (el1 instanceof Table && el2 instanceof Table)
-			res.addAll(R_R(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+		if (el1 instanceof Table && el2 instanceof Table) {
+			Database db1 = model.getPhysicalDatabase(ent1);
+			Database db2 = model.getPhysicalDatabase(ent2);
+			
+			
+			if (db1 == db2)
+				res.addAll(R_R(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+			else {
+				// tables stored in different databases
+				res.addAll(R_R$(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+			}
+		}
 
 		if (el1 instanceof Table && el2 instanceof typhonml.Collection)
 			res.addAll(R_D(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
@@ -177,8 +187,19 @@ public class RecommendationMgr {
 		if (el1 instanceof typhonml.Collection && el2 instanceof Table)
 			res.addAll(D_R(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
 
-		if (el1 instanceof typhonml.Collection && el2 instanceof typhonml.Collection)
-			res.addAll(D_D(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+		if (el1 instanceof typhonml.Collection && el2 instanceof typhonml.Collection) {
+			typhonml.Collection coll1 = (typhonml.Collection) el1;
+			typhonml.Collection coll2 = (typhonml.Collection) el2;
+			Database db1 = model.getPhysicalDatabase(coll1.getEntity());
+			Database db2 = model.getPhysicalDatabase(coll2.getEntity());
+
+			if (db1 == db2)
+				res.addAll(D_D(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+			else {
+				// collections stored in different databases
+				res.addAll(D_D$(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
+			}
+		}
 
 		return res;
 	}
@@ -213,6 +234,36 @@ public class RecommendationMgr {
 		return res;
 	}
 
+	private static List<Recommendation> D_D$(TyphonModel model, Entity ent1, int maxCard1, Relation rel, Relation rel2,
+			Entity ent2, int maxCard2) {
+		List<Recommendation> res = new ArrayList<Recommendation>();
+		if (maxCard1 == 1 && maxCard2 == 2) {
+			Recommendation r = D1_ND$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 1 && maxCard2 == 1) {
+			Recommendation r = D1_1D$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 2 && maxCard2 == 1) {
+			Recommendation r = DN_1D$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 2 && maxCard2 == 2) {
+			Recommendation r = DN_ND$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		return res;
+	}
+
 	private static Recommendation DN_ND(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
 		// 1 recommendation: migrating both entities into relational database(s)
 
@@ -236,6 +287,43 @@ public class RecommendationMgr {
 		}
 
 		return r2;
+	}
+	
+	private static Recommendation DN_ND$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// 2 xor recommendations: 
+		// 1) migrating one entity to the database of the other one
+		// 2) migrating both entities into relational database(s)
+
+		
+		// 1) 
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+		MigrateEntityRecommendation r11 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r12 = new MigrateEntityRecommendation(ent2, db1);
+		XorRecommendation r1 = new XorRecommendation(r11, r12);
+		
+		
+		// 2)
+		List<Recommendation> list = new ArrayList<Recommendation>();
+		for (Database db : model.getModel().getDatabases())
+			if (db instanceof RelationalDB) {
+				RelationalDB rdb = (RelationalDB) db;
+				MigrateEntityRecommendation r21 = new MigrateEntityRecommendation(ent1, rdb);
+				MigrateEntityRecommendation r22 = new MigrateEntityRecommendation(ent2, rdb);
+				AndRecommendation ar = new AndRecommendation(r21, r22);
+				list.add(ar);
+			}
+
+		Recommendation r2 = null;
+		if (list.size() == 1) {
+			r2 = list.get(0);
+		}
+
+		if (list.size() > 1) {
+			r2 = new XorRecommendation(list.toArray(new Recommendation[list.size()]));
+		}
+
+		return new XorRecommendation(r1, r2);
 	}
 
 	private static Recommendation DN_1D(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
@@ -280,6 +368,57 @@ public class RecommendationMgr {
 		return null;
 	}
 
+	private static Recommendation DN_1D$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// 3 XOR recommendations
+		// 1) merging ent2 into ent1
+		// 2) migrating one entity to the database of the other one
+		// 3) migrating both entities into relational database(s) => faster SQL joins
+
+		// 1)
+		MergeEntitiesRecommendation r1 = null;
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent2, rel2, rel) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r1 = new MergeEntitiesRecommendation(ent1, ent2, rel);
+		}
+
+		// 2)
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+		MigrateEntityRecommendation r21 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r22 = new MigrateEntityRecommendation(ent2, db1);
+		XorRecommendation r2 = new XorRecommendation(r21, r22);
+
+		// 3)
+		List<Recommendation> list = new ArrayList<Recommendation>();
+		for (Database db : model.getModel().getDatabases())
+			if (db instanceof RelationalDB) {
+				RelationalDB rdb = (RelationalDB) db;
+				MigrateEntityRecommendation r31 = new MigrateEntityRecommendation(ent1, rdb);
+				MigrateEntityRecommendation r32 = new MigrateEntityRecommendation(ent2, rdb);
+				AndRecommendation ar = new AndRecommendation(r31, r32);
+				list.add(ar);
+			}
+
+		Recommendation r3 = null;
+		if (list.size() == 1) {
+			r3 = list.get(0);
+		}
+
+		if (list.size() > 1) {
+			r3 = new XorRecommendation(list.toArray(new Recommendation[list.size()]));
+		}
+
+		if (r1 != null && r3 == null)
+			return new XorRecommendation(r1, r2);
+		if (r1 == null && r3 != null)
+			return new XorRecommendation(r2, r3);
+
+		if (r1 != null && r3 != null)
+			return new XorRecommendation(r1, r2, r3);
+
+		return r2;
+	}
+
 	private static Recommendation D1_1D(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
 		// 2 XOR recommendations:
 		// 1) merge e1 into e2
@@ -306,6 +445,41 @@ public class RecommendationMgr {
 			return r2;
 
 		return null;
+	}
+
+	private static Recommendation D1_1D$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// 3 XOR recommendations:
+		// 1) merge e1 into e2
+		// 2) merge e2 into e1
+		// 3) migrating one entity to the database of the other one
+
+		MergeEntitiesRecommendation r1 = null;
+		MergeEntitiesRecommendation r2 = null;
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent1, rel, rel2) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r1 = new MergeEntitiesRecommendation(ent2, ent1, rel);
+		}
+
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent2, rel2, rel) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r2 = new MergeEntitiesRecommendation(ent1, ent2, rel);
+		}
+
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+		MigrateEntityRecommendation r31 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r32 = new MigrateEntityRecommendation(ent2, db1);
+		XorRecommendation r3 = new XorRecommendation(r31, r32);
+
+		if (r1 != null && r2 != null)
+			return new XorRecommendation(r1, r2, r3);
+
+		if (r1 != null)
+			return new XorRecommendation(r1, r3);
+		if (r2 != null)
+			return new XorRecommendation(r2, r3);
+
+		return r3;
 	}
 
 	private static Recommendation D1_ND(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
@@ -348,6 +522,60 @@ public class RecommendationMgr {
 			return new XorRecommendation(r1, r2);
 
 		return null;
+
+	}
+
+	private static Recommendation D1_ND$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// 3 XOR recommendations
+		// 1) merging ent1 into ent2
+		// 2) migrating one entity to the document database of the other one
+		// 3) migrating both entities into relational database(s) => faster SQL joins
+
+		// 1)
+		MergeEntitiesRecommendation r1 = null;
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent1, rel, rel2) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r1 = new MergeEntitiesRecommendation(ent2, ent1, rel);
+		}
+
+		// 2)
+		Recommendation r2;
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+		MigrateEntityRecommendation mer1 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation mer2 = new MigrateEntityRecommendation(ent2, db1);
+		r2 = new XorRecommendation(mer1, mer2);
+
+		// 3)
+		List<Recommendation> list = new ArrayList<Recommendation>();
+		for (Database db : model.getModel().getDatabases())
+			if (db instanceof RelationalDB) {
+				RelationalDB rdb = (RelationalDB) db;
+				MigrateEntityRecommendation r21 = new MigrateEntityRecommendation(ent1, rdb);
+				MigrateEntityRecommendation r22 = new MigrateEntityRecommendation(ent2, rdb);
+				AndRecommendation ar = new AndRecommendation(r21, r22);
+				list.add(ar);
+			}
+
+		Recommendation r3 = null;
+		if (list.size() == 1) {
+			r3 = list.get(0);
+		}
+
+		if (list.size() > 1) {
+			r3 = new XorRecommendation(list.toArray(new Recommendation[list.size()]));
+		}
+
+		if (r1 == null && r3 == null)
+			return r2;
+
+		if (r1 != null && r3 == null)
+			return new XorRecommendation(r1, r2);
+
+		if (r1 == null && r3 != null)
+			return new XorRecommendation(r2, r3);
+
+		return new XorRecommendation(r1, r2, r3);
 
 	}
 
@@ -659,14 +887,67 @@ public class RecommendationMgr {
 
 	}
 
+	private static List<Recommendation> R_R$(TyphonModel model, Entity ent1, int maxCard1, Relation rel, Relation rel2,
+			Entity ent2, int maxCard2) {
+		List<Recommendation> res = new ArrayList<Recommendation>();
+		if (maxCard1 == 1 && maxCard2 == 2) {
+			Recommendation r = R1_NR$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 1 && maxCard2 == 1) {
+			Recommendation r = R1_1R$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 2 && maxCard2 == 1) {
+			Recommendation r = RN_1R$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		if (maxCard1 == 2 && maxCard2 == 2) {
+			Recommendation r = RN_NR$(model, ent1, rel, rel2, ent2);
+			if (r != null)
+				res.add(r);
+		}
+
+		return res;
+
+	}
+
 	private static Recommendation RN_NR(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
 		// no recommendations
 		return null;
 	}
 
+	private static Recommendation RN_NR$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// XOR condition: migrating one entity to the database of the other one
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+
+		MigrateEntityRecommendation r1 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r2 = new MigrateEntityRecommendation(ent2, db1);
+
+		return new XorRecommendation(r1, r2);
+	}
+
 	private static Recommendation RN_1R(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
 		// no recommendations
 		return null;
+	}
+
+	private static Recommendation RN_1R$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// XOR condition: migrating one entity to the database of the other one
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+
+		MigrateEntityRecommendation r1 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r2 = new MigrateEntityRecommendation(ent2, db1);
+
+		return new XorRecommendation(r1, r2);
 	}
 
 	/**
@@ -702,9 +983,45 @@ public class RecommendationMgr {
 		return null;
 	}
 
+	private static Recommendation R1_1R$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		MergeEntitiesRecommendation r1 = null;
+		MergeEntitiesRecommendation r2 = null;
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent1, rel, rel2) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r1 = new MergeEntitiesRecommendation(ent2, ent1, rel);
+		}
+
+		if (ent1 != ent2 && !model.hasOtherRelations(model, ent2, rel2, rel) && !model.isContainmentRelation(rel)
+				&& !model.isContainmentRelation(rel2)) {
+			r2 = new MergeEntitiesRecommendation(ent1, ent2, rel);
+		}
+
+		if (r1 != null && r2 != null)
+			return new XorRecommendation(r1, r2);
+
+		if (r1 != null)
+			return r1;
+		if (r2 != null)
+			return r2;
+
+		return null;
+	}
+
 	private static Recommendation R1_NR(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
 		// no recommendations
 		return null;
+	}
+
+	private static Recommendation R1_NR$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
+		// one XOR recommendation: migrating one to the database of the other one
+
+		Database db1 = model.getPhysicalDatabase(ent1);
+		Database db2 = model.getPhysicalDatabase(ent2);
+
+		MigrateEntityRecommendation r1 = new MigrateEntityRecommendation(ent1, db2);
+		MigrateEntityRecommendation r2 = new MigrateEntityRecommendation(ent2, db1);
+
+		return new XorRecommendation(r1, r2);
 	}
 
 }

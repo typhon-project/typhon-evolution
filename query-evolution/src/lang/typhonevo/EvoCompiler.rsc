@@ -5,7 +5,6 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::handlers::EntityEvolution;
 import lang::typhonevo::handlers::AttributeEvolution;
 import lang::typhonevo::handlers::RelationEvolution;
-
 import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 import lang::typhonml::TyphonML;

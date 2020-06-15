@@ -53,49 +53,111 @@ public class MergeEntitiesRecommendation extends Recommendation {
 
 	@Override
 	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
-		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
+		Element res = document.createElement("div");
 
-		Element res = null;
+		Element input = document.createElement("input");
+		input.setAttribute("value", getChangeOperator());
+		res.appendChild(input);
+		Element label = document.createElement("label");
+		res.appendChild(label);
+
+		label.appendChild(document.createTextNode(getHumanReadableDescription()));
+		label.appendChild(getInformationLabel(document));
+
 		if (radioName != null) {
-			// XOR recommendation
-//			<div>
-//			  <input type="radio" id="huey" name="radioName" value="huey"
-//			         checked>
-//			  <label for="huey">Huey</label>
-//			</div>
-
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-			Element input = document.createElement("input");
 			input.setAttribute("type", "radio");
 			input.setAttribute("id", getId() + "");
 			input.setAttribute("name", radioName);
-			input.setAttribute("value", getId() + "");
-			Element label = document.createElement("label");
 			label.setAttribute("for", getId() + "");
-			label.appendChild(document.createTextNode("merge entities " + absorbingEntity.getName() + " "
-					+ absorbedEntity.getName() + " '" + srcEntity.getName() + "." + relation.getName() + "'"));
-			res.appendChild(input);
-			res.appendChild(label);
-
-		} else {
-//			<div><label><input type="checkbox"><span>some text</span></label></div>
-			res = document.createElement("div");
-//			res.setAttribute("class", "recommendationDiv");
-
-			Element label = document.createElement("label");
-			res.appendChild(label);
-
-			if (!andRecommendation) {
-				Element input = document.createElement("input");
-				input.setAttribute("type", "checkbox");
-				input.appendChild(document.createTextNode("merge entities " + absorbingEntity.getName() + " "
-						+ absorbedEntity.getName() + " '" + srcEntity.getName() + "." + relation.getName() + "'"));
-				label.appendChild(input);
-			}
-		}
+		} else if (andRecommendation) {
+			input.setAttribute("type", "hidden");
+		} else
+			input.setAttribute("type", "checkbox");
 
 		return res;
+	}
+
+	private Element getInformationLabel(Document document) {
+		Element infoLabel = document.createElement("label");
+		infoLabel.setAttribute("class", "info");
+		infoLabel.setAttribute("title", getExplanation());
+		infoLabel.appendChild(document.createTextNode(" "));
+		return infoLabel;
+	}
+
+//	@Override
+//	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
+//		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
+//
+//		Element res = null;
+//		if (radioName != null) {
+//			// XOR recommendation
+////			<div>
+////			  <input type="radio" id="huey" name="radioName" value="huey"
+////			         checked>
+////			  <label for="huey">Huey</label>
+////			</div>
+//
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//			Element input = document.createElement("input");
+//			input.setAttribute("type", "radio");
+//			input.setAttribute("id", getId() + "");
+//			input.setAttribute("name", radioName);
+//			input.setAttribute("value", getId() + "");
+//			Element label = document.createElement("label");
+//			label.setAttribute("for", getId() + "");
+//			label.appendChild(document.createTextNode(getHumanReadableDescription()));
+//			res.appendChild(input);
+//
+//			Element hiddenInput = document.createElement("input");
+//			hiddenInput.setAttribute("class", "changeOperator");
+//			hiddenInput.setAttribute("type", "hidden");
+//			hiddenInput.setAttribute("value", getChangeOperator());
+//			res.appendChild(hiddenInput);
+//
+//			res.appendChild(label);
+//
+//		} else {
+////			<div><label><input type="checkbox"><span>some text</span></label></div>
+//			res = document.createElement("div");
+////			res.setAttribute("class", "recommendationDiv");
+//
+//			Element label = document.createElement("label");
+//			res.appendChild(label);
+//
+//			if (!andRecommendation) {
+//				Element input = document.createElement("input");
+//				input.setAttribute("type", "checkbox");
+//				input.appendChild(document.createTextNode(getHumanReadableDescription()));
+//
+//				Element hiddenInput = document.createElement("input");
+//				hiddenInput.setAttribute("class", "changeOperator");
+//				hiddenInput.setAttribute("type", "hidden");
+//				hiddenInput.setAttribute("value", getChangeOperator());
+//
+//				label.appendChild(input);
+//				label.appendChild(hiddenInput);
+//			}
+//		}
+//
+//		return res;
+//	}
+
+	private String getExplanation() {
+		return "Performing joins between entities can be time-consuming. Merging these entities will make joins obsolete since entities data will be stored in a single one.";
+	}
+
+	private String getChangeOperator() {
+		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
+		return "merge entities " + absorbingEntity.getName() + " " + absorbedEntity.getName() + " '"
+				+ srcEntity.getName() + "." + relation.getName() + "'";
+	}
+
+	private String getHumanReadableDescription() {
+		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
+		return "Merging entity " + absorbedEntity.getName() + " into " + absorbingEntity.getName() + " via relation '"
+				+ srcEntity.getName() + "." + relation.getName() + "'";
 	}
 
 }

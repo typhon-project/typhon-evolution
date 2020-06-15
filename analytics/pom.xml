@@ -200,7 +200,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>QueryParsing</mainClass>
+									<mainClass>ConsumePostEvents</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

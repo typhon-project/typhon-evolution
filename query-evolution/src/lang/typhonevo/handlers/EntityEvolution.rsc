@@ -2,13 +2,12 @@
 
 import IO;
 import ParseTree;
-import List;
-import Exception;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonql::Expr;
 import lang::typhonevo::utils::QueryManipulation;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::utils::SchemaUtils;
+
 import lang::typhonml::Util;
 
 // DISPATCHER

@@ -21,19 +21,27 @@
     </attributes>
     <relations name="orders" type="//@entities.0" cardinality="zero_many"/>
   </entities>
+  <entities name="NewEntity">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="test">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+  </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-      <tables name="OrderDB" entity="//@entities.0">
-        <indexSpec name="orderIndex" attributes="//@entities.0/@attributes.0"/>
-        <idSpec attributes="//@entities.0/@attributes.0"/>
-      </tables>
-      <tables name="UserDB" entity="//@entities.1">
-        <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
-        <idSpec attributes="//@entities.1/@attributes.1"/>
-      </tables>
+    <tables name="OrderDB" entity="//@entities.0">
+      <indexSpec name="orderIndex" attributes="//@entities.0/@attributes.0"/>
+      <idSpec attributes="//@entities.0/@attributes.0"/>
+    </tables>
+    <tables name="UserDB" entity="//@entities.1">
+      <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
+      <idSpec attributes="//@entities.1/@attributes.1"/>
+    </tables>
+    <tables name="NewEntityDB" entity="//@entities.2"/>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-  </databases>
-  <changeOperators xsi:type="typhonml:RenameEntity" entityToRename="//@entities.1" newEntityName="UserInfo"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
+  <changeOperators xsi:type="typhonml:RenameEntity" entityToRename="//@entities.2" newEntityName="NewEntity2"/>
 </typhonml:Model>
 
 

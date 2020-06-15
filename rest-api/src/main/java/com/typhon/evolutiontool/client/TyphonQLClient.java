@@ -34,13 +34,13 @@ public class TyphonQLClient {
         //Get polystore users
 //        getUsers();
         //Get all instances of "User" entity
-        select();
+//        select();
         //Insert an instance of "User" entity
 //        insert();
         //Create a new entity "TestRelational" into the relational database
 //        create();
         //Create a new attribute "id" for "TestRelational" entity
-//        createAttribute();
+        createAttribute();
         //Create a new relation "relationalToDocument" in "TestRelational" entity to "TestDocument" entity
 //        createRelation();
         //Drop "TestRelational" entity from the relational database
@@ -50,7 +50,7 @@ public class TyphonQLClient {
         //Get all uploaded TyphonML models
 //        getModels();
         //Upload a TyphonML model
-//        uploadModel();
+        //
     }
 
     private static void resetDatabases() {
@@ -114,7 +114,7 @@ public class TyphonQLClient {
     }
 
     private static void createAttribute() {
-        String query = "create TestDocument.id : str";
+        String query = "create NewEntity.id : string(32)";
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)

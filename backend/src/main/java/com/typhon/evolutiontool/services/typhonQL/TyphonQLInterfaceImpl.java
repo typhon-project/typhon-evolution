@@ -38,6 +38,8 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String INSERT = "insert ";
     private static final String CREATE = "create ";
     private static final String RENAME = "rename ";
+    private static final String RENAME_RELATION = RENAME + "relation ";
+    private static final String RENAME_ATTRIBUTE = RENAME + "attribute ";
     private static final String CHANGE = "change ";
     private static final String DROP = "drop ";
     private static final String DROP_RELATION = DROP + "relation ";
@@ -230,7 +232,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void renameEntity(String oldEntityName, String newEntityName) {
         logger.debug("Rename entity (from '{}' to '{}') TyphonQL query", oldEntityName, newEntityName);
-        String tql = new StringBuilder(RENAME).append(oldEntityName).append(TO).append(newEntityName).toString();
+        String tql = new StringBuilder(RENAME).append(oldEntityName).append(" u").append(TO).append(newEntityName).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
@@ -272,14 +274,14 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void renameRelation(String entityName, String relationName, String newRelationName) {
         logger.debug("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model", relationName, newRelationName);
-        String tql = new StringBuilder(RENAME).append(entityName).append(DOT).append(relationName).append(TO).append(newRelationName).toString();
+        String tql = new StringBuilder(RENAME_RELATION).append(entityName).append(DOT).append(relationName).append(TO).append(newRelationName).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
     @Override
     public void renameAttribute(String oldAttributeName, String newAttributeName, String entityName) {
         logger.debug("Rename attribute [from '{}' to '{}'] in entity [{}]  via TyphonQL on TyphonML model", oldAttributeName, newAttributeName, entityName);
-        String tql = new StringBuilder(RENAME).append(entityName).append(DOT).append(oldAttributeName).append(TO).append(newAttributeName).toString();
+        String tql = new StringBuilder(RENAME_ATTRIBUTE).append(entityName).append(DOT).append(oldAttributeName).append(TO).append(newAttributeName).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 

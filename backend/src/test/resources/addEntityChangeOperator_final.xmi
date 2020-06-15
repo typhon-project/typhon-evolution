@@ -31,8 +31,7 @@
       <indexSpec name="userIndex" attributes="//@entities.1/@attributes.1"/>
       <idSpec attributes="//@entities.1/@attributes.1"/>
     </tables>
+    <tables name="NewEntityDB" entity="//@entities.2"/>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="NewEntityDB" entity="//@entities.2"/>
-  </databases>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
 </typhonml:Model>

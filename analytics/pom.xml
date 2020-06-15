@@ -281,10 +281,29 @@
 							<resources>
 								<resource>
 									<directory>${basedir}/src/main/resources/</directory>
-
 								</resource>
 							</resources>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<copy file="${basedir}/target/${project.artifactId}-${project.parent.version}.jar"
+									tofile="../evolution-analytics/src/resources/QLRecommendation.jar" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

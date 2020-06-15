@@ -17,8 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
@@ -43,16 +41,12 @@ import typhonml.Entity;
 import typhonml.EntityAttributeKind;
 import typhonml.Relation;
 
+import org.apache.log4j.Logger;
+
 public class QueryParsing {
 	private static Evaluator evaluator = null;
 	private static IValueFactory vf = null;
 
-	static {
-		PropertyConfigurator.configure(
-				System.getProperty("user.dir") + File.separator + "resources" + File.separator + "log4j.properties");
-
-	}
-	
 	public static Logger logger = Logger.getLogger(QueryParsing.class);
 
 	public static boolean init() {

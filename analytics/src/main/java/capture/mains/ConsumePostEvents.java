@@ -1,3 +1,4 @@
+package capture.mains;
 
 
 import java.io.BufferedWriter;
@@ -24,7 +25,6 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -33,7 +33,6 @@ import org.w3c.dom.Element;
 import ac.york.typhon.analytics.commons.datatypes.events.Event;
 import ac.york.typhon.analytics.commons.datatypes.events.PostEvent;
 import ac.york.typhon.analytics.commons.serialization.EventSchema;
-import capture.mains.QueryParsing;
 
 //import capture.commons.Event;
 //import capture.commons.EventSchema;
@@ -59,20 +58,20 @@ public class ConsumePostEvents {
 	static final String WEBSERVICE_USERNAME = "admin";
 	static final String WEBSERVICE_PASSWORD = "admin1@";
 	static final String ANALYTICS_DB_IP = "localhost";
-	static final int ANALYTICS_DB_PORT = 5502;
+	static final int ANALYTICS_DB_PORT = 5501;
 	static final String ANALYTICS_DB_USER = "username";
 	static final String ANALYTICS_DB_PWD = "password";
 	static final String ANALYTICS_DB_NAME = "Analytics";
 
-	static {
-		try {
-			PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator + "resources"
-					+ File.separator + "log4j.properties");
-		} catch (Exception | Error e) {
-			System.err.println("cannot initialize log4j");
-		}
-
-	}
+//	static {
+//		try {
+//			PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator + "resources"
+//					+ File.separator + "log4j.properties");
+//		} catch (Exception | Error e) {
+//			System.err.println("cannot initialize log4j");
+//		}
+//
+//	}
 
 	public static void main(String[] args) throws Exception {
 //		args = new String[] { (

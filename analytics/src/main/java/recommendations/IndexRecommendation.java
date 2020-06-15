@@ -3,51 +3,56 @@ package recommendations;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-import typhonml.Entity;
-import typhonml.Relation;
+public class IndexRecommendation extends Recommendation {
 
-public class MergeEntitiesRecommendation extends Recommendation {
-	private Entity absorbingEntity;
-	private Entity absorbedEntity;
-	private Relation relation;
+	private String dbName;
+	private String tableName;
+	private String entityName;
+	private String attribute;
 
-	public MergeEntitiesRecommendation(Entity absorbingEntity, Entity absorbedEntity, Relation relation) {
+	public IndexRecommendation(String dbName, String tableName, String entityName, String attribute) {
 		super();
-		this.absorbedEntity = absorbedEntity;
-		this.absorbingEntity = absorbingEntity;
-		this.relation = relation;
+		this.dbName = dbName;
+		this.tableName = tableName;
+		this.entityName = entityName;
+		this.attribute = attribute;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
 	}
 
 	@Override
 	public String getEvolutionOperator() {
-		return "MERGE ENTITIES " + absorbingEntity.getName() + " " + absorbedEntity.getName();
-	}
-
-	public Relation getRelation() {
-		return relation;
-	}
-
-	public void setRelation(Relation relation) {
-		this.relation = relation;
+		return "Adding index to " + tableName + "[" + attribute + "]";
 	}
 
 	@Override
 	public String getJSONContent() {
-		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
-
-		return "\"mergeEntities\": { \"changeOperator\": \"merge entities " + absorbingEntity.getName() + " "
-				+ absorbedEntity.getName() + " '" + srcEntity.getName() + "." + relation.getName() + "'\"}";
+		return "\"addIndex\": { \"changeOperator\": \"AddIndex {table '" + tableName + "' attributes ('" + attribute
+				+ "')}\"}";
 	}
 
 	@Override
 	public JSONObject getJSON() {
-		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
 		JSONObject res = new JSONObject();
 		JSONObject o = new JSONObject();
-		o.put("changeOperator", "merge entities " + absorbingEntity.getName() + " " + absorbedEntity.getName() + " '"
-				+ srcEntity.getName() + "." + relation.getName());
-		res.put("mergeEntities", o);
+		o.put("changeOperator", "AddIndex {table '" + tableName + "' attributes ('" + attribute + "'}");
+		res.put("addIndex", o);
 		return res;
 	}
 
@@ -77,18 +82,8 @@ public class MergeEntitiesRecommendation extends Recommendation {
 		return res;
 	}
 
-	private Element getInformationLabel(Document document) {
-		Element infoLabel = document.createElement("label");
-		infoLabel.setAttribute("class", "info");
-		infoLabel.setAttribute("title", getExplanation());
-		infoLabel.appendChild(document.createTextNode(" "));
-		return infoLabel;
-	}
-
 //	@Override
 //	public Element getHTMLElement(Document document, String radioName, boolean andRecommendation) {
-//		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
-//
 //		Element res = null;
 //		if (radioName != null) {
 //			// XOR recommendation
@@ -107,15 +102,17 @@ public class MergeEntitiesRecommendation extends Recommendation {
 //			input.setAttribute("value", getId() + "");
 //			Element label = document.createElement("label");
 //			label.setAttribute("for", getId() + "");
-//			label.appendChild(document.createTextNode(getHumanReadableDescription()));
+//			label.appendChild(
+//					document.createTextNode(getHumanReadableDescription()));
 //			res.appendChild(input);
-//
+//			
+//			
 //			Element hiddenInput = document.createElement("input");
 //			hiddenInput.setAttribute("class", "changeOperator");
 //			hiddenInput.setAttribute("type", "hidden");
 //			hiddenInput.setAttribute("value", getChangeOperator());
 //			res.appendChild(hiddenInput);
-//
+//			
 //			res.appendChild(label);
 //
 //		} else {
@@ -129,35 +126,57 @@ public class MergeEntitiesRecommendation extends Recommendation {
 //			if (!andRecommendation) {
 //				Element input = document.createElement("input");
 //				input.setAttribute("type", "checkbox");
-//				input.appendChild(document.createTextNode(getHumanReadableDescription()));
-//
+//				input.appendChild(document
+//						.createTextNode(getHumanReadableDescription()));
+//				
 //				Element hiddenInput = document.createElement("input");
 //				hiddenInput.setAttribute("class", "changeOperator");
 //				hiddenInput.setAttribute("type", "hidden");
 //				hiddenInput.setAttribute("value", getChangeOperator());
-//
+//				
 //				label.appendChild(input);
 //				label.appendChild(hiddenInput);
 //			}
+//
 //		}
 //
 //		return res;
 //	}
 
-	private String getExplanation() {
-		return "Performing joins between entities can be time-consuming. Merging these entities will make joins obsolete since entities data will be stored in a single one.";
+	private Element getInformationLabel(Document document) {
+		Element infoLabel = document.createElement("label");
+		infoLabel.setAttribute("class", "info");
+		infoLabel.setAttribute("title", getExplanation());
+		infoLabel.appendChild(document.createTextNode(" "));
+		return infoLabel;
 	}
 
-	private String getChangeOperator() {
-		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
-		return "merge entities " + absorbingEntity.getName() + " " + absorbedEntity.getName() + " '"
-				+ srcEntity.getName() + "." + relation.getName() + "'";
+	private String getExplanation() {
+		return "Adding an index will improve the search performance on this attribute";
 	}
 
 	private String getHumanReadableDescription() {
-		Entity srcEntity = (relation.getType() == absorbingEntity) ? absorbedEntity : absorbingEntity;
-		return "Merging entity " + absorbedEntity.getName() + " into " + absorbingEntity.getName() + " via relation '"
-				+ srcEntity.getName() + "." + relation.getName() + "'";
+		return "Adding an index to " + tableName + "[" + attribute + "]";
+	}
+
+	private String getChangeOperator() {
+		return "AddIndex {table '" + dbName + "." + tableName + "' attributes ('" + entityName + "." + attribute + "') }";
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+	public String getEntityName() {
+		return entityName;
+	}
+
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
 	}
 
 }

@@ -9,7 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -53,7 +55,7 @@ public class AnalyticsDB {
 	private static final String TYPHON_ENTITY_HISTORY_COLLECTION = "TyphonEntityHistory";
 	private static final String QL_NORMALIZED_QUERY_COLLECTION = "QLNormalizedQuery";
 	private static final String QL_QUERY_COLLECTION = "QLQuery";
-
+	
 	public static void saveTyphonModel(TyphonModel oldModel, TyphonModel newModel) {
 		logger.info("New Typhon model was loaded: " + newModel.getVersion());
 
@@ -81,29 +83,31 @@ public class AnalyticsDB {
 //					   { $push: { scores: 89 } }
 //					)
 			Database db = newModel.getEntityDatabase(entityName);
-			String dbName = db.getName();
-			String dbType = DatabaseInformationMgr.getDatatbaseType(db);
+			if (db != null) {
+				String dbName = db.getName();
+				String dbType = DatabaseInformationMgr.getDatatbaseType(db);
 
-			BasicDBObject updateQuery = (BasicDBObject) JSON.parse("{ $push: { versions: " + newModel.getVersion()
-					+ " }, $set: {latestVersion: " + newModel.getVersion() + "}, $set: {dbName: '" + dbName
-					+ "'} , $set: {dbType: '" + dbType + "'}}");
-			UpdateResult ur = entityColl.updateOne(searchQuery, updateQuery);
-			long nbOfModifiedDocs = ur.getModifiedCount();
+				BasicDBObject updateQuery = (BasicDBObject) JSON.parse("{ $push: { versions: " + newModel.getVersion()
+						+ " }, $set: {latestVersion: " + newModel.getVersion() + "}, $set: {dbName: '" + dbName
+						+ "'} , $set: {dbType: '" + dbType + "'}}");
+				UpdateResult ur = entityColl.updateOne(searchQuery, updateQuery);
+				long nbOfModifiedDocs = ur.getModifiedCount();
 
-			if (nbOfModifiedDocs == 0) {
-				// entity is not in the db yet
-				Document entityDoc = new Document();
-				entityDoc.put("name", entityName);
-				entityDoc.put("latestVersion", newModel.getVersion());
-				entityDoc.put("dbName", dbName);
-				entityDoc.put("dbType", dbType);
-				List<Integer> versions = new ArrayList<Integer>();
-				versions.add(newModel.getVersion());
-				entityDoc.put("versions", versions);
-				entityColl.insertOne(entityDoc);
-				logger.info("new entity mongo inserted");
-			} else {
-				logger.info("update in Entity mongo");
+				if (nbOfModifiedDocs == 0) {
+					// entity is not in the db yet
+					Document entityDoc = new Document();
+					entityDoc.put("name", entityName);
+					entityDoc.put("latestVersion", newModel.getVersion());
+					entityDoc.put("dbName", dbName);
+					entityDoc.put("dbType", dbType);
+					List<Integer> versions = new ArrayList<Integer>();
+					versions.add(newModel.getVersion());
+					entityDoc.put("versions", versions);
+					entityColl.insertOne(entityDoc);
+					logger.info("new entity mongo inserted");
+				} else {
+					logger.info("update in Entity mongo");
+				}
 			}
 
 //			Document entityDoc = entityColl.find(Filters.eq("name", entityName)).first();
@@ -215,19 +219,20 @@ public class AnalyticsDB {
 	}
 
 	public static void saveEntitiesHistory(Map<String, Long> entitySize, int version) {
-
 		MongoCollection<Document> coll = database.getCollection(TYPHON_ENTITY_HISTORY_COLLECTION);
 
 		List<Document> documents = new ArrayList<Document>();
 		for (Entry<String, Long> entry : entitySize.entrySet()) {
 			String entityName = entry.getKey();
 			Long dataSize = entry.getValue();
-
+			
 			Document document = new Document();
 			document.put("name", entityName);
 			document.put("updateDate", new Date().getTime());
 			document.put("modelVersion", version);
 			document.put("dataSize", dataSize);
+			
+			
 
 			document.put("nbOfQueries", 0);
 			document.put("nbOfSelect", 0);
@@ -276,7 +281,7 @@ public class AnalyticsDB {
 		query.put("executionDate", startDate.getTime());
 		query.put("executionTime", executionTime);
 		query.put("modelVersion", q.getModelVersion());
-		
+
 		query.put("allEntities", new ArrayList<String>(q.getAllEntities()));
 		if (q.getMainEntities().size() > 0)
 			query.put("mainEntities", q.getMainEntities());

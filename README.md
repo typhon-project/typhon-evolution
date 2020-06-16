@@ -6,7 +6,7 @@ This repository provides a set of tools helping you to evolve the polystore sche
 
 - [Evolution CLI](#evolution-cli) : A command line tool enabling you to change the schema deploied in the polystore,
 - [Query Evolution Plugin](#query-evolution-plugin) : An eclipse plugin helping you to translate TyphonQL queries for the new schema,
-- [Injection Tool](#injection-tool) : Allows you to inject an external database to the polystore schema,
+- [Ingestion Tool](#ingestion-tool) : Allows you to ingest an existing relationnal DB into the polystore,
 - [Analytics Tool](#analytics-tool) : An interface enabling you to visualize the performance of the polystore.
 
 The instruction for installing and using each of these tools are explicited in the following sections.
@@ -15,7 +15,7 @@ The instruction for installing and using each of these tools are explicited in t
 
 The evolution CLI evolve the schema of your polystore accordingly to the changeoperators of the new tml file.
 
-### Installation
+### Build From Source
 
 First, you need to clone the evolution tool repository with the following command :
 
@@ -94,7 +94,7 @@ A status is assigned to each transformed queries :
 
 An explanation of why the query is set as *Warning* or *Broken* is also provided to help the developper to assess the issue.
 
-## Injection Tool
+## Ingestion Tool
 
 
 ## Analytics Tool

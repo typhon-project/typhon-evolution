@@ -138,7 +138,10 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 	return q;
 }
 
-EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schema s){
+EvoQuery entity_merge(EvoQuery q,  str relation, str entity1, str entity2, Schema s){
+	
+	e1 = parse(#EId, entity1);
+	e2 = parse(#EId, entity2);
 
 	map[EId, VId] binding = ();
 	
@@ -146,12 +149,12 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 		binding[entity] = bind;
 	}
 	
-	if(entity1 in binding && entity2 in binding){
+	if(e1 in binding && e2 in binding){
 	
-		old_alias = binding[entity2];
-		del_binding = (Binding) `<EId entity2> <VId old_alias>`;
+		old_alias = binding[e2];
+		del_binding = (Binding) `<EId e2> <VId old_alias>`;
 		
-		new_alias = binding[entity1];
+		new_alias = binding[e1];
 		result = (Result) `<Expr new_alias>`;
 		
 		q = removeBinding(q, del_binding); 
@@ -169,9 +172,7 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 				=> (Query) `from <{Binding ","}+ bindings> select <Result result> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
 		}
 		
-		q = entity_rename(q, entity1, new_name);
-		
-		for(Rel r <- get_relations(s, "<entity1>", "<entity2>")){
+		for(Rel r <- get_relations(s, "<e1>", "<e2>")){
 			
 			try {
 				Id from = parse(#Id, r.fromRole);
@@ -185,33 +186,40 @@ EvoQuery entity_merge(EvoQuery q,  EId new_name, EId entity1, EId entity2, Schem
 		
 		switch(q.q.query){
 			case (Statement) `insert <{Obj ","}* obj>` : 
-				q = setStatusBroken(q, "<entity1> and <entity2> merged.");
+				println("insert");
+		}
+		
+		switch(q.q.query){
+			case (Statement) `insert <{Obj ","}* obj>` : 
+				q = setStatusBroken(q, "<e1> and <e2> merged.");
 			case (Statement) `delete <Binding binding> <Where? where>` : 
-				q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
+				q = setStatusWarn(q, "<e1> and <e2> merged. Delete will erase more information than before");
 			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
-				q = setStatusChanged(q, "<entity1> and <entity2> merged.");
+				q = setStatusChanged(q, "<e1> and <e2> merged.");
 			case Query quer : 
-				q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
+				q = setStatusWarn(q, "Query return a different QuerySet : <e1> contains attributes from <e1> and <e2>");
 		};
 		
 	}
+	
+	
 	else{
-		r1 = entity_rename(q, entity1, new_name);
-		r2= entity_rename(r1, entity2, new_name);
-		
-		if(r2 := q)
-			return q;
-			
+		r2= entity_rename(q, entity2, entity1);
 		q = r2;
+		
+		if(r2 := q){
+			return q;
+		}
+		
 		switch(q.q.query){
 			case (Statement) `insert <{Obj ","}* obj>` : 
-				q = setStatusBroken(q, "<entity1> and <entity2> merged.");
+				q = setStatusBroken(q, "<e1> and <e2> merged.");
 			case (Statement) `delete <Binding binding> <Where? where>` : 
-				q = setStatusWarn(q, "<entity1> and <entity2> merged. Delete will erase more information than before");
+				q = setStatusWarn(q, "<e1> and <e2> merged. Delete will erase more information than before");
 			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
-				q = setStatusChanged(q, "<entity1> and <entity2> merged.");
+				q = setStatusChanged(q, "<e1> and <e2> merged.");
 			case Query quer : 
-				q = setStatusWarn(q, "Query return a different QuerySet : <new_name> contains attributes from <entity1> and <entity2>");
+				q = setStatusWarn(q, "Query return a different QuerySet : <e1> contains attributes from <e1> and <e2>");
 		};
 		
 	}

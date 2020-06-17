@@ -1,4 +1,13 @@
 package com.typhon.evolutiontool;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
 import org.apache.commons.cli.*;
 
 public class Main {
@@ -14,16 +23,6 @@ public class Main {
     	help.setRequired(false);
     	options.addOption(help);
     	
-    	// Input file Required :
-    	Option input = new Option("i", "input", true,  "Path to the XMI file containing the change operators to apply");
-    	input.setRequired(true);
-    	options.addOption(input);
-    	
-    	// Output file Required for now
-    	Option output = new Option("o", "output", true, "Output the resulting schema with change operators applied");
-    	output.setRequired(true);
-    	options.addOption(output);
-    	
     	
     	CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -31,26 +30,74 @@ public class Main {
 
     	try {
     		cmd = parser.parse(options, args);
-    		EvolutionTool evolutionTool = new EvolutionTool();
     		
     		if(cmd.hasOption("help")) {
-    			formatter.printHelp("typhon-evolution", options);
+    			System.out.println("Running the tool without parameters will generate a configuration file for "
+    					+ "the evolation. Edit the generated file for your case and run the tool again to perform "
+    					+ "the evolution.");
     			System.exit(0);
     		}
-            
-            String modelInitialPath = cmd.getOptionValue("input");
-            String modelFinalPath = cmd.getOptionValue("output");
-            
-            
-            String resultMessage = evolutionTool.evolve(modelInitialPath, modelFinalPath);
-            System.out.println("Evolution result: " + resultMessage);
-    		
     	}
     	catch(ParseException e) {
     		System.out.println(e.getMessage());
     		formatter.printHelp("typhon-evolution", options);
-    		
     		System.exit(1);
     	}
+    	
+    	// Test if the config file exists. If not create it
+    	File config_file = new File("./application.properties");
+    	if(config_file.exists()) {
+    		// Read properties file
+    		Properties prop = new Properties();
+    		InputStream is;
+			try {
+				is = new FileInputStream(config_file);
+				prop.load(is);
+			} catch (FileNotFoundException e) {
+				System.out.println("Unable to load property file ");
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("Unable to load property file ");
+				e.printStackTrace();
+			}
+
+    		EvolutionTool evolutionTool = new EvolutionTool();
+        	String resultMessage = evolutionTool.evolve(prop.getProperty("INPUT_XMI"), prop.getProperty("RESULT_FILE"));
+    	}
+    	else {
+    		// write properties file
+    		Properties props = new Properties();
+    		
+    		props.setProperty("INPUT_XMI", "");
+    		props.setProperty("RESULT_FILE", "");
+    		props.setProperty("POLYSTORE_API_URL", "http://localhost:8080/");
+    		props.setProperty("POLYSTORE_API_USER_PASSWORD", "admin:admin1@");
+    		props.setProperty("API_RESET_DATABASES_URL", "api/resetdatabases");
+    		props.setProperty("API_GET_USERS_URL", "users");
+    		props.setProperty("API_QUERY_URL", "api/query");
+    		props.setProperty("API_UPDATE_URL", "api/update");
+    		props.setProperty("API_GET_ML_MODEL_URL", "api/model/ml/");
+    		props.setProperty("API_GET_ML_MODELS_URL", "api/models/ml");
+    		props.setProperty("API_UPLOAD_ML_MODEL_URL", "api/model/ml");
+
+    		OutputStream os;
+			try {
+				os = new FileOutputStream(config_file);
+				props.store(os, "");
+				System.out.println("Configuration file 'application.propertes' was created. "
+	    				+ "open it and check the parameters than, run the command line again to perform evolution");
+			} catch (FileNotFoundException e) {
+				System.out.println("Unable to create property file ");
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("Unable to create property file ");
+				e.printStackTrace();
+			}
+    		
+    		
+    		
+    	}
+    	
+    	
     }
 }

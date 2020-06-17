@@ -128,7 +128,8 @@ public class SMOAdapter implements SMO {
             if (evolutionOperator == EvolutionOperator.MERGE) {
                 inputParameter.put(ChangeOperatorParameter.FIRST_ENTITY_TO_MERGE, ((MergeEntity) changeOperator).getFirstEntityToMerge());
                 inputParameter.put(ChangeOperatorParameter.SECOND_ENTITY_TO_MERGE, ((MergeEntity) changeOperator).getSecondEntityToMerge());
-                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((MergeEntity) changeOperator).getNewEntityName());
+//                inputParameter.put(ChangeOperatorParameter.NEW_ENTITY_NAME, ((MergeEntity) changeOperator).getNewEntityName());
+                inputParameter.put(ChangeOperatorParameter.RELATION_NAME, ((MergeEntity) changeOperator).getNewEntityName());
             }
         }
 

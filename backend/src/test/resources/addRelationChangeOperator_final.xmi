@@ -10,7 +10,7 @@
     <attributes xsi:type="typhonml:Attribute" name="totalAmount">
       <type xsi:type="typhonml:IntType"/>
     </attributes>
-    <relations name="users" type="//@entities.1" cardinality="one" isContainment="false"/>
+    <relations name="users" type="//@entities.1" cardinality="one" isContainment="true"/>
   </entities>
   <entities name="User">
     <attributes xsi:type="typhonml:Attribute" name="id">

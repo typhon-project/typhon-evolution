@@ -35,12 +35,14 @@ public class TyphonQLClient {
 //        getUsers();
         //Get all instances of "User" entity
 //        select();
+        //Update instances of "User" entity
+        update();
         //Insert an instance of "User" entity
 //        insert();
         //Create a new entity "TestRelational" into the relational database
 //        create();
         //Create a new attribute "id" for "TestRelational" entity
-        createAttribute();
+//        createAttribute();
         //Create a new relation "relationalToDocument" in "TestRelational" entity to "TestDocument" entity
 //        createRelation();
         //Drop "TestRelational" entity from the relational database
@@ -72,7 +74,7 @@ public class TyphonQLClient {
     }
 
     private static void select() {
-        String query = "from User u select u";
+        String query = "from User user select user.@id, user.address where user.@id == #b4628b35-1a8f-483d-83ef-74d02969f9ca";
         webTarget = webTarget.path(QUERY_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
@@ -85,8 +87,26 @@ public class TyphonQLClient {
         System.out.println("Result: " + result);
     }
 
+    private static void update() {
+        String query = "update User u where u.@id == #a4e8cd34-022e-4d6b-bfbc-11cd04ddb4e4 set {name: \"Pablo\"}";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
+    }
+
     private static void insert() {
-        String query = "insert User {id: 1, name: \"test\", surname: \"test\" }";
+//        String query = "insert User {id: 1, name: \"Loup\"}";
+//        String query = "insert User {id: 2, name: \"Pol\" }";
+//        String query = "insert Address {zip: \"10\", city: \"adr1\", streetNumber: \"100\", streetName: \"street1\", country: \"country1\"}";
+        String query = "insert Address {zip: \"20\", city: \"adr2\", streetNumber: \"200\", streetName: \"stree2\", country: \"country2\"}";
+
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)

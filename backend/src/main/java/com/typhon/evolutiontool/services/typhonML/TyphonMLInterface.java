@@ -102,4 +102,12 @@ public interface TyphonMLInterface {
     Model renameRelation(String relationName, String entityName, String newRelationName, Model model);
 
     Model removeCurrentChangeOperator(Model model);
+
+    /**
+     * Merge the second entity into the first one
+     * @param firstEntityName the name of the entity who will contain the second one
+     * @param secondEntityName the entity name to be merged
+     * @return the ML model containing the merged entity
+     */
+    Model mergeEntities(String firstEntityName, String secondEntityName, Model model);
 }

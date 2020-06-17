@@ -4,7 +4,7 @@ import com.typhon.evolutiontool.datatypes.DataTypeDO;
 import com.typhon.evolutiontool.entities.*;
 import typhonml.Model;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 public interface TyphonQLInterface {
@@ -35,9 +35,9 @@ public interface TyphonQLInterface {
     /**
      * Create a new attribute for the entity in the polystore using a TyphonQL query
      *
-     * @param entityName        the name of the entity
-     * @param attributeName     the name of the attribute
-     * @param dataType          the type of the attribute
+     * @param entityName    the name of the entity
+     * @param attributeName the name of the attribute
+     * @param dataType      the type of the attribute
      * @return the TyphonQL query
      */
     String createEntityAttribute(String entityName, String attributeName, DataTypeDO dataType);
@@ -57,13 +57,14 @@ public interface TyphonQLInterface {
     /**
      * Select the entity data from the polystore using a TyphonQL query
      *
-     * @param entityName     the name of the entity
-     * @param attributesToSelect     the attributes to select from the entity
-     * @param attributeToFilterOn  the name of the entity attribute for the "where" clause
+     * @param entityName               the name of the entity
+     * @param attributesToSelect       the attributes to select from the entity
+     * @param relationsToSelect        the attributes to select from the entity
+     * @param attributeToFilterOn      the name of the entity attribute for the "where" clause
      * @param attributeToFilterOnValue the value of the entity attribute for the "where" clause
      * @return the WorkingSet results
      */
-    WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, String attributeToFilterOn, String attributeToFilterOnValue);
+    WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, List<String> relationsToSelect, String attributeToFilterOn, String attributeToFilterOnValue);
 
     /**
      * Update the entity name in the source entity data
@@ -137,6 +138,8 @@ public interface TyphonQLInterface {
 
     void addAttribute(AttributeDO attributeDO, String entityname);
 
+    void addAttribute(String attributeName, String entityname, DataTypeDO dataType);
+
     void renameRelation(String entityName, String relationName, String newRelationName);
 
     void renameAttribute(String oldAttributeName, String newAttributeName, String entityName);
@@ -149,4 +152,17 @@ public interface TyphonQLInterface {
      * @param entityName        the name of the entity containing the attribute
      */
     void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName);
+
+    /**
+     * Update entity data (first WorkingSet) with the data from the second WorkingSet, joined by the relation.
+     * According firstOrSecondEntityRelation, the relation data are contained in the first or in the second WS.
+     *
+     * @param entityName the entity name in which the data are updated
+     * @param firstWs the existing entity data
+     * @param secondWs the data to be updated into the entity
+     * @param secondEntity the entity to be merged
+     * @param relationName the name of the relation between the entity and the second WS
+     * @param firstOrSecondEntityRelation true if the entity contains the reference data to the second WS, false if the second WS contains the reference data to the entity
+     */
+    void updateEntityData(String entityName, WorkingSet firstWs, WorkingSet secondWs, EntityDO secondEntity, String relationName, Boolean firstOrSecondEntityRelation);
 }

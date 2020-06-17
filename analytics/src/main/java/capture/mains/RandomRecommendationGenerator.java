@@ -1037,7 +1037,7 @@ public class RandomRecommendationGenerator {
 	}
 
 	private Recommendation randomIndex() {
-		IndexRecommendation res = new IndexRecommendation("tableName", "attribute");
+		IndexRecommendation res = new IndexRecommendation("dbName", "tableName", "entity", "attribute");
 		return res;
 	}
 

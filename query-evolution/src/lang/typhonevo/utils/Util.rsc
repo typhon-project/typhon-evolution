@@ -54,3 +54,15 @@ bool QueryUseAttribut(EvoQuery q, EId entity, Id attr){
 	
 	return res;
 } 
+
+
+map[EId, VId] get_bindings(EvoQuery q){
+
+	map[EId, VId] bindings = ();
+	
+	for(/(Binding) `<EId entity> <VId bind>` := q){
+		bindings[entity] = bind;
+	}
+	
+	return bindings;
+}

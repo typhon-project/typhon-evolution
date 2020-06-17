@@ -1,0 +1,2 @@
+Executing "mvn clean install" in ../../../analytics will copy the generated output jar file within this directory.
+This jar file (QLRecommendation.jar) is used to propose schema evolution recommendations for improving a given QL query.

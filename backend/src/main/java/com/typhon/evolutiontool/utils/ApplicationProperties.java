@@ -15,11 +15,11 @@ public class ApplicationProperties {
     protected ApplicationProperties() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
 
-        URL resource = classLoader.getResource("configuration/application.properties");
-        if (resource == null) {
+        File config_file = new File("./application.properties");
+        if (!config_file.exists()) {
             throw new IllegalArgumentException("Application configuration file not found");
         } else {
-            InputStream file = new FileInputStream(new File(resource.getFile())) ;
+            InputStream file = new FileInputStream(config_file) ;
             properties = new Properties();
             properties.load(file);
         }

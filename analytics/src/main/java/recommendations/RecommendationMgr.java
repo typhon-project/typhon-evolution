@@ -67,9 +67,10 @@ public class RecommendationMgr {
 			if (!hasIndex(query, entityName, attr)) {
 				Entity ent = query.getModel().getEntityTypeFromName(entityName);
 				if (ent != null) {
+					Database db = query.getModel().getPhysicalDatabase(ent);
 					NamedElement el = query.getModel().getPhysicalEntity(ent);
-					if (el != null)
-						res.add(new IndexRecommendation(el.getName(), attr));
+					if (db != null && el != null)
+						res.add(new IndexRecommendation(db.getName(), el.getName(), entityName, attr));
 				}
 			}
 		}
@@ -171,8 +172,7 @@ public class RecommendationMgr {
 		if (el1 instanceof Table && el2 instanceof Table) {
 			Database db1 = model.getPhysicalDatabase(ent1);
 			Database db2 = model.getPhysicalDatabase(ent2);
-			
-			
+
 			if (db1 == db2)
 				res.addAll(R_R(model, ent1, maxCard1, attributeRel, opposite, ent2, maxCard2));
 			else {
@@ -288,21 +288,19 @@ public class RecommendationMgr {
 
 		return r2;
 	}
-	
+
 	private static Recommendation DN_ND$(TyphonModel model, Entity ent1, Relation rel, Relation rel2, Entity ent2) {
-		// 2 xor recommendations: 
+		// 2 xor recommendations:
 		// 1) migrating one entity to the database of the other one
 		// 2) migrating both entities into relational database(s)
 
-		
-		// 1) 
+		// 1)
 		Database db1 = model.getPhysicalDatabase(ent1);
 		Database db2 = model.getPhysicalDatabase(ent2);
 		MigrateEntityRecommendation r11 = new MigrateEntityRecommendation(ent1, db2);
 		MigrateEntityRecommendation r12 = new MigrateEntityRecommendation(ent2, db1);
 		XorRecommendation r1 = new XorRecommendation(r11, r12);
-		
-		
+
 		// 2)
 		List<Recommendation> list = new ArrayList<Recommendation>();
 		for (Database db : model.getModel().getDatabases())

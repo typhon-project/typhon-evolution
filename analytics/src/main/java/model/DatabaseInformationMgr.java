@@ -134,7 +134,7 @@ public class DatabaseInformationMgr {
 			if (info.getJDBCConn() != null) {
 				try {
 					info.getJDBCConn().close();
-					logger.info("Relational db connection closed:" + info.getDatabaseInfo().getDbName());
+//					logger.info("Relational db connection closed:" + info.getDatabaseInfo().getDbName());
 				} catch (Exception | Error e) {
 				}
 			}
@@ -142,7 +142,7 @@ public class DatabaseInformationMgr {
 			if (info.getMongoDBConn() != null) {
 				try {
 					info.getMongoDBConn().close();
-					logger.info("Document db connection closed:" + info.getDatabaseInfo().getDbName());
+//					logger.info("Document db connection closed:" + info.getDatabaseInfo().getDbName());
 				} catch (Exception | Error e) {
 
 				}

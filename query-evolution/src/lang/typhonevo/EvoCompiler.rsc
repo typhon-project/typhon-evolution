@@ -9,7 +9,7 @@ import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
 import lang::typhonevo::utils::EvolveStatus;
-
+import lang::typhonevo::handlers::MergeEntity;
 
 EvoSyntax evolve(EvoSyntax x, loc location){
 

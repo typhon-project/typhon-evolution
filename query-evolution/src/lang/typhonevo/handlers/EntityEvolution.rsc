@@ -138,97 +138,10 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 	return q;
 }
 
-EvoQuery entity_merge(EvoQuery q,  str relation, str entity1, str entity2, Schema s){
-	
-	e1 = parse(#EId, entity1);
-	e2 = parse(#EId, entity2);
-
-	map[EId, VId] binding = ();
-	
-	for(/(Binding) `<EId entity> <VId bind>` := q){
-		binding[entity] = bind;
-	}
-	
-	if(e1 in binding && e2 in binding){
-	
-		old_alias = binding[e2];
-		del_binding = (Binding) `<EId e2> <VId old_alias>`;
-		
-		new_alias = binding[e1];
-		result = (Result) `<Expr new_alias>`;
-		
-		q = removeBinding(q, del_binding); 
-		
-		
-		// alter alias
-		q = visit(q){
-			case old_alias => new_alias	
-		}
-		
-		// alter Results
-
-		q = visit(q){
-			case (Query) `from <{Binding ","}+ bindings> select <Result result>, <Result result> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				=> (Query) `from <{Binding ","}+ bindings> select <Result result> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-		}
-		
-		for(Rel r <- get_relations(s, "<e1>", "<e2>")){
-			
-			try {
-				Id from = parse(#Id, r.fromRole);
-				q = removeExprFromWhere(q, from);
-				
-				Id to  = parse(#Id, r.toRole);
-				q = removeExprFromWhere(q, to);
-			}
-			catch: a = 10;
-		}
-		
-		switch(q.q.query){
-			case (Statement) `insert <{Obj ","}* obj>` : 
-				println("insert");
-		}
-		
-		switch(q.q.query){
-			case (Statement) `insert <{Obj ","}* obj>` : 
-				q = setStatusBroken(q, "<e1> and <e2> merged.");
-			case (Statement) `delete <Binding binding> <Where? where>` : 
-				q = setStatusWarn(q, "<e1> and <e2> merged. Delete will erase more information than before");
-			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
-				q = setStatusChanged(q, "<e1> and <e2> merged.");
-			case Query quer : 
-				q = setStatusWarn(q, "Query return a different QuerySet : <e1> contains attributes from <e1> and <e2>");
-		};
-		
-	}
-	
-	
-	else{
-		r2= entity_rename(q, entity2, entity1);
-		q = r2;
-		
-		if(r2 := q){
-			return q;
-		}
-		
-		switch(q.q.query){
-			case (Statement) `insert <{Obj ","}* obj>` : 
-				q = setStatusBroken(q, "<e1> and <e2> merged.");
-			case (Statement) `delete <Binding binding> <Where? where>` : 
-				q = setStatusWarn(q, "<e1> and <e2> merged. Delete will erase more information than before");
-			case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
-				q = setStatusChanged(q, "<e1> and <e2> merged.");
-			case Query quer : 
-				q = setStatusWarn(q, "Query return a different QuerySet : <e1> contains attributes from <e1> and <e2>");
-		};
-		
-	}
-		
-	return q;
-}
 
 
 EvoQuery entity_migration(EvoQuery q, EId entity_name){
+
 	return entity_rename(q, entity_name, parse(#EId, "<entity_name>_migrated"));
 }
 

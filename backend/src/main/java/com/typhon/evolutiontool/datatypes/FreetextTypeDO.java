@@ -8,4 +8,9 @@ public class FreetextTypeDO implements DataTypeDO {
 //    public FreetextTypeDO(DataType type) {
 //        super(type);
 //    }
+
+    public String getTasks() {
+        //TODO: create the corresponding DO objects
+        return null;
+    }
 }

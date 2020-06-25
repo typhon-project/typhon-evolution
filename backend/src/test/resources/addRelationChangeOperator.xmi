@@ -30,5 +30,5 @@
     </tables>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
-  <changeOperators xsi:type="typhonml:AddRelation" name="users" type="//@entities.1" cardinality="one" isContainment="false" ownerEntity="//@entities.0"/>
+  <changeOperators xsi:type="typhonml:AddRelation" name="users" type="//@entities.1" cardinality="one" isContainment="true" ownerEntity="//@entities.0"/>
 </typhonml:Model>

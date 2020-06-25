@@ -45,7 +45,7 @@ public class EntityMigrateHandler extends BaseHandler {
             //Typhon QL
             try {
                 //Select the source entity data
-                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, entityDO.getAttributes().keySet(), null, null);
+                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, entityDO.getAttributes().keySet(), null, null, null);
                 //Manipulate the source entity data (modify the entity name, to the new entity name)
                 typhonQLInterface.updateEntityNameInSourceEntityData(entityData, sourceEntityName, targetEntityName);
                 //Upload the new XMI to the polystore

@@ -425,6 +425,42 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public Model mergeEntities(String firstEntityName, String secondEntityName, Model model) {
+        Model newModel = EcoreUtil.copy(model);
+        Entity firstEntity = getEntityByName(firstEntityName, newModel);
+        Entity secondEntity = getEntityByName(secondEntityName, newModel);
+        //Remove the relation between the entities
+        if (firstEntity != null && secondEntity != null) {
+            List<Relation> firstEntityRelations = firstEntity.getRelations();
+            if (firstEntityRelations != null) {
+                for (Relation firstRelation : firstEntityRelations) {
+                    if (firstRelation.getType().getName().equals(secondEntity.getName())) {
+                        firstEntityRelations.remove(firstRelation);
+                        break;
+                    }
+                }
+            }
+            List<Relation> secondEntityRelations = secondEntity.getRelations();
+            if (secondEntityRelations != null) {
+                for (Relation secondRelation : secondEntityRelations) {
+                    if (secondRelation.getType().getName().equals(firstEntity.getName())) {
+                        secondEntityRelations.remove(secondRelation);
+                        break;
+                    }
+                }
+            }
+            //Merge second entity attributes and relations into the first one
+            if (firstEntity.getAttributes() != null && secondEntity.getAttributes() != null) {
+                firstEntity.getAttributes().addAll(secondEntity.getAttributes());
+            }
+            if (firstEntity.getRelations() != null && secondEntity.getRelations() != null) {
+                firstEntity.getRelations().addAll(secondEntity.getRelations());
+            }
+        }
+        return newModel;
+    }
+
+    @Override
     public Model createNewEntityMappingInDatabase(DatabaseType databaseType, String dbname, String targetLogicalName, String entityTypeNameToMap, Model targetModel) {
         logger.info("Creating a mapping Database [{}] of type [{}] to entity [{}] mapped to [{}] in TyphonML", dbname, databaseType, entityTypeNameToMap, targetLogicalName);
         Model newModel;

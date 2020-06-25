@@ -61,7 +61,8 @@ public class EvolutionServiceImpl implements EvolutionService {
         entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
-        entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+//        entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.MERGE, new EntityNewMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
 
         relationHandlers = new EnumMap<>(EvolutionOperator.class);
         relationHandlers.put(EvolutionOperator.ADD, new RelationAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));

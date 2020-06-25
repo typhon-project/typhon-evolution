@@ -36,6 +36,8 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String DELETE = "delete ";
     private static final String WHERE = "where ";
     private static final String INSERT = "insert ";
+    private static final String UPDATE = "update ";
+    private static final String SET = "set ";
     private static final String CREATE = "create ";
     private static final String RENAME = "rename ";
     private static final String RENAME_RELATION = RENAME + "relation ";
@@ -50,6 +52,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String CARDINALITY_ONE_ONE = "[1..1]";
     private static final String CARDINALITY_ZERO_MANY = "[0..*]";
     private static final String CARDINALITY_ONE_MANY = "[1..*]";
+    private static final String UUID_ATTRIBUTE = "@id";
 
     private Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
 
@@ -112,7 +115,6 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     public String createEntityAttribute(String entityName, String attributeName, DataTypeDO dataType) {
         logger.debug("Create attribute [{}: {}] for entity [{}] TyphonQL query", attributeName, dataType, entityName);
         String tql = new StringBuilder(CREATE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(dataType)).toString();
-        getTyphonQLWebServiceClient().update(tql);
         return tql;
     }
 
@@ -125,12 +127,15 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, String attributeToFilterOn, String attributeToFilterOnValue) {
+    public WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, List<String> relationsToSelect, String attributeToFilterOn, String attributeToFilterOnValue) {
         logger.debug("Select data for entity [{}] TyphonQL query", entityName);
-        StringBuilder query = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase());
+        StringBuilder query = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE);
         String[] attributesNames = null;
         if (attributesToSelect != null && !attributesToSelect.isEmpty()) {
             query.append(attributesToSelect.stream().map(attribute -> entityName.toLowerCase() + DOT + attribute).collect(Collectors.joining(COMMA, COMMA, "")));
+        }
+        if (relationsToSelect != null && !relationsToSelect.isEmpty()) {
+            query.append(relationsToSelect.stream().map(relation -> entityName.toLowerCase() + DOT + relation).collect(Collectors.joining(COMMA, COMMA, "")));
         }
         if (attributeToFilterOn != null && attributeToFilterOnValue != null) {
             query.append(BLANK).append(WHERE).append(entityName.toLowerCase()).append(DOT).append(attributeToFilterOn).append(EQUALS).append("\"").append(attributeToFilterOnValue).append("\"");
@@ -232,7 +237,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     @Override
     public void renameEntity(String oldEntityName, String newEntityName) {
         logger.debug("Rename entity (from '{}' to '{}') TyphonQL query", oldEntityName, newEntityName);
-        String tql = new StringBuilder(RENAME).append(oldEntityName).append(" u").append(TO).append(newEntityName).toString();
+        String tql = new StringBuilder(RENAME).append(oldEntityName).append(TO).append(newEntityName).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
@@ -272,6 +277,13 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
+    public void addAttribute(String attributeName, String entityname, DataTypeDO dataType) {
+        logger.debug("Add attribute [{}] to entity [{}]  via TyphonQL on TyphonML model", attributeName, entityname);
+        String tql = createEntityAttribute(entityname, attributeName, dataType);
+        getTyphonQLWebServiceClient().update(tql);
+    }
+
+    @Override
     public void renameRelation(String entityName, String relationName, String newRelationName) {
         logger.debug("Rename Relation [{}] to [{}] via TyphonQL on TyphonML model", relationName, newRelationName);
         String tql = new StringBuilder(RENAME_RELATION).append(entityName).append(DOT).append(relationName).append(TO).append(newRelationName).toString();
@@ -290,6 +302,53 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         logger.debug("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model", attributeName, attributeTypeName, entityName);
         String tql = new StringBuilder(CHANGE).append(entityName).append(DOT).append(attributeName).append(COLON).append(attributeTypeName).toString();
         getTyphonQLWebServiceClient().update(tql);
+    }
+
+    @Override
+    public void updateEntityData(String entityName, WorkingSet firstWs, WorkingSet secondWs, EntityDO secondEntity, String relationName, Boolean firstOrSecondEntityRelation) {
+        logger.debug("Update '{}' entity data through '{}' relation", entityName, relationName);
+        List<EntityInstance> entityInstances = firstWs.getEntityRows(entityName);
+        List<EntityInstance> secondEntityInstances = secondWs.getEntityRows(entityName);
+        String tql = "";
+        if (firstOrSecondEntityRelation) {
+            if (entityInstances != null && !entityInstances.isEmpty()) {
+                for (EntityInstance instance : entityInstances) {
+                    String relationValue = (String) instance.getAttribute(relationName);
+                    for (EntityInstance secondInstance : secondEntityInstances) {
+                        if (secondInstance.getUuid().equals(relationValue)) {
+                            EntityInstance referencedInstance = secondInstance;
+                                String updateQuery = referencedInstance.getAttributes().entrySet().stream()
+                                        .filter(attribute -> !attribute.getKey().equals(relationName))
+                                        .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
+                                tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
+                                        .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(instance.getUuid()).append(BLANK)
+                                        .append(SET).append(updateQuery).toString();
+                            getTyphonQLWebServiceClient().update(tql);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            if (secondEntityInstances != null && !secondEntityInstances.isEmpty()) {
+                for (EntityInstance instance : secondEntityInstances) {
+                    String relationValue = (String) instance.getAttribute(relationName);
+                    for (EntityInstance entityInstance : entityInstances) {
+                        if (entityInstance.getUuid().equals(relationValue)) {
+                            EntityInstance referencedInstance = entityInstance;
+                            String updateQuery = instance.getAttributes().entrySet().stream()
+                                    .filter(attribute -> !attribute.getKey().equals(relationName))
+                                    .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
+                            tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
+                                    .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(referencedInstance.getUuid()).append(BLANK)
+                                    .append(SET).append(updateQuery).toString();
+                            getTyphonQLWebServiceClient().update(tql);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -323,40 +382,40 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
 
     private String covertMLTypeToQLType(DataTypeDO dataType) {
         if (dataType != null) {
-            if (dataType instanceof BigintType) {
+            if (dataType instanceof BigIntTypeDO) {
                 return "bigint";
             }
-            if (dataType instanceof BlobType) {
+            if (dataType instanceof BlobTypeDO) {
                 return "blob";
             }
-            if (dataType instanceof BoolType) {
+            if (dataType instanceof BoolTypeDO) {
                 return "bool";
             }
-            if (dataType instanceof DatetimeType) {
+            if (dataType instanceof DatetimeTypeDO) {
                 return "datetime";
             }
-            if (dataType instanceof DateType) {
+            if (dataType instanceof DateTypeDO) {
                 return "date";
             }
-            if (dataType instanceof FloatType) {
+            if (dataType instanceof FloatTypeDO) {
                 return "float";
             }
-            if (dataType instanceof FreetextType) {
-                return "freetext[" + ((FreetextType) dataType).getTasks() + "]";
+            if (dataType instanceof FreetextTypeDO) {
+                return "freetext[" + ((FreetextTypeDO) dataType).getTasks() + "]";
             }
-            if (dataType instanceof IntType) {
+            if (dataType instanceof IntTypeDO) {
                 return "int";
             }
-            if (dataType instanceof PointType) {
+            if (dataType instanceof PointTypeDO) {
                 return "point";
             }
-            if (dataType instanceof PolygonType) {
+            if (dataType instanceof PolygonTypeDO) {
                 return "polygon";
             }
-            if (dataType instanceof StringType) {
-                return "string(" + ((StringType) dataType).getMaxSize() + ")";
+            if (dataType instanceof StringTypeDO) {
+                return "string(" + ((StringTypeDO) dataType).getMaxSize() + ")";
             }
-            if (dataType instanceof TextType) {
+            if (dataType instanceof TextTypeDO) {
                 return "text";
             }
         }

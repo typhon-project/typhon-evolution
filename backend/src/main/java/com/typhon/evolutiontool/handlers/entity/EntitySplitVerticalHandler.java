@@ -46,7 +46,7 @@ public class EntitySplitVerticalHandler extends BaseHandler {
 
             //TyphonQL
             //Select the source entity data for the attribute and the value
-            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName(), firstEntityDO.getAttributes().keySet(), null, null);
+            WorkingSet entityData = typhonQLInterface.selectEntityData(firstEntityDO.getName(), firstEntityDO.getAttributes().keySet(), null, null, null);
             //Manipulate the source entity data (keep only the new entity attributes)
             typhonQLInterface.removeUselessAttributesInSourceEntityData(entityData, firstEntityDO.getName(), entityAttributes.keySet());
             //Manipulate the source entity data (modify the entity name, to the new entity name)

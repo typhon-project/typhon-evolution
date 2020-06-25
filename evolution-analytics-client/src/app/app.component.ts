@@ -12,6 +12,7 @@ import {ModelFilter} from 'evolution-analytics-model/dist/filter/ModelFilter';
 import {Model} from 'evolution-analytics-model/dist/model/Model';
 import {Selector} from 'evolution-analytics-model/dist/model/Selector';
 import {MongoApiClientService} from '../services/api/mongo.api.client.service';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('test env var: ' + environment.username);
     this.socketService.setupSocketConnection();
     // this.testMongoApiClientService();
   }

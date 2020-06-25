@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  BACKEND_ENDPOINT: 'http://localhost:3000'
+  BACKEND_ENDPOINT: 'http://localhost:3000',
+  username: process.env.JAVA_HOME
 };
 
 /*

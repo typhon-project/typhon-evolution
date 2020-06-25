@@ -727,6 +727,7 @@ export class MongoService {
 
 
     private buildSchema(databaseEntities: any[]) {
+        console.log('build:' + databaseEntities);
         if (databaseEntities != null) {
             let schema = [];
             databaseEntities.forEach(db => {
@@ -749,6 +750,7 @@ export class MongoService {
             });
             return schema;
         }
+        console.log('On est ici');
         return null;
     }
 

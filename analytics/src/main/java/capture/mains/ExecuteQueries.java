@@ -21,13 +21,20 @@ public class ExecuteQueries {
 	// Make sure you put the local ip address of your computer
 	final static String IP_ADDRESS = "192.168.1.15";
 
-	public static void main2(String[] args) {
-//		String query = "from User u select u";
-		String query = "insert User {}";
-		executeQuery(query);
+	public static void main(String[] args) {
+		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
+				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
+				ConsumePostEvents.ANALYTICS_DB_NAME))
+			System.exit(1);
+		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME,
+				ConsumePostEvents.WEBSERVICE_PASSWORD);
+		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
+		
+		String query = "from Address x0, User x1 select x0, x1 where x0.user == x1, x0.city == \"London\"";
+		simulateQuery(query);
 	}
 	
-	public static void main(String[] args) {
+	public static void main2(String[] args) {
 		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
 				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
 				ConsumePostEvents.ANALYTICS_DB_NAME))

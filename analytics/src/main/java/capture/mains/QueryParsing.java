@@ -54,13 +54,14 @@ public class QueryParsing {
 			ISourceLocation root = URIUtil.createFileLocation(
 					QueryParsing.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 			PathConfig pcfg = PathConfig.fromSourceProjectRascalManifest(root);
-			
+
 			GlobalEnvironment heap = new GlobalEnvironment();
 //			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), new PrintWriter(System.err, true),
 //					new PrintWriter(System.out, false), new ModuleEnvironment("$typhonql$", heap), heap);
-			
-			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), null, new PrintStream(System.err, true), new PrintStream(System.out, true), new ModuleEnvironment("$typhonql$", heap), heap);
-			
+
+			evaluator = new Evaluator(ValueFactoryFactory.getValueFactory(), null, new PrintStream(System.err, true),
+					new PrintStream(System.out, true), new ModuleEnvironment("$typhonql$", heap), heap);
+
 			evaluator.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
 
 			for (IValue path : pcfg.getJavaCompilerPath()) {
@@ -157,7 +158,7 @@ public class QueryParsing {
 					List<String> attributes = new ArrayList<String>();
 					attributes.add(attrRel);
 					as = new AttributeSelector(entity.getName(), attributes);
-				} else {
+				} else if (!attrRel.equals("@id")) {
 					logger.error("Query is obsolete: " + attrRel + " in " + entityName);
 					return res;
 				}
@@ -172,7 +173,7 @@ public class QueryParsing {
 	public static void analyzeAtttributeSelector(AttributeSelector sel, TyphonModel model) {
 		Couple<List<Join>, AttributeSelector> couple = getImplicitJoins(sel.getEntityName(), sel.getAttributes(),
 				model);
-		
+
 		if (couple == null)
 			return;
 

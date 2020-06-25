@@ -69,7 +69,7 @@ public class RecommendationMgr {
 				if (ent != null) {
 					Database db = query.getModel().getPhysicalDatabase(ent);
 					NamedElement el = query.getModel().getPhysicalEntity(ent);
-					if (db != null && el != null)
+					if (db != null && el != null && !attr.equals("@id"))
 						res.add(new IndexRecommendation(db.getName(), el.getName(), entityName, attr));
 				}
 			}

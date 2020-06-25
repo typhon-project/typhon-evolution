@@ -1,9 +1,13 @@
 package capture.mains;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -22,6 +26,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.log4j.Logger;
@@ -41,6 +46,7 @@ import ac.york.typhon.analytics.commons.serialization.EventSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import db.AnalyticsDB;
+import jdk.internal.org.jline.utils.Log;
 import model.TyphonModel;
 import query.Query;
 import recommendations.Recommendation;
@@ -51,39 +57,176 @@ import typhonml.Relation;
 public class ConsumePostEvents {
 	private static Logger logger = Logger.getLogger(ConsumePostEvents.class);
 
-	private static final long WAKEUP_TIME_MS_FREQUENCY = 10000;
-	private static final String KAFKA_CHANNEL_IP = "192.168.1.15";
-	private static final String KAFKA_CHANNEL_PORT = "29092";
-	static final String WEBSERVICE_URL = "http://localhost:8080/";
-	static final String WEBSERVICE_USERNAME = "admin";
-	static final String WEBSERVICE_PASSWORD = "admin1@";
-	static final String ANALYTICS_DB_IP = "localhost";
-	static final int ANALYTICS_DB_PORT = 5501;
-	static final String ANALYTICS_DB_USER = "username";
-	static final String ANALYTICS_DB_PWD = "password";
-	static final String ANALYTICS_DB_NAME = "Analytics";
-
-//	static {
-//		try {
-//			PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator + "resources"
-//					+ File.separator + "log4j.properties");
-//		} catch (Exception | Error e) {
-//			System.err.println("cannot initialize log4j");
-//		}
-//
-//	}
+	// The parameters below are the ones required for connecting the event queue and
+	// the analytics db.
+	// The below affected values are the default values. If they exist, the values
+	// of the environment variables (listed in EnvironmentVariable class) will
+	// replace the default ones.
+	private static long WAKEUP_TIME_MS_FREQUENCY = 10000;
+	private static String KAFKA_CHANNEL_IP = "192.168.1.15";
+	private static String KAFKA_CHANNEL_PORT = "29092";
+	static String WEBSERVICE_URL = "http://localhost:8080/";
+	static String WEBSERVICE_USERNAME = "admin";
+	static String WEBSERVICE_PASSWORD = "admin1@";
+	static String ANALYTICS_DB_IP = "localhost";
+	static String ANALYTICS_DB_PORT = "5501";
+	static String ANALYTICS_DB_USER = "username";
+	static String ANALYTICS_DB_PWD = "password";
+	static String ANALYTICS_DB_NAME = "Analytics";
 
 	public static void main(String[] args) throws Exception {
-//		args = new String[] { (
-//				"rO0ABXNyABNjYXB0dXJlLm1haW5zLlF1ZXJ5+3Ewr9ipd4YCAAtMAAthbGxFbnRpdGllc3QAD0xqYXZhL3V0aWwvU2V0O0wAEmF0dHJpYnV0ZVNlbGVjdG9yc3QAEExqYXZhL3V0aWwvTGlzdDtMABBkaXNwbGF5YWJsZVF1ZXJ5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAHaW5zZXJ0c3EAfgACTAAFam9pbnNxAH4AAkwADG1haW5FbnRpdGllc3EAfgACTAAFbW9kZWx0ABJMamF2YS9sYW5nL09iamVjdDtMAA9ub3JtYWxpemVkUXVlcnlxAH4AA0wADW9yaWdpbmFsUXVlcnlxAH4AA0wACXF1ZXJ5VHlwZXEAfgADTAAPc2VyaWFsaXplZFF1ZXJ5cQB+AAN4cHNyABFqYXZhLnV0aWwuSGFzaFNldLpEhZWWuLc0AwAAeHB3DAAAABA/QAAAAAAAAXQADE9yZGVyUHJvZHVjdHhzcgATamF2YS51dGlsLkFycmF5TGlzdHiB0h2Zx2GdAwABSQAEc2l6ZXhwAAAAAXcEAAAAAXNyAB9jYXB0dXJlLm1haW5zLkF0dHJpYnV0ZVNlbGVjdG9yBfHuCWYzyZICAARMAAphdHRyaWJ1dGVzcQB+AAJMAAplbnRpdHlOYW1lcQB+AANMAA1pbXBsaWNpdEpvaW5zcQB+AAJMAAtpbXBsaWNpdFNlbHQAIUxjYXB0dXJlL21haW5zL0F0dHJpYnV0ZVNlbGVjdG9yO3hwc3EAfgAJAAAAAXcEAAAAAXQADHByb2R1Y3RfZGF0ZXhxAH4ACHBweHQAVHVwZGF0ZSBPcmRlclByb2R1Y3QgeDAgd2hlcmUgeDAucHJvZHVjdF9kYXRlID09ICI/IiBzZXQge3Byb2R1Y3RfZGF0ZTogIj8iLCBpZDogIj8ifXNxAH4ACQAAAAB3BAAAAAB4c3EAfgAJAAAAAHcEAAAAAHhzcQB+AAkAAAABdwQAAAABcQB+AAh4cHQASXVwZGF0ZU9yZGVyUHJvZHVjdHgwd2hlcmV4MC5wcm9kdWN0X2RhdGU9PSI/InNldHtwcm9kdWN0X2RhdGU6Ij8iLGlkOiI/In10AGx1cGRhdGUgT3JkZXJQcm9kdWN0IHgwIHdoZXJlIHgwLnByb2R1Y3RfZGF0ZSA9PSAiWXNPV3NlaUlKIiBzZXQge3Byb2R1Y3RfZGF0ZTogIk9iQktJTk5XIiwgaWQ6ICJ1QTZlNzBqb2JtIn10AAZVUERBVEVw") };
-//		args = new String[] { "C:\\Users\\lmeurice\\Desktop\\test.txt" };
+
+		// it reads the environment variables and affects their value to the connection
+		// parameters above
+		readEnvironmentVariables();
 
 		if (args == null || args.length == 0) {
+			// QL query capture system
 			startService();
 		} else {
+			// recommendation system call by the node.js backend
 			recommendQueryImprovements(args[0]);
 		}
 
+	}
+
+	private static void readEnvironmentVariables() {
+		String wakeup = getEnvironmentVariable(EnvironmentVariable.WAKEUP_TIME_MS_FREQUENCY);
+		setWakeUpTime(wakeup);
+		String kafka_ip = getEnvironmentVariable(EnvironmentVariable.KAFKA_CHANNEL_IP);
+		setKafkaIp(kafka_ip);
+		String kafka_port = getEnvironmentVariable(EnvironmentVariable.KAFKA_CHANNEL_PORT);
+		setKafkaPort(kafka_port);
+		String ws_url = getEnvironmentVariable(EnvironmentVariable.WEBSERVICE_URL);
+		setWSUrl(ws_url);
+		String ws_usr = getEnvironmentVariable(EnvironmentVariable.WEBSERVICE_USERNAME);
+		setWSUsername(ws_usr);
+		String ws_pwd = getEnvironmentVariable(EnvironmentVariable.WEBSERVICE_PASSWORD);
+		setWSPassword(ws_pwd);
+		String analytics_db_ip = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_IP);
+		setAnalyticsDBIP(analytics_db_ip);
+		String analytics_db_port = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_PORT);
+		setAnalyticsDBPort(analytics_db_port);
+		String analytics_db_usr = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_USER);
+		setAnalyticsDBUserName(analytics_db_usr);
+		String analytics_db_pwd = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_PWD);
+		setAnalyticsDBPassword(analytics_db_pwd);
+		String analytics_db_name = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_NAME);
+		setAnalyticsDBName(analytics_db_name);
+
+	}
+
+	private static String getEnvironmentVariable(String variableName) {
+		try {
+			return System.getenv(variableName);
+		} catch (Exception | Error e) {
+			return null;
+		}
+	}
+
+	private static void setAnalyticsDBName(String analytics_db_name) {
+		if (analytics_db_name != null) {
+			ANALYTICS_DB_NAME = analytics_db_name;
+			logger.info("ANALYTICS_DB_NAME: " + ANALYTICS_DB_NAME);
+			return;
+		}
+		logger.info("DEFAULT ANALYTICS_DB_NAME: " + ANALYTICS_DB_NAME);
+	}
+
+	private static void setAnalyticsDBPassword(String analytics_db_pwd) {
+		if (analytics_db_pwd != null) {
+			ANALYTICS_DB_PWD = analytics_db_pwd;
+			logger.info("ANALYTICS_DB_PWD: " + ANALYTICS_DB_PWD);
+			return;
+		}
+		logger.info("DEFAULT ANALYTICS_DB_PWD: " + ANALYTICS_DB_PWD);
+	}
+
+	private static void setAnalyticsDBUserName(String analytics_db_usr) {
+		if (analytics_db_usr != null) {
+			ANALYTICS_DB_USER = analytics_db_usr;
+			logger.info("ANALYTICS_DB_USER: " + ANALYTICS_DB_USER);
+			return;
+		}
+		logger.info("DEFAULT ANALYTICS_DB_USER: " + ANALYTICS_DB_USER);
+	}
+
+	private static void setAnalyticsDBPort(String analytics_db_port) {
+		if (analytics_db_port != null) {
+			ANALYTICS_DB_PORT = analytics_db_port;
+			logger.info("ANALYTICS_DB_PORT: " + ANALYTICS_DB_PORT);
+			return;
+		}
+		logger.info("DEFAULT ANALYTICS_DB_PORT: " + ANALYTICS_DB_PORT);
+	}
+
+	private static void setAnalyticsDBIP(String analytics_db_ip) {
+		if (analytics_db_ip != null) {
+			ANALYTICS_DB_IP = analytics_db_ip;
+			logger.info("ANALYTICS_DB_IP: " + ANALYTICS_DB_IP);
+			return;
+		}
+		logger.info("DEFAULT ANALYTICS_DB_IP: " + ANALYTICS_DB_IP);
+	}
+
+	private static void setWSPassword(String ws_pwd) {
+		if (ws_pwd != null) {
+			WEBSERVICE_PASSWORD = ws_pwd;
+			logger.info("WEBSERVICE_PASSWORD: " + WEBSERVICE_PASSWORD);
+			return;
+		}
+		logger.info("DEFAULT WEBSERVICE_PASSWORD: " + WEBSERVICE_PASSWORD);
+	}
+
+	private static void setWSUsername(String ws_usr) {
+		if (ws_usr != null) {
+			WEBSERVICE_USERNAME = ws_usr;
+			logger.info("WEBSERVICE_USERNAME: " + WEBSERVICE_USERNAME);
+			return;
+		}
+		logger.info("DEFAULT WEBSERVICE_USERNAME: " + WEBSERVICE_USERNAME);
+	}
+
+	private static void setWSUrl(String ws_url) {
+		if (ws_url != null) {
+			WEBSERVICE_URL = ws_url;
+			logger.info("WEBSERVICE_URL: " + WEBSERVICE_URL);
+			return;
+		}
+		logger.info("DEFAULT WEBSERVICE_URL: " + WEBSERVICE_URL);
+	}
+
+	private static void setKafkaPort(String kafka_port) {
+		if (kafka_port != null) {
+			KAFKA_CHANNEL_PORT = kafka_port;
+			logger.info("KAFKA_PORT: " + KAFKA_CHANNEL_PORT);
+			return;
+		}
+		logger.info("DEFAULT KAFKA_PORT: " + KAFKA_CHANNEL_PORT);
+
+	}
+
+	private static void setKafkaIp(String kafka_ip) {
+		if (kafka_ip != null) {
+			KAFKA_CHANNEL_IP = kafka_ip;
+			logger.info("KAFKA IP: " + KAFKA_CHANNEL_IP);
+			return;
+		}
+		logger.info("DEFAULT KAFKA_IP: " + KAFKA_CHANNEL_IP);
+
+	}
+
+	private static void setWakeUpTime(String wakeup) {
+		if (wakeup != null) {
+			try {
+				Long time = Long.parseLong(wakeup);
+				WAKEUP_TIME_MS_FREQUENCY = time;
+				logger.info("WAKE UP TIME FREQUENCY: " + WAKEUP_TIME_MS_FREQUENCY);
+				return;
+			} catch (Exception e) {
+			}
+		}
+		logger.info("DEFAULT WAKE UP TIME FREQUENCY: " + WAKEUP_TIME_MS_FREQUENCY);
 	}
 
 	private static void recommendQueryImprovements(String file) throws IOException, ClassNotFoundException {
@@ -91,7 +234,6 @@ public class ConsumePostEvents {
 
 			String serializedQuery = new String(Files.readAllBytes(Paths.get(file)));
 			Query q = QueryParsing.deserializeQuery(serializedQuery);
-			System.out.println("Query to recommend: " + q.getDisplayableQuery());
 
 			TyphonModel.initWebService(WEBSERVICE_URL, WEBSERVICE_USERNAME, WEBSERVICE_PASSWORD);
 			TyphonModel m = TyphonModel.getCurrentModel();
@@ -115,9 +257,7 @@ public class ConsumePostEvents {
 
 				transformer.transform(domSource, streamResult);
 			} else {
-				Files.write(Paths.get(file),
-						"There is no recommendation for this query."
-								.getBytes());
+				Files.write(Paths.get(file), "There is no recommendation for this query.".getBytes());
 			}
 
 		} catch (Exception | Error e) {
@@ -160,7 +300,6 @@ public class ConsumePostEvents {
 
 		return res;
 	}
-
 
 	private static void startService() throws Exception {
 		if (!initializeQueryParsingPlugin())

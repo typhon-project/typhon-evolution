@@ -44,8 +44,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
     }
 
     if (this.type === this.SLOWEST) {
-      this.titleElements = ['position', this.secondColumnName, 'query', ''];
-      this.headElements = ['position', 'occ', 'query', 'handle'];
+      this.titleElements = ['position', this.secondColumnName, 'date', 'query', ''];
+      this.headElements = ['position', 'occ', 'date', 'query', 'handle'];
     }
 
     this.navigationTab.addChart(this, this.chartsId);
@@ -125,7 +125,8 @@ export class TablePaginationComponent implements OnInit, AfterViewInit  {
           const array = [];
           let i = 0;
           for (const query of queries) {
-            array.push({ position: (i + 1), id: query._id, occ: query.executionTime, query: query.query, handle: 'Handle ' + i });
+            array.push({ position: (i + 1), id: query._id, occ: query.executionTime,
+              date: new Date(query.executionDate).toLocaleString(), query: query.query, handle: 'Handle ' + i });
             i++;
           }
 

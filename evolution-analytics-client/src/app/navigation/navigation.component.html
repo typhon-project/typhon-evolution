@@ -41,7 +41,7 @@
     <ng-template ngbNavContent>
       <app-time-radio-button [invisible]="true" [chartsId]="'1'" [navigationTab]="getNavigationComponent()" ></app-time-radio-button>
       <div style="text-align:center; margin-top: 20px;">
-        <app-table-pagination [secondColumnName]="'Occ.'" [chartsId]="'1'" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination class="" [secondColumnName]="'Occ.'" [chartsId]="'1'" [chartTitle]="'Most frequent query categories'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
         <app-table-pagination [secondColumnName]="'Time(ms)'" [chartsId]="'1'" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
       </div>
     </ng-template>
@@ -90,7 +90,7 @@
         </div>
       </div>
       <div style="text-align:center; margin-top: 20px;">
-        <app-table-pagination [entityName]="entityName" [secondColumnName]="'Occ.'" [chartsId]="entityName" [chartTitle]="'Most frequent queries'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
+        <app-table-pagination [entityName]="entityName" [secondColumnName]="'Occ.'" [chartsId]="entityName" [chartTitle]="'Most frequent query categories'" [type]="0" [navigationTab]="getNavigationComponent()"></app-table-pagination>
         <app-table-pagination [entityName]="entityName" [secondColumnName]="'Time(ms)'" [chartsId]="entityName" [chartTitle]="'Slowest queries'" [type]="1" [navigationTab]="getNavigationComponent()"></app-table-pagination>
       </div>
     </ng-template>

@@ -30,11 +30,11 @@ const mongoHelper = new MongoHelper();
 const socketService = new SocketService();
 
 //Retrieve environment variables from .env file
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
-const MONGO_DB_USERNAME = process.env.MONGO_DB_USERNAME;
-const MONGO_DB_PWD = process.env.MONGO_DB_PWD;
-const PORT = process.env.SERVER_PORT;
+const MONGO_DB_URL = process.env.ANALYTICS_DB_URL;
+const MONGO_DB_NAME = process.env.ANALYTICS_DB_NAME;
+const MONGO_DB_USERNAME = process.env.ANALYTICS_DB_USER;
+const MONGO_DB_PWD = process.env.ANALYTICS_DB_PWD;
+const PORT = process.env.BACKEND_DEPLOYMENT_PORT;
 
 
 socketService.runSocket(app, httpServer, PORT, io);

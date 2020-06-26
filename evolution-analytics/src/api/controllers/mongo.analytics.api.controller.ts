@@ -8,10 +8,10 @@ import {config} from 'dotenv';
 config();
 
 //Retrieve environment variables from .env file
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
-const MONGO_DB_USERNAME = process.env.MONGO_DB_USERNAME;
-const MONGO_DB_PWD = process.env.MONGO_DB_PWD;
+const MONGO_DB_URL = process.env.ANALYTICS_DB_URL;
+const MONGO_DB_NAME = process.env.ANALYTICS_DB_NAME;
+const MONGO_DB_USERNAME = process.env.ANALYTICS_DB_USER;
+const MONGO_DB_PWD = process.env.ANALYTICS_DB_PWD;
 
 export class MongoAnalyticsApiController {
 
@@ -414,7 +414,7 @@ export class MongoAnalyticsApiController {
             const fileName = MongoAnalyticsApiController.writeTempFile(serialization);
 
             const exec = require('child_process').exec;
-            const jarFile = process.env.JAR_FILE;
+            const jarFile = process.env.RECOMMENDATION_JAR_FILE;
             const childPorcess = await exec('java -jar ' + jarFile + ' \"' + fileName + "\"", function (err, stdout, stderr) {
                 result.set('Content-Type', 'text/html');
                 if (err) {

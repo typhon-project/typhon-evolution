@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('test env var: ' + environment.username);
     this.socketService.setupSocketConnection();
     // this.testMongoApiClientService();
   }

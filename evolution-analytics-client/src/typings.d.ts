@@ -5,6 +5,7 @@ interface Process {
 }
 
 interface Env {
+  BACKEND_ENDPOINT: string;
   JAVA_HOME: string;
 }
 

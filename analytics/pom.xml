@@ -266,6 +266,27 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>1.8.0</version>
+					<configuration>
+							<container>
+									<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+							</container>
+							<from>
+								<image>adoptopenjdk:8-jdk-hotspot</image>
+							</from>
+              <container>
+									<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+									<mainClass>capture.mains.ConsumePostEvents</mainClass>
+							</container>
+							<to>
+								<image>docker.io/meuriceloup/typhon-evolution-analytics-java</image>
+							</to>
+					</configuration>
+			</plugin>
+
 
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>

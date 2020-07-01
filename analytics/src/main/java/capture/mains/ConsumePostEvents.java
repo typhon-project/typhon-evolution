@@ -10,12 +10,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,17 +72,19 @@ public class ConsumePostEvents {
 	static String WEBSERVICE_USERNAME = "admin";
 	static String WEBSERVICE_PASSWORD = "admin1@";
 	static String ANALYTICS_DB_IP = "localhost";
-	static String ANALYTICS_DB_PORT = "5501";
-	static String ANALYTICS_DB_USER = "username";
-	static String ANALYTICS_DB_PWD = "password";
+	static String ANALYTICS_DB_PORT = "27017";
+	static String ANALYTICS_DB_USER = "myUserAdmin";
+	static String ANALYTICS_DB_PWD = "abc123";
 	static String ANALYTICS_DB_NAME = "Analytics";
+	
+	private static List<Long> times = new ArrayList<Long>();
+	private static int counter = 0;
 
 	public static void main(String[] args) throws Exception {
-
 		// it reads the environment variables and affects their value to the connection
 		// parameters above
 		readEnvironmentVariables();
-
+		
 		if (args == null || args.length == 0) {
 			// QL query capture system
 			startService();
@@ -318,7 +323,7 @@ public class ConsumePostEvents {
 
 		Properties properties = new Properties();
 		properties.setProperty("bootstrap.servers", KAFKA_CHANNEL_IP + ":" + KAFKA_CHANNEL_PORT);
-		properties.setProperty("group.id", "namur");
+		properties.setProperty("group.id", UUID.randomUUID().toString());
 		properties.setProperty("auto.offset.reset", "earliest");
 
 		DataStream<Event> PostEventStream = env
@@ -341,6 +346,7 @@ public class ConsumePostEvents {
 
 			@Override
 			public String map(Event event) throws Exception {
+				Date d1 = new Date();
 				logger.info("receiving post event...");
 				logger.info(event);
 				try {
@@ -360,7 +366,18 @@ public class ConsumePostEvents {
 					logger.error("Problem happened consuming the following post event: " + event + "\nCause: ");
 					e.printStackTrace();
 				}
-
+				Date d2 = new Date();
+				long ms = d2.getTime() - d1.getTime();
+				times.add(ms);
+				counter++;
+				
+				if(counter == 10000) {
+					long avg = getAvg(times);
+					System.out.println("avg: " + avg);
+					System.out.println("size:" + times.size());
+				}
+				
+				
 				return "";
 			}
 
@@ -368,6 +385,14 @@ public class ConsumePostEvents {
 
 		logger.info("Kafka consumer created");
 		env.execute();
+	}
+
+	protected static long getAvg(List<Long> array) {
+		long total = 0;
+		for(long a : array)
+			total += a;
+		System.out.println(total + "/" + array.size());
+		return (long) total / array.size();
 	}
 
 	private static void startSavingGeneralInformationThread() {

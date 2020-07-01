@@ -21,7 +21,7 @@ public class ExecuteQueries {
 	// Make sure you put the local ip address of your computer
 	final static String IP_ADDRESS = "192.168.1.15";
 
-	public static void main(String[] args) {
+	public static void main2(String[] args) {
 		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
 				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
 				ConsumePostEvents.ANALYTICS_DB_NAME))
@@ -34,7 +34,7 @@ public class ExecuteQueries {
 		simulateQuery(query);
 	}
 	
-	public static void main2(String[] args) {
+	public static void main3(String[] args) {
 		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
 				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
 				ConsumePostEvents.ANALYTICS_DB_NAME))
@@ -43,10 +43,14 @@ public class ExecuteQueries {
 				ConsumePostEvents.WEBSERVICE_PASSWORD);
 		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 100; i++) {
 			String query = g.randomQuery();
 			simulateQuery(query);
 		}
+	}
+	
+	public static void main(String[] args) {
+		simulateQuery("from User uu select uu");
 	}
 	
 	private static void simulateQuery(String query) {

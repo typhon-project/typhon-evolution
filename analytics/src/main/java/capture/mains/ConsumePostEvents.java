@@ -49,7 +49,6 @@ import ac.york.typhon.analytics.commons.serialization.EventSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import db.AnalyticsDB;
-import jdk.internal.org.jline.utils.Log;
 import model.TyphonModel;
 import query.Query;
 import recommendations.Recommendation;

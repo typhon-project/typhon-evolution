@@ -23,7 +23,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "evolution-analytics-model": "file:../evolution-analytics-model",
+    "evolution-analytics-model": "file:evolution-analytics-model",
     "express": "^4.17.1",
     "mongodb": "^3.5.5",
     "socket.io": "^2.3.0",

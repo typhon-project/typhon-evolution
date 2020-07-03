@@ -23,5 +23,7 @@
     "@types/node": "^13.11.0",
     "typescript": "^3.8.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "copyfiles": "^2.3.0"
+  }
 }

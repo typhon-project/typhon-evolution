@@ -4,7 +4,7 @@
   "description": "Typhon evolution analytics tool model",
   "scripts": {
     "build": "tsc && npm run copy",
-    "copy": "copyfiles ../evolution-analytics-model/** ../evolution-analytics/evolution-analytics-model && copyfiles ../evolution-analytics-model/** ../evolution-analytics/evolution-analytics",
+    "copy": "copyfiles ../evolution-analytics-model/** ../evolution-analytics/evolution-analytics-model && copyfiles ../evolution-analytics-model/** ../evolution-analytics-client/evolution-analytics-model",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

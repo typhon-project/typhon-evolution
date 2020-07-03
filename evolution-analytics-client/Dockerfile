@@ -13,7 +13,7 @@ RUN npm config set unsafe-perm true
 # Only copy the package.json file to work directory
 COPY ["package.json", "."]
 # Copy evolution-moden to the work directory
-COPY ["evolution-analytics-model", "./"]
+COPY ["evolution-analytics-model", "."]
 # Install all Packages
 RUN npm install && npm install -g @angular/cli@9.0.7
 

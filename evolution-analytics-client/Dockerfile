@@ -11,15 +11,18 @@ COPY evolution-analytics-model ./
 #RUN rm -rf node_modules && rm package-lock.json
 # Clean the cache
 RUN npm cache clean --force
-# Install all Packages
+# Install all the dependencies
 #RUN npm install @angular-builders/custom-webpack && npm install @angular-builders/dev-server && npm install @angular-devkit/build-angular && npm install @angular/cli && npm install @angular/compiler-cli && npm install @angular/language-service
 RUN npm install
-RUN npm install -g @angular/cli@9.0.7
 
 # Copy all other source code to work directory
 ADD . /usr/src/app
+
+# Install angular-cli dependency to build the project
+RUN npm install -g @angular/cli@9.0.7
+# Build the Angular application
 RUN npm run build
 
-# start app
+# Start the application
 CMD ["ng","serve","--host", "0.0.0.0"]
 EXPOSE 5000

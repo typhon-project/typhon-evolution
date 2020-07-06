@@ -31,13 +31,10 @@ evolution-analytics/node_modules/
 evolution-analytics/dist/
 evolution-analytics/.idea/
 evolution-analytics/.env
-evolution-analytics/package-lock.json
 evolution-analytics-client/node_modules/
 evolution-analytics-client/dist/
 evolution-analytics-client/.idea/
-evolution-analytics-client/package-lock.json
 evolution-analytics-model/node_modules/
 evolution-analytics-model/dist/
 evolution-analytics-model/.idea/
-evolution-analytics-model/package-lock.json
 

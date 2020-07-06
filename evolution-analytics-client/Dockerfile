@@ -3,6 +3,8 @@ FROM node:12.4.0-alpine
 # Create Directory for the Container
 WORKDIR /usr/src/app
 
+RUN ls
+
 # Only copy the package.json file to work directory
 COPY package.json .
 # Copy evolution-model to the work directory

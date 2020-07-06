@@ -13,7 +13,7 @@ COPY evolution-analytics-model ./
 RUN npm cache clean --force
 # Install all the dependencies
 #RUN npm install @angular-builders/custom-webpack && npm install @angular-builders/dev-server && npm install @angular-devkit/build-angular && npm install @angular/cli && npm install @angular/compiler-cli && npm install @angular/language-service
-RUN npm install
+RUN npm install --force
 
 # Copy all other source code to work directory
 ADD . /usr/src/app

@@ -3,6 +3,8 @@ FROM node:12.4.0-alpine
 # Create Directory for the Container
 WORKDIR /usr/src/app
 
+RUN ls
+
 # SETUP env
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH

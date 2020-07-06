@@ -36,7 +36,7 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.5.0",
     "d3": "^4.10.2",
-    "evolution-analytics-model": "file:../evolution-analytics-model",
+    "evolution-analytics-model": "file:evolution-analytics-model",
     "hammerjs": "^2.0.8",
     "node-html-parser": "^1.2.19",
     "rxjs": "~6.5.4",

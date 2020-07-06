@@ -16,6 +16,10 @@ RUN npm config set unsafe-perm true
 COPY ["package.json", "."]
 # Copy evolution-model to the work directory
 COPY ["evolution-analytics-model", "."]
+# Clean node_modules
+RUN rm -rf node_modules
+# Clean the cache
+RUN npm cache clean --force
 # Install all Packages
 RUN npm install -g @angular/cli@9.0.7
 #RUN npm install @angular-builders/custom-webpack && npm install @angular-builders/dev-server && npm install @angular-devkit/build-angular && npm install @angular/cli && npm install @angular/compiler-cli && npm install @angular/language-service

@@ -15,7 +15,8 @@ COPY ["package.json", "."]
 # Copy evolution-model to the work directory
 COPY ["evolution-analytics-model", "."]
 # Install all Packages
-RUN npm install @angular/cli && npm install @angular-builders/custom-webpack && npm install @angular-builders/dev-server && npm install @angular-devkit/build-angular && npm install @angular/cli && npm install @angular/compiler-cli && npm install @angular/language-service
+RUN npm install -g @angular/cli
+# RUN npm install @angular/cli && npm install @angular-builders/custom-webpack && npm install @angular-builders/dev-server && npm install @angular-devkit/build-angular && npm install @angular/cli && npm install @angular/compiler-cli && npm install @angular/language-service
 RUN npm install
 
 # Copy all other source code to work directory

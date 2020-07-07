@@ -401,11 +401,15 @@ public class ConsumePostEvents {
 
 					try {
 						updateGeneralInformation();
-						synchronized (this) {
-							wait(WAKEUP_TIME_MS_FREQUENCY);
-						}
 					} catch (Exception | Error e) {
 						e.printStackTrace();
+					}
+					
+					synchronized (this) {
+						try {
+							wait(WAKEUP_TIME_MS_FREQUENCY);
+						} catch (InterruptedException e) {
+						}
 					}
 
 				}

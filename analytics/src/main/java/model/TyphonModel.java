@@ -129,8 +129,8 @@ public class TyphonModel {
 				}
 
 			} catch (Exception | Error e) {
-				logger.error("Impossible to load the current TyphonML model\nCause:");
-				e.printStackTrace();
+				logger.error("Impossible to load the current TyphonML model");
+//				e.printStackTrace();
 			} finally {
 				if (tempFile != null)
 					try {

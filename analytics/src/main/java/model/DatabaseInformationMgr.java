@@ -237,7 +237,8 @@ public class DatabaseInformationMgr {
 					stmt.close();
 				} catch (Exception | Error e) {
 					// cannot execute query
-					e.printStackTrace();
+					logger.error("Cannot get relational table size: " + tableName);
+//					e.printStackTrace();
 				} finally {
 					if (stmt != null)
 						try {
@@ -291,7 +292,7 @@ public class DatabaseInformationMgr {
 			return result;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to load the current databases information");
-			e.printStackTrace();
+//			e.printStackTrace();
 			return null;
 		}
 	}

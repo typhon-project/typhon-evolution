@@ -292,7 +292,7 @@ public class DatabaseInformationMgr {
 			return result;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to load the current databases information");
-//			e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		}
 	}

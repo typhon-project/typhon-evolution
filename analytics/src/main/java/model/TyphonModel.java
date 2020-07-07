@@ -83,7 +83,7 @@ public class TyphonModel {
 	public static void initWebService(String url, String username, String password) {
 		authStringEnc = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 		webTarget = restClient.target(url);
-		logger.info("Connected to polystore webservice");
+		logger.info("Connected to polystore webservice: " + url + " => " + username + " / " + password);
 	}
 
 	private static boolean typhonMLPackageRegistering() {

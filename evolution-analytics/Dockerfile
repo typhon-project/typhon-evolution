@@ -1,11 +1,11 @@
-FROM node:10.13.0-alpine
+FROM node:12.4.0-alpine
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
 # Only copy the package.json file to work directory
 COPY package.json .
 # Copy evolution-moden to the work directory
-COPY evolution-analytics-model ./
+COPY evolution-analytics-model ./evolution-analytics-model
 # Install all Packages
 RUN npm install
 # Install ts package

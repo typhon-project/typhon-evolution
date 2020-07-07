@@ -1,6 +1,9 @@
 */target/
 !.mvn/wrapper/maven-wrapper.jar
 
+typecheck.txt
+evolution-analytics/src/resources/QLRecommendation.jar
+
 ### STS ###
 .apt_generated
 .classpath

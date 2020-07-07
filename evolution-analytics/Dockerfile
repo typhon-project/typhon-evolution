@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM azul/zulu-openjdk-alpine:8
 
 
@@ -9,13 +10,16 @@ RUN apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ --no-ca
 
 RUN npm install -g grunt grunt-cli
 
+=======
+FROM node:12.4.0-alpine
+>>>>>>> 0ce22a8b1d77eeff4efe0d87f5990e37e769bed9
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
 # Only copy the package.json file to work directory
 COPY package.json .
 # Copy evolution-moden to the work directory
-COPY evolution-analytics-model ./
+COPY evolution-analytics-model ./evolution-analytics-model
 # Install all Packages
 RUN npm install
 # Install ts package

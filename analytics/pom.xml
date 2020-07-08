@@ -18,13 +18,13 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>analytics_id</id> -->
-<!-- 			<name>analytics repository</name> -->
-<!-- 			<url>http://archiva.clmsuk.com:8090/repository/internal/</url> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
+	<repositories>
+		<repository>
+			<id>analytics_id</id>
+			<name>analytics repository</name>
+			<url>http://archiva.clmsuk.com:8090/repository/internal/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->

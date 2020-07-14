@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:  
+  evolution-mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: Analytics
+    ports:
+      - 27017:27017
+  
+  evolution-java:
+    image: meuriceloup/typhon-evolution-analytics-java:latest
+    environment:
+      WAKEUP_TIME_MS_FREQUENCY: 10000
+      KAFKA_CHANNEL_IP: kafka
+      KAFKA_CHANNEL_PORT: 9092
+      WEBSERVICE_URL: http://typhon-polystore-service:8080/
+      WEBSERVICE_USERNAME: admin
+      WEBSERVICE_PASSWORD: admin1@
+      ANALYTICS_DB_IP: evolution-mongo
+      ANALYTICS_DB_PORT: 27017
+      ANALYTICS_DB_USER: admin
+      ANALYTICS_DB_PWD: admin
+      ANALYTICS_DB_NAME: Analytics
+    depends_on: 
+      - evolution-mongo
+      - typhon-polystore-service
+      - kafka
+  evolution-backend:
+    image: meuriceloup/typhon-evolution-analytics-backend:latest
+    environment:
+      BACKEND_DEPLOYMENT_PORT: 3000
+      ANALYTICS_DB_URL: mongodb://evolution-mongo:27017/
+      ANALYTICS_DB_NAME: Analytics
+      ANALYTICS_DB_USER: admin
+      ANALYTICS_DB_PWD: admin
+      WEBSERVICE_URL: http://typhon-polystore-service:8080/
+      WEBSERVICE_USERNAME: admin
+      WEBSERVICE_PASSWORD: admin1@
+    depends_on:
+      - evolution-mongo
+    ports:
+      - 3000:3000
+   
+  evolution-frontend:
+    image: meuriceloup/typhon-evolution-analytics-client:latest
+    environment:
+      BACKEND_ENDPOINT: http://evolution-backend:3000
+    depends_on:
+      - evolution-backend
+    ports:
+      - 5000:5000

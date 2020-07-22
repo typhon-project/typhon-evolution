@@ -1,4 +1,13 @@
-FROM node:12.4.0-alpine
+FROM azul/zulu-openjdk-alpine:8
+
+
+RUN apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ --no-cache \
+  nodejs \
+  nodejs-npm \
+  yarn \
+  curl
+
+RUN npm install -g grunt grunt-cli
 
 # Create Directory for the Container
 WORKDIR /usr/src/app

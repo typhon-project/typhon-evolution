@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="typhonevo_feature"
-      label="typhonevo IDE"
+      label="Query Evolution"
       version="0.1.0.qualifier">
 
    <description url="http://www.example.com/description">

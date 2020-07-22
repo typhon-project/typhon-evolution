@@ -1,7 +1,7 @@
 Manifest-Version: 0.0.1
 Main-Function: main
 Courses: courses
-Main-Module: PluginEvo
+Main-Module: lang::typhonevo::EvolutionIDE
 Require-Libraries: |lib://typhonql|, |lib://typepal|
 Source: src
 

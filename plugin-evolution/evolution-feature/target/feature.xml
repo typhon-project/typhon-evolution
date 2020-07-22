@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="typhonevo_feature"
-      label="typhonevo IDE"
-      version="0.1.0.202007221228">
+      label="Query Evolution"
+      version="0.1.0.202007221335">
 
    <description url="http://www.example.com/description">
       Typhon Evolution
@@ -21,7 +21,7 @@
          id="query-evolution"
          download-size="23"
          install-size="52"
-         version="0.1.0.202007221228"
+         version="0.1.0.202007221335"
          unpack="false"/>
 
 </feature>

@@ -61,42 +61,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='typhonql' version='0.1.0.202007201556' generation='2'>
-      <update id='typhonql' range='[0.0.0,0.1.0.202007201556)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='typhonql'/>
-        <property name='maven-groupId' value='engineering.swat.typhon'/>
-        <property name='maven-artifactId' value='typhonql'/>
-        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
-      </properties>
-      <provides size='4'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonql' version='0.1.0.202007201556'/>
-        <provided namespace='osgi.bundle' name='typhonql' version='0.1.0.202007201556'/>
-        <provided namespace='osgi.identity' name='typhonql' version='0.1.0.202007201556'>
-          <properties size='1'>
-            <property name='type' value='osgi.bundle'/>
-          </properties>
-        </provided>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-      </provides>
-      <requires size='4'>
-        <required namespace='osgi.bundle' name='rascal_eclipse' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies' range='0.15.0'/>
-        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies-drivers' range='0.3.0' optional='true' greedy='false'/>
-        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='typhonql' version='0.1.0.202007201556'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-SymbolicName: typhonql;singleton:=true&#xA;Bundle-Version: 0.1.0.202007201556
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
     <unit id='org.eclipse.e4.ui.di' version='1.2.800.v20200128-0855' singleton='false' generation='2'>
       <update id='org.eclipse.e4.ui.di' range='[0.0.0,1.2.800.v20200128-0855)' severity='0'/>
       <properties size='8'>
@@ -439,6 +403,48 @@
         <instructions size='1'>
           <instruction key='manifest'>
             Bundle-SymbolicName: org.eclipse.pde.core; singleton:=true&#xA;Bundle-Version: 3.13.300.v20200217-1517
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='typhonql-ide' version='0.1.0.202007221246' generation='2'>
+      <update id='typhonql-ide' range='[0.0.0,0.1.0.202007221246)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='typhonql-ide'/>
+        <property name='maven-groupId' value='engineering.swat.typhon'/>
+        <property name='maven-artifactId' value='typhonql-ide'/>
+        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonql-ide' version='0.1.0.202007221246'/>
+        <provided namespace='osgi.bundle' name='typhonql-ide' version='0.1.0.202007221246'/>
+        <provided namespace='osgi.identity' name='typhonql-ide' version='0.1.0.202007221246'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='10'>
+        <required namespace='osgi.bundle' name='rascal_eclipse' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='typhonql' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='impulse' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.resources' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.osgi' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.pde.core' range='0.0.0'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='typhonql-ide' version='0.1.0.202007221246'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: typhonql-ide;singleton:=true&#xA;Bundle-Version: 0.1.0.202007221246
           </instruction>
         </instructions>
       </touchpointData>
@@ -952,6 +958,42 @@
         <instructions size='1'>
           <instruction key='manifest'>
             Bundle-SymbolicName: org.eclipse.update.configurator; singleton:=true&#xA;Bundle-Version: 3.4.500.v20200225-0827
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='query-evolution' version='0.1.0.202007221335' generation='2'>
+      <update id='query-evolution' range='[0.0.0,0.1.0.202007221335)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='query-evolution'/>
+        <property name='maven-groupId' value='be.unamur.typhonevo'/>
+        <property name='maven-artifactId' value='query-evolution'/>
+        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='query-evolution' version='0.1.0.202007221335'/>
+        <provided namespace='osgi.bundle' name='query-evolution' version='0.1.0.202007221335'/>
+        <provided namespace='osgi.identity' name='query-evolution' version='0.1.0.202007221335'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='4'>
+        <required namespace='osgi.bundle' name='typhonql' range='0.1.0'/>
+        <required namespace='osgi.bundle' name='typhonql-ide' range='0.1.0'/>
+        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies' range='0.12.0'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='query-evolution' version='0.1.0.202007221335'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: query-evolution;singleton:=true&#xA;Bundle-Version: 0.1.0.202007221335
           </instruction>
         </instructions>
       </touchpointData>
@@ -1747,42 +1789,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='query-evolution' version='0.1.0.202007221228' generation='2'>
-      <update id='query-evolution' range='[0.0.0,0.1.0.202007221228)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='query-evolution'/>
-        <property name='maven-groupId' value='be.unamur.typhonevo'/>
-        <property name='maven-artifactId' value='query-evolution'/>
-        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
-      </properties>
-      <provides size='4'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='query-evolution' version='0.1.0.202007221228'/>
-        <provided namespace='osgi.bundle' name='query-evolution' version='0.1.0.202007221228'/>
-        <provided namespace='osgi.identity' name='query-evolution' version='0.1.0.202007221228'>
-          <properties size='1'>
-            <property name='type' value='osgi.bundle'/>
-          </properties>
-        </provided>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-      </provides>
-      <requires size='4'>
-        <required namespace='osgi.bundle' name='typhonql' range='0.1.0'/>
-        <required namespace='osgi.bundle' name='typhonql-ide' range='0.1.0'/>
-        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies' range='0.12.0'/>
-        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='query-evolution' version='0.1.0.202007221228'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-SymbolicName: query-evolution;singleton:=true&#xA;Bundle-Version: 0.1.0.202007221228
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
     <unit id='org.eclipse.equinox.frameworkadmin.equinox' version='1.1.300.v20200211-1503' generation='2'>
       <update id='org.eclipse.equinox.frameworkadmin.equinox' range='[0.0.0,1.1.300.v20200211-1503)' severity='0'/>
       <properties size='8'>
@@ -2482,38 +2488,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='typhonevo_feature.feature.jar' version='0.1.0.202007221228'>
-      <properties size='6'>
-        <property name='org.eclipse.equinox.p2.name' value='typhonevo IDE'/>
-        <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='http://www.example.com/description'/>
-        <property name='maven-groupId' value='be.unamur.typhonevo'/>
-        <property name='maven-artifactId' value='typhonevo_feature'/>
-        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
-      </properties>
-      <provides size='3'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' version='0.1.0.202007221228'/>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
-        <provided namespace='org.eclipse.update.feature' name='typhonevo_feature' version='0.1.0.202007221228'/>
-      </provides>
-      <filter>
-        (org.eclipse.update.install.features=true)
-      </filter>
-      <artifacts size='1'>
-        <artifact classifier='org.eclipse.update.feature' id='typhonevo_feature' version='0.1.0.202007221228'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='zipped'>
-            true
-          </instruction>
-        </instructions>
-      </touchpointData>
-      <copyright>
-        ?
-      </copyright>
-    </unit>
     <unit id='org.eclipse.jface.text' version='3.16.200.v20200218-0828' singleton='false' generation='2'>
       <update id='org.eclipse.jface.text' range='[0.0.0,3.16.200.v20200218-0828)' severity='0'/>
       <properties size='8'>
@@ -3146,35 +3120,6 @@
         </instructions>
       </touchpointData>
     </unit>
-    <unit id='typhonevo_feature.feature.group' version='0.1.0.202007221228' singleton='false'>
-      <update id='typhonevo_feature.feature.group' range='[0.0.0,0.1.0.202007221228)' severity='0'/>
-      <properties size='7'>
-        <property name='org.eclipse.equinox.p2.name' value='typhonevo IDE'/>
-        <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='http://www.example.com/description'/>
-        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
-        <property name='maven-groupId' value='be.unamur.typhonevo'/>
-        <property name='maven-artifactId' value='typhonevo_feature'/>
-        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
-      </properties>
-      <provides size='1'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.group' version='0.1.0.202007221228'/>
-      </provides>
-      <requires size='4'>
-        <required namespace='org.eclipse.equinox.p2.iu' name='typhonql' range='0.0.0'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='typhonql-ide' range='0.0.0'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='query-evolution' range='[0.1.0.202007221228,0.1.0.202007221228]'/>
-        <required namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' range='[0.1.0.202007221228,0.1.0.202007221228]'>
-          <filter>
-            (org.eclipse.update.install.features=true)
-          </filter>
-        </required>
-      </requires>
-      <touchpoint id='null' version='0.0.0'/>
-      <copyright>
-        ?
-      </copyright>
-    </unit>
     <unit id='org.eclipse.ui.editors' version='3.13.100.v20200130-1507' generation='2'>
       <update id='org.eclipse.ui.editors' range='[0.0.0,3.13.100.v20200130-1507)' severity='0'/>
       <properties size='8'>
@@ -3416,6 +3361,38 @@
           </instruction>
         </instructions>
       </touchpointData>
+    </unit>
+    <unit id='typhonevo_feature.feature.jar' version='0.1.0.202007221335'>
+      <properties size='6'>
+        <property name='org.eclipse.equinox.p2.name' value='Query Evolution'/>
+        <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.example.com/description'/>
+        <property name='maven-groupId' value='be.unamur.typhonevo'/>
+        <property name='maven-artifactId' value='typhonevo_feature'/>
+        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' version='0.1.0.202007221335'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='typhonevo_feature' version='0.1.0.202007221335'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='typhonevo_feature' version='0.1.0.202007221335'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <copyright>
+        ?
+      </copyright>
     </unit>
     <unit id='org.eclipse.help' version='3.8.700.v20191212-1123' generation='2'>
       <update id='org.eclipse.help' range='[0.0.0,3.8.700.v20191212-1123)' severity='0'/>
@@ -4248,6 +4225,35 @@
         </instructions>
       </touchpointData>
     </unit>
+    <unit id='typhonevo_feature.feature.group' version='0.1.0.202007221335' singleton='false'>
+      <update id='typhonevo_feature.feature.group' range='[0.0.0,0.1.0.202007221335)' severity='0'/>
+      <properties size='7'>
+        <property name='org.eclipse.equinox.p2.name' value='Query Evolution'/>
+        <property name='org.eclipse.equinox.p2.description' value='Typhon Evolution'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://www.example.com/description'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+        <property name='maven-groupId' value='be.unamur.typhonevo'/>
+        <property name='maven-artifactId' value='typhonevo_feature'/>
+        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.group' version='0.1.0.202007221335'/>
+      </provides>
+      <requires size='4'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='typhonql' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='typhonql-ide' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='query-evolution' range='[0.1.0.202007221335,0.1.0.202007221335]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='typhonevo_feature.feature.jar' range='[0.1.0.202007221335,0.1.0.202007221335]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <copyright>
+        ?
+      </copyright>
+    </unit>
     <unit id='org.eclipse.emf.ecore' version='2.22.0.v20200519-1135' generation='2'>
       <update id='org.eclipse.emf.ecore' range='[0.0.0,2.22.0.v20200519-1135)' severity='0'/>
       <properties size='8'>
@@ -4352,48 +4358,6 @@
         <instructions size='1'>
           <instruction key='manifest'>
             Bundle-SymbolicName: org.apache.commons.jxpath&#xA;Bundle-Version: 1.3.0.v200911051830
-          </instruction>
-        </instructions>
-      </touchpointData>
-    </unit>
-    <unit id='typhonql-ide' version='0.1.0.202007201556' generation='2'>
-      <update id='typhonql-ide' range='[0.0.0,0.1.0.202007201556)' severity='0'/>
-      <properties size='4'>
-        <property name='org.eclipse.equinox.p2.name' value='typhonql-ide'/>
-        <property name='maven-groupId' value='engineering.swat.typhon'/>
-        <property name='maven-artifactId' value='typhonql-ide'/>
-        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
-      </properties>
-      <provides size='4'>
-        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonql-ide' version='0.1.0.202007201556'/>
-        <provided namespace='osgi.bundle' name='typhonql-ide' version='0.1.0.202007201556'/>
-        <provided namespace='osgi.identity' name='typhonql-ide' version='0.1.0.202007201556'>
-          <properties size='1'>
-            <property name='type' value='osgi.bundle'/>
-          </properties>
-        </provided>
-        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
-      </provides>
-      <requires size='10'>
-        <required namespace='osgi.bundle' name='rascal_eclipse' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='typhonql' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='impulse' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.ui.ide' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.core.resources' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.osgi' range='0.0.0'/>
-        <required namespace='osgi.bundle' name='org.eclipse.pde.core' range='0.0.0'/>
-        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
-      </requires>
-      <artifacts size='1'>
-        <artifact classifier='osgi.bundle' id='typhonql-ide' version='0.1.0.202007201556'/>
-      </artifacts>
-      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
-      <touchpointData size='1'>
-        <instructions size='1'>
-          <instruction key='manifest'>
-            Bundle-SymbolicName: typhonql-ide;singleton:=true&#xA;Bundle-Version: 0.1.0.202007201556
           </instruction>
         </instructions>
       </touchpointData>
@@ -5014,6 +4978,42 @@
         <provided namespace='osgi.ee' name='JavaSE/compact3' version='9.0.0'/>
       </provides>
       <touchpoint id='org.eclipse.equinox.p2.native' version='1.0.0'/>
+    </unit>
+    <unit id='typhonql' version='0.1.0.202007221246' generation='2'>
+      <update id='typhonql' range='[0.0.0,0.1.0.202007221246)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='typhonql'/>
+        <property name='maven-groupId' value='engineering.swat.typhon'/>
+        <property name='maven-artifactId' value='typhonql'/>
+        <property name='maven-version' value='0.1.0-SNAPSHOT'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='typhonql' version='0.1.0.202007221246'/>
+        <provided namespace='osgi.bundle' name='typhonql' version='0.1.0.202007221246'/>
+        <provided namespace='osgi.identity' name='typhonql' version='0.1.0.202007221246'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='4'>
+        <required namespace='osgi.bundle' name='rascal_eclipse' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies' range='0.15.0'/>
+        <required namespace='osgi.bundle' name='engineering.swat.typhon.bundle-typhonql-dependencies-drivers' range='0.3.0' optional='true' greedy='false'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=1.8))'/>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='typhonql' version='0.1.0.202007221246'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: typhonql;singleton:=true&#xA;Bundle-Version: 0.1.0.202007221246
+          </instruction>
+        </instructions>
+      </touchpointData>
     </unit>
     <unit id='org.w3c.css.sac' version='1.3.1.v200903091627' singleton='false'>
       <update id='org.w3c.css.sac' range='[0.0.0,1.3.1.v200903091627)' severity='0'/>

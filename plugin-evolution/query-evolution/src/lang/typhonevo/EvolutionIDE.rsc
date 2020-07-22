@@ -61,3 +61,7 @@ void setEvoIDE(){
 	registerLanguage(languageName, extQL, parser);
 	registerContributions(languageName, languageContrib);
 }
+
+void main(){
+	setEvoIDE();
+}

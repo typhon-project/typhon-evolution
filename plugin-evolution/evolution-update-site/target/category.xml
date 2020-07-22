@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/typhonevo_0.1.0.qualifier.jar" id="typhonevo_feature" version="0.1.0.qualifier">
+      <category name="Typhon"/>
+   </feature>
+   <category-def name="Typhon" label="Typhon">
+      <description>
+         Typhon Evolution tool
+      </description>
+   </category-def>
+</site>

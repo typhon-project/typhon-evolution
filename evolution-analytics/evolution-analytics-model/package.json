@@ -1,0 +1,29 @@
+{
+  "name": "evolution-analytics-model",
+  "version": "1.0.0",
+  "description": "Typhon evolution analytics tool model",
+  "scripts": {
+    "build": "tsc && npm run copy",
+    "copy": "copyfiles ../evolution-analytics-model/** ../evolution-analytics/evolution-analytics-model && copyfiles ../evolution-analytics-model/** ../evolution-analytics-client/evolution-analytics-model",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typhon-project/typhon-evolution.git"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "typescript",
+    "ts"
+  ],
+  "author": "UNamur",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.11.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "copyfiles": "^2.3.0"
+  }
+}

@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+    <groupId>be.unamur.typhonevo</groupId>
+    <artifactId>query-evolution-root</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>query-evolution</module>
+        <module>evolution-feature</module>
+        <module>evolution-update-site</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+		<tycho-version>1.6.0</tycho-version>
+    </properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+            <plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+                <configuration>
+                    <compilerArgument>-parameters</compilerArgument>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+                <configuration>
+                    <skip>true</skip>
+                    <executable>java</executable>
+                </configuration>
+			</plugin>
+		</plugins>
+	</build>
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <url>http://archiva.clmsuk.com:8090/repository/internal/</url>
+        </repository>
+    </distributionManagement>
+
+	<repositories>
+        <repository>
+            <id>usethesource-cache</id>
+            <url>https://nexus.usethesource.io/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>usethesource-snapshots</id>
+            <url>https://nexus.usethesource.io/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>usethesource-rascalmpl-stable</id>
+            <layout>p2</layout>
+            <url>https://update.rascal-mpl.org/archive/0.18.2/</url>
+        </repository>
+
+        <repository>
+            <id>rascalmpl-libs</id>
+            <layout>p2</layout>
+            <url>https://update.rascal-mpl.org/libs/</url>
+        </repository>
+
+        <repository>
+            <id>eclipse</id>
+            <layout>p2</layout>
+            <url>http://ftp.snt.utwente.nl/pub/software/eclipse/releases/2019-09/</url>
+        </repository>
+        <repository>
+            <id>tm</id>
+            <layout>p2</layout>
+            <url>https://nexus.usethesource.io/content/repositories/tm-terminal-marketplace/</url>
+        </repository>
+        <repository>
+            <id>typhon</id>
+            <layout>p2</layout>
+            <url>http://typhon.clmsuk.com:8082</url>
+        </repository>
+	</repositories>
+</project>
+

@@ -7,8 +7,8 @@
 		<artifactId>typhonevo</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>sqlextractor</artifactId>
-	<name>sqlextractor</name>
+	<artifactId>dataingestion</artifactId>
+	<name>dataingestion</name>
 	<packaging>jar</packaging>
 
 	<properties>

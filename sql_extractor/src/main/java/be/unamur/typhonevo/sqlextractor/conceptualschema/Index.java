@@ -14,4 +14,11 @@ private List<Attribute> columns = new ArrayList<Attribute>();
 	public List<Attribute> getAttributes() {
 		return columns;
 	}
+	
+	public boolean isTechnical() {
+		if(columns.size() != 1)
+			return false;
+		
+		return columns.get(0).isTechnicalIdentifier();
+	}
 }

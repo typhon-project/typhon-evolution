@@ -51,6 +51,7 @@ public class Extract {
 		this.schemaName = schemaName;
 
 		connect(driver, url, login, password);
+		
 	}
 
 	public Connection getConnection() {
@@ -208,8 +209,11 @@ public class Extract {
 			if (columnNullable == DatabaseMetaData.columnNoNulls) {
 				columnMinCard = 1;
 			}
+			
+			String autoIncrementStr = rs.getString(23);
+			boolean isAutoIncrement = autoIncrementStr != null && autoIncrementStr.equals("YES");
 
-			Column column = new Column(columnName, columnType, columnSize, columnDecimal, columnMinCard, 1);
+			Column column = new Column(columnName, columnType, columnSize, columnDecimal, columnMinCard, 1, isAutoIncrement);
 			table.addColumn(column);
 
 		}
@@ -268,7 +272,6 @@ public class Extract {
 			grName = rs.getString(6);
 			String colName = rs.getString(4);
 			int colPos = rs.getInt(5);
-			System.out.println("PK:" + grName + "=>" + colName + "=>" + tableName + "=>" + colPos);
 			Column col = table.findColumn(colName);
 			lComp.put(colPos, new GroupComponent(colPos, col));
 		}

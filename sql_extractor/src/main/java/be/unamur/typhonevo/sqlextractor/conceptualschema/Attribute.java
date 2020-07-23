@@ -5,12 +5,18 @@ import java.io.Serializable;
 import be.unamur.typhonevo.sqlextractor.jdbcextractor.extractJdbc.Column;
 
 public class Attribute  implements Serializable {
-	public static final String STRING_TYPE = "String";
-	public static final String INTEGER_TYPE = "Int";
-	public static final String REAL_TYPE = "Real";
-	public static final String DATE_TYPE = "Date";
+	public static final String STRING_TYPE = "string";
+	public static final String INTEGER_TYPE = "int";
+	public static final String BIGINT_TYPE = "bigint";
+	public static final String TEXT_TYPE = "text";
+	public static final String BOOLEAN_TYPE = "bool";
+	public static final String DATE_TYPE = "date";
+	public static final String DATETIME_TYPE = "datetime";
+	public static final String BLOB_TYPE = "blob";
+	public static final String FLOAT_TYPE = "float";
 
 	private Column column;
+	private boolean technicalIdentifier = false;
 	
 	
 
@@ -36,24 +42,7 @@ public class Attribute  implements Serializable {
 	}
 
 	public static String getTyphonType(Column column) {
-		String type = column.getAbstractType();
-
-		switch (type) {
-		case Column.BOO_ATT:
-			return INTEGER_TYPE;
-		case Column.CHAR_ATT:
-			return STRING_TYPE;
-		case Column.DATE_ATT:
-			return DATE_TYPE;
-		case Column.FLOAT_ATT:
-			return REAL_TYPE;
-		case Column.NUM_ATT:
-			return INTEGER_TYPE;
-		case Column.VARCHAR_ATT:
-			return STRING_TYPE;
-		default:
-			return STRING_TYPE;
-		}
+		return column.getMLType();
 	}
 
 	public String getSplitTable() {
@@ -62,6 +51,15 @@ public class Attribute  implements Serializable {
 
 	public void setSplitTable(String splitTable) {
 		this.column.setSplitTable(splitTable);
+	}
+
+	public boolean isTechnicalIdentifier() {
+		return technicalIdentifier;
+	}
+
+	public void setTechnicalIdentifier(boolean technicalIdentifier) {
+		this.technicalIdentifier = technicalIdentifier;
+		this.column.setTechnicalIdentifier(technicalIdentifier);
 	}
 
 }

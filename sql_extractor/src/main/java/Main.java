@@ -2,6 +2,7 @@
 public class Main {
 
 	public static void main(String[] args) {
+		
 		if (args == null || args.length == 0) {
 			help();
 			return;
@@ -48,7 +49,7 @@ public class Main {
 		System.out.println("Possible command lines:");
 		System.out.println("   -help");
 		System.out.println("   -extract <config file> <output directory where the migration scripts will be copied>");
-		System.out.println("   -inject <config file> <directory containing the SQL/JSON migration scripts>");
+		System.out.println("   -inject <config file> <directory containing the TQL migration scripts>");
 	}
 
 }

@@ -3,14 +3,9 @@ package be.unamur.typhonevo.sqlextractor.jdbcextractor.extractJdbc;
 import java.io.Serializable;
 import java.sql.Types;
 
-public class Column implements Serializable {
+import be.unamur.typhonevo.sqlextractor.conceptualschema.Attribute;
 
-	public static final String NUM_ATT = "numeric";
-	public static final String VARCHAR_ATT = "varchar";
-	public static final String BOO_ATT = "boolean";
-	public static final String CHAR_ATT = "char";
-	public static final String DATE_ATT = "date";
-	public static final String FLOAT_ATT = "float";
+public class Column implements Serializable {
 
 	private String name;
 	private int columnType;
@@ -18,18 +13,23 @@ public class Column implements Serializable {
 	private int columnDecimal;
 	private int columnMinCard;
 	private int columnMaxCard;
+	private boolean autoIncrement;
+	private boolean technicalIdentifier = false;
 	private boolean split = false;
 	private String splitTable;
 	private Table table;
 
+	private String mlType = null;
+
 	public Column(String columnName, int columnType, int columnSize, int columnDecimal, int columnMinCard,
-			int columnMaxCard) {
+			int columnMaxCard, boolean autoIncrement) {
 		this.name = columnName;
 		this.setColumnType(columnType);
 		this.setColumnSize(columnSize);
 		this.setColumnDecimal(columnDecimal);
 		this.setColumnMinCard(columnMinCard);
 		this.setColumnMaxCard(columnMaxCard);
+		this.setAutoIncrement(autoIncrement);
 
 	}
 
@@ -90,111 +90,123 @@ public class Column implements Serializable {
 		this.columnMaxCard = columnMaxCard;
 	}
 
-	public String getAbstractType() {
-		String dbmType = "";
-		switch (columnType) {
-		case Types.BIGINT:
-			dbmType = NUM_ATT;
-			break;
-		case Types.BINARY:
-			dbmType = NUM_ATT;
-			break;
-		case Types.BIT:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.BLOB:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.BOOLEAN:
-			dbmType = BOO_ATT;
-			break;
-		case Types.CHAR:
-			dbmType = CHAR_ATT;
-			break;
-		case Types.CLOB:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.DATE:
-			dbmType = DATE_ATT;
-			break;
-		case Types.DECIMAL:
-			dbmType = NUM_ATT;
-			break;
-		case Types.DOUBLE:
-			dbmType = FLOAT_ATT;
-			break;
-		case Types.FLOAT:
-			dbmType = FLOAT_ATT;
-			break;
-		case Types.INTEGER:
-			dbmType = NUM_ATT;
-			break;
-		case Types.LONGNVARCHAR:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.LONGVARBINARY:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.LONGVARCHAR:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.NCHAR:
-			dbmType = CHAR_ATT;
-			break;
-		case Types.NCLOB:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.NUMERIC:
-			dbmType = NUM_ATT;
-			break;
-		case Types.NVARCHAR:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.REAL:
-			dbmType = FLOAT_ATT;
-			break;
-		case Types.SMALLINT:
-			dbmType = NUM_ATT;
-			break;
-		case Types.SQLXML:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.TIME:
-			dbmType = DATE_ATT;
-			break;
-		case Types.TIMESTAMP:
-			dbmType = DATE_ATT;
-			break;
-		case Types.TINYINT:
-			dbmType = NUM_ATT;
-			break;
-		case Types.VARBINARY:
-			dbmType = VARCHAR_ATT;
-			break;
-		case Types.VARCHAR:
-			dbmType = VARCHAR_ATT;
-			break;
-		/*
-		 * case Types.ARRAY : dbmType = ' '; break; case Types.DATALINK : dbmType = ' ';
-		 * break; case Types.DISTINCT : dbmType = ' '; break; case Types.JAVA_OBJECT :
-		 * dbmType = ' '; break; case Types.NULL : dbmType = ' '; break; case
-		 * Types.OTHER : dbmType = ' '; break; case Types.REF : dbmType = ' '; break;
-		 * case Types.ROWID : dbmType = ' '; break; case Types.STRUCT : dbmType = ' ';
-		 * break;
-		 */
-		default:
-			dbmType = VARCHAR_ATT;
-			break;
+	public String getMLType() {
+
+		if (mlType == null) {
+			String dbmType = "";
+			int columnSize = this.columnSize > 0 ? this.columnSize : 1;
+
+			// cannot create string[1] attribute at this moment
+			columnSize = Math.max(2, columnSize);
+
+			switch (columnType) {
+			case Types.BIGINT:
+				dbmType = Attribute.BIGINT_TYPE;
+				break;
+			case Types.BINARY:
+				dbmType = Attribute.INTEGER_TYPE;
+				break;
+			case Types.BIT:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			case Types.BLOB:
+				dbmType = Attribute.BLOB_TYPE;
+				break;
+			case Types.BOOLEAN:
+				dbmType = Attribute.BOOLEAN_TYPE;
+				break;
+			case Types.CHAR:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			case Types.CLOB:
+				dbmType = Attribute.BLOB_TYPE;
+				break;
+			case Types.DATE:
+				dbmType = Attribute.DATE_TYPE;
+				break;
+			case Types.DECIMAL:
+				dbmType = Attribute.FLOAT_TYPE;
+				break;
+			case Types.DOUBLE:
+				dbmType = Attribute.FLOAT_TYPE;
+				break;
+			case Types.FLOAT:
+				dbmType = Attribute.FLOAT_TYPE;
+				break;
+			case Types.INTEGER:
+				dbmType = Attribute.INTEGER_TYPE;
+				break;
+			case Types.LONGNVARCHAR:
+				dbmType = Attribute.TEXT_TYPE;
+				break;
+			case Types.LONGVARBINARY:
+				dbmType = Attribute.TEXT_TYPE;
+				break;
+			case Types.LONGVARCHAR:
+				dbmType = Attribute.TEXT_TYPE;
+				break;
+			case Types.NCHAR:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			case Types.NCLOB:
+				dbmType = Attribute.BLOB_TYPE;
+				break;
+			case Types.NUMERIC:
+				if (columnDecimal > 0)
+					dbmType = Attribute.FLOAT_TYPE;
+				else
+					dbmType = Attribute.INTEGER_TYPE;
+				break;
+			case Types.NVARCHAR:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			case Types.REAL:
+				dbmType = Attribute.FLOAT_TYPE;
+				break;
+			case Types.SMALLINT:
+				dbmType = Attribute.INTEGER_TYPE;
+				break;
+			case Types.SQLXML:
+				dbmType = Attribute.TEXT_TYPE;
+				break;
+			case Types.TIME:
+				dbmType = Attribute.DATE_TYPE;
+				break;
+			case Types.TIMESTAMP:
+				dbmType = Attribute.DATE_TYPE;
+				break;
+			case Types.TINYINT:
+				dbmType = Attribute.INTEGER_TYPE;
+				break;
+			case Types.VARBINARY:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			case Types.VARCHAR:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			/*
+			 * case Types.ARRAY : dbmType = ' '; break; case Types.DATALINK : dbmType = ' ';
+			 * break; case Types.DISTINCT : dbmType = ' '; break; case Types.JAVA_OBJECT :
+			 * dbmType = ' '; break; case Types.NULL : dbmType = ' '; break; case
+			 * Types.OTHER : dbmType = ' '; break; case Types.REF : dbmType = ' '; break;
+			 * case Types.ROWID : dbmType = ' '; break; case Types.STRUCT : dbmType = ' ';
+			 * break;
+			 */
+			default:
+				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				break;
+			}
+			
+			mlType = dbmType;
+
 		}
 
-		return dbmType;
-
+		return mlType;
 	}
 
 	@Override
 	public String toString() {
-		return name + " " + getAbstractType() + "(" + getColumnSize() + ")" + " [" + columnMinCard + "," + columnMaxCard
-				+ "]";
+		return name + " " + columnType + "(" + getColumnSize() + ")" + " [" + columnMinCard + "," + columnMaxCard + "]";
 	}
 
 	public boolean isSplit() {
@@ -213,8 +225,23 @@ public class Column implements Serializable {
 		this.splitTable = splitTable;
 	}
 
-
 	public void setTable(Table table) {
 		this.table = table;
+	}
+
+	public boolean isAutoIncrement() {
+		return autoIncrement;
+	}
+
+	public void setAutoIncrement(boolean autoIncrement) {
+		this.autoIncrement = autoIncrement;
+	}
+
+	public boolean isTechnicalIdentifier() {
+		return technicalIdentifier;
+	}
+
+	public void setTechnicalIdentifier(boolean technicalIdentifier) {
+		this.technicalIdentifier = technicalIdentifier;
 	}
 }

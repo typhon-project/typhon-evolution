@@ -390,7 +390,7 @@ public class TyphonSQLGenerator implements Serializable {
 							java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							String value = sdf.format(date);
 							o = value;
-						} 
+						}
 
 						BasicDBObject json = new BasicDBObject();
 						json.put("_id", UUIDGenerator.get(null, null));
@@ -415,17 +415,24 @@ public class TyphonSQLGenerator implements Serializable {
 	}
 
 	private static String getDelimiter(Column column) {
+
 		String delimiter = "";
-		if (Attribute.getTyphonType(column).equals(Attribute.STRING_TYPE)
-				|| Attribute.getTyphonType(column).equals(Attribute.DATE_TYPE))
+		if (Attribute.getTyphonType(column).startsWith(Attribute.STRING_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.DATE_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.TEXT_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.DATETIME_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.BLOB_TYPE))
 			delimiter = "'";
 		return delimiter;
 	}
 
 	private static String getJSONDelimiter(Column column) {
 		String delimiter = "";
-		if (Attribute.getTyphonType(column).equals(Attribute.STRING_TYPE)
-				|| Attribute.getTyphonType(column).equals(Attribute.DATE_TYPE))
+		if (Attribute.getTyphonType(column).startsWith(Attribute.STRING_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.DATE_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.TEXT_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.DATETIME_TYPE)
+				|| Attribute.getTyphonType(column).equals(Attribute.BLOB_TYPE))
 			delimiter = "\"";
 		return delimiter;
 	}

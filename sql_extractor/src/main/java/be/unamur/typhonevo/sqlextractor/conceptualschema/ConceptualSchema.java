@@ -66,16 +66,23 @@ public class ConceptualSchema {
 					}
 
 					// Columns
+
 					List<Column> columns = table.getColumnsNotPartOfFk();
 					for (Column col : columns) {
 						Attribute a = new Attribute(col);
 						e.addAttribute(a);
+
+						if (isTechnicalId(col, table))
+							a.setTechnicalIdentifier(true);
+
 					}
-					
+
 					List<Column> splitColumns = table.getSplitColumns();
 					for (Column col : splitColumns) {
 						Attribute a = new Attribute(col);
 						e.addAttribute(a);
+						if (isTechnicalId(col, table))
+							a.setTechnicalIdentifier(true);
 					}
 
 					// Foreign keys
@@ -142,6 +149,22 @@ public class ConceptualSchema {
 		createSimpleIdentifiers(map);
 		createSimpleIndexes(map);
 
+	}
+
+	private boolean isTechnicalId(Column col, Table table) {
+		if(!col.isAutoIncrement())
+			return false;
+		
+		boolean technical = false;
+		for (Group pk : table.getIds()) {
+			if (pk.getColumns().size() == 1 && pk.contains(col))
+				technical = true;
+
+			if (pk.getColumns().size() > 1 && pk.contains(col))
+				return false;
+		}
+
+		return technical;
 	}
 
 	private void createSimpleIndexes(Map<String, EntityType> map) {
@@ -265,13 +288,13 @@ public class ConceptualSchema {
 	public void printTyphonML(String file) throws Exception {
 		int index_counter = 0;
 		List<String> content = new ArrayList<String>();
-		Set<String> types = new HashSet<String>();
-		for (EntityType ent : entityTypes.values()) {
-			for (Attribute a : ent.getAttributes().values()) {
-				if (types.add(Attribute.getTyphonType(a.getColumn())))
-					content.add("datatype " + Attribute.getTyphonType(a.getColumn()));
-			}
-		}
+//		Set<String> types = new HashSet<String>();
+//		for (EntityType ent : entityTypes.values()) {
+//			for (Attribute a : ent.getAttributes().values()) {
+//				if (types.add(Attribute.getTyphonType(a.getColumn())))
+//					content.add("datatype " + Attribute.getTyphonType(a.getColumn()));
+//			}
+//		}
 
 		Set<String> splitTable = new HashSet<String>();
 		List<String> splitTableContent = new ArrayList<String>();
@@ -280,6 +303,8 @@ public class ConceptualSchema {
 			Set<String> attrAndRelList = new HashSet<String>();
 			content.add("entity \"" + ent.getName() + "\" {");
 			for (Attribute a : ent.getAttributes().values()) {
+				if (a.isTechnicalIdentifier())
+					continue;
 
 				if (!a.getColumn().isSplit()) {
 					attrAndRelList.add(a.getName());
@@ -296,8 +321,7 @@ public class ConceptualSchema {
 					String entityDeclaration = "entity \"" + name + "\" {\n";
 					entityDeclaration += "   \"" + a.getName() + "\" : " + Attribute.getTyphonType(a.getColumn())
 							+ "\n";
-					entityDeclaration += "   \"" + ent.getName() + "\" -> \"" + ent.getName() + "\""
-							+ ("[1]") + "\n";
+					entityDeclaration += "   \"" + ent.getName() + "\" -> \"" + ent.getName() + "\"" + ("[1]") + "\n";
 					entityDeclaration += "}\n";
 					splitTableContent.add(entityDeclaration);
 					a.setSplitTable(name);
@@ -308,7 +332,33 @@ public class ConceptualSchema {
 			for (RelationshipType rel : oneToManyRels) {
 				EntityType ent1 = rel.getTable1();
 				Role role = rel.getRole2();
-				String beginName = ent1.getName();
+				String relName = role.getTmlName();
+
+				if (relName == null) {
+					String beginName = ent1.getName();
+					relName = beginName;
+					boolean ok = !attrAndRelList.contains(relName);
+					int i = 1;
+					while (!ok) {
+						relName = beginName + "_" + i;
+						ok = !attrAndRelList.contains(relName);
+						i++;
+					}
+				}
+
+				role.setTmlName(relName);
+				attrAndRelList.add(relName);
+				content.add("   \"" + relName + "\" -> \"" + ent1.getName() + "\""
+						+ (role.getMinCard() == 0 ? "[0..1]" : "[1]"));
+			}
+
+			// Opposite
+			List<RelationshipType> manyToOneRels = getManyToOne(ent);
+
+			for (RelationshipType rel : manyToOneRels) {
+				EntityType ent2 = rel.getTable2();
+				Role role = rel.getRole1();
+				String beginName = ent2.getName();
 				String relName = beginName;
 				boolean ok = !attrAndRelList.contains(relName);
 				int i = 1;
@@ -317,50 +367,64 @@ public class ConceptualSchema {
 					ok = !attrAndRelList.contains(relName);
 					i++;
 				}
+
 				role.setTmlName(relName);
 				attrAndRelList.add(relName);
-				content.add("   \"" + relName + "\" -> \"" + ent1.getName() + "\""
-						+ ("[1]"));
+
+				String relName2 = rel.getRole2().getTmlName();
+				if (relName2 == null) {
+					String beginName2 = rel.getTable1().getName();
+					relName2 = beginName2;
+					ok = !attrAndRelList.contains(relName2);
+					i = 1;
+					while (!ok) {
+						relName2 = beginName2 + "_" + i;
+						ok = !attrAndRelList.contains(relName2);
+						i++;
+					}
+
+				}
+
+				rel.getRole2().setTmlName(relName2);
+				attrAndRelList.add(relName2);
+
+				content.add("   \"" + relName + "\" -> \"" + ent2.getName() + "\".\"" + ent2.getName() + "." + relName2
+						+ "\"[0..*]");
 			}
 
-//			List<RelationshipType> manyToOneRels = getManyToOne(ent);
-//
-//			for (RelationshipType rel : manyToOneRels) {
-//				EntityType ent2 = rel.getTable2();
-//				String beginName = rel.getRole1().getName();
-//				String relName = beginName;
-//				boolean ok = !attrAndRelList.contains(relName);
-//				int i = 1;
-//				while (!ok) {
-//					relName = beginName + "_" + i;
-//					ok = !attrAndRelList.contains(relName);
-//					i++;
-//				}
-//				attrAndRelList.add(relName);
-//				content.add("   \"" + relName + "\" -> \"" + ent2.getName() + "\"[0..*]");
-//			}
+			//////////////////////
 
 			List<RelationshipType> manyToManyRels = getManyToMany(ent);
 
 			for (RelationshipType rel : manyToManyRels) {
+//				ici opposite
 				if (rel.isLoop()) {
 					EntityType e = rel.getTable1();
-					String relName1 = rel.getManyToManyTable().getName();
-					String relName2 = rel.getManyToManyTable().getName();
-					boolean ok = !attrAndRelList.contains(relName1);
-					int i = 1;
-					while (!ok) {
-						relName1 = rel.getManyToManyTable().getName() + "_" + i;
-						ok = !attrAndRelList.contains(relName1);
-						i++;
+
+					String relName1 = rel.getRole1().getTmlName();
+					if (relName1 == null) {
+						relName1 = rel.getManyToManyTable().getName();
+						boolean ok = !attrAndRelList.contains(relName1);
+						int i = 1;
+						while (!ok) {
+							relName1 = rel.getManyToManyTable().getName() + "_" + i;
+							ok = !attrAndRelList.contains(relName1);
+							i++;
+						}
 					}
 
-					attrAndRelList.add(relName1);
-					ok = !attrAndRelList.contains(relName2);
-					while (!ok) {
-						relName2 = rel.getManyToManyTable().getName() + "_" + i;
-						ok = !attrAndRelList.contains(relName2);
-						i++;
+					String relName2 = rel.getRole2().getTmlName();
+					if (relName2 == null) {
+						relName2 = rel.getManyToManyTable().getName();
+
+						attrAndRelList.add(relName1);
+						boolean ok = !attrAndRelList.contains(relName2);
+						int i = 1;
+						while (!ok) {
+							relName2 = rel.getManyToManyTable().getName() + "_" + i;
+							ok = !attrAndRelList.contains(relName2);
+							i++;
+						}
 					}
 
 					attrAndRelList.add(relName2);
@@ -368,17 +432,24 @@ public class ConceptualSchema {
 					rel.getRole2().setTmlName(relName2);
 
 					content.add("   \"" + relName1 + "\" -> \"" + e.getName() + "\"[0..*]");
-					content.add("   \"" + relName2 + "\" -> \"" + e.getName() + "\"[0..*]");
+					content.add("   \"" + relName2 + "\" -> \"" + e.getName() + "\".\"" + e.getName() + "." + relName1
+							+ "\"[0..*]");
 
 				} else {
 					EntityType e;
+					EntityType e2;
 					Role role;
+					Role role2;
 					if (rel.getTable1().getName().equals(ent.getName())) {
 						e = rel.getTable2();
 						role = rel.getRole2();
+						e2 = rel.getTable1();
+						role2 = rel.getRole1();
 					} else {
 						e = rel.getTable1();
 						role = rel.getRole1();
+						e2 = rel.getTable2();
+						role2 = rel.getRole2();
 					}
 
 					String relName = e.getName();
@@ -392,7 +463,14 @@ public class ConceptualSchema {
 
 					role.setTmlName(relName);
 					attrAndRelList.add(relName);
-					content.add("   \"" + relName + "\" -> \"" + e.getName() + "\"[0..*]");
+
+					if (role2.getTmlName() != null) {
+						// opposite
+						content.add("   \"" + relName + "\" -> \"" + e.getName() + "\".\"" + e.getName() + "."
+								+ role2.getTmlName() + "\"[0..*]");
+					} else {
+						content.add("   \"" + relName + "\" -> \"" + e.getName() + "\"[0..*]");
+					}
 
 				}
 
@@ -402,8 +480,8 @@ public class ConceptualSchema {
 			content.add("");
 
 		}
-		
-		for(String split : splitTableContent)
+
+		for (String split : splitTableContent)
 			content.add(split);
 
 		content.add("relationaldb " + databaseName + " {");
@@ -414,6 +492,9 @@ public class ConceptualSchema {
 
 			int counter = 0;
 			for (Index index : ent.getIndexes()) {
+				if(index.isTechnical())
+					continue;
+				
 				if (counter >= MAX_NB_OF_INDEXES)
 					break;
 				String indString = "         index \"index_" + index_counter + "\" {\n";
@@ -434,6 +515,9 @@ public class ConceptualSchema {
 
 			int id_counter = 0;
 			for (Identifier id : ent.getIds()) {
+				if(id.isTechnical())
+					continue;
+				
 				if (id_counter >= MAX_NB_OF_IDS)
 					break;
 
@@ -455,17 +539,16 @@ public class ConceptualSchema {
 		}
 		content.add("   }");
 		content.add("}");
-		
+
 		content.add("");
 		content.add("documentdb " + documentdb + " {");
 
 		if (isExistsDocumentDatabase() && splitTable.size() > 0) {
-			
+
 			content.add("   collections {");
-			for(String s : splitTable)
+			for (String s : splitTable)
 				content.add("      \"" + s + "\" : \"" + s + "\"");
 			content.add("   }");
-			
 
 //			    collections {
 //			            Review : Review
@@ -473,7 +556,7 @@ public class ConceptualSchema {
 //			            Product : Product
 //			    }
 		}
-		
+
 		content.add("}");
 
 		writeToFile(file, content);
@@ -497,11 +580,11 @@ public class ConceptualSchema {
 		List<RelationshipType> res = new ArrayList<RelationshipType>();
 		for (RelationshipType rel : relationshipTypes) {
 			if (!rel.isManyToMany()) {
-				EntityType e;
-				if (rel.getRole1().getMaxCard() > 1)
-					e = rel.getTable1();
-				else
-					e = rel.getTable2();
+				EntityType e = rel.getTable1();
+//				if (rel.getRole1().getMaxCard() == 1)
+//					e = rel.getTable1();
+//				else
+//					e = rel.getTable2();
 
 				if (e.getName().equals(ent.getName()))
 					res.add(rel);

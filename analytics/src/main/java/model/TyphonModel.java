@@ -44,7 +44,8 @@ import javax.ws.rs.core.Response;
 public class TyphonModel {
 
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
-	private static final String GET_ML_MODELS_URL = "api/models/ml";
+//	private static final String GET_ML_MODELS_URL = "api/models/ml";
+	private static final String GET_ML_MODELS_URL = "api/model/ml";
 
 	private static String authStringEnc;
 	private static final JerseyClient restClient = JerseyClientBuilder.createClient();

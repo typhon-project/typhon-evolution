@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: queryevolution
-Bundle-SymbolicName: queryevolution;singleton:=true
-Bundle-Version: 0.1.0.qualifier
-Require-Bundle: typhonql;bundle-version="0.1.0",
- typhonql-ide;bundle-version="0.1.0",
- engineering.swat.typhon.bundle-typhonql-dependencies;bundle-version="0.11.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8

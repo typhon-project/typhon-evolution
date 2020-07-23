@@ -1,0 +1,38 @@
+import { Selector } from "./Selector";
+import { Join } from "./Join";
+import { MongoCollection } from "./MongoCollection";
+export declare class Query extends MongoCollection {
+    private _normalizedQueryId;
+    private _query;
+    private _type;
+    private _executionDate;
+    private _executionTime;
+    private _modelVersion;
+    private _mainEntities?;
+    private _selectors?;
+    private _joins?;
+    private _implicitInsertedEntities?;
+    constructor(normalizedQueryId: string, query: string, type: string, executionDate: Date, executionTime: Date, modelVersion: number, mainEntities?: string[], selectors?: Selector[], joins?: Join[], implicitInsertedEntities?: string[], id?: string);
+    get collectionName(): string;
+    get normalizedQueryId(): string;
+    get query(): string;
+    get type(): string;
+    get executionDate(): Date;
+    get executionTime(): Date;
+    get modelVersion(): number;
+    get mainEntities(): string[];
+    get selectors(): Selector[];
+    get joins(): Join[];
+    get implicitInsertedEntities(): string[];
+    set normalizedQueryId(normalizedQueryId: string);
+    set query(query: string);
+    set type(type: string);
+    set executionDate(executionDate: Date);
+    set executionTime(executionTime: Date);
+    set modelVersion(modelVersion: number);
+    set mainEntities(mainEntities: string[]);
+    set selectors(selectors: Selector[]);
+    set joins(joins: Join[]);
+    set implicitInsertedEntities(implicitInsertedEntities: string[]);
+    toString(): string;
+}

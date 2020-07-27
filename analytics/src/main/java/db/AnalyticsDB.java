@@ -235,7 +235,6 @@ public class AnalyticsDB {
 			String entityName = entry.getKey();
 			Long dataSize = entry.getValue();
 
-
 			Document document = new Document();
 			document.put("name", entityName);
 			document.put("updateDate", new Date().getTime());
@@ -251,7 +250,8 @@ public class AnalyticsDB {
 			documents.add(document);
 		}
 
-		coll.insertMany(documents);
+		if (documents.size() > 0)
+			coll.insertMany(documents);
 
 	}
 

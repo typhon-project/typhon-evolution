@@ -27,6 +27,14 @@
 	</repositories>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -97,19 +105,22 @@
 			<artifactId>jersey-client</artifactId>
 			<version>2.30.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.19.4</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>typhon</groupId>
 			<artifactId>ac.york.typhon.analytics</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jersey</groupId>
+					<artifactId>jersey-client</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-
 
 		<!--Eclipse plugins beyond this point -->
 
@@ -267,28 +278,28 @@
 			</plugin>
 
 			<plugin>
-					<groupId>com.google.cloud.tools</groupId>
-					<artifactId>jib-maven-plugin</artifactId>
-					<version>1.8.0</version>
-					<configuration>
-							<container>
-									<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
-							</container>
-							<from>
-								<image>adoptopenjdk:8-jdk-hotspot</image>
-							</from>
-              <container>
-									<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
-									<mainClass>capture.mains.ConsumePostEvents</mainClass>
-							</container>
-							<to>
-								<auth>
-									<username>${env.REGISTRY_USERNAME}</username>
-									<password>${env.REGISTRY_PASSWORD}</password>
-								</auth>
-								<image>docker.io/meuriceloup/typhon-evolution-analytics-java</image>
-							</to>
-					</configuration>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.8.0</version>
+				<configuration>
+					<container>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+					</container>
+					<from>
+						<image>adoptopenjdk:8-jdk-hotspot</image>
+					</from>
+					<container>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+						<mainClass>capture.mains.ConsumePostEvents</mainClass>
+					</container>
+					<to>
+						<auth>
+							<username>${env.REGISTRY_USERNAME}</username>
+							<password>${env.REGISTRY_PASSWORD}</password>
+						</auth>
+						<image>docker.io/meuriceloup/typhon-evolution-analytics-java</image>
+					</to>
+				</configuration>
 			</plugin>
 
 
@@ -323,7 +334,8 @@
 						<phase>install</phase>
 						<configuration>
 							<target>
-								<copy file="${basedir}/target/${project.artifactId}-${project.parent.version}.jar"
+								<copy
+									file="${basedir}/target/${project.artifactId}-${project.parent.version}.jar"
 									tofile="../evolution-analytics/src/resources/QLRecommendation.jar" />
 							</target>
 						</configuration>

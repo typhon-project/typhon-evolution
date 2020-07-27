@@ -6,10 +6,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
 import ac.york.typhon.analytics.commons.datatypes.events.PostEvent;
 import ac.york.typhon.analytics.commons.datatypes.events.PreEvent;
 import capture.flickKafkaUtils.QueueProducer;
@@ -75,25 +71,25 @@ public class ExecuteQueries {
 	}
 
 	private static void executeUpdateInsertDeleteQuery(String query) {
-		String url = "http://localhost:8080/api/update";
-		String name = "admin";
-		String password = "admin1@";
-		String authString = name + ":" + password;
-		String authStringEnc = Base64.getEncoder().encodeToString((authString).getBytes());
-		Client restClient = Client.create();
-		WebResource webResource = restClient.resource(url);
-
-		// Start timing for calculating execution time
-		Date startTime = new Date();
-		System.out.println("executing query...");
-		ClientResponse resp = webResource.accept("application/json")
-				.header("Authorization", "Basic " + authStringEnc).post(ClientResponse.class, query);
-		if (resp.getStatus() != 200) {
-			System.err.println("Unable to connect to the server");
-		} else {
-			System.out.println("query successfully executed in " + (new Date().getTime() - startTime.getTime()) + "ms");
-			String output = resp.getEntity(String.class);
-		}
+//		String url = "http://localhost:8080/api/update";
+//		String name = "admin";
+//		String password = "admin1@";
+//		String authString = name + ":" + password;
+//		String authStringEnc = Base64.getEncoder().encodeToString((authString).getBytes());
+//		Client restClient = Client.create();
+//		WebResource webResource = restClient.resource(url);
+//
+//		// Start timing for calculating execution time
+//		Date startTime = new Date();
+//		System.out.println("executing query...");
+//		ClientResponse resp = webResource.accept("application/json")
+//				.header("Authorization", "Basic " + authStringEnc).post(ClientResponse.class, query);
+//		if (resp.getStatus() != 200) {
+//			System.err.println("Unable to connect to the server");
+//		} else {
+//			System.out.println("query successfully executed in " + (new Date().getTime() - startTime.getTime()) + "ms");
+//			String output = resp.getEntity(String.class);
+//		}
 
 		
 		
@@ -101,26 +97,26 @@ public class ExecuteQueries {
 
 	private static void executeSelectQuery(String query) {
 
-		String url = "http://localhost:8080/api/query";
-		String name = "admin";
-		String password = "admin1@";
-		String authString = name + ":" + password;
-		String authStringEnc = Base64.getEncoder().encodeToString((authString).getBytes());
-		Client restClient = Client.create();
-		WebResource webResource = restClient.resource(url);
-
-		// Start timing for calculating execution time
-		System.out.println("executing query ...");
-		Date startTime = new Date();
-		ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
-				.post(ClientResponse.class, query);
-		if (resp.getStatus() != 200) {
-			System.err.println("Unable to connect to the server");
-		} else {
-			Date endTime = new Date();
-			System.out.println("query successfully executed : " + (endTime.getTime() - startTime.getTime() + "ms"));
-			String output = resp.getEntity(String.class);
-		}
+//		String url = "http://localhost:8080/api/query";
+//		String name = "admin";
+//		String password = "admin1@";
+//		String authString = name + ":" + password;
+//		String authStringEnc = Base64.getEncoder().encodeToString((authString).getBytes());
+//		Client restClient = Client.create();
+//		WebResource webResource = restClient.resource(url);
+//
+//		// Start timing for calculating execution time
+//		System.out.println("executing query ...");
+//		Date startTime = new Date();
+//		ClientResponse resp = webResource.accept("application/json").header("Authorization", "Basic " + authStringEnc)
+//				.post(ClientResponse.class, query);
+//		if (resp.getStatus() != 200) {
+//			System.err.println("Unable to connect to the server");
+//		} else {
+//			Date endTime = new Date();
+//			System.out.println("query successfully executed : " + (endTime.getTime() - startTime.getTime() + "ms"));
+//			String output = resp.getEntity(String.class);
+//		}
 
 	}
 

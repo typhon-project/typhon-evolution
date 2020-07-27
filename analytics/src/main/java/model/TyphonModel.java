@@ -44,7 +44,8 @@ import javax.ws.rs.core.Response;
 public class TyphonModel {
 
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
-	private static final String GET_ML_MODELS_URL = "api/models/ml";
+//	private static final String GET_ML_MODELS_URL = "api/models/ml";
+	private static final String GET_ML_MODELS_URL = "api/model/ml";
 
 	private static String authStringEnc;
 	private static final JerseyClient restClient = JerseyClientBuilder.createClient();
@@ -83,7 +84,7 @@ public class TyphonModel {
 	public static void initWebService(String url, String username, String password) {
 		authStringEnc = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 		webTarget = restClient.target(url);
-		logger.info("Connected to polystore webservice");
+		logger.info("Connected to polystore webservice: " + url + " => " + username + " / " + password);
 	}
 
 	private static boolean typhonMLPackageRegistering() {
@@ -129,8 +130,8 @@ public class TyphonModel {
 				}
 
 			} catch (Exception | Error e) {
-				logger.error("Impossible to load the current TyphonML model\nCause:");
-				e.printStackTrace();
+				logger.error("Impossible to load the current TyphonML model");
+//				e.printStackTrace();
 			} finally {
 				if (tempFile != null)
 					try {

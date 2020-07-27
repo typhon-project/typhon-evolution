@@ -16,7 +16,7 @@ The instruction for installing and using each of these tools are explicited in t
 
 ## Schema and data evolution/migration
 
-This command-line tool enabling you to (1) evolve the TyphonML polystore schema and (2) migrate the data from one polystore schema version to another.
+This module is a command-line application permitting to evolve/migrate automatically the deployed TyphonML polystore schema, the corresponding physical structures and data from one polystore schema version to another, using evolution operators defined in the Typhon ML grammar.
 
 You can access the source code [here](https://github.com/typhon-project/typhon-evolution/tree/master/backend)
 
@@ -496,7 +496,7 @@ Following the pattern PARAMETER#DB, i.e URL2 will be the URL of the second datab
 
 In addition, the user can specify two other configuration parameters concerning the data ingestion scripts to generate:
 
--	**MAX_QL_QUERIES_PER_FILE**: a set of prepared QL queries will be generated at the end of the Extraction Step. Executing these QL queries (see Step 2 - Ingestion) will allow to transfer the data from the input relational database(s) towards the polystore, as soon as the latter will be deployed. Parameter MAX_QL_QUERIES_PER_FILE allows the user to specify the maximal number of QL queries per ingestion file.
+-	**MAX_QL_QUERIES_PER_FILE**: a set of prepared QL queries will be generated at the end of the Extraction Step. Executing these QL queries (see Step 3 - Ingestion) will allow to transfer the data from the input relational database(s) towards the polystore, as soon as the latter will be deployed. Parameter MAX_QL_QUERIES_PER_FILE allows the user to specify the maximal number of QL queries per ingestion file.
 -	**PREPARED_STATEMENTS_BOUND_ROWS**: the user can specify the maximal number of rows each prepared query to insert.
 
 The Figure below provides an example of configuration file specifying the credentials of two input relational databases to connect. A configuration file example is copied in the target directory generated during the install phase, and can be edited by the user.

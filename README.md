@@ -49,7 +49,7 @@ RESULT_FILE=removeAttribute_result.xmi
 To create the input XMI file, you should use the TyphonML Eclipse-based textual or graphical editors on the TML schema file. Regarding the use of the graphical editor, we refer to the TyphonML documentation. Below, you can find the TML textual syntax for the  evolution operators supported by the polystore schema and data evolution/migration tool:
 
 •	**Add attribute**:
-``
+```
 changeOperators [
 	AddPrimitiveDataTypeAttribute newPrimitiveAttribute {
 		ownerEntity Test type bigint

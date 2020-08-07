@@ -1,3 +1,14 @@
+Copyright (C) 2020  University Of Namur (BENATS. P, FINK. J, GOBERT. M, MEURICE. L)
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the Eclipse Public License V2.0
+along with this program.  If not, see <https://www.eclipse.org/legal/epl-2.0/>.
+
+
 # EvolutionAnalyticsClient
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.

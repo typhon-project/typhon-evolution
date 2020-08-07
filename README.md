@@ -1,5 +1,15 @@
 [![Build Status](http://typhon.clmsuk.com:8080/buildStatus/icon?job=TyphonEvolution)](http://typhon.clmsuk.com:8080/job/TyphonEvolution)
 
+Copyright (C) 2020  University Of Namur (BENATS. P, CLEVE. A, FINK. J, GOBERT. M, MEURICE. L)
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the Eclipse Public License V2.0
+along with this program.  If not, see <https://www.eclipse.org/legal/epl-2.0/>.
+
 # Typhon evolution tools
 
 In the context of its Work Package 6, the Typhon project aims to develop a method and a technical infrastructure to support the graceful evolution of hybrid polystores, where multiple NoSQL and SQL databases may jointly evolve in a consistent manner.

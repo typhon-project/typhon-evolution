@@ -4,8 +4,8 @@ Copyright (C) 2020  University Of Namur (BENATS. P, CLEVE. A, FINK. J, GOBERT. M
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  Eclipse
+Public License
 
 You should have received a copy of the Eclipse Public License V2.0
 along with this program.  If not, see <https://www.eclipse.org/legal/epl-2.0/>.

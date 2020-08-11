@@ -37,7 +37,7 @@ EvoQuery transform(q:(EvoQuery)`BROKEN <Annotation+ _>  <QlQuery _>`, _, _) = q;
 
 // Listing all the change operators
 
-// ENTITIES (/!\ manque split)
+// ENTITIES
 EvoQuery transform(EvoQuery q, <"addEntity", _>, Schema s) = q;
 EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s) = entity_rename(q, old_name, new_name);
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);

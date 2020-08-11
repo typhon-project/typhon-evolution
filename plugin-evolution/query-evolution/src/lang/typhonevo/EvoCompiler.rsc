@@ -5,6 +5,7 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::handlers::EntityEvolution;
 import lang::typhonevo::handlers::AttributeEvolution;
 import lang::typhonevo::handlers::RelationEvolution;
+import lang::typhonevo::handlers::SplitEntity;
 import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
@@ -42,6 +43,7 @@ EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s)
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
 EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, relation]>, Schema s) = entity_merge(q, relation, e1, e2, s);
 EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
+EvoQuery transform(EvoQuery q, <"splitEntityVertical", [entity, new_entity, attrs, rels]>, Schema s) = split_vertical(q, entity, new_entity, attrs, s);
 
 // ATTRIBUTES
 EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);

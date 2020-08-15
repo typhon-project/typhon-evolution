@@ -11,6 +11,7 @@ import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::handlers::MergeEntity;
+import Type;
 
 EvoSyntax evolve(EvoSyntax x, loc location){
 
@@ -24,6 +25,7 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	};
 
 	for ( ChangeOp op <- s.changeOperators){
+
 		x = visit(x){
 			case EvoQuery q => transform(q, op, s)
 		};
@@ -31,6 +33,7 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	
 	return x;
 }
+
 
 EvoQuery transform(q:(EvoQuery)`BROKEN  <QlQuery _>`, _, _) = q;
 EvoQuery transform(q:(EvoQuery)`BROKEN <Annotation+ _>  <QlQuery _>`, _, _) = q;
@@ -43,7 +46,7 @@ EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s)
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
 EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, relation]>, Schema s) = entity_merge(q, relation, e1, e2, s);
 EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
-EvoQuery transform(EvoQuery q, <"splitEntityVertical", [entity, new_entity, attrs, rels]>, Schema s) = split_vertical(q, entity, new_entity, attrs, s);
+EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attr, rels]>, Schema s) = split_vertical(q, entity, new_entity, attr, s);
 
 // ATTRIBUTES
 EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);

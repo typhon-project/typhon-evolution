@@ -66,3 +66,35 @@ map[EId, VId] get_bindings(EvoQuery q){
 	
 	return bindings;
 }
+
+list[Id] get_attrs_used(EId entity, EvoQuery q){
+	// Retrieve the attribute used by the query
+	// for a given entity.
+	
+	entity_alias = get_bindings(q)[entity];
+	list[Id] result = [];
+	
+	
+	for(/(Expr) `<VId vid>.<Id attr>` := q){
+
+		if(vid == entity_alias){
+			result = result + attr;
+		}
+	}
+	
+	return result;
+}
+
+bool contains_select_all(EId entity, EvoQuery q){
+	entity_alias = get_bindings(q)[entity];
+	list[Id] result = [];
+	
+	for(/(Expr) `<VId vid>` := q){
+		if(vid == entity_alias){
+			return true;
+		}
+	}
+	
+	return false;
+}
+

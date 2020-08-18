@@ -23,9 +23,8 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	x = visit(x){
 		case EvoQuery q => setStatusUnchanged(q)
 	};
-
+	
 	for ( ChangeOp op <- s.changeOperators){
-
 		x = visit(x){
 			case EvoQuery q => transform(q, op, s)
 		};
@@ -46,7 +45,7 @@ EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s)
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
 EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, relation]>, Schema s) = entity_merge(q, relation, e1, e2, s);
 EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
-EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attr, rels]>, Schema s) = split_vertical(q, entity, new_entity, attr, s);
+EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attr]>, Schema s) = split_vertical(q, entity, new_entity, attr, s);
 
 // ATTRIBUTES
 EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);

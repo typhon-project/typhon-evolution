@@ -1,5 +1,15 @@
 [![Build Status](http://typhon.clmsuk.com:8080/buildStatus/icon?job=TyphonEvolution)](http://typhon.clmsuk.com:8080/job/TyphonEvolution)
 
+Copyright (C) 2020  University Of Namur (BENATS. P, CLEVE. A, FINK. J, GOBERT. M, MEURICE. L)
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  Eclipse
+Public License
+
+You should have received a copy of the Eclipse Public License V2.0
+along with this program.  If not, see <https://www.eclipse.org/legal/epl-2.0/>.
+
 # Typhon evolution tools
 
 In the context of its Work Package 6, the Typhon project aims to develop a method and a technical infrastructure to support the graceful evolution of hybrid polystores, where multiple NoSQL and SQL databases may jointly evolve in a consistent manner.
@@ -50,7 +60,7 @@ To create the input XMI file, you should use the TyphonML Eclipse-based textual 
 
 •	**Add attribute**:
 ```
-  changeOperators [
+changeOperators [
 	AddPrimitiveDataTypeAttribute newPrimitiveAttribute {
 		ownerEntity Test type bigint
 	},
@@ -69,7 +79,7 @@ relationaldb RelationalDatabase {
     }
 }
 changeOperators [
-add entity Test2 {
+	add entity Test2 {
 		attributes [
 			testDate: date,
 			testBool: bool
@@ -80,114 +90,114 @@ add entity Test2 {
 
 •	**Add relation**:
 ```
-	changeOperators [
-		add relation newRelation to Test -> Test2
+changeOperators [
+	add relation newRelation to Test -> Test2
 ]
 ```
 
 •	**Rename attribute**:
 ```
-	changeOperators [
-		rename attribute 'Test.id' as 'identifier'
+changeOperators [
+	rename attribute 'Test.id' as 'identifier'
 ]
 ```
 
 •	**Rename entity**:
 ```
-	changeOperators [
-		rename entity Test as 'TestNewName'
+changeOperators [
+	rename entity Test as 'TestNewName'
 ]
 ```
 
 •	**Rename relation**:
 ```
-	changeOperators [
-		rename relation newRelation as 'newRelationName'
+changeOperators [
+	rename relation newRelation as 'newRelationName'
 ]
 ```
 
 •	**Remove attribute**:
 ```
-	changeOperators [
-		remove attribute 'Test.id’
+changeOperators [
+	remove attribute 'Test.id’
 ]
 ```
 
 •	**Remove entity**:
 ```
-	changeOperators [
-		remove entity Test2
+changeOperators [
+	remove entity Test2
 ]
 ```
 
 •	**Remove relation**:
 ```
-	changeOperators [
-		remove relation newRelation
+changeOperators [
+	remove relation newRelation
 ]
 ```
 
 •	**Migrate entity**: migrate an entity from one database to another. Hypothesis: the incoming relations (relations pointing to the migrated entity) will be lost.
 ```
-	changeOperators [
-		migrate Test to DocumentDatabase
+changeOperators [
+	migrate Test to DocumentDatabase
 ]
 ```
 
 •	**Merge entities**: merge 2 entities using the “as” for the relation name. Hypothesis: the relation between the 2 entities is 1-1.
 ```
-  changeOperators [
-		merge entities Test Test2 as 'Test2.relationName'
+changeOperators [
+	merge entities Test Test2 as 'Test2.relationName'
 ]
 ```
 
 •	**Split entity vertical**: split an entity into 2 entities. The attributes specified as input will be moved from the first (existing) entity to the second (new) entity.
 ```
-	changeOperators [
-		split entity vertical Test2 to Test3 attributes: [ "Test2.testBool" ]
+changeOperators [
+	split entity vertical Test2 to Test3 attributes: [ "Test2.testBool" ]
 ]
 ```
 
 •	**Split entity horizontal**: split an entity into 2 entities. The where clause contains the attribute and the value on which the split is applied. The result data of the where clause will be contained in the second (new) entity. Both entities will have the same attributes.
 ```
-	changeOperators [
-		split entity horizontal Test2 to Test3 where "Test2.testBool" value "true"
+changeOperators [
+	split entity horizontal Test2 to Test3 where "Test2.testBool" value "true"
 ]
 ```
 
 •	**Enable relation containment**:
 ```
-	changeOperators [
-		EnableRelationContainment { relation newRelation }
+changeOperators [
+	EnableRelationContainment { relation newRelation }
 ]
 ```
 
 •	**Disable relation containment**:
 ```
-	changeOperators [
-		DisableRelationContainment { relation newRelation }
+changeOperators [
+	DisableRelationContainment { relation newRelation }
 ]
 ```
 
 •	**Enable relation opposite**:
 ```
-	changeOperators [
-		EnableBidirectionalRelation { relation newRelation }
+changeOperators [
+	EnableBidirectionalRelation { relation newRelation }
 ]
 ```
 
 •	**Disable relation opposite**:
 ```
-	changeOperators [
-		DisableBidirectionalRelation { relation newRelation }
+changeOperators [
+	DisableBidirectionalRelation { relation newRelation }
 ]
 ```
 
 •	**Change attribute type**:
 ```
-	changeOperators [
-		ChangePrimitiveDataTypeAttribute { attributeToChange "Test.id" newType bigint },
-		ChangeCustomDataTypeAttribute { attributeToChange "Test.id" newType customType }
+changeOperators [
+	ChangePrimitiveDataTypeAttribute { attributeToChange "Test.id" newType bigint },
+	ChangeCustomDataTypeAttribute { attributeToChange "Test.id" newType customType }
 ]
 ```
 

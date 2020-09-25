@@ -13,7 +13,7 @@ import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 
 
-private str languageName = "TyphonQL";
+private str languageName = "EvoQuery";
 private str extQL = "qevo";
 
 
@@ -48,7 +48,7 @@ public void getIDEid(Tree t, loc selection){
 
 public set[Contribution] languageContrib = {
 	popup(
-		menu("TyphonEvolution",[
+		menu("Query Evolution",[
 		    action("Evolve", evalQuery)
 	    ])
   	)
@@ -58,8 +58,8 @@ public set[Contribution] languageContrib = {
 
 
 void setEvoIDE(){
-	registerLanguage(languageName, extQL, parser);
 	registerContributions(languageName, languageContrib);
+	registerLanguage(languageName, extQL, parser);
 }
 
 void main(){

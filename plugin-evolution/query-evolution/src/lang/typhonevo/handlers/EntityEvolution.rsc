@@ -10,15 +10,7 @@ import lang::typhonevo::utils::SchemaUtils;
 
 import lang::typhonml::Util;
 
-// DISPATCHER
 	
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation) `split entity <EId name> { left <EId entity1> right <EId entity2> }`, Schema s)
-	= entity_split(q, name, entity1, entity2);
-	
-	
-EvoQuery evolve_entity(EvoQuery q, (EntityOperation)  `split entity vertical <EId entity1> to <EId entity2> attributes : [ <{Expr ","}+ expr> ]`, Schema s)
-	= entity_split(q, entity1, entity1, entity2);
-
 default EvoQuery evolve_entity(EvoQuery q, _, _) = q;
 
 

@@ -5,11 +5,13 @@ import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::handlers::EntityEvolution;
 import lang::typhonevo::handlers::AttributeEvolution;
 import lang::typhonevo::handlers::RelationEvolution;
+import lang::typhonevo::handlers::SplitEntity;
 import lang::typhonml::XMIReader;
 import lang::typhonml::Util;
 import lang::typhonml::TyphonML;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::handlers::MergeEntity;
+import Type;
 
 EvoSyntax evolve(EvoSyntax x, loc location){
 
@@ -21,7 +23,7 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	x = visit(x){
 		case EvoQuery q => setStatusUnchanged(q)
 	};
-
+	
 	for ( ChangeOp op <- s.changeOperators){
 		x = visit(x){
 			case EvoQuery q => transform(q, op, s)
@@ -31,17 +33,19 @@ EvoSyntax evolve(EvoSyntax x, loc location){
 	return x;
 }
 
+
 EvoQuery transform(q:(EvoQuery)`BROKEN  <QlQuery _>`, _, _) = q;
 EvoQuery transform(q:(EvoQuery)`BROKEN <Annotation+ _>  <QlQuery _>`, _, _) = q;
 
 // Listing all the change operators
 
-// ENTITIES (/!\ manque split)
+// ENTITIES
 EvoQuery transform(EvoQuery q, <"addEntity", _>, Schema s) = q;
 EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s) = entity_rename(q, old_name, new_name);
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
 EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, relation]>, Schema s) = entity_merge(q, relation, e1, e2, s);
 EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
+EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attr]>, Schema s) = split_vertical(q, entity, new_entity, attr, s);
 
 // ATTRIBUTES
 EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);

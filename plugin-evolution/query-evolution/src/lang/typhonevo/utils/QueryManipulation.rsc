@@ -1,6 +1,7 @@
 module lang::typhonevo::utils::QueryManipulation
 
 import lang::typhonevo::EvoAbstractSyntax;
+import ParseTree;
 
 EvoQuery removeBinding(EvoQuery q, Binding del_binding)
 	= visit(q){
@@ -51,4 +52,18 @@ map[EId, VId] get_bindings(EvoQuery q){
 	
 	return binding;
 } 
+
+
+EvoQuery addWhereCondition(EvoQuery q, Expr expression){
+	e = visit(q){
+		case (Where) `where <{Expr ","}+ conditions>`
+			=> (Where) `where <{Expr ","}+ conditions>, <Expr expression>`
+	}
+	
+	if(e := q){
+		e = parse(#EvoQuery, "<q> where <expression>");
+	}
+	
+	return e;
+}
 	

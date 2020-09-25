@@ -354,8 +354,9 @@ public class ConsumePostEvents {
 						PostEvent postEvent = (PostEvent) event;
 						// TODO currently, success is always equal to NULL. One needs to check if
 						// resultset is equal to null
-						boolean success = postEvent.getSuccess() == null ? postEvent.getResultSet() != null
-								: postEvent.getSuccess();
+//						boolean success = postEvent.getSuccess() == null ? postEvent.getResultSet() != null
+//								: postEvent.getSuccess();
+						boolean success = true;
 						if (success) {
 							logger.debug("Captured query: " + postEvent.getPreEvent().getQuery());
 							captureQuery(postEvent);

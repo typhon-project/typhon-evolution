@@ -125,7 +125,7 @@ public class ExecuteQueries {
 
 		event.setId(UUID.randomUUID().toString());
 		event.setQuery(query);
-		event.setUser("user");
+		event.setDbUser("user");
 		event.setAuthenticated(true);
 
 		PostEvent post = new PostEvent();

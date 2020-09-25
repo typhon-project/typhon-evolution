@@ -129,13 +129,13 @@
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql</groupId>
 			<artifactId>nl.cwi.swat.typhonql</artifactId>
-			<version>0.1.0.202005201434</version>
+			<version>0.1.0.202009210942</version>
 		</dependency>
 
 		<dependency>
 			<groupId>nl.cwi.swat.typhonql-ide</groupId>
 			<artifactId>nl.cwi.swat.typhonql-ide</artifactId>
-			<version>0.1.0.202005201434</version>
+			<version>0.1.0.202009210942</version>
 		</dependency>
 
 		<!-- <dependency> -->

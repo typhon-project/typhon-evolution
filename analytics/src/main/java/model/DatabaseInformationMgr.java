@@ -33,7 +33,6 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-import nl.cwi.swat.typhonql.DBType;
 import nl.cwi.swat.typhonql.client.DatabaseInfo;
 import typhonml.ColumnDB;
 import typhonml.Database;
@@ -42,6 +41,7 @@ import typhonml.Entity;
 import typhonml.GraphDB;
 import typhonml.KeyValueDB;
 import typhonml.RelationalDB;
+import typhonmlreq.databaseType;
 
 public class DatabaseInformationMgr {
 	private static Logger logger = Logger.getLogger(TyphonModel.class);
@@ -172,7 +172,7 @@ public class DatabaseInformationMgr {
 		Long res = null;
 		for (ConnectionInfo info : infos) {
 			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(dDB.getName()) && di.getDbType() == DBType.documentdb) {
+			if (di.getDbName().equals(dDB.getName())/** && di.getDbType() == DBType.documentdb**/) {
 				MongoClient mongoClient = info.getMongoDBConn();
 
 				try {
@@ -207,7 +207,7 @@ public class DatabaseInformationMgr {
 		Long res = null;
 		for (ConnectionInfo info : infos) {
 			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(rDB.getName()) && di.getDbType() == DBType.relationaldb) {
+			if (di.getDbName().equals(rDB.getName())/** && di.getDbType() == DBType.relationaldb**/) {
 				String ip = di.getHost();
 				String dbName = di.getDbName();
 				String dbms = di.getDbms();
@@ -265,13 +265,13 @@ public class DatabaseInformationMgr {
 			for (BsonValue v : array.getValues()) {
 				BsonDocument d = v.asDocument();
 				try {
-					String engineType = d.getString("engineType").getValue().toLowerCase() + "db";
-					DBType dbType = DBType.valueOf(engineType);
-					if (dbType == null)
+					
+					String type = d.getString("dbType").getValue();
+					if (type == null)
 						throw new RuntimeException(
 								"Engine type " + d.getString("engineType").getValue() + " not known");
 					ConnectionInfo info = new ConnectionInfo(null, d.getString("externalHost").getValue(),
-							d.getNumber("externalPort").intValue(), d.getString("name").getValue(), dbType,
+							d.getNumber("externalPort").intValue(), d.getString("name").getValue(),
 							d.getString("dbType").getValue(), d.getString("username").getValue(),
 							d.getString("password").getValue());
 					infos.add(info);

@@ -19,7 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import db.AnalyticsDB;
-import nl.cwi.swat.typhonql.DBType;
 import nl.cwi.swat.typhonql.client.DatabaseInfo;
 import typhonml.impl.ModelImpl;
 import typhonml.*;

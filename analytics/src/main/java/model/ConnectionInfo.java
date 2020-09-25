@@ -4,13 +4,12 @@ import java.sql.Connection;
 
 import com.mongodb.MongoClient;
 
-import nl.cwi.swat.typhonql.DBType;
 import nl.cwi.swat.typhonql.client.DatabaseInfo;
 
 public class ConnectionInfo extends nl.cwi.swat.typhonql.ConnectionInfo {
-	public ConnectionInfo(String polystoreId, String host, int port, String dbName, DBType dbType, String dbms,
+	public ConnectionInfo(String polystoreId, String host, int port, String dbName, String dbms,
 			String user, String password) {
-		super(polystoreId, host, port, dbName, dbType, dbms, user, password);
+		super(polystoreId, host, port, dbName, dbms, user, password);
 	}
 
 	private Connection JDBCConn = null;

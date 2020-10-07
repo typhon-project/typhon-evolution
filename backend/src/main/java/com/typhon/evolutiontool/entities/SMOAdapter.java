@@ -149,7 +149,7 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.CHANGECONTAINMENT) {
                 inputParameter.put(ChangeOperatorParameter.RELATION, ((ChangeRelationContainement) changeOperator).getRelation());
-                inputParameter.put(ChangeOperatorParameter.NEW_CONTAINMENT, ((ChangeRelationContainement) changeOperator).getNewContainment());
+                inputParameter.put(ChangeOperatorParameter.NEW_CONTAINMENT, ((ChangeRelationContainement) changeOperator).isNewContainment());
             }
             if (evolutionOperator == EvolutionOperator.ENABLEOPPOSITE) {
                 inputParameter.put(ChangeOperatorParameter.RELATION, ((EnableBidirectionalRelation) changeOperator).getRelation());

@@ -88,7 +88,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
@@ -108,7 +108,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((applicationProperties.getValue(POLYSTORE_API_USER_PASSWORD)).getBytes()))
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }

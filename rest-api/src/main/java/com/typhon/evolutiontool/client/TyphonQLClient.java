@@ -34,15 +34,17 @@ public class TyphonQLClient {
         //Get polystore users
 //        getUsers();
         //Get all instances of "User" entity
-//        select();
+        select();
         //Update instances of "User" entity
-        update();
+//        update();
         //Insert an instance of "User" entity
 //        insert();
-        //Create a new entity "TestRelational" into the relational database
+        //Create a new entity "TestRelational" into the Inventory relational database
 //        create();
-        //Create a new attribute "id" for "TestRelational" entity
+        //Create a new attribute "id" for "Word" entity
 //        createAttribute();
+        //Drop an attribute "id" for "Word" entity
+//        dropAttribute();
         //Create a new relation "relationalToDocument" in "TestRelational" entity to "TestDocument" entity
 //        createRelation();
         //Drop "TestRelational" entity from the relational database
@@ -74,12 +76,13 @@ public class TyphonQLClient {
     }
 
     private static void select() {
-        String query = "from User user select user.@id, user.address where user.@id == #b4628b35-1a8f-483d-83ef-74d02969f9ca";
+//        String query = "from User user select user.@id, user.address where user.@id == #b4628b35-1a8f-483d-83ef-74d02969f9ca";
+        String query = "from Word w select w.@id, w.name";
         webTarget = webTarget.path(QUERY_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -88,12 +91,14 @@ public class TyphonQLClient {
     }
 
     private static void update() {
-        String query = "update User u where u.@id == #a4e8cd34-022e-4d6b-bfbc-11cd04ddb4e4 set {name: \"Pablo\"}";
+//        String query = "update Word w where w.name == \"updated word 2\" set {name: \"updated word\"}";
+        String query = "update Word w where w.@id == #4bb512eb-8f90-46cc-9c06-1c900b35de04 set {name: \"updated word 2\"}";
+//        String query = "update Word w where w.name == \"updated word\" set {name: \"updated word 2\"}";
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -105,13 +110,14 @@ public class TyphonQLClient {
 //        String query = "insert User {id: 1, name: \"Loup\"}";
 //        String query = "insert User {id: 2, name: \"Pol\" }";
 //        String query = "insert Address {zip: \"10\", city: \"adr1\", streetNumber: \"100\", streetName: \"street1\", country: \"country1\"}";
-        String query = "insert Address {zip: \"20\", city: \"adr2\", streetNumber: \"200\", streetName: \"stree2\", country: \"country2\"}";
+//        String query = "insert Address {zip: \"20\", city: \"adr2\", streetNumber: \"200\", streetName: \"stree2\", country: \"country2\"}";
+        String query = "insert Word {name: \"new word\"}";
 
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -120,12 +126,12 @@ public class TyphonQLClient {
     }
 
     private static void create() {
-        String query = "create TestRelational at RelationalDatabase";
+        String query = "create TestRelational at Inventory";
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -134,12 +140,26 @@ public class TyphonQLClient {
     }
 
     private static void createAttribute() {
-        String query = "create NewEntity.id : string(32)";
+        String query = "create Word.id : string(32)";
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
+    }
+
+    private static void dropAttribute() {
+        String query = "drop attribute Word.id";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -154,7 +174,7 @@ public class TyphonQLClient {
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
@@ -168,7 +188,7 @@ public class TyphonQLClient {
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Basic " + authStringEnc)
-                .post(Entity.entity(query, MediaType.TEXT_PLAIN));
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }

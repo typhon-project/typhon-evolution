@@ -28,7 +28,7 @@
         <dependency>
             <groupId>it.univaq.disim.typhonml</groupId>
             <artifactId>it.univaq.disim.typhonml</artifactId>
-            <version>1.0.0.202004151330</version>
+            <version>1.0.0.202009150837</version>
         </dependency>
 
         <!-- Other useful Maven dependencies -->

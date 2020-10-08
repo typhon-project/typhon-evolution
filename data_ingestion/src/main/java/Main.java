@@ -2,7 +2,7 @@
 public class Main {
 
 	public static void main(String[] args) {
-		
+
 		if (args == null || args.length == 0) {
 			help();
 			return;
@@ -12,6 +12,8 @@ public class Main {
 			help();
 			return;
 		}
+
+		fixSparkHadoopBugWithJavaVersion();
 
 		String operation = args[0];
 		boolean ok = false;
@@ -42,6 +44,19 @@ public class Main {
 
 		if (!ok)
 			help();
+
+	}
+
+	private static void fixSparkHadoopBugWithJavaVersion() {
+		try {
+			String java_version = System.getProperty("java.version");
+			if (java_version.length() < 3) {
+				java_version += ".0.0";
+				System.setProperty("java.version", java_version);
+			}
+		} catch (Exception | Error e) {
+			System.err.println("The Java version cannot be modified");
+		}
 
 	}
 

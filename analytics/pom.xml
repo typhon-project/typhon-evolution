@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>it.univaq.disim.typhonml</groupId>
 			<artifactId>it.univaq.disim.typhonml</artifactId>
-			<version>1.0.0.202005251732</version>
+			<version>1.0.0.202009150837</version>
 		</dependency>
 
 		<dependency>

@@ -503,7 +503,7 @@ public class ConceptualSchema {
 				for (Attribute attr : index.getAttributes()) {
 					if (i > 0)
 						indString += ", ";
-					indString += "\"" + ent.getName() + "." + attr.getName() + "\"";
+					indString += "\"" + attr.getName() + "\"";
 					i++;
 				}
 				indString += ")\n";
@@ -527,7 +527,7 @@ public class ConceptualSchema {
 					if (i > 0)
 						idString += ", ";
 
-					idString += "\"" + ent.getName() + "." + attr.getName() + "\"";
+					idString += "\"" + attr.getName() + "\"";
 					i++;
 				}
 				idString += ")";
@@ -541,23 +541,23 @@ public class ConceptualSchema {
 		content.add("}");
 
 		content.add("");
-		content.add("documentdb " + documentdb + " {");
-
-		if (isExistsDocumentDatabase() && splitTable.size() > 0) {
-
-			content.add("   collections {");
-			for (String s : splitTable)
-				content.add("      \"" + s + "\" : \"" + s + "\"");
-			content.add("   }");
-
-//			    collections {
-//			            Review : Review
-//			            Comment : Comment
-//			            Product : Product
-//			    }
-		}
-
-		content.add("}");
+//		content.add("documentdb " + documentdb + " {");
+//
+//		if (isExistsDocumentDatabase() && splitTable.size() > 0) {
+//
+//			content.add("   collections {");
+//			for (String s : splitTable)
+//				content.add("      \"" + s + "\" : \"" + s + "\"");
+//			content.add("   }");
+//
+////			    collections {
+////			            Review : Review
+////			            Comment : Comment
+////			            Product : Product
+////			    }
+//		}
+//
+//		content.add("}");
 
 		writeToFile(file, content);
 	}

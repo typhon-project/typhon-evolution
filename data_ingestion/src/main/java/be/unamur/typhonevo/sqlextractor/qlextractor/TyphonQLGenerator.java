@@ -143,44 +143,54 @@ public class TyphonQLGenerator implements Serializable {
 			return res;
 
 		} else {
-			String res = o.toString().replaceAll("\"", "\\\\\\\\\\\\\"");
+//			String res = o.toString().replaceAll("\"", "\\\\\\\\\\\\\"");
+			String res = o.toString().replaceAll("\"", "\\\\\"");
 			return res;
 		}
 	}
 
 	public static void main(String[] args) {
+		String test = "test\"ok";
+		System.out.println(getPreparedStringValue(test));
+
 //		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 //		String res = sdf.format(new Date());
 //		System.out.println(res);
-
-		List<List<String>> lists = new ArrayList<List<String>>();
-		List<String> t1 = new ArrayList<String>();
-		t1.add("t11");
-		t1.add("t111");
-
-		List<String> t2 = new ArrayList<String>();
-		t2.add("t21");
-		t2.add("t211");
-
-		lists.add(t1);
-		lists.add(t2);
-
-		System.out.println(lists);
+//
+//		List<List<String>> lists = new ArrayList<List<String>>();
+//		List<String> t1 = new ArrayList<String>();
+//		t1.add("t11");
+//		t1.add("t111");
+//
+//		List<String> t2 = new ArrayList<String>();
+//		t2.add("t21");
+//		t2.add("t211");
+//
+//		lists.add(t1);
+//		lists.add(t2);
+//
+//		System.out.println(lists);
 	}
 
 	private void generateQLScriptForTable() throws Exception {
 
 		String preparedQueryTemp = "insert " + entityName + "{";
 		List<String> parametersNames = new ArrayList<String>();
+		List<String> parametersTypes = new ArrayList<String>();
 		preparedQueryTemp += "@id:??UUID";
 		parametersNames.add("\"UUID\"");
+		parametersTypes.add("\"uuid\"");
 		for (Column c : columns) {
-			if(c.isTechnicalIdentifier())
+			if (c.isTechnicalIdentifier())
 				continue;
-			
+
 			String attrName = c.getName();
 			preparedQueryTemp += "," + attrName + ":??" + attrName;
 			parametersNames.add("\"" + attrName + "\"");
+			String mltype = c.getMLType();
+			if(mltype.startsWith("string"))
+				mltype = "string";
+			parametersTypes.add("\"" + mltype + "\"");
 		}
 
 		preparedQueryTemp += "}";
@@ -201,8 +211,11 @@ public class TyphonQLGenerator implements Serializable {
 		}
 
 		List<String> parametersNames2 = new ArrayList<String>();
+		List<String> parametersTypes2 = new ArrayList<String>();
 		parametersNames2.add("\"UUID\"");
 		parametersNames2.add("\"UUID2\"");
+		parametersTypes2.add("\"uuid\"");
+		parametersTypes2.add("\"uuid\"");
 
 		CURRENT_UPDATE_BOUNDROWS_ARRAY = new ArrayList<List<List<String>>>();
 		for (int i = 0; i < oneToMany.size(); i++) {
@@ -228,12 +241,12 @@ public class TyphonQLGenerator implements Serializable {
 //				ql += "@id: #" + uuid;
 
 				List<String> row = new ArrayList<String>();
-				row.add("\"#" + uuid + "\"");
+				row.add("\"" + uuid + "\"");
 
 //				CURRENT_BOUNDROWS_ARRAY.get(0).add("\"#" + uuid + "\"");
 
 				for (Column c : columns) {
-					if(c.isTechnicalIdentifier())
+					if (c.isTechnicalIdentifier())
 						continue;
 					String attrName = c.getName();
 					Object o = r.getAs(c.getName());
@@ -250,7 +263,8 @@ public class TyphonQLGenerator implements Serializable {
 				CURRENT_BOUNDROWS_NUMBER++;
 
 				if (CURRENT_BOUNDROWS_NUMBER == BOUNDROWS_LIMIT) {
-					printInsertPreparedStatement(preparedQuery, parametersNames, CURRENT_BOUNDROWS_ARRAY);
+					printInsertPreparedStatement(preparedQuery, parametersNames, parametersTypes,
+							CURRENT_BOUNDROWS_ARRAY);
 					CURRENT_BOUNDROWS_NUMBER = 0;
 				}
 
@@ -283,8 +297,8 @@ public class TyphonQLGenerator implements Serializable {
 
 						List<List<String>> relArray = CURRENT_UPDATE_BOUNDROWS_ARRAY.get(counter);
 						List<String> uuids = new ArrayList<String>();
-						uuids.add("\"#" + uuid + "\"");
-						uuids.add("\"#" + uuid2 + "\"");
+						uuids.add("\"" + uuid + "\"");
+						uuids.add("\"" + uuid2 + "\"");
 						relArray.add(uuids);
 						atLeastOneAddedRow = true;
 					}
@@ -298,7 +312,8 @@ public class TyphonQLGenerator implements Serializable {
 					if (CURRENT_UPDATE_BOUNDROWS_NUMBER == BOUNDROWS_LIMIT) {
 						int j = 0;
 						for (List<List<String>> subarray : CURRENT_UPDATE_BOUNDROWS_ARRAY) {
-							printUpdatePreparedStatement(preparedUpdateQueries.get(j), parametersNames2, subarray);
+							printUpdatePreparedStatement(preparedUpdateQueries.get(j), parametersNames2,
+									parametersTypes2, subarray);
 							j++;
 						}
 						CURRENT_UPDATE_BOUNDROWS_NUMBER = 0;
@@ -310,14 +325,15 @@ public class TyphonQLGenerator implements Serializable {
 		});
 
 		if (CURRENT_BOUNDROWS_NUMBER > 0) {
-			printInsertPreparedStatement(preparedQuery, parametersNames, CURRENT_BOUNDROWS_ARRAY);
+			printInsertPreparedStatement(preparedQuery, parametersNames, parametersTypes, CURRENT_BOUNDROWS_ARRAY);
 			CURRENT_BOUNDROWS_NUMBER = 0;
 		}
 
 		if (CURRENT_UPDATE_BOUNDROWS_NUMBER > 0) {
 			int j = 0;
 			for (List<List<String>> subarray : CURRENT_UPDATE_BOUNDROWS_ARRAY) {
-				printUpdatePreparedStatement(preparedUpdateQueries.get(j), parametersNames2, subarray);
+				printUpdatePreparedStatement(preparedUpdateQueries.get(j), parametersNames2, parametersTypes2,
+						subarray);
 				j++;
 			}
 			CURRENT_UPDATE_BOUNDROWS_NUMBER = 0;
@@ -326,12 +342,12 @@ public class TyphonQLGenerator implements Serializable {
 	}
 
 	private void writePreparedStatementToFile(String preparedQuery, List<String> parametersNames,
-			List<List<String>> boundRows, boolean end) {
+			List<String> parametersTypes, List<List<String>> boundRows, boolean end) {
 		if (boundRows.size() == 0)
 			return;
 
-		String preparedQL = "{\"command\":\"" + preparedQuery + "\",\"parameterNames\":" + parametersNames
-				+ ",\"boundRows\":" + boundRows + "}";
+		String preparedQL = "{\"query\":\"" + preparedQuery + "\",\"parameterNames\":" + parametersNames
+				+ ",\"parameterTypes\":" + parametersTypes + ",\"boundRows\":" + boundRows + "}";
 
 		if (end)
 			writeQLQueryAtTheEnd(preparedQL);
@@ -344,18 +360,19 @@ public class TyphonQLGenerator implements Serializable {
 	}
 
 	protected void printInsertPreparedStatement(String preparedQuery, List<String> parametersNames,
-			List<List<String>> boundRows) {
-		writePreparedStatementToFile(preparedQuery, parametersNames, boundRows, false);
+			List<String> parametersTypes, List<List<String>> boundRows) {
+		writePreparedStatementToFile(preparedQuery, parametersNames, parametersTypes, boundRows, false);
 	}
 
 	protected void printUpdatePreparedStatement(String preparedQuery, List<String> parametersNames,
-			List<List<String>> boundRows) {
-		writePreparedStatementToFile(preparedQuery, parametersNames, boundRows, true);
+			List<String> parametersTypes, List<List<String>> boundRows) {
+		writePreparedStatementToFile(preparedQuery, parametersNames, parametersTypes, boundRows, true);
 	}
 
 	protected String getPreparedStatementDelimiter(String mlType) {
 		if (mlType.startsWith(Attribute.STRING_TYPE))
-			return "\\\"";
+//			return "\\\"";
+			return "";
 
 		switch (mlType) {
 		case Attribute.BIGINT_TYPE:
@@ -365,12 +382,16 @@ public class TyphonQLGenerator implements Serializable {
 			return "";
 		case Attribute.TEXT_TYPE:
 		case Attribute.STRING_TYPE:
-			return "\\\"";
+//			return "\\\"";
+			return "";
 		case Attribute.BLOB_TYPE:
-			return "\\\"";
+//			return "\\\"";
+			// TODO
+			return "";
 		case Attribute.DATE_TYPE:
 		case Attribute.DATETIME_TYPE:
-			return "$";
+//			return "$";
+			return "";
 		default:
 			return "";
 		}
@@ -395,8 +416,11 @@ public class TyphonQLGenerator implements Serializable {
 			final String preparedQuery = "update " + entity1 + " x where x.@id == ??UUID set {" + relName
 					+ " +: ??UUID2}";
 			List<String> parametersNames = new ArrayList<String>();
+			List<String> parametersTypes = new ArrayList<String>();
 			parametersNames.add("\"UUID\"");
 			parametersNames.add("\"UUID2\"");
+			parametersTypes.add("\"uuid\"");
+			parametersTypes.add("\"uuid\"");
 
 			CURRENT_BOUNDROWS_ARRAY = new ArrayList<List<String>>();
 //			for (int j = 0; j < parametersNames.size(); j++)
@@ -443,15 +467,16 @@ public class TyphonQLGenerator implements Serializable {
 //					writeQLQueryAtTheEnd(ql);
 
 						List<String> row = new ArrayList<String>();
-						row.add("\"#" + srcUUID + "\"");
-						row.add("\"#" + refUUID + "\"");
+						row.add("\"" + srcUUID + "\"");
+						row.add("\"" + refUUID + "\"");
 
 						CURRENT_BOUNDROWS_ARRAY.add(row);
 
 						CURRENT_BOUNDROWS_NUMBER++;
 
 						if (CURRENT_BOUNDROWS_NUMBER == BOUNDROWS_LIMIT) {
-							printUpdatePreparedStatement(preparedQuery, parametersNames, CURRENT_BOUNDROWS_ARRAY);
+							printUpdatePreparedStatement(preparedQuery, parametersNames, parametersTypes,
+									CURRENT_BOUNDROWS_ARRAY);
 							CURRENT_BOUNDROWS_NUMBER = 0;
 						}
 					}
@@ -459,7 +484,7 @@ public class TyphonQLGenerator implements Serializable {
 			});
 
 			if (CURRENT_BOUNDROWS_NUMBER > 0) {
-				printUpdatePreparedStatement(preparedQuery, parametersNames, CURRENT_BOUNDROWS_ARRAY);
+				printUpdatePreparedStatement(preparedQuery, parametersNames, parametersTypes, CURRENT_BOUNDROWS_ARRAY);
 				CURRENT_BOUNDROWS_NUMBER = 0;
 			}
 

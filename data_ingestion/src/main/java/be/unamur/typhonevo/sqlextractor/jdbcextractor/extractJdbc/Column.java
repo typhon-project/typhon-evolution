@@ -170,10 +170,10 @@ public class Column implements Serializable {
 				dbmType = Attribute.TEXT_TYPE;
 				break;
 			case Types.TIME:
-				dbmType = Attribute.DATE_TYPE;
+				dbmType = Attribute.DATETIME_TYPE;
 				break;
 			case Types.TIMESTAMP:
-				dbmType = Attribute.DATE_TYPE;
+				dbmType = Attribute.DATETIME_TYPE;
 				break;
 			case Types.TINYINT:
 				dbmType = Attribute.INTEGER_TYPE;

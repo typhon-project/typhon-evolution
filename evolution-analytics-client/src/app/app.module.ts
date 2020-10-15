@@ -9,6 +9,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {NavigationModule} from './navigation/navigation.module';
 import {MatButtonModule } from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {TextFieldModule} from '@angular/cdk/text-field';
 
 @NgModule({
   declarations: [
@@ -20,9 +21,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     HttpClientModule,
     NavigationModule,
     MatButtonModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    TextFieldModule
   ],
   providers: [MongoApiClientService, SocketioService],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

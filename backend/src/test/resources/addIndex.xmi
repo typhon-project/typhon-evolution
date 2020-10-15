@@ -90,5 +90,4 @@
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
     <collections name="ReviewDB" entity="//@entities.0"/>
   </databases>
-  <changeOperators xsi:type="typhonml:MergeEntity" firstEntityToMerge="//@entities.3" secondEntityToMerge="//@entities.4" newEntityName="User.address"/>
 </typhonml:Model>

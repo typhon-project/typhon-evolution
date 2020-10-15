@@ -83,6 +83,11 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
+    public Model getCurrentModel() {
+        return getTyphonQLWebServiceClient().getModel(-1);
+    }
+
+    @Override
     public void createEntity(EntityDO entity, String databaseName) {
         logger.debug("Create entity, attributes and relations [{}] TyphonQL query", entity.getName());
         //Create the new entity

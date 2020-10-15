@@ -9,5 +9,6 @@ public interface EvolutionToolFacade {
     String evolve(String initialModelPath, String finalModelPath);
 
     Model executeChangeOperators(Model model) throws InputParameterException, EvolutionOperationNotSupported;
+    Model executeChangeOperators(String changeOperatorsFilePath) throws InputParameterException, EvolutionOperationNotSupported;
 
 }

@@ -3,9 +3,12 @@ package com.typhon.evolutiontool.services;
 import com.typhon.evolutiontool.entities.SMO;
 import com.typhon.evolutiontool.exceptions.EvolutionOperationNotSupported;
 import com.typhon.evolutiontool.exceptions.InputParameterException;
+import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import typhonml.Model;
 
 public interface EvolutionService {
+
+    Model prepareEvolution(String changeOperatorsFilePath) throws Exception;
 
     Model evolveEntity(SMO smo, Model model) throws InputParameterException, EvolutionOperationNotSupported;
 
@@ -36,5 +39,4 @@ public interface EvolutionService {
     String renameDocumentCollection(SMO smo, Model model);
 
     String renameColumnFamilyName(SMO smo, Model model);
-
 }

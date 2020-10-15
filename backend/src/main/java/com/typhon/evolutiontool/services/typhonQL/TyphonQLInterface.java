@@ -18,6 +18,13 @@ public interface TyphonQLInterface {
     String uploadSchema(Model model);
 
     /**
+     * Retrieve the latest version of the XMI deployed on the polystore
+     *
+     * @return the Model containing the XMI
+     */
+    Model getCurrentModel();
+
+    /**
      * Create a new entity (with its attributes and relations) in the polystore using a TyphonQL query
      *
      * @param entity the entity

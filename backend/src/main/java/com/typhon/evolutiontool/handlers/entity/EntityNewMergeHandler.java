@@ -95,8 +95,7 @@ public class EntityNewMergeHandler extends BaseHandler {
 
                 return targetModel;
             } else {
-                logger.error("Cannot find the relation: {}; aborting the merge...", mergeRelationName);
-                return model;
+                throw new InputParameterException("Cannot find the relation: " + mergeRelationName + "; aborting the merge...");
             }
         } else {
             throw new InputParameterException("Missing parameters. Needed [" + ChangeOperatorParameter.FIRST_ENTITY_TO_MERGE + ", " + ChangeOperatorParameter.SECOND_ENTITY_TO_MERGE + ", " + ChangeOperatorParameter.RELATION_NAME + "]");

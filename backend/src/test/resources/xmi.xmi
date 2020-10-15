@@ -33,7 +33,7 @@
       <type xsi:type="typhonml:BigintType"/>
     </attributes>
     <attributes xsi:type="typhonml:Attribute" name="paidWith">
-      <type xsi:type="typhonml:StringType"/>
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
     <relations name="products" type="//@entities.1" cardinality="zero_many" opposite="//@entities.2/@relations.0"/>
     <relations name="users" type="//@entities.3" cardinality="one" opposite="//@entities.3/@relations.0"/>
@@ -46,10 +46,10 @@
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
     <attributes xsi:type="typhonml:Attribute" name="comments">
-      <type xsi:type="typhonml:StringType"/>
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
     <attributes xsi:type="typhonml:Attribute" name="paymentsDetails">
-      <type xsi:type="typhonml:StringType"/>
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
     <relations name="orders" type="//@entities.2" cardinality="zero_many"/>
     <relations name="address" type="//@entities.4" cardinality="one"/>
@@ -90,5 +90,6 @@
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
     <collections name="ReviewDB" entity="//@entities.0"/>
   </databases>
+  <changeOperators xsi:type="typhonml:AddIndex" table="//@databases.0/@tables.2" attributes="//@entities.4/@attributes.3"/>
   <changeOperators xsi:type="typhonml:MergeEntity" firstEntityToMerge="//@entities.3" secondEntityToMerge="//@entities.4" newEntityName="User.address"/>
 </typhonml:Model>

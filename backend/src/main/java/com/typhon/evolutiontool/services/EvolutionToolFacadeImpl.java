@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class EvolutionToolFacadeImpl implements EvolutionToolFacade {
@@ -47,6 +51,32 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade {
         TyphonMLUtils.removeChangeOperators(model);
 
         return model;
+    }
+
+    @Override
+    public Model executeChangeOperators(String changeOperatorsFilePath) {
+        Model modelToEvolve = null, newModel = null;
+        String message = "Evolution operators have been successfully executed on the model";
+        try {
+            modelToEvolve = evolutionService.prepareEvolution(changeOperatorsFilePath);
+        } catch (Exception e) {
+            message = e.getMessage();
+            logger.error(message);
+        }
+        try {
+            newModel = executeChangeOperators(modelToEvolve);
+        } catch (Exception e) {
+            message = "Error while evolving the model";
+            logger.error(message);
+        }
+        logger.info(message);
+        //Log the result message in the input file
+        try {
+            Files.write(Paths.get(changeOperatorsFilePath), (System.lineSeparator() + message).getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            logger.error("Error while writing the evolution message to the input file. Result message content: " + message);
+        }
+        return newModel;
     }
 
     @Override

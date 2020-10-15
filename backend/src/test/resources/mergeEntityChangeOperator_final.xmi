@@ -1,23 +1,88 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <entities name="Review">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="content">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <relations name="product" type="//@entities.1" cardinality="one"/>
+  </entities>
+  <entities name="Product">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="name">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="description">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <relations name="orders" type="//@entities.2" cardinality="zero_many"/>
+    <relations name="review" type="//@entities.0" cardinality="zero_many" opposite="//@entities.0/@relations.0" isContainment="true"/>
+  </entities>
+  <entities name="OrderProduct">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="product_date">
+      <type xsi:type="typhonml:DatetimeType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="totalAmount">
+      <type xsi:type="typhonml:BigintType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="paidWith">
+      <type xsi:type="typhonml:StringType"/>
+    </attributes>
+    <relations name="products" type="//@entities.1" cardinality="zero_many" opposite="//@entities.2/@relations.0"/>
+    <relations name="users" type="//@entities.3" cardinality="one" opposite="//@entities.3/@relations.0"/>
+  </entities>
+  <entities name="User">
+    <attributes xsi:type="typhonml:Attribute" name="id">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="name">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="comments">
+      <type xsi:type="typhonml:StringType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="paymentsDetails">
+      <type xsi:type="typhonml:StringType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="streetName">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="streetNumber">
+      <type xsi:type="typhonml:BigintType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="zipcode">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="city">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="country">
+      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    </attributes>
+    <relations name="orders" type="//@entities.2" cardinality="zero_many"/>
+  </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="Order" entity="//@dataTypes.2">
-      <indexSpec name="orderIndex" attributes="//@dataTypes.2/@attributes.0"/>
-      <idSpec attributes="//@dataTypes.2/@attributes.0"/>
+    <tables name="OrderDB" entity="//@entities.2">
+      <indexSpec name="orderIndex" attributes="//@entities.2/@attributes.0"/>
+      <idSpec attributes="//@entities.2/@attributes.0"/>
     </tables>
-    <tables name="mergedEntity" db="//@databases.0" entity="//@dataTypes.3"/>
+    <tables name="UserDB" entity="//@entities.3">
+      <indexSpec name="userIndex" attributes="//@entities.3/@attributes.1"/>
+      <idSpec attributes="//@entities.3/@attributes.1"/>
+    </tables>
+    <tables name="ProductDB" entity="//@entities.1">
+      <indexSpec name="productIndex" attributes="//@entities.1/@attributes.1"/>
+      <idSpec attributes="//@entities.1/@attributes.1"/>
+    </tables>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="String"/>
-  <dataTypes xsi:type="typhonml:PrimitiveDataType" name="int"/>
-  <dataTypes xsi:type="typhonml:Entity" name="Order">
-    <attributes name="id" type="//@dataTypes.0"/>
-    <attributes name="number" type="//@dataTypes.1"/>
-  </dataTypes>
-  <dataTypes xsi:type="typhonml:Entity" name="mergedEntity">
-    <attributes name="name" type="//@dataTypes.0"/>
-    <attributes name="id" type="//@dataTypes.0"/>
-    <attributes name="city" type="//@dataTypes.0"/>
-    <attributes name="street" type="//@dataTypes.0"/>
-  </dataTypes>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
+    <collections name="ReviewDB" entity="//@entities.0"/>
+  </databases>
 </typhonml:Model>

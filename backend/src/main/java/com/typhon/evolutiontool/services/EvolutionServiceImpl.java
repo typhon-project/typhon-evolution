@@ -20,10 +20,12 @@ import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterfaceImpl;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
+import it.univaq.disim.typhon.acceleo.services.Services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Model;
 
+import java.io.*;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,56 @@ public class EvolutionServiceImpl implements EvolutionService {
         indexHandlers = new EnumMap<>(EvolutionOperator.class);
         indexHandlers.put(EvolutionOperator.ADD_TABLE_INDEX, new AddTableIndexHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         indexHandlers.put(EvolutionOperator.ADD_COLLECTION_INDEX, new AddCollectionIndexHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+    }
+
+    @Override
+    public Model prepareEvolution(String changeOperatorsFilePath) throws Exception {
+        try {
+            //1. Retrieve the latest XMI version of the deployed model
+            Model currentModel = typhonQLInterface.getCurrentModel();
+            //2. Serialize the XMI model in a TML model
+            Services.serializeTML(currentModel, "temp/currentTMLModel.tml");
+            //3. Read TML model and change operators files as Strings
+            String tmlContent = null;
+            String changeOperators = null;
+            try {
+                BufferedReader tmlReader = new BufferedReader(new FileReader("temp/currentTMLModel.tml"));
+                StringBuilder tmlReaderStringBuilder = new StringBuilder();
+                String line;
+                while ((line = tmlReader.readLine()) != null) {
+                    tmlReaderStringBuilder.append(line);
+                }
+                tmlReader.close();
+                tmlContent = tmlReaderStringBuilder.toString();
+                BufferedReader changeOperatorsReader = new BufferedReader(new FileReader(changeOperatorsFilePath));
+                StringBuilder changeOperatorsStringBuilder = new StringBuilder();
+                while ((line = changeOperatorsReader.readLine()) != null) {
+                    changeOperatorsStringBuilder.append(line);
+                }
+                changeOperatorsReader.close();
+                changeOperators = changeOperatorsStringBuilder.toString();
+            } catch (IOException e) {
+                logger.error("Error while reading current model and change operators files. Aborting evolution...");
+                throw new Exception("Error while reading current model and change operators files. Aborting evolution...");
+            }
+            logger.debug("Model content: " + tmlContent);
+            logger.debug("Change operators to apply: " + changeOperators);
+            //4. Create the new TML model containing the current model and the change operators
+            try (PrintWriter out = new PrintWriter("temp/newTMLModel.tml")) {
+                out.println(tmlContent);
+                out.println(changeOperators);
+            } catch (FileNotFoundException e) {
+                logger.error("Error while creating the TML model file containing the model and the change operators");
+                throw new Exception("Error while creating the TML model file containing the model and the change operators");
+            }
+            //5. Load the new TML model
+            Model newModel = Services.loadXtextModel("temp/newTMLModel.tml");
+            //6. Save the new XMI model in a file
+            Services.serialize(newModel, "temp/newXMIModel.xmi");
+            return newModel;
+        } catch (Exception e) {
+            throw new Exception("Error while preparing the model for evolution");
+        }
     }
 
     @Override

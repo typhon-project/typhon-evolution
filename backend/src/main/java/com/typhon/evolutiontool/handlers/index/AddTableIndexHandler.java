@@ -37,7 +37,7 @@ public class AddTableIndexHandler extends BaseHandler {
 
             //TyphonQL
             //TODO: upload the schema and add the index when QL has implemented the change operator
-            //typhonQLInterface.uploadSchema(targetModel);
+//            typhonQLInterface.uploadSchema(targetModel);
 //            typhonQLInterface.addTableIndex(databaseName, storageUnitDO.getName(), storageUnitDO.getEntity().getName(), entityAttributes.keySet());
 
             return targetModel;

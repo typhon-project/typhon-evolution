@@ -5,6 +5,7 @@ import com.typhon.evolutiontool.exceptions.InputParameterException;
 import com.typhon.evolutiontool.services.EvolutionToolFacade;
 import com.typhon.evolutiontool.services.EvolutionToolFacadeImpl;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import it.univaq.disim.typhon.acceleo.services.Services;
 import typhonml.Model;
 
 public class EvolutionTool {
@@ -12,9 +13,9 @@ public class EvolutionTool {
     private EvolutionToolFacade evolutionToolFacade = new EvolutionToolFacadeImpl();
 
     public String evolve(String initialModelPath, String finalModelPath) {
-        TyphonMLUtils.typhonMLPackageRegistering();
+//        TyphonMLUtils.typhonMLPackageRegistering();
         String message;
-        Model model = TyphonMLUtils.loadModelTyphonML(initialModelPath);
+        Model model = Services.loadXtextModel(initialModelPath);
         if (model == null) {
             return "FAILED to load initial model";
         }
@@ -30,4 +31,14 @@ public class EvolutionTool {
         return message;
     }
 
+    public String evolveFromWebApplication(String changeOperatorsFilePath) {
+        String message;
+        try {
+            Model model = evolutionToolFacade.executeChangeOperators(changeOperatorsFilePath);
+            message = "Evolution operators have been applied successfully and the new model has been uploaded to the polystore";
+        } catch (InputParameterException | EvolutionOperationNotSupported exception) {
+            message = "FAILED " + exception.getMessage();
+        }
+        return message;
+    }
 }

@@ -28,8 +28,24 @@
         <dependency>
             <groupId>it.univaq.disim.typhonml</groupId>
             <artifactId>it.univaq.disim.typhonml</artifactId>
-            <version>1.0.0.202009150837</version>
+            <version>1.0.0.202010150957</version>
         </dependency>
+        <dependency>
+            <groupId>it.univaq.disim.typhonml</groupId>
+            <artifactId>it.univaq.disim.typhon.acceleo</artifactId>
+            <version>1.0.0.202010150957</version>
+        </dependency>
+        <dependency>
+            <groupId>it.univaq.disim.typhonml</groupId>
+            <artifactId>it.univaq.disim.typhonml.xtext</artifactId>
+            <version>1.0.0.202010150957</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.xtext</groupId>
+            <artifactId>org.eclipse.xtext</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
 
         <!-- Other useful Maven dependencies -->
         <dependency>
@@ -39,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.30</version>
         </dependency>
         <dependency>
@@ -120,6 +136,26 @@
                                 </resource>
                             </resources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <copy
+                                        file="${basedir}/target/be.unamur.typhonevo.backend-0.1.0-SNAPSHOT-jar-with-dependencies.jar"
+                                        tofile="../evolution-analytics/src/resources/ChangeOperator.jar" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

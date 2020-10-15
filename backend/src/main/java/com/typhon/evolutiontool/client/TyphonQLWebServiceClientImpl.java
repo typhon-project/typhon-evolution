@@ -2,6 +2,7 @@ package com.typhon.evolutiontool.client;
 
 import com.typhon.evolutiontool.utils.ApplicationProperties;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import it.univaq.disim.typhon.acceleo.services.Services;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.slf4j.Logger;
@@ -137,7 +138,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
             logger.error("Unable to write the content of the retrieved XMI file");
         }
         logger.info("Get TyphonML model successful");
-        return TyphonMLUtils.loadModelTyphonML("xmi.xmi");
+        return Services.loadXtextModel("xmi.xmi");
     }
 
     /**

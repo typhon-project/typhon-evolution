@@ -34,7 +34,7 @@ public class TyphonQLClient {
         //Get polystore users
 //        getUsers();
         //Get all instances of "User" entity
-        select();
+//        select();
         //Update instances of "User" entity
 //        update();
         //Insert an instance of "User" entity
@@ -50,7 +50,7 @@ public class TyphonQLClient {
         //Drop "TestRelational" entity from the relational database
 //        delete();
         //Get first uploaded TyphonML model
-//        getModel(1);
+        getModel(5);
         //Get all uploaded TyphonML models
 //        getModels();
         //Upload a TyphonML model
@@ -111,7 +111,8 @@ public class TyphonQLClient {
 //        String query = "insert User {id: 2, name: \"Pol\" }";
 //        String query = "insert Address {zip: \"10\", city: \"adr1\", streetNumber: \"100\", streetName: \"street1\", country: \"country1\"}";
 //        String query = "insert Address {zip: \"20\", city: \"adr2\", streetNumber: \"200\", streetName: \"stree2\", country: \"country2\"}";
-        String query = "insert Word {name: \"new word\"}";
+//        String query = "insert Word {name: \"new word\"}";
+        String query = "insert Category {name: \"new category\", id: \"1\"}";
 
         webTarget = webTarget.path(UPDATE_URL);
         Response response = webTarget

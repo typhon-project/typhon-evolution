@@ -1,0 +1,9 @@
+<div style="width: 100%; white-space: nowrap; margin-top: 20px;">
+  <input style="width: 450px;display: inline-block; margin-right: 20px;" #changeOperator type="text" class="form-control" placeholder="Enter your change operator">
+  <button class="evolveButton" style="display:inline-block;" (click)="applyEvolutionOperator(changeOperator.value)" mat-button color="primary">Apply</button>
+  <div style="display: inline-block; margin-left: 15px;" [ngClass]="{'invisible': waitingDiv}">
+    <mat-spinner diameter="35"></mat-spinner>
+  </div>
+  <label style="margin-left: 20px;">{{evolveResponse}}</label>
+
+</div>

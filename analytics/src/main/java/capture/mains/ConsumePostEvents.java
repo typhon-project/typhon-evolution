@@ -71,9 +71,9 @@ public class ConsumePostEvents {
 	static String WEBSERVICE_USERNAME = "admin";
 	static String WEBSERVICE_PASSWORD = "admin1@";
 	static String ANALYTICS_DB_IP = "localhost";
-	static String ANALYTICS_DB_PORT = "27017";
-	static String ANALYTICS_DB_USER = "myUserAdmin";
-	static String ANALYTICS_DB_PWD = "abc123";
+	static String ANALYTICS_DB_PORT = "5500";
+	static String ANALYTICS_DB_USER = "admin";
+	static String ANALYTICS_DB_PWD = "admin";
 	static String ANALYTICS_DB_NAME = "Analytics";
 	
 	private static List<Long> times = new ArrayList<Long>();

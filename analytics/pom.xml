@@ -297,7 +297,7 @@
 							<username>${env.REGISTRY_USERNAME}</username>
 							<password>${env.REGISTRY_PASSWORD}</password>
 						</auth>
-						<image>docker.io/meuriceloup/typhon-evolution-analytics-java:models2020</image>
+						<image>docker.io/meuriceloup/typhon-evolution-analytics-java</image>
 					</to>
 				</configuration>
 			</plugin>

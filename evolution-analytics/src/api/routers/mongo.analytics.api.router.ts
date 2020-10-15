@@ -36,6 +36,6 @@ mongoAnalyticsApiRouter.get('/latestQuery/:normalizedQueryUUID', MongoAnalyticsA
 mongoAnalyticsApiRouter.get('/normalizedQueryId/:queryUUID', MongoAnalyticsApiController.getNormalizedQueryUUID);
 
 mongoAnalyticsApiRouter.get('/recommendations/:normalizedQueryUUID', MongoAnalyticsApiController.recommend);
-
+mongoAnalyticsApiRouter.get('/evolve/:changeOperator', MongoAnalyticsApiController.evolve);
 
 export {mongoAnalyticsApiRouter};

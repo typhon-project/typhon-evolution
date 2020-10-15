@@ -401,6 +401,33 @@ export class MongoAnalyticsApiController {
         }
     };
 
+    public static evolve = async (request: Request, result: Response) => {
+        const changeOperator = request.params.changeOperator;
+        console.log('change Op: ' + changeOperator);
+        const exec = require('child_process').exec;
+        const jarFile = process.env.CHANGE_OPERATOR_JAR_FILE;
+        const fileName = MongoAnalyticsApiController.writeTempFile(changeOperator);
+        const originContent = MongoAnalyticsApiController.readFile(fileName);
+        console.log('content written in tmp file:' + originContent);
+        const childPorcess = await exec('java -jar ' + jarFile + ' \"' + fileName + "\"", function (err, stdout, stderr) {
+            result.set('Content-Type', 'text/html');
+            if (err) {
+                console.log(err);
+                MongoAnalyticsApiController.removeTempFile(fileName);
+                result.send('An unexpected error happened. Impossible to apply the change operator');
+            } else {
+                try {
+                    const response: string = MongoAnalyticsApiController.readTempFileAndRemoveIt(fileName);
+                    console.log('content:' + response);
+                    result.send(response);
+                } catch (error) {
+                    result.send('An unexpected error happened. Impossible to apply the change operator');
+                }
+            }
+        })
+
+    };
+
     public static recommend = async (request: Request, result: Response) => {
         const normalizedQueryId = request.params.normalizedQueryUUID;
 
@@ -458,6 +485,12 @@ export class MongoAnalyticsApiController {
             // if no error, file has been deleted successfully
             console.log('File deleted: ' + fileName);
         });
+    }
+
+    private static readFile(fileName: string): string {
+        var fs = require('fs');
+        const content = fs.readFileSync(fileName).toString('utf8');
+        return content;
     }
 
     private static readTempFileAndRemoveIt(fileName: string): string {

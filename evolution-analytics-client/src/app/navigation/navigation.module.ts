@@ -10,6 +10,9 @@ import {QueryTableModule} from '../query-table/query-table.module';
 import {AppAreaChartModule} from '../app-area-chart/app-area-chart.module';
 import {D3ChartsModule} from '../d3-charts/d3-charts.module';
 import {QueryDetailsModule} from '../query-details/query-details.module';
+import {TextfieldModule} from '../textfield/textfield.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -28,7 +31,10 @@ import {QueryDetailsModule} from '../query-details/query-details.module';
     QueryTableModule,
     AppAreaChartModule,
     D3ChartsModule,
-    QueryDetailsModule
+    QueryDetailsModule,
+    TextfieldModule,
+    MatFormFieldModule,
+    MatInputModule,
   ]
 })
 export class NavigationModule { }

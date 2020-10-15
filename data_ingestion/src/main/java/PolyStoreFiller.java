@@ -40,9 +40,9 @@ public class PolyStoreFiller {
 	private static Logger logger = LoggerFactory.getLogger(PolyStoreFiller.class);
 
 	private static final String PREPARED_UPDATE = "/api/preparedupdate";
-	private static final String DEFAULT_PROPERTIES_FILE = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\sql_extractor\\src\\main\\resources\\files_to_copy\\inject.properties";
+	private static final String DEFAULT_PROPERTIES_FILE = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\data_ingestion\\target\\inject.properties";
 
-	private static final String DEFAULT_INPUT_DIR = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\sql_extractor\\data";
+	private static final String DEFAULT_INPUT_DIR = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\data_ingestion\\target\\output\\data";
 	public static boolean DEV_MODE = true;
 
 	private static String inputDir;

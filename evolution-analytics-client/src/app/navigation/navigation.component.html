@@ -47,6 +47,16 @@
     </ng-template>
   </li>
 
+  <li ngbNavItem="evolution">
+    <a ngbNavLink>
+      Evolution
+    </a>
+    <ng-template ngbNavContent>
+      <app-text-field></app-text-field>
+
+    </ng-template>
+  </li>
+
   <li *ngFor="let query of queryTabs" [ngbNavItem]="query.uuid">
     <a ngbNavLink>
       Query <i>{{ formatTabTitle(query.query) }}</i>

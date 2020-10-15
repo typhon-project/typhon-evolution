@@ -60,6 +60,7 @@ public class QLQueryInjector {
 			ClientResponse resp = webResource.accept("application/json")
 					.header("Authorization", "Basic " + authStringEnc).header("content-type", "application/json").post(ClientResponse.class, ql);
 			if (resp.getStatus() != 200) {
+				System.out.println(resp);
 				logger.error("Unable to execute the following prepared query: " + ql);
 				failed = true;
 			}

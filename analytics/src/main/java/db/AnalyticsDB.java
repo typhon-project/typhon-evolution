@@ -57,6 +57,10 @@ public class AnalyticsDB {
 	private static final String TYPHON_ENTITY_HISTORY_COLLECTION = "TyphonEntityHistory";
 	private static final String QL_NORMALIZED_QUERY_COLLECTION = "QLNormalizedQuery";
 	private static final String QL_QUERY_COLLECTION = "QLQuery";
+	
+	public static MongoDatabase getDatabase() {
+		return database;
+	}
 
 	public static void saveTyphonModel(TyphonModel oldModel, TyphonModel newModel) {
 		logger.info("New Typhon model was loaded: " + newModel.getVersion());
@@ -508,5 +512,5 @@ class EntityStats {
 	public int getDeletes() {
 		return deletes;
 	}
-
+	
 }

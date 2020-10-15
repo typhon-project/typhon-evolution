@@ -45,6 +45,7 @@ export class MongoApiClientService {
   NORMALIZED_QUERY_ID = '/normalizedQueryId/';
   NORMALIZED_QUERY = '/normalizedQuery/';
   RECOMMENDATIONS = '/recommendations/';
+  CHANGE_OPERATOR = '/evolve/';
 
   constructor(private http: HttpClient) {
   }
@@ -298,5 +299,9 @@ export class MongoApiClientService {
 
   recommend(normalizedQueryUUID: string) {
     return this.http.get(this.END_POINT + this.RECOMMENDATIONS + normalizedQueryUUID, {responseType: 'text'});
+  }
+
+  applyChangeOperator(operator: string) {
+    return this.http.get(this.END_POINT + this.CHANGE_OPERATOR + operator, {responseType: 'text'});
   }
 }

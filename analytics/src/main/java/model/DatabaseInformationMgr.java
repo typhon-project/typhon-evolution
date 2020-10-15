@@ -153,17 +153,17 @@ public class DatabaseInformationMgr {
 
 	private static Long getNbOfXXXInKeyValueElement(KeyValueDB kDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0L;
 	}
 
 	private static Long getNbOfXXXInColumn(ColumnDB cDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0L;
 	}
 
 	private static Long getNbOfXXXInGraphNode(GraphDB gDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0L;
 	}
 
 	private static Long getNbOfDocumentsInDocumentCollection(DocumentDB dDB, String collectionName,

@@ -7,7 +7,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.eclipse.emf.common.util.EList;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 
 import db.AnalyticsDB;
 import model.TyphonModel;
@@ -51,6 +61,70 @@ public class RandomQueryGenerator {
 //		}
 //
 //	}
+
+	public static void main2(String[] args) {
+		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
+				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
+				ConsumePostEvents.ANALYTICS_DB_NAME))
+			System.exit(1);
+		MongoDatabase db = AnalyticsDB.getDatabase();
+		MongoCollection coll = db.getCollection("TyphonEntityHistory");
+		FindIterable<Document> docs = coll.find();
+		MongoCursor<Document> cursor = docs.iterator();
+		int dataSize = 100;
+		final int add = 200;
+		int counter = 0;
+		while (cursor.hasNext()) {
+			Document doc = cursor.next();
+//			System.out.println(doc);
+			String entityName = (String) doc.get("name");
+			Bson condition = Filters.eq("_id", doc.get("_id"));
+			Document update;
+			int randomSmallInt = (int) (Math.random() * (20 - 0 + 1) + 0);
+			if (entityName.equals("User") || entityName.equals("Address")) {
+				update = new Document("$set", new Document("dataSize", dataSize + randomSmallInt));
+
+				counter++;
+				if (counter % 2 == 0)
+					dataSize += add;
+			} else {
+				int max = 5000;
+				int min = 3000;
+				int random_int = (int) (Math.random() * (max - min + 1) + min);
+				update = new Document("$set", new Document("dataSize", random_int));
+			}
+
+			coll.updateOne(condition, update);
+		}
+
+		System.out.println(counter);
+	}
+
+	public static void main(String[] args) {
+		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
+				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
+				ConsumePostEvents.ANALYTICS_DB_NAME))
+			System.exit(1);
+		MongoDatabase db = AnalyticsDB.getDatabase();
+		MongoCollection coll = db.getCollection("TyphonEntityHistory");
+		FindIterable<Document> docs = coll.find();
+		MongoCursor<Document> cursor = docs.iterator();
+
+		while (cursor.hasNext()) {
+			Document doc = cursor.next();
+			Bson condition = Filters.eq("_id", doc.get("_id"));
+			int selects = new RandomDataGenerator().nextInt(0, 50);
+			int updates = new RandomDataGenerator().nextInt(0, 10);
+			int inserts = new RandomDataGenerator().nextInt(0, 10);
+			int deletes = new RandomDataGenerator().nextInt(0, 10);
+			int total = selects + updates + inserts + deletes;
+			Document update = new Document("$set",
+					new BasicDBObject("nbOfSelect", selects).append("nbOfInsert", inserts).append("nbOfUpdate", updates)
+							.append("nbOfDelete", deletes).append("nbOfQueries", total));
+			coll.updateOne(condition, update);
+		}
+
+	}
 
 	public RandomQueryGenerator(TyphonModel model) {
 		this.model = model;

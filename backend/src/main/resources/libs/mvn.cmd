@@ -5,3 +5,4 @@ mvn install:install-file -Dfile=org.eclipse.emf.ecore.xmi_2.16.0.v20190528-0725.
 mvn install:install-file -Dfile=it.univaq.disim.typhon.acceleo_1.0.0.202010150957.jar -DgroupId=it.univaq.disim.typhonml -DartifactId=it.univaq.disim.typhon.acceleo -Dversion=1.0.0.202010150957 -Dpackaging=jar
 mvn install:install-file -Dfile=it.univaq.disim.typhonml.xtext_1.0.0.202010150957.jar -DgroupId=it.univaq.disim.typhonml -DartifactId=it.univaq.disim.typhonml.xtext -Dversion=1.0.0.202010150957 -Dpackaging=jar
 mvn install:install-file -Dfile=org.eclipse.xtext_2.19.0.jar -DgroupId=org.eclipse.xtext -DartifactId=org.eclipse.xtext -Dversion=2.19.0 -Dpackaging=jar
+mvn install:install-file -Dfile=org.eclipse.xtext.util_2.23.0.v20200831-0730.jar -DgroupId=org.eclipse.xtext -DartifactId=org.eclipse.xtext.util -Dversion=2.23.0.v20200831-0730 -Dpackaging=jar

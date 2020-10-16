@@ -8,3 +8,4 @@ mvn install:install-file -Dfile=org.eclipse.xtext_2.19.0.jar -DgroupId=org.eclip
 mvn install:install-file -Dfile=org.eclipse.xtext.util_2.23.0.v20200831-0730.jar -DgroupId=org.eclipse.xtext -DartifactId=org.eclipse.xtext.util -Dversion=2.23.0.v20200831-0730 -Dpackaging=jar
 mvn install:install-file -Dfile=org.eclipse.equinox.common_3.13.0.v20200828-1034.jar -DgroupId=org.eclipse.equinox -DartifactId=org.eclipse.equinox.common -Dversion=3.13.0.v20200828-1034 -Dpackaging=jar
 mvn install:install-file -Dfile=org.eclipse.xtext.xbase.lib_2.23.0.v20200831-0723.jar -DgroupId=org.eclipse.xtext.xbase -DartifactId=org.eclipse.xtext.xbase.lib -Dversion=2.23.0.v20200831-0723 -Dpackaging=jar
+mvn install:install-file -Dfile=org.eclipse.core.runtime_3.18.0.v20200506-2143.jar -DgroupId=org.eclipse.core -DartifactId=org.eclipse.core.runtime -Dversion=3.18.0.v20200506-2143 -Dpackaging=jar

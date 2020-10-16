@@ -7,7 +7,9 @@
     <attributes xsi:type="typhonml:Attribute" name="content">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="product" type="//@entities.1" cardinality="one"/>
+    <relations name="product" cardinality="one">
+      <type href="src/test/resources/tml.tml#|0"/>
+    </relations>
   </entities>
   <entities name="Product">
     <attributes xsi:type="typhonml:Attribute" name="id">
@@ -19,8 +21,13 @@
     <attributes xsi:type="typhonml:Attribute" name="description">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="orders" type="//@entities.2" cardinality="zero_many"/>
-    <relations name="review" type="//@entities.0" cardinality="zero_many" opposite="//@entities.0/@relations.0" isContainment="true"/>
+    <relations name="orders" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|1"/>
+    </relations>
+    <relations name="review" cardinality="zero_many" isContainment="true">
+      <type href="src/test/resources/tml.tml#|2"/>
+      <opposite href="src/test/resources/tml.tml#|3"/>
+    </relations>
   </entities>
   <entities name="OrderProduct">
     <attributes xsi:type="typhonml:Attribute" name="id">
@@ -35,8 +42,14 @@
     <attributes xsi:type="typhonml:Attribute" name="paidWith">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="products" type="//@entities.1" cardinality="zero_many" opposite="//@entities.2/@relations.0"/>
-    <relations name="users" type="//@entities.3" cardinality="one" opposite="//@entities.3/@relations.0"/>
+    <relations name="products" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|4"/>
+      <opposite href="src/test/resources/tml.tml#|5"/>
+    </relations>
+    <relations name="users" cardinality="one">
+      <type href="src/test/resources/tml.tml#|6"/>
+      <opposite href="src/test/resources/tml.tml#|7"/>
+    </relations>
   </entities>
   <entities name="User">
     <attributes xsi:type="typhonml:Attribute" name="id">
@@ -51,8 +64,12 @@
     <attributes xsi:type="typhonml:Attribute" name="paymentsDetails">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="orders" type="//@entities.2" cardinality="zero_many"/>
-    <relations name="address" type="//@entities.4" cardinality="one"/>
+    <relations name="orders" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|8"/>
+    </relations>
+    <relations name="address" cardinality="one">
+      <type href="src/test/resources/tml.tml#|9"/>
+    </relations>
   </entities>
   <entities name="Address">
     <attributes xsi:type="typhonml:Attribute" name="streetName">
@@ -70,26 +87,54 @@
     <attributes xsi:type="typhonml:Attribute" name="country">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <relations name="user" type="//@entities.3" cardinality="one" opposite="//@entities.3/@relations.1"/>
+    <relations name="user" cardinality="one">
+      <type href="src/test/resources/tml.tml#|10"/>
+      <opposite href="src/test/resources/tml.tml#|11"/>
+    </relations>
   </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="OrderDB" entity="//@entities.2">
-      <indexSpec name="orderIndex" attributes="//@entities.2/@attributes.0"/>
-      <idSpec attributes="//@entities.2/@attributes.0"/>
+    <tables name="OrderDB">
+      <indexSpec name="orderIndex">
+        <attributes href="src/test/resources/tml.tml#|13"/>
+      </indexSpec>
+      <idSpec>
+        <attributes href="src/test/resources/tml.tml#|14"/>
+      </idSpec>
+      <entity href="src/test/resources/tml.tml#|12"/>
     </tables>
-    <tables name="UserDB" entity="//@entities.3">
-      <indexSpec name="userIndex" attributes="//@entities.3/@attributes.1"/>
-      <idSpec attributes="//@entities.3/@attributes.1"/>
+    <tables name="UserDB">
+      <indexSpec name="userIndex">
+        <attributes href="src/test/resources/tml.tml#|16"/>
+      </indexSpec>
+      <idSpec>
+        <attributes href="src/test/resources/tml.tml#|17"/>
+      </idSpec>
+      <entity href="src/test/resources/tml.tml#|15"/>
     </tables>
-    <tables name="AddressDB" entity="//@entities.4"/>
-    <tables name="ProductDB" entity="//@entities.1">
-      <indexSpec name="productIndex" attributes="//@entities.1/@attributes.1"/>
-      <idSpec attributes="//@entities.1/@attributes.1"/>
+    <tables name="AddressDB">
+      <entity href="src/test/resources/tml.tml#|18"/>
+    </tables>
+    <tables name="ProductDB">
+      <indexSpec name="productIndex">
+        <attributes href="src/test/resources/tml.tml#|20"/>
+      </indexSpec>
+      <idSpec>
+        <attributes href="src/test/resources/tml.tml#|21"/>
+      </idSpec>
+      <entity href="src/test/resources/tml.tml#|19"/>
     </tables>
   </databases>
   <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="ReviewDB" entity="//@entities.0"/>
+    <collections name="ReviewDB">
+      <entity href="src/test/resources/tml.tml#|22"/>
+    </collections>
   </databases>
-  <changeOperators xsi:type="typhonml:AddIndex" table="//@databases.0/@tables.2" attributes="//@entities.4/@attributes.3"/>
-  <changeOperators xsi:type="typhonml:MergeEntity" firstEntityToMerge="//@entities.3" secondEntityToMerge="//@entities.4" newEntityName="User.address"/>
+  <changeOperators xsi:type="typhonml:AddIndex">
+    <table href="src/test/resources/tml.tml#|23"/>
+    <attributes href="src/test/resources/tml.tml#|24"/>
+  </changeOperators>
+  <changeOperators xsi:type="typhonml:MergeEntity" newEntityName="User.address">
+    <firstEntityToMerge href="src/test/resources/tml.tml#|25"/>
+    <secondEntityToMerge href="src/test/resources/tml.tml#|26"/>
+  </changeOperators>
 </typhonml:Model>

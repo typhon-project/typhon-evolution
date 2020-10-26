@@ -198,6 +198,15 @@ public class TyphonModel {
 							}
 						}
 					}
+					
+					List<GraphEdge> graphEdges = ((GraphDB) database).getEdges();
+					if (graphEdges != null) {
+						for (GraphEdge graphEdge : graphEdges) {
+							if (graphEdge.getEntity().getName().equals(entityName)) {
+								return database;
+							}
+						}
+					}
 				}
 				if (database instanceof ColumnDB) {
 					List<Column> columns = ((ColumnDB) database).getColumns();
@@ -257,6 +266,15 @@ public class TyphonModel {
 						}
 					}
 				}
+				
+//				List<GraphEdge> graphEdges = ((GraphDB) database).getEdges();
+//				if (graphEdges != null) {
+//					for (GraphEdge graphEdge : graphEdges) {
+//						if (graphEdge.getEntity().getName().equals(entity.getName())) {
+//							return graphEdge.getName();
+//						}
+//					}
+//				}
 			}
 			if (database instanceof ColumnDB) {
 				List<Column> columns = ((ColumnDB) database).getColumns();
@@ -377,7 +395,7 @@ public class TyphonModel {
 		}
 
 	}
-	
+
 	public static Long getEntityCount(String entityName) {
 		return DatabaseInformationMgr.getCountEntity(webTarget, authStringEnc, entityName);
 	}
@@ -433,12 +451,20 @@ public class TyphonModel {
 
 			if (d instanceof GraphDB) {
 				GraphDB g = (GraphDB) d;
-				for (GraphNode n : g.getNodes()) {
-					Entity entity = n.getEntity();
-					if (entity.getName().equals(entityName)) {
-						return d;
+				if (g.getEdges() != null)
+					for (GraphEdge e : g.getEdges()) {
+						Entity entity = e.getEntity();
+						if (entity.getName().equals(entityName)) {
+							return d;
+						}
 					}
-				}
+				if (g.getNodes() != null)
+					for (GraphNode n : g.getNodes()) {
+						Entity entity = n.getEntity();
+						if (entity.getName().equals(entityName)) {
+							return d;
+						}
+					}
 
 			}
 		}
@@ -489,18 +515,25 @@ public class TyphonModel {
 						return n;
 					}
 				}
+				
+//				for(GraphEdge e : g.getEdges()) {
+//					Entity entity = e.getEntity();
+//					if (entity.getName().equals(entityName)) {
+//						return e;
+//					}
+//				}
 
 			}
 		}
 
 		return null;
 	}
-	
+
 	public boolean isContainmentRelation(Relation rel) {
-		if(rel != null) {
+		if (rel != null) {
 			return rel.getIsContainment() != null && rel.getIsContainment().booleanValue();
 		}
-		
+
 		return false;
 	}
 

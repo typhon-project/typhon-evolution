@@ -50,11 +50,15 @@ public class TyphonQLClient {
         //Drop "TestRelational" entity from the relational database
 //        delete();
         //Get first uploaded TyphonML model
-        getModel(5);
+//        getModel(5);
         //Get all uploaded TyphonML models
 //        getModels();
-        //Upload a TyphonML model
-        //
+        //Add Index to relational database
+//        testAddIndex();
+        //Drop Index in relational database
+//        testDropIndex();
+        //Create an entity attribute for a relational entity, but the attribute is used in a key-value entity
+        createAttributeForRelationalEntityBackendInKeyValue();
     }
 
     private static void resetDatabases() {
@@ -238,5 +242,47 @@ public class TyphonQLClient {
             System.err.println("Error during the web service query call: " + webTarget.getUri());
         }
         System.out.println("Result: " + response);
+    }
+
+    private static void testAddIndex() {
+        String query = "create index NameAddressIndex for User.{address, created}";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
+    }
+
+    private static void testDropIndex() {
+        String query = "drop index User.NameAddressIndex";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
+    }
+
+    private static void createAttributeForRelationalEntityBackendInKeyValue() {
+        String query = "create User.years : int forKV Stuff";
+        webTarget = webTarget.path(UPDATE_URL);
+        Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Basic " + authStringEnc)
+                .post(Entity.entity(query, MediaType.APPLICATION_JSON));
+        if (response.getStatus() != 200) {
+            System.err.println("Error during the web service query call: " + webTarget.getUri());
+        }
+        String result = response.readEntity(String.class);
+        System.out.println("Result: " + result);
     }
 }

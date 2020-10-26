@@ -121,7 +121,7 @@ public class TyphonQLGenerator implements Serializable {
 		if (o instanceof Date) {
 			Date date = (java.util.Date) o;
 //			2020-03-31T18:08:28.477+00:00
-			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 			String res = sdf.format(date);
 			return res;
 
@@ -138,7 +138,7 @@ public class TyphonQLGenerator implements Serializable {
 		if (o instanceof Date) {
 			Date date = (java.util.Date) o;
 //			2020-03-31T18:08:28.477+00:00
-			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 			String res = sdf.format(date);
 			return res;
 
@@ -188,7 +188,7 @@ public class TyphonQLGenerator implements Serializable {
 			preparedQueryTemp += "," + attrName + ":??" + attrName;
 			parametersNames.add("\"" + attrName + "\"");
 			String mltype = c.getMLType();
-			if(mltype.startsWith("string"))
+			if (mltype.startsWith("string"))
 				mltype = "string";
 			parametersTypes.add("\"" + mltype + "\"");
 		}
@@ -255,8 +255,12 @@ public class TyphonQLGenerator implements Serializable {
 					String preparedStatementDelimiter = getPreparedStatementDelimiter(c.getMLType());
 //					ql += ", " + attrName + ": " + dataDelimiter + val + dataDelimiter;
 
-					row.add("\"" + preparedStatementDelimiter + getPreparedStringValue(o) + preparedStatementDelimiter
-							+ "\"");
+					String preparedStringValue = getPreparedStringValue(o);
+					if (preparedStringValue != null)
+						row.add("\"" + preparedStatementDelimiter + getPreparedStringValue(o)
+								+ preparedStatementDelimiter + "\"");
+					else
+						row.add(null);
 				}
 
 				CURRENT_BOUNDROWS_ARRAY.add(row);

@@ -377,6 +377,10 @@ public class TyphonModel {
 		}
 
 	}
+	
+	public static Long getEntityCount(String entityName) {
+		return DatabaseInformationMgr.getCountEntity(webTarget, authStringEnc, entityName);
+	}
 
 	public Relation getOpposite(Relation rel) {
 		if (rel.getOpposite() != null)

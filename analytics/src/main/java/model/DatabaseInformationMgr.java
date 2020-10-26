@@ -20,6 +20,9 @@ import org.bson.BsonDocument;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonValue;
 import org.bson.Document;
+import org.glassfish.jersey.client.ClientResponse;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.mongodb.MongoClientURI;
 import com.mongodb.BasicDBObjectBuilder;
@@ -46,6 +49,7 @@ import typhonmlreq.databaseType;
 public class DatabaseInformationMgr {
 	private static Logger logger = Logger.getLogger(TyphonModel.class);
 	public static final String GET_DATABASES = "api/databases";
+	public static final String GET_NOANALYTICS_QUERY = "api/noAnalytics/query";
 	public static final String RELATIONALDB = "RELATIONALDB";
 	public static final String DOCUMENTDB = "DOCUMENTDB";
 	public static final String GRAPHDB = "GRAPHDB";
@@ -153,26 +157,37 @@ public class DatabaseInformationMgr {
 
 	private static Long getNbOfXXXInKeyValueElement(KeyValueDB kDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return 0L;
+		return getCountEntity(name);
 	}
 
 	private static Long getNbOfXXXInColumn(ColumnDB cDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return 0L;
+		return getCountEntity(name);
 	}
 
 	private static Long getNbOfXXXInGraphNode(GraphDB gDB, String name, List<ConnectionInfo> infos) {
 		// TODO Auto-generated method stub
-		return 0L;
+		return getCountEntity(name);
 	}
 
+	private static Long getCountEntity(String entityName) {
+		return TyphonModel.getEntityCount(entityName);
+
+	}
+
+	public static void main(String[] args) {
+		TyphonModel.initWebService("http://localhost:4200", "admin", "admin1@");
+		System.out.println(getCountEntity("User"));
+	}
+	
 	private static Long getNbOfDocumentsInDocumentCollection(DocumentDB dDB, String collectionName,
 			List<ConnectionInfo> infos) {
 
 		Long res = null;
 		for (ConnectionInfo info : infos) {
 			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(dDB.getName())/** && di.getDbType() == DBType.documentdb**/) {
+			if (di.getDbName().equals(dDB.getName())/** && di.getDbType() == DBType.documentdb **/
+			) {
 				MongoClient mongoClient = info.getMongoDBConn();
 
 				try {
@@ -207,7 +222,8 @@ public class DatabaseInformationMgr {
 		Long res = null;
 		for (ConnectionInfo info : infos) {
 			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(rDB.getName())/** && di.getDbType() == DBType.relationaldb**/) {
+			if (di.getDbName().equals(rDB.getName())/** && di.getDbType() == DBType.relationaldb **/
+			) {
 				String ip = di.getHost();
 				String dbName = di.getDbName();
 				String dbms = di.getDbms();
@@ -265,7 +281,7 @@ public class DatabaseInformationMgr {
 			for (BsonValue v : array.getValues()) {
 				BsonDocument d = v.asDocument();
 				try {
-					
+
 					String type = d.getString("dbType").getValue();
 					if (type == null)
 						throw new RuntimeException(
@@ -292,6 +308,30 @@ public class DatabaseInformationMgr {
 			return result;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to load the current databases information");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static Long getCountEntity(WebTarget webTarget, String authStringEnc, String entityName) {
+		try {
+			String query = "from " + entityName + " x select x.@id";
+			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
+			 javax.ws.rs.core.Response response = target
+		                .request(MediaType.APPLICATION_JSON)
+		                .header("Authorization", "Basic " + authStringEnc)
+		                .post(javax.ws.rs.client.Entity.entity(query, MediaType.APPLICATION_JSON));
+		        if (response.getStatus() != 200) {
+		        	logger.error("Impossible to count the number of records in Entity " + entityName);
+		        	return null;
+		        }
+		        String result = response.readEntity(String.class);
+		        JSONObject json = new JSONObject(result);
+		        JSONArray attributesValues = json.getJSONArray("values");
+		        long nb = attributesValues.length();
+		        return nb;
+		} catch (Exception | Error e) {
+			logger.error("Impossible to count the number of records in Entity " + entityName);
 			e.printStackTrace();
 			return null;
 		}

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,7 @@ public class TyphonQLGenerator implements Serializable {
 	private List<Column> splitColumns;
 	private List<Column> id = null;
 	private String entityName;
+	private String tmlEntityName;
 	private List<RelationshipType> oneToMany;
 	private List<RelationshipType> manyToMany;
 
@@ -65,6 +68,7 @@ public class TyphonQLGenerator implements Serializable {
 		this.id = table.getPrimaryKey();
 
 		this.entityName = table.getName();
+		this.tmlEntityName = ent.getAdaptedMLName();
 		this.columns = table.getColumnsNotPartOfFk();
 		this.dataset = table.getDataset();
 		oneToMany = sch.getOneToMany(ent);
@@ -130,10 +134,22 @@ public class TyphonQLGenerator implements Serializable {
 			return res;
 		}
 	}
-
-	private static String getPreparedStringValue(Object o) {
-		if (o == null)
-			return null;
+	
+	private static String getPreparedStringValue(Object o, String mlType) {
+		if (o == null) {
+			if(mlType.equals(Attribute.DATE_TYPE) || mlType.equals(Attribute.DATETIME_TYPE)) {
+				//at this moment, the QL server does not support insertion of null values for date fields
+				// the workaround is to replace null values with default datetime
+				String dateStr = "1900-01-01T00:00:00.000Z";
+				try {
+					o = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(dateStr);
+				} catch (ParseException e) {
+					e.printStackTrace();
+					return null;
+				}  
+			} else			
+				return null;
+		}
 
 		if (o instanceof Date) {
 			Date date = (java.util.Date) o;
@@ -150,11 +166,12 @@ public class TyphonQLGenerator implements Serializable {
 	}
 
 	public static void main(String[] args) {
-		String test = "test\"ok";
-		System.out.println(getPreparedStringValue(test));
+		
+//		String test = "test\"ok";
+		System.out.println(getPreparedStringValue(null, "date"));
 
 //		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-//		String res = sdf.format(new Date());
+//		String res = sdf.format(new Date(0));
 //		System.out.println(res);
 //
 //		List<List<String>> lists = new ArrayList<List<String>>();
@@ -174,7 +191,7 @@ public class TyphonQLGenerator implements Serializable {
 
 	private void generateQLScriptForTable() throws Exception {
 
-		String preparedQueryTemp = "insert " + entityName + "{";
+		String preparedQueryTemp = "insert " + tmlEntityName + "{";
 		List<String> parametersNames = new ArrayList<String>();
 		List<String> parametersTypes = new ArrayList<String>();
 		preparedQueryTemp += "@id:??UUID";
@@ -205,7 +222,7 @@ public class TyphonQLGenerator implements Serializable {
 
 		List<String> preparedUpdateQueries = new ArrayList<String>();
 		for (RelationshipType rel : oneToMany) {
-			String updateQuery = "update " + entityName + " x where x.@id == ??UUID set {" + rel.getRole2().getTmlName()
+			String updateQuery = "update " + tmlEntityName + " x where x.@id == ??UUID set {" + rel.getRole2().getTmlName()
 					+ ": " + "??UUID2}";
 			preparedUpdateQueries.add(updateQuery);
 		}
@@ -255,9 +272,9 @@ public class TyphonQLGenerator implements Serializable {
 					String preparedStatementDelimiter = getPreparedStatementDelimiter(c.getMLType());
 //					ql += ", " + attrName + ": " + dataDelimiter + val + dataDelimiter;
 
-					String preparedStringValue = getPreparedStringValue(o);
+					String preparedStringValue = getPreparedStringValue(o, c.getMLType());
 					if (preparedStringValue != null)
-						row.add("\"" + preparedStatementDelimiter + getPreparedStringValue(o)
+						row.add("\"" + preparedStatementDelimiter + preparedStringValue
 								+ preparedStatementDelimiter + "\"");
 					else
 						row.add(null);
@@ -417,7 +434,7 @@ public class TyphonQLGenerator implements Serializable {
 
 			/////////////////////////////////////
 
-			final String preparedQuery = "update " + entity1 + " x where x.@id == ??UUID set {" + relName
+			final String preparedQuery = "update " + rel.getTable1().getAdaptedMLName() + " x where x.@id == ??UUID set {" + relName
 					+ " +: ??UUID2}";
 			List<String> parametersNames = new ArrayList<String>();
 			List<String> parametersTypes = new ArrayList<String>();

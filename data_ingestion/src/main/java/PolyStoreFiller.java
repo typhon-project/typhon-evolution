@@ -39,7 +39,7 @@ import be.unamur.typhonevo.sqlinjector.SQLQueryInjector;
 public class PolyStoreFiller {
 	private static Logger logger = LoggerFactory.getLogger(PolyStoreFiller.class);
 
-	private static final String PREPARED_UPDATE = "/api/preparedupdate";
+	private static final String PREPARED_UPDATE = "/api/update";
 	private static final String DEFAULT_PROPERTIES_FILE = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\data_ingestion\\target\\inject.properties";
 
 	private static final String DEFAULT_INPUT_DIR = "C:\\Users\\lmeurice\\Documents\\WP6.5\\typhon-evolution\\data_ingestion\\target\\output\\data";

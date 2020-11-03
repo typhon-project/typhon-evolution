@@ -87,5 +87,17 @@ public class EntityType  implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public static String getTmlEntityName(String name) {
+		if(name == null)
+			return null;
+		
+		return name.replaceAll("\\s+", "_");
+		
+	}
+	
+	public String getAdaptedMLName() {
+		return getTmlEntityName(name);
+	}
 
 }

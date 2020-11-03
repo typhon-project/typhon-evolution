@@ -57,6 +57,10 @@ public class Extract {
 	public Connection getConnection() {
 		return (con);
 	}
+	
+	public static void main(String[] args) throws ClassNotFoundException {
+		Class.forName("org.postgresql.Driver");
+	}
 
 	private void connect(String driver, String url, String login, String password) throws Exception {
 		try {

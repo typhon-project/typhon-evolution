@@ -53,6 +53,10 @@ public class Table implements Serializable {
 	public String getName() {
 		return name;
 	}
+	
+	public String getAdaptedMLName() {
+		return EntityType.getTmlEntityName(name);
+	}
 
 	public String getNameWithDBMSDelimiter(String driver) {
 		String res = name;

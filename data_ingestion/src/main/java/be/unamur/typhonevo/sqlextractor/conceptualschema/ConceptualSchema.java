@@ -301,7 +301,7 @@ public class ConceptualSchema {
 
 		for (EntityType ent : entityTypes.values()) {
 			Set<String> attrAndRelList = new HashSet<String>();
-			content.add("entity \"" + ent.getName() + "\" {");
+			content.add("entity \"" + ent.getAdaptedMLName() + "\" {");
 			for (Attribute a : ent.getAttributes().values()) {
 				if (a.isTechnicalIdentifier())
 					continue;
@@ -335,7 +335,7 @@ public class ConceptualSchema {
 				String relName = role.getTmlName();
 
 				if (relName == null) {
-					String beginName = ent1.getName();
+					String beginName = ent1.getAdaptedMLName();
 					relName = beginName;
 					boolean ok = !attrAndRelList.contains(relName);
 					int i = 1;
@@ -348,7 +348,7 @@ public class ConceptualSchema {
 
 				role.setTmlName(relName);
 				attrAndRelList.add(relName);
-				content.add("   \"" + relName + "\" -> \"" + ent1.getName() + "\""
+				content.add("   \"" + relName + "\" -> \"" + ent1.getAdaptedMLName() + "\""
 						+ (role.getMinCard() == 0 ? "[0..1]" : "[1]"));
 			}
 
@@ -358,7 +358,7 @@ public class ConceptualSchema {
 			for (RelationshipType rel : manyToOneRels) {
 				EntityType ent2 = rel.getTable2();
 				Role role = rel.getRole1();
-				String beginName = ent2.getName();
+				String beginName = ent2.getAdaptedMLName();
 				String relName = beginName;
 				boolean ok = !attrAndRelList.contains(relName);
 				int i = 1;
@@ -373,7 +373,7 @@ public class ConceptualSchema {
 
 				String relName2 = rel.getRole2().getTmlName();
 				if (relName2 == null) {
-					String beginName2 = rel.getTable1().getName();
+					String beginName2 = rel.getTable1().getAdaptedMLName();
 					relName2 = beginName2;
 					ok = !attrAndRelList.contains(relName2);
 					i = 1;
@@ -388,7 +388,7 @@ public class ConceptualSchema {
 				rel.getRole2().setTmlName(relName2);
 				attrAndRelList.add(relName2);
 
-				content.add("   \"" + relName + "\" -> \"" + ent2.getName() + "\".\"" + ent2.getName() + "." + relName2
+				content.add("   \"" + relName + "\" -> \"" + ent2.getAdaptedMLName() + "\".\"" + ent2.getAdaptedMLName() + "." + relName2
 						+ "\"[0..*]");
 			}
 
@@ -403,11 +403,11 @@ public class ConceptualSchema {
 
 					String relName1 = rel.getRole1().getTmlName();
 					if (relName1 == null) {
-						relName1 = rel.getManyToManyTable().getName();
+						relName1 = rel.getManyToManyTable().getAdaptedMLName();
 						boolean ok = !attrAndRelList.contains(relName1);
 						int i = 1;
 						while (!ok) {
-							relName1 = rel.getManyToManyTable().getName() + "_" + i;
+							relName1 = rel.getManyToManyTable().getAdaptedMLName() + "_" + i;
 							ok = !attrAndRelList.contains(relName1);
 							i++;
 						}
@@ -415,13 +415,13 @@ public class ConceptualSchema {
 
 					String relName2 = rel.getRole2().getTmlName();
 					if (relName2 == null) {
-						relName2 = rel.getManyToManyTable().getName();
+						relName2 = rel.getManyToManyTable().getAdaptedMLName();
 
 						attrAndRelList.add(relName1);
 						boolean ok = !attrAndRelList.contains(relName2);
 						int i = 1;
 						while (!ok) {
-							relName2 = rel.getManyToManyTable().getName() + "_" + i;
+							relName2 = rel.getManyToManyTable().getAdaptedMLName() + "_" + i;
 							ok = !attrAndRelList.contains(relName2);
 							i++;
 						}
@@ -431,8 +431,8 @@ public class ConceptualSchema {
 					rel.getRole1().setTmlName(relName1);
 					rel.getRole2().setTmlName(relName2);
 
-					content.add("   \"" + relName1 + "\" -> \"" + e.getName() + "\"[0..*]");
-					content.add("   \"" + relName2 + "\" -> \"" + e.getName() + "\".\"" + e.getName() + "." + relName1
+					content.add("   \"" + relName1 + "\" -> \"" + e.getAdaptedMLName() + "\"[0..*]");
+					content.add("   \"" + relName2 + "\" -> \"" + e.getAdaptedMLName() + "\".\"" + e.getAdaptedMLName() + "." + relName1
 							+ "\"[0..*]");
 
 				} else {
@@ -452,11 +452,11 @@ public class ConceptualSchema {
 						role2 = rel.getRole2();
 					}
 
-					String relName = e.getName();
+					String relName = e.getAdaptedMLName();
 					boolean ok = !attrAndRelList.contains(relName);
 					int i = 1;
 					while (!ok) {
-						relName = e.getName() + "_" + i;
+						relName = e.getAdaptedMLName() + "_" + i;
 						ok = !attrAndRelList.contains(relName);
 						i++;
 					}
@@ -466,10 +466,10 @@ public class ConceptualSchema {
 
 					if (role2.getTmlName() != null) {
 						// opposite
-						content.add("   \"" + relName + "\" -> \"" + e.getName() + "\".\"" + e.getName() + "."
+						content.add("   \"" + relName + "\" -> \"" + e.getAdaptedMLName() + "\".\"" + e.getAdaptedMLName() + "."
 								+ role2.getTmlName() + "\"[0..*]");
 					} else {
-						content.add("   \"" + relName + "\" -> \"" + e.getName() + "\"[0..*]");
+						content.add("   \"" + relName + "\" -> \"" + e.getAdaptedMLName() + "\"[0..*]");
 					}
 
 				}
@@ -488,7 +488,7 @@ public class ConceptualSchema {
 		content.add("   tables {");
 		for (EntityType ent : entityTypes.values()) {
 			content.add("      table {");
-			content.add("         \"" + ent.getName() + "\" : \"" + ent.getName() + "\"");
+			content.add("         \"" + ent.getAdaptedMLName() + "\" : \"" + ent.getAdaptedMLName() + "\"");
 
 			int counter = 0;
 			for (Index index : ent.getIndexes()) {

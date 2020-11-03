@@ -107,7 +107,7 @@ public class Column implements Serializable {
 				dbmType = Attribute.INTEGER_TYPE;
 				break;
 			case Types.BIT:
-				dbmType = Attribute.STRING_TYPE + "[" + columnSize + "]";
+				dbmType = Attribute.STRING_TYPE + "[" + Math.max(columnSize, 5) + "]";
 				break;
 			case Types.BLOB:
 				dbmType = Attribute.BLOB_TYPE;

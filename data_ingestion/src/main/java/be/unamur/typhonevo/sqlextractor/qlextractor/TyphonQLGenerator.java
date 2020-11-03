@@ -161,14 +161,19 @@ public class TyphonQLGenerator implements Serializable {
 		} else {
 //			String res = o.toString().replaceAll("\"", "\\\\\\\\\\\\\"");
 			String res = o.toString().replaceAll("\"", "\\\\\"");
+			res = res.replaceAll("\r\n", "\\\\n").replaceAll("\r|\n","\\\\n");
 			return res;
 		}
 	}
 
 	public static void main(String[] args) {
+		String str = "test\r\nok\n\n\rfin";
+		System.out.println(str);
+		System.out.println(getPreparedStringValue(str, "string"));
 		
-//		String test = "test\"ok";
-		System.out.println(getPreparedStringValue(null, "date"));
+		String test = "test\"ok";
+		System.out.println(test);
+		System.out.println(getPreparedStringValue(test, "string"));
 
 //		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 //		String res = sdf.format(new Date(0));

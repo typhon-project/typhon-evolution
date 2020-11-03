@@ -440,7 +440,7 @@ public class TyphonQLGenerator implements Serializable {
 			/////////////////////////////////////
 
 			final String preparedQuery = "update " + rel.getTable1().getAdaptedMLName() + " x where x.@id == ??UUID set {" + relName
-					+ " +: ??UUID2}";
+					+ " +: [??UUID2]}";
 			List<String> parametersNames = new ArrayList<String>();
 			List<String> parametersTypes = new ArrayList<String>();
 			parametersNames.add("\"UUID\"");

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONObject;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
@@ -214,6 +215,9 @@ public class QueryParsing {
 	}
 
 	public static Query eval(String query, TyphonModel m) {
+		
+		query = extractQueryFromJSONWrappedQuery(query);
+		
 		logger.debug("Eval:" + query);
 		IValue v = evaluator.getEvaluator().call("parseQuery", vf.string(query));
 		logger.debug("Eval done");
@@ -227,6 +231,24 @@ public class QueryParsing {
 		logger.info("Query analyzed: " + query);
 		q2.print();
 		return q2;
+	}
+
+	private static String extractQueryFromJSONWrappedQuery(String query) {
+		String res = query;
+		
+		try {
+		JSONObject obj = new JSONObject(query);
+		res = obj.getString("query");
+		} catch(Exception | Error e) {
+			//the query was not json-wrapped
+		}
+		
+		return res;
+	}
+	
+	public static void main(String[] args) {
+		String q = "{\"query\":\"from Employees e select e.@id\"}";
+		System.out.println(extractQueryFromJSONWrappedQuery(q));
 	}
 
 	private static String toString(Serializable o) throws IOException {

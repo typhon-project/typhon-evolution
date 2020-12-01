@@ -12,13 +12,13 @@ public class EntityChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testMigrateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/migrateEntityChangeOperator.xmi");
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/migrateEntity2ChangeOperator.xmi");
         MigrateEntity migrateEntity = (MigrateEntity) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
 
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
         TyphonMLUtils.removeChangeOperators(targetModel);
-        TyphonMLUtils.saveModel(targetModel, "src/test/resources/migrateEntityChangeOperator_final.xmi");
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/migrateEntity2ChangeOperator_final.xmi");
     }
 
     @Test

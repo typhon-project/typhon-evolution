@@ -219,57 +219,58 @@ public class DatabaseInformationMgr {
 	}
 
 	private static Long getNbOfRowsInRelationalTable(RelationalDB rDB, String tableName, List<ConnectionInfo> infos) {
-		Long res = null;
-		for (ConnectionInfo info : infos) {
-			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(rDB.getName())/** && di.getDbType() == DBType.relationaldb **/
-			) {
-				String ip = di.getHost();
-				String dbName = di.getDbName();
-				String dbms = di.getDbms();
-				int port = di.getPort();
-				String user = di.getUser();
-				String pwd = di.getPassword();
-
-				Statement stmt = null;
-				try {
-
-					Connection conn = info.getJDBCConn();
-					if (conn == null) {
-						String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
-						String DB_URL = "jdbc:mysql://" + ip + ":" + port + "/" + dbName;
-						Class.forName(JDBC_DRIVER);
-						conn = DriverManager.getConnection(DB_URL, user, pwd);
-						info.setJDBCConn(conn);
-					}
-
-					// STEP 4: Execute a query
-					stmt = conn.createStatement();
-					String sql = "SELECT COUNT(*) FROM `" + tableName + "`;";
-					ResultSet rs = stmt.executeQuery(sql);
-					rs.next();
-					res = rs.getLong(1);
-
-					stmt.close();
-				} catch (Exception | Error e) {
-					// cannot execute query
-					logger.error("Cannot get relational table size: " + tableName);
-//					e.printStackTrace();
-				} finally {
-					if (stmt != null)
-						try {
-							stmt.close();
-						} catch (Exception | Error e) {
-
-						}
-				}
-
-				break;
-
-			}
-		}
-
-		return res;
+		return getCountEntity(tableName);
+//		Long res = null;
+//		for (ConnectionInfo info : infos) {
+//			DatabaseInfo di = info.getDatabaseInfo();
+//			if (di.getDbName().equals(rDB.getName())/** && di.getDbType() == DBType.relationaldb **/
+//			) {
+//				String ip = di.getHost();
+//				String dbName = di.getDbName();
+//				String dbms = di.getDbms();
+//				int port = di.getPort();
+//				String user = di.getUser();
+//				String pwd = di.getPassword();
+//
+//				Statement stmt = null;
+//				try {
+//
+//					Connection conn = info.getJDBCConn();
+//					if (conn == null) {
+//						String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
+//						String DB_URL = "jdbc:mysql://" + ip + ":" + port + "/" + dbName;
+//						Class.forName(JDBC_DRIVER);
+//						conn = DriverManager.getConnection(DB_URL, user, pwd);
+//						info.setJDBCConn(conn);
+//					}
+//
+//					// STEP 4: Execute a query
+//					stmt = conn.createStatement();
+//					String sql = "SELECT COUNT(*) FROM `" + tableName + "`;";
+//					ResultSet rs = stmt.executeQuery(sql);
+//					rs.next();
+//					res = rs.getLong(1);
+//
+//					stmt.close();
+//				} catch (Exception | Error e) {
+//					// cannot execute query
+//					logger.error("Cannot get relational table size: " + tableName);
+////					e.printStackTrace();
+//				} finally {
+//					if (stmt != null)
+//						try {
+//							stmt.close();
+//						} catch (Exception | Error e) {
+//
+//						}
+//				}
+//
+//				break;
+//
+//			}
+//		}
+//
+//		return res;
 	}
 
 	public static List<ConnectionInfo> getDatabasesInfo(WebTarget webTarget, String authStringEnc) {

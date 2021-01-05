@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ASCII"?>
+<typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+  <entities name="Products">
+    <attributes xsi:type="typhonml:Attribute" name="ProductId">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ProductName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="QuantityPerUnit">
+      <type xsi:type="typhonml:StringType" maxSize="20"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitPrice">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitsInStock">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitsOnOrder">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ReorderLevel">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Discontinued">
+      <type xsi:type="typhonml:StringType" maxSize="3"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="CategoriesID">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="SuppliersID">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+  </entities>
+  <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
+    <tables name="Products" entity="//@entities.0"/>
+  </databases>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
+  <changeOperators xsi:type="typhonml:MigrateEntity" entity="//@entities.0" newDatabase="//@databases.1"/>
+</typhonml:Model>

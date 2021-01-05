@@ -4,6 +4,7 @@ import com.typhon.evolutiontool.client.TyphonQLWebServiceClient;
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClientImpl;
 import com.typhon.evolutiontool.datatypes.*;
 import com.typhon.evolutiontool.entities.*;
+import com.typhon.evolutiontool.entities.Collection;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,10 +26,12 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String BLANK = " ";
     private static final String DOT = ".";
     private static final String COMMA = ",";
-    private static final String COLON = " : ";
-    private static final String EQUALS = " == ";
-    private static final String OPENING_CURLY_BRACE = " { ";
-    private static final String CLOSING_CURLY_BRACE = " } ";
+    private static final String COLON = ":";
+    private static final String EQUALS = "=";
+    private static final String OPENING_CURLY_BRACE = "{";
+    private static final String CLOSING_CURLY_BRACE = "}";
+    private static final String OPENING_SQUARE_BRACKET = "[";
+    private static final String CLOSING_SQUARE_BRACKET = "]";
     private static final String RELATION = " -> ";
     private static final String CONTAINMENT = " :-> ";
     private static final String FROM = "from ";
@@ -135,7 +138,6 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     public WorkingSet selectEntityData(String entityName, Set<String> attributesToSelect, List<String> relationsToSelect, String attributeToFilterOn, String attributeToFilterOnValue) {
         logger.debug("Select data for entity [{}] TyphonQL query", entityName);
         StringBuilder query = new StringBuilder(FROM).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK).append(SELECT).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE);
-        String[] attributesNames = null;
         if (attributesToSelect != null && !attributesToSelect.isEmpty()) {
             query.append(attributesToSelect.stream().map(attribute -> entityName.toLowerCase() + DOT + attribute).collect(Collectors.joining(COMMA, COMMA, "")));
         }
@@ -209,16 +211,63 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         List<EntityInstance> instances = ws.getEntityRows(entityName);
         String tql = "";
         if (instances != null && !instances.isEmpty()) {
-            List<String> insertQueries = new ArrayList<>();
-            for (EntityInstance instance : instances) {
-                Map<String, Object> attributes = instance.getAttributes();
-                insertQueries.add(attributes.entrySet().stream().map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, entityDO)).collect(Collectors.joining(COMMA, entityName + OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim())));
-            }
-            tql = new StringBuilder(INSERT).append(String.join(COMMA, insertQueries)).toString();
+            Map<String, DataTypeDO> attributes = entityDO.getAttributes();
+            Set<String> attributesNames = attributes.keySet();
+            List<String> attributesTypes = getQLAttributesTypes(attributes);
+            StringBuilder query = new StringBuilder("\"query\"").append(COLON).append("\"").append(INSERT).append(entityName).append(OPENING_CURLY_BRACE).append(attributesNames.stream().map(name -> name + COLON.trim() + "??" + name).collect(Collectors.joining(COMMA))).append(CLOSING_CURLY_BRACE).append("\"").append(COMMA);
+            StringBuilder parameterNames = new StringBuilder("\"parameterNames\"").append(COLON).append(OPENING_SQUARE_BRACKET).append(attributesNames.stream().map(name -> "\"" + name + "\"").collect(Collectors.joining(COMMA))).append(CLOSING_SQUARE_BRACKET).append(COMMA);
+            StringBuilder parameterTypes = new StringBuilder("\"parameterTypes\"").append(COLON).append(OPENING_SQUARE_BRACKET).append(attributesTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA))).append(CLOSING_SQUARE_BRACKET).append(COMMA);
+            StringBuilder boundRows = new StringBuilder("\"boundRows\"").append(COLON).append(instances.stream().map(inst -> inst.getAttributes().values().stream().map(value -> "\"" + value + "\"").collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET))).collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET)));
+            logger.info("Query: {}", query.toString());
+            logger.info("Parameter names: {}", parameterNames.toString());
+            logger.info("Parameter types: {}", parameterTypes.toString());
+            logger.info("Rows: {}", boundRows.toString());
+            //One single insert statement code (not working anymore and worse performance):
+//            List<String> insertQueries = new ArrayList<>();
+//            for (EntityInstance instance : instances) {
+//                Map<String, Object> attributes = instance.getAttributes();
+//                insertQueries.add(attributes.entrySet().stream().map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, entityDO)).collect(Collectors.joining(COMMA, entityName + OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim())));
+//            }
+            tql = new StringBuilder(OPENING_CURLY_BRACE).append(query.toString()).append(parameterNames.toString()).append(parameterTypes.toString()).append(boundRows.toString()).append(CLOSING_CURLY_BRACE).toString();
+            logger.info("QL query: {}", tql);
             getTyphonQLWebServiceClient().update(tql);
         }
         return tql;
     }
+
+    private List<String> getQLAttributesTypes(Map<String, DataTypeDO> attributes) {
+        List<String> attributesTypes = new ArrayList<>();
+        if (attributes != null && !attributes.isEmpty()) {
+            for (String attributeName: attributes.keySet()) {
+                DataTypeDO attributeType = attributes.get(attributeName);
+                if (attributeType instanceof IntTypeDO) { attributesTypes.add("int"); continue; }
+                if (attributeType instanceof BigIntTypeDO) { attributesTypes.add("bigint"); continue; }
+                if (attributeType instanceof FloatTypeDO) { attributesTypes.add("float"); continue; }
+                if (attributeType instanceof StringTypeDO) { attributesTypes.add("string"); continue; }
+                if (attributeType instanceof BoolTypeDO) { attributesTypes.add("bool"); continue; }
+                if (attributeType instanceof TextTypeDO) { attributesTypes.add("text"); continue; }
+                if (attributeType instanceof DateTypeDO) { attributesTypes.add("date"); continue; }
+                if (attributeType instanceof DatetimeTypeDO) { attributesTypes.add("datetime"); continue; }
+                if (attributeType instanceof PointTypeDO) { attributesTypes.add("point"); continue; }
+                if (attributeType instanceof PolygonTypeDO) { attributesTypes.add("polygon"); continue; }
+                if (attributeType instanceof BlobTypeDO) { attributesTypes.add("blob"); }
+            }
+        }
+        return attributesTypes;
+    }
+
+//    insert Products_migrated { Discontinued : "0",UnitPrice : 18.0,ProductName : "Chai",QuantityPerUnit : "10 boxes x 20 bags",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 10,CategoriesID : 1,UnitsInStock : 39,SuppliersID : 1},
+//    Products_migrated { Discontinued : "0",UnitPrice : 31.0,ProductName : "Ikura",QuantityPerUnit : "12 - 200 ml jars",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 0,CategoriesID : 8,UnitsInStock : 31,SuppliersID : 4},
+//    Products_migrated { Discontinued : "0",UnitPrice : 21.0,ProductName : "Queso Cabrales",QuantityPerUnit : "1 kg pkg.",UnitsOnOrder : 30,ProductId : 0,ReorderLevel : 30,CategoriesID : 4,UnitsInStock : 22,SuppliersID : 5},
+//    Products_migrated { Discontinued : "0",UnitPrice : 38.0,ProductName : "Queso Manchego La Pastora",QuantityPerUnit : "10 - 500 g pkgs.",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 0,CategoriesID : 4,UnitsInStock : 86,SuppliersID : 5},
+//    Products_migrated { Discontinued : "0",UnitPrice : 6.0,ProductName : "Konbu",QuantityPerUnit : "2 kg box",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 5,CategoriesID : 8,UnitsInStock : 24,SuppliersID : 6}
+
+//    {
+//    "query":"insert Products{ProductId:??ProductId,ProductName:??ProductName,QuantityPerUnit:??QuantityPerUnit,UnitPrice:??UnitPrice,UnitsInStock:??UnitsInStock,UnitsOnOrder:??UnitsOnOrder,ReorderLevel:??ReorderLevel,Discontinued:??Discontinued,CategoriesID:??CategoriesID,SuppliersID:??SuppliersID}",
+//    "parameterNames":["ProductId", "ProductName","SuppliersID","CategoriesID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued"],
+//    "parameterTypes": ["int","string","int","int","string","float","int","int","int","string"],
+//    "boundRows":[["1","Chai","1","1","10 boxes x 20 bags","18.0000","39","0","10","0"],["2","Chang","1","1","24 - 12 oz bottles","19.0000","17","40","25","0"]
+//    }
 
     @Override
     public void deleteEntityData(String entityName, String attributeName, String attributeValue) {

@@ -318,6 +318,7 @@ public class ConsumePostEvents {
 		startSavingGeneralInformationThread();
 
 		logger.info("Creating new kafka consumer ...");
+		
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		Properties properties = new Properties();

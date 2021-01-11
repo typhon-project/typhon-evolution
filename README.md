@@ -196,8 +196,8 @@ changeOperators [
 •	**Change attribute type**:
 ```
 changeOperators [
-	ChangePrimitiveDataTypeAttribute { attributeToChange "Test.id" newType bigint },
-	ChangeCustomDataTypeAttribute { attributeToChange "Test.id" newType customType }
+	change attribute "Test.id" : bigint,
+	change attribute "Test.id" : customType
 ]
 ```
 

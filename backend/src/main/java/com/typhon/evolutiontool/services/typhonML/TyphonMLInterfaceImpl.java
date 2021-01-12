@@ -25,6 +25,27 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
+    public boolean hasTableIndex(String databaseName, String tableName, Model sourceModel) {
+        logger.info("Checking if table '{}' has an index in TyphonML model database '{}'", tableName, databaseName);
+        List<Database> databases = sourceModel.getDatabases();
+        if (databases != null) {
+            for (Database database : databases) {
+                if (database instanceof RelationalDB && databaseName.equals(database.getName())) {
+                    List<Table> tables = ((RelationalDB) database).getTables();
+                    if (tables != null) {
+                        for (Table table : tables) {
+                            if (tableName.equals(table.getName())) {
+                                return table.getIdSpec() != null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     public Model addTableIndex(String databaseName, String tableName, String entityName, Set<String> entityAttributesNames, Model sourceModel) {
         logger.info("Add attributes to table '{}' index list in TyphonML model database '{}'", tableName, databaseName);
         Model newModel = EcoreUtil.copy(sourceModel);
@@ -41,6 +62,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                                 IdSpec idSpec = table.getIdSpec();
                                 if (idSpec == null) {
                                     idSpec = TyphonmlFactory.eINSTANCE.createIdSpec();
+                                    table.setIdSpec(idSpec);
                                 }
                                 List<Attribute> attributes = idSpec.getAttributes();
                                 if (attributes == null) {
@@ -70,10 +92,11 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
                     if (collections != null) {
                         for (Collection collection : collections) {
                             if (collectionName.equals(collection.getName())) {
-                                //TODO: build the IdSpecDO when ML and QL have implemented the change operator
+//                                //TODO: build the IdSpecDO when ML and QL have implemented the change operator
 //                                IdSpec idSpec = collection.getIdSpec();
 //                                if (idSpec == null) {
 //                                    idSpec = TyphonmlFactory.eINSTANCE.createIdSpec();
+//                                    collection.setIdSpec(idSpec);
 //                                }
 //                                List<Attribute> attributes = idSpec.getAttributes();
 //                                if (attributes == null) {

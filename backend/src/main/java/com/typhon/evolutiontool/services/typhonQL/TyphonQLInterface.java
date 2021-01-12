@@ -172,4 +172,12 @@ public interface TyphonQLInterface {
      * @param firstOrSecondEntityRelation true if the entity contains the reference data to the second WS, false if the second WS contains the reference data to the entity
      */
     void updateEntityData(String entityName, WorkingSet firstWs, WorkingSet secondWs, EntityDO secondEntity, String relationName, Boolean firstOrSecondEntityRelation);
+
+    /**
+     * Add the entity attributes to the index of the table
+     *
+     * @param entityName the name of the entity containing the attributes to add to the index
+     * @param attributesNames the names of the attributes to add to the index
+     */
+    void addTableIndex(String entityName, Set<String> attributesNames);
 }

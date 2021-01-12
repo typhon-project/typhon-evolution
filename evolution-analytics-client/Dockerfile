@@ -29,6 +29,6 @@ FROM nginx
 COPY docker/proxy.conf /etc/nginx/conf.d/proxy.conf
 COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
 COPY docker/proxy_params.conf /etc/nginx/snippets/proxy_params.conf
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY --from=builder /usr/src/app/dist/evolution-analytics-client /usr/share/nginx/html
 ENV API_HOST=evolution-backend
 ENV API_PORT=3000

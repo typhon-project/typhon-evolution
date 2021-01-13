@@ -54,7 +54,6 @@ public class AttributeChangeOperatorsTests extends InitialTest {
     }
 
     @Test
-    //TODO: test the evolution operator after TyphonML has uncommented it (problem with the type)
     public void testChangeTypeAttributeChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeTypeAttributeChangeOperator.xmi");
         ChangeAttributeType changeAttributeType = (ChangeAttributeType) sourceModel.getChangeOperators().get(0);
@@ -63,5 +62,16 @@ public class AttributeChangeOperatorsTests extends InitialTest {
         targetModel = evolutionService.evolveAttribute(smo, sourceModel);
         TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeTypeAttributeChangeOperator_final.xmi");
+    }
+
+    @Test
+    public void testChangeAttributeTypeChangeOperatorVW() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/changeAttributeType_VW_ChangeOperator.xmi");
+        ChangeAttributeType changeAttributeType = (ChangeAttributeType) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(changeAttributeType);
+
+        targetModel = evolutionService.evolveAttribute(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/changeAttributeType_VW_ChangeOperator_final.xmi");
     }
 }

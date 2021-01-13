@@ -155,10 +155,10 @@ public interface TyphonQLInterface {
      * Change the attribute type in the polystore using a TyphonQL query
      *
      * @param attributeName     the name of the attribute
-     * @param attributeTypeName the name of the attribute type
+     * @param attributeType     the new type of the attribute
      * @param entityName        the name of the entity containing the attribute
      */
-    void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName);
+    void changeTypeAttribute(String attributeName, DataTypeDO attributeType, String entityName);
 
     /**
      * Update entity data (first WorkingSet) with the data from the second WorkingSet, joined by the relation.

@@ -396,14 +396,13 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     }
 
     @Override
-    public Model changeTypeAttribute(AttributeDO attributeDO, String entityName, String dataTypeName, Model model) {
+    public Model changeTypeAttribute(AttributeDO attributeDO, String entityName, DataTypeDO attributeDataType, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityByName(entityName, newModel);
         if (entity.getAttributes() != null) {
             for (EntityAttributeKind attribute : entity.getAttributes()) {
                 if (attribute.getName().equals(attributeDO.getName())) {
-//                    TODO: deprecated getNewType? see SMOAdapter.java
-//                    attribute.setType(getAttributeDataTypeFromDataTypeName(dataTypeName, newModel));
+                    ((Attribute) attribute).setType(getDataType(attributeDataType));
                     break;
                 }
             }

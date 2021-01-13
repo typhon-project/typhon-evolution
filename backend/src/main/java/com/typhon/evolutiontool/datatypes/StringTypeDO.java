@@ -5,7 +5,7 @@ import typhonml.StringType;
 
 public class StringTypeDO implements DataTypeDO {
 
-    private static final int MAX_SIZE_DEFAULT = 0;
+    private static final int MAX_SIZE_DEFAULT = 255;
     private int maxSize;
 
     public StringTypeDO(DataType type) {

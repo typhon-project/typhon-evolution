@@ -354,9 +354,9 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName) {
-        logger.debug("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model", attributeName, attributeTypeName, entityName);
-        String tql = new StringBuilder(CHANGE).append(entityName).append(DOT).append(attributeName).append(COLON).append(attributeTypeName).toString();
+    public void changeTypeAttribute(String attributeName, DataTypeDO attributeType, String entityName) {
+        logger.debug("Change type of attribute '{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model", attributeName, covertMLTypeToQLType(attributeType), entityName);
+        String tql = new StringBuilder(CHANGE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(attributeType)).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 

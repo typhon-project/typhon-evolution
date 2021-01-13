@@ -7,7 +7,7 @@ import {mongoCrudApiRouter} from './api/routers/mongo.crud.api.router';
 import {mongoAnalyticsApiRouter} from "./api/routers/mongo.analytics.api.router";
 import {config} from 'dotenv';
 import {createServer} from 'http';
-import e from "cors";
+import cors from "cors";
 
 
 //Import .env configuration file
@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 //Cors configuration for access control for webservices: authorize all clients to use the webservices, all methods (get, put, ...), headers, ...
-app.use(e());
+app.use(cors({origin: '*'}));
 //API routers
 app.use('/', mongoCrudApiRouter);
 app.use('/', mongoAnalyticsApiRouter);

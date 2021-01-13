@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 const endPoint = process.env.BACKEND_ENDPOINT && process.env.BACKEND_ENDPOINT !== '' ?
-  process.env.BACKEND_ENDPOINT : 'http://localhost:3000';
+  process.env.BACKEND_ENDPOINT : 'http://evolution_api/api/';
 
 export const environment = {
   production: false,

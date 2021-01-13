@@ -1,0 +1,25 @@
+upstream evolution_api {
+    server ${API_HOST}:${API_PORT};
+    keepalive 8;
+}
+
+server {
+   listen 5000;
+   server_name localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location /api/ {
+      include /etc/nginx/snippets/proxy_params.conf;
+      proxy_pass http://evolution_api/api/;
+    }
+}

@@ -61,12 +61,7 @@ To create the input XMI file, you should use the TyphonML Eclipse-based textual 
 •	**Add attribute**:
 ```
 changeOperators [
-	AddPrimitiveDataTypeAttribute newPrimitiveAttribute {
-		ownerEntity Test type bigint
-	},
-	AddCustomDataTypeAttribute newCustomAttribute {
-		ownerEntity Test type customType
-	}
+	add attribute newAttribute : string[30] to TestEntity
 ]
 ```
 •	**Add entity**:
@@ -196,8 +191,7 @@ changeOperators [
 •	**Change attribute type**:
 ```
 changeOperators [
-	ChangePrimitiveDataTypeAttribute { attributeToChange "Test.id" newType bigint },
-	ChangeCustomDataTypeAttribute { attributeToChange "Test.id" newType customType }
+	change attribute "Entity.attribute" : string[250]
 ]
 ```
 

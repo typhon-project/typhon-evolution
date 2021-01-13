@@ -8,8 +8,5 @@ if (environment.production) {
   enableProdMode();
 }
 
-console.log('process.env.BACKEND_ENDPOINT: ' + process.env.BACKEND_ENDPOINT);
-console.log('environment.BACKEND_ENDPOINT: ' + environment.BACKEND_ENDPOINT);
-
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

@@ -32,3 +32,4 @@ COPY docker/proxy_params.conf /etc/nginx/snippets/proxy_params.conf
 COPY --from=builder /usr/src/app/dist/evolution-analytics-client /usr/share/nginx/html
 ENV API_HOST=evolution-backend
 ENV API_PORT=3000
+ENV BACKEND_ENDPOINT=http://evolution_api/api/

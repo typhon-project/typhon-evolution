@@ -6,3 +6,5 @@ mvn install:install-file -Dfile="org.eclipse.emf.ecore_2.23.0.v20200630-0516.jar
 mvn install:install-file -Dfile="org.eclipse.emf.ecore.xmi_2.16.0.v20190528-0725.jar" -DgroupId="org.eclipse.emf" -DartifactId="org.eclipse.emf.ecore.xmi" -Dversion="2.16.0.v20190528-0725" -Dpackaging="jar"
 mvn install:install-file -Dfile="org.eclipse.xtext_2.23.0.v20200831-0730.jar" -DgroupId="org.eclipse.xtext" -DartifactId="org.eclipse.xtext" -Dversion="2.23.0.v20200831-0730" -Dpackaging="jar"
 mvn install:install-file -Dfile="org.eclipse.core.runtime_3.18.0.v20200506-2143.jar" -DgroupId="org.eclipse.core" -DartifactId="org.eclipse.core.runtime" -Dversion="3.18.0.v20200506-2143" -Dpackaging="jar"
+mvn install:install-file -Dfile="org.eclipse.xtext.util_2.23.0.v20200831-0730.jar" -DgroupId="org.eclipse.xtext" -DartifactId="org.eclipse.xtext.util" -Dversion="2.23.0.v20200831-0730" -Dpackaging="jar"
+mvn install:install-file -Dfile="org.eclipse.equinox.common_3.13.0.v20200828-1034.jar" -DgroupId="org.eclipse.equinox" -DartifactId="org.eclipse.equinox.common" -Dversion="3.13.0.v20200828-1034" -Dpackaging="jar"

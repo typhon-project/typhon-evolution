@@ -49,4 +49,11 @@ public class DataTypeDOFactory {
         }
         return null;
     }
+
+    public static DataTypeDO buildInstance(CustomDataType dataType) {
+        if (dataType != null) {
+            return new CustomTypeDO(dataType);
+        }
+        return null;
+    }
 }

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Collection;
 import typhonml.*;
+import typhonml.impl.SuperDataTypeImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -360,7 +361,14 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(attributeDO.getName());
         attribute.setImportedNamespace(attributeDO.getImportedNamespace());
-        attribute.setType(getDataType(attributeDO.getDataTypeDO()));
+        if (attributeDO.getDataTypeDO() instanceof CustomTypeDO) {
+            CustomDataType customDataType = TyphonmlFactory.eINSTANCE.createCustomDataType();
+            customDataType.getElements().addAll(((CustomTypeDO) attributeDO.getDataTypeDO()).getElements());
+            //TODO Waiting Juri's answer to know how to manage this
+//            attribute.setType(customDataType);
+        } else {
+            attribute.setType(getDataType(attributeDO.getDataTypeDO()));
+        }
         entity.getAttributes().add(attribute);
         return newModel;
     }

@@ -46,8 +46,6 @@ services:
    
   evolution-frontend:
     image: meuriceloup/typhon-evolution-analytics-client:latest
-    environment:
-      BACKEND_ENDPOINT: http://evolution-backend:3000
     depends_on:
       - evolution-backend
     ports:

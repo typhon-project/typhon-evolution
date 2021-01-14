@@ -1,4 +1,6 @@
 import express from 'express';
+import SocketIOStatic from 'socket.io';
+import {SocketService} from './services/socket.service';
 import {mongoCrudApiRouter} from './api/routers/mongo.crud.api.router';
 import {mongoAnalyticsApiRouter} from "./api/routers/mongo.analytics.api.router";
 import {config} from 'dotenv';
@@ -19,21 +21,21 @@ app.use('/', mongoCrudApiRouter);
 app.use('/', mongoAnalyticsApiRouter);
 
 const httpServer = createServer(app);
-// const io = SocketIOStatic(httpServer);
+const io = SocketIOStatic(httpServer);
 //
 // const mongoService = new MongoService();
 // const mongoHelper = new MongoHelper();
-// const socketService = new SocketService();
+const socketService = new SocketService();
 //
 // //Retrieve environment variables from .env file
 // const MONGO_DB_URL = process.env.ANALYTICS_DB_URL;
 // const MONGO_DB_NAME = process.env.ANALYTICS_DB_NAME;
 // const MONGO_DB_USERNAME = process.env.ANALYTICS_DB_USER;
 // const MONGO_DB_PWD = process.env.ANALYTICS_DB_PWD;
-// const PORT = process.env.BACKEND_DEPLOYMENT_PORT;
+const PORT = process.env.BACKEND_DEPLOYMENT_PORT;
 
 
-// socketService.runSocket(app, httpServer, PORT, io);
+socketService.runSocket(app, httpServer, PORT, io);
 
 
 // mongoHelper.connect(MONGO_DB_URL, MONGO_DB_USERNAME, MONGO_DB_PWD);

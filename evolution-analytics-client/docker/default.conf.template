@@ -7,8 +7,6 @@ server {
    listen 5000;
    server_name localhost;
 
-    add_header 'Access-Control-Allow-Origin' '*';
-
     location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
@@ -21,8 +19,7 @@ server {
     }
 
     location /api/ {
-      proxy_hide_header 'Access-Control-Allow-Origin';
       include /etc/nginx/snippets/proxy_params.conf;
-      proxy_pass http://evolution_api/api/;
+      proxy_pass http://evolution_api/;
     }
 }

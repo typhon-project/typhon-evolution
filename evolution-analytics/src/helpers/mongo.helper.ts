@@ -8,6 +8,7 @@ export class MongoHelper {
     }
 
     public async connect(url: string, username?: string, password?: string): Promise<any> {
+        console.log(`Connection to mongo database with user "${username}" and password "${password.substr(0, 3)}..." at: ${url}`);
         try {
             if (!this.client || !this.client.isConnected()) {
                 if (username && password) {

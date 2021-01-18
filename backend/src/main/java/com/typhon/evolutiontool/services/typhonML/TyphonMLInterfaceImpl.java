@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import typhonml.Collection;
 import typhonml.*;
-import typhonml.impl.SuperDataTypeImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -358,18 +357,23 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
     public Model addAttribute(AttributeDO attributeDO, String entityName, Model model) {
         Model newModel = EcoreUtil.copy(model);
         Entity entity = getEntityByName(entityName, newModel);
-        Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
-        attribute.setName(attributeDO.getName());
-        attribute.setImportedNamespace(attributeDO.getImportedNamespace());
         if (attributeDO.getDataTypeDO() instanceof CustomTypeDO) {
             CustomDataType customDataType = TyphonmlFactory.eINSTANCE.createCustomDataType();
             customDataType.getElements().addAll(((CustomTypeDO) attributeDO.getDataTypeDO()).getElements());
-            //TODO Waiting Juri's answer to know how to manage this
-//            attribute.setType(customDataType);
+            AddCustomDataTypeAttribute addCustomAttribute = TyphonmlFactory.eINSTANCE.createAddCustomDataTypeAttribute();
+            addCustomAttribute.setName(attributeDO.getName());
+            addCustomAttribute.setImportedNamespace(attributeDO.getImportedNamespace());
+            addCustomAttribute.setType(customDataType);
+            addCustomAttribute.setOwnerEntity(entity);
+            entity.getAttributes().add(addCustomAttribute);
         } else {
-            attribute.setType(getDataType(attributeDO.getDataTypeDO()));
+            AddPrimitiveDataTypeAttribute addPrimitiveAttibute = TyphonmlFactory.eINSTANCE.createAddPrimitiveDataTypeAttribute();
+            addPrimitiveAttibute.setType(getDataType(attributeDO.getDataTypeDO()));
+            addPrimitiveAttibute.setName(attributeDO.getName());
+            addPrimitiveAttibute.setImportedNamespace(attributeDO.getImportedNamespace());
+            addPrimitiveAttibute.setOwnerEntity(entity);
+            entity.getAttributes().add(addPrimitiveAttibute);
         }
-        entity.getAttributes().add(attribute);
         return newModel;
     }
 

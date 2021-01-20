@@ -64,17 +64,18 @@ changeOperators [
 	add attribute newAttribute : string[30] to TestEntity
 ]
 ```
-•	**Add entity**:
+•	**Add entity**: add an entity to a database.  
+Precondition: the change operator must be completed with the corresponding storage unit (e.g. table, collection). See the example below:
 ```
 relationaldb RelationalDatabase {
     tables {
         table {
-            Test2Table : Test2
+            TableForTheAddedEntity : Test
         }
     }
 }
 changeOperators [
-	add entity Test2 {
+	add entity Test {
 		attributes [
 			testDate: date,
 			testBool: bool
@@ -132,7 +133,8 @@ changeOperators [
 ]
 ```
 
-•	**Migrate entity**: migrate an entity from one database to another. Hypothesis: the incoming relations (relations pointing to the migrated entity) will be lost.
+•	**Migrate entity**: migrate an entity from one database to another.  
+Precondition: there cannot be incoming relations to the migrated entity (relations referencing the migrated entity).
 ```
 changeOperators [
 	migrate Test to DocumentDatabase

@@ -16,6 +16,10 @@ public class XorRecommendation extends Recommendation {
 		for (Recommendation r : list)
 			recommendations.add(r);
 	}
+	
+	public List<Recommendation> getRecommendations() {
+		return recommendations;
+	}
 
 	@Override
 	public String getEvolutionOperator() {

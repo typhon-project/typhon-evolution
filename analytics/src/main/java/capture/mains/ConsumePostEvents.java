@@ -76,8 +76,8 @@ public class ConsumePostEvents {
 	static String ANALYTICS_DB_PWD = "admin";
 	static String ANALYTICS_DB_NAME = "Analytics";
 	
-	private static List<Long> times = new ArrayList<Long>();
 	private static int counter = 0;
+	
 
 	public static void main(String[] args) throws Exception {
 		// it reads the environment variables and affects their value to the connection
@@ -346,7 +346,6 @@ public class ConsumePostEvents {
 
 			@Override
 			public String map(Event event) throws Exception {
-				Date d1 = new Date();
 				logger.info("receiving post event...");
 				logger.info(event);
 				try {
@@ -367,17 +366,6 @@ public class ConsumePostEvents {
 					logger.error("Problem happened consuming the following post event: " + event + "\nCause: ");
 					e.printStackTrace();
 				}
-				Date d2 = new Date();
-				long ms = d2.getTime() - d1.getTime();
-				times.add(ms);
-				counter++;
-				
-				if(counter == 10000) {
-					long avg = getAvg(times);
-					System.out.println("avg: " + avg);
-					System.out.println("size:" + times.size());
-				}
-				
 				
 				return "";
 			}

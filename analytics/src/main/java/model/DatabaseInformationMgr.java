@@ -176,45 +176,45 @@ public class DatabaseInformationMgr {
 	}
 
 	public static void main(String[] args) {
-		TyphonModel.initWebService("http://localhost:4200", "admin", "admin1@");
-		System.out.println(getCountEntity("User"));
+		TyphonModel.initWebService("http://168.119.234.158:4200", "admin", "admin1@");
+		System.out.println(getCountEntity("ESPData"));
 	}
 	
 	private static Long getNbOfDocumentsInDocumentCollection(DocumentDB dDB, String collectionName,
 			List<ConnectionInfo> infos) {
-
-		Long res = null;
-		for (ConnectionInfo info : infos) {
-			DatabaseInfo di = info.getDatabaseInfo();
-			if (di.getDbName().equals(dDB.getName())/** && di.getDbType() == DBType.documentdb **/
-			) {
-				MongoClient mongoClient = info.getMongoDBConn();
-
-				try {
-
-					if (mongoClient == null) {
-
-						String url = "mongodb://" + di.getUser() + ":" + di.getPassword() + "@" + di.getHost() + ":"
-								+ di.getPort();
-
-						MongoClientURI uri = new MongoClientURI(url);
-
-						mongoClient = new MongoClient(uri);
-						info.setMongoDBConn(mongoClient);
-					}
-
-					MongoDatabase database = mongoClient.getDatabase(dDB.getName());
-					res = database.getCollection(collectionName).estimatedDocumentCount();
-
-				} catch (Exception | Error e) {
-					// cannot execute mongo query
-				}
-
-				break;
-			}
-		}
-
-		return res;
+		return getCountEntity(collectionName);
+//		Long res = null;
+//		for (ConnectionInfo info : infos) {
+//			DatabaseInfo di = info.getDatabaseInfo();
+//			if (di.getDbName().equals(dDB.getName())/** && di.getDbType() == DBType.documentdb **/
+//			) {
+//				MongoClient mongoClient = info.getMongoDBConn();
+//
+//				try {
+//
+//					if (mongoClient == null) {
+//
+//						String url = "mongodb://" + di.getUser() + ":" + di.getPassword() + "@" + di.getHost() + ":"
+//								+ di.getPort();
+//
+//						MongoClientURI uri = new MongoClientURI(url);
+//
+//						mongoClient = new MongoClient(uri);
+//						info.setMongoDBConn(mongoClient);
+//					}
+//
+//					MongoDatabase database = mongoClient.getDatabase(dDB.getName());
+//					res = database.getCollection(collectionName).estimatedDocumentCount();
+//
+//				} catch (Exception | Error e) {
+//					// cannot execute mongo query
+//				}
+//
+//				break;
+//			}
+//		}
+//
+//		return res;
 
 	}
 
@@ -316,7 +316,7 @@ public class DatabaseInformationMgr {
 	
 	public static Long getCountEntity(WebTarget webTarget, String authStringEnc, String entityName) {
 		try {
-			String query = "from " + entityName + " x select x.@id";
+			String query = "from " + entityName + " x select count(x.@id) as cnt";
 			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
 			 javax.ws.rs.core.Response response = target
 		                .request(MediaType.APPLICATION_JSON)
@@ -329,8 +329,10 @@ public class DatabaseInformationMgr {
 		        String result = response.readEntity(String.class);
 		        JSONObject json = new JSONObject(result);
 		        JSONArray attributesValues = json.getJSONArray("values");
-		        long nb = attributesValues.length();
-		        return nb;
+		        JSONArray lengthArray = (JSONArray) attributesValues.get(0);
+		        String length = lengthArray.getString(0);
+		        Long res = Long.parseLong(length);
+		        return res;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to count the number of records in Entity " + entityName);
 			e.printStackTrace();

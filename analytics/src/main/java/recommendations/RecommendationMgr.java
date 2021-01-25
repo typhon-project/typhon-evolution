@@ -7,6 +7,7 @@ import java.util.List;
 import javax.management.Attribute;
 
 import capture.mains.AttributeSelector;
+import capture.mains.QueryParsing;
 import model.TyphonModel;
 import query.Join;
 import query.Query;
@@ -27,6 +28,17 @@ import typhonml.impl.AttributeImpl;
 import typhonml.impl.ModelImpl;
 
 public class RecommendationMgr {
+	
+	public static void main(String[] args) {
+		String query = "from AppData ad, ProcessedWarnings pw, MeteologixWarnings mw select mw.warningType, mw.severity, pw.WEATHER_EVENT_INTENSITY, pw.WEATHER_EVENT, ad.vehicle_position where pw.DATE < \"?\" && pw.DATE > \"?\" && ad.timeStamp == \"?\" && mw.time_start < \"?\" && mw.time_end > \"?\" && distance (ad.vehicle_position, pw.LOCATION) < \"?\" && ad.vehicle_position & mw.area";
+		TyphonModel.initWebService("http://168.119.234.158:8080", "admin", "admin1@");
+		TyphonModel m = TyphonModel.getCurrentModel();
+		QueryParsing.init();
+		Query q = QueryParsing.eval(query, m);
+		List<Recommendation> list = getRecommendations(q);
+		XorRecommendation r = (XorRecommendation) list.get(list.size() - 1);
+		System.out.println(r.getEvolutionOperator());
+	}
 
 	public static List<Recommendation> getRecommendations(Query query) {
 		if (query != null) {
@@ -130,7 +142,74 @@ public class RecommendationMgr {
 	private static List<Recommendation> getSelectRecommendations(Query query) {
 		List<Recommendation> res = new ArrayList<Recommendation>();
 		res.addAll(getAttributeSelectorsRecommendations(query));
-		res.addAll(getJoinsRecommendations(query.getModel(), WellFormedJoin.extractWellFormedJoins(query)));
+		List<WellFormedJoin> wellFormedJoins = WellFormedJoin.extractWellFormedJoins(query);
+		res.addAll(getJoinsRecommendations(query.getModel(), wellFormedJoins));
+		if ((wellFormedJoins == null || wellFormedJoins.size() == 0) && query.getMainEntities().size() > 1) {
+			// join between several entities which are performed without specifying an ML
+			// rel
+			// ex: from User u, Order o select u,o
+			// ex: from User u, Product p select u, o where u.date < p.date
+
+			// the possible recommendation will be to migrate all the concerned entities to
+			// the same backend.
+			res.addAll(getMisFormedJoinRecommendation(query.getModel(), query.getMainEntities()));
+		}
+		return res;
+	}
+
+	private static List<Recommendation> getMisFormedJoinRecommendation(TyphonModel model, List<String> mainEntities) {
+		List<Recommendation> res = new ArrayList<Recommendation>();
+
+		List<Entity> entities = new ArrayList<Entity>();
+		List<Database> databases = new ArrayList<Database>();
+
+		List<Database> uniqueDatabasesList = new ArrayList<Database>();
+		for (String entityName : mainEntities) {
+			Entity ent = model.getEntityTypeFromName(entityName);
+			entities.add(ent);
+			Database db = model.getPhysicalDatabase(ent);
+			if (db != null) {
+				boolean present = false;
+				for (Database d : uniqueDatabasesList)
+					if (d == db) {
+						present = true;
+						break;
+					}
+				if (!present)
+					uniqueDatabasesList.add(db);
+			}
+			databases.add(db);
+		}
+
+		if (uniqueDatabasesList.size() > 1) { // more than one db
+			XorRecommendation xor = new XorRecommendation();
+			for (Database dbToMigrate : uniqueDatabasesList) {
+				// one migrate all the entities to dbToMigrate (AndRecommendation)
+				AndRecommendation rec = new AndRecommendation();
+				for (int i = 0; i < entities.size(); i++) {
+					Entity ent = entities.get(i);
+					Database database = databases.get(i);
+					if (dbToMigrate != database) {
+						// we must migrate ent
+						MigrateEntityRecommendation migrate = new MigrateEntityRecommendation(ent, dbToMigrate);
+						rec.getRecommendations().add(migrate);
+					}
+				}
+
+				if (rec.getRecommendations().size() > 1)
+					xor.getRecommendations().add(rec);
+				if (rec.getRecommendations().size() == 1)
+					xor.getRecommendations().add(rec.getRecommendations().get(0));
+
+			}
+
+			if (xor.getRecommendations().size() == 1)
+				res.add(xor.getRecommendations().get(0));
+			if (xor.getRecommendations().size() > 1)
+				res.add(xor);
+
+		}
+
 		return res;
 	}
 

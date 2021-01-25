@@ -36,6 +36,14 @@ public interface TyphonMLInterface {
     boolean hasRelationship(String entityname, Model model);
 
     /**
+     * Check if the table in the database has an index
+     * @param databaseName the name of the database containing the table
+     * @param tableName the name of the table for which we check if an index exists
+     * @param sourceModel the current ML model
+     * @return true if the table contains an index; false otherwise
+     */
+    boolean hasTableIndex(String databaseName, String tableName, Model sourceModel);
+    /**
      * Add a list of attributes to the index list of a table in the ML model
      * @param databaseName the name of the database containing the table
      * @param tableName the name of the table containing the existing index list
@@ -44,8 +52,8 @@ public interface TyphonMLInterface {
      * @param sourceModel the current ML model to update
      * @return the updated ML model
      */
-
     Model addTableIndex(String databaseName, String tableName, String entityName, Set<String> entityAttributesNames, Model sourceModel);
+
     /**
      * Add a list of attributes to the index list of a collection in the ML model
      * @param databaseName the name of the database containing the collection
@@ -93,7 +101,7 @@ public interface TyphonMLInterface {
 
     Model renameAttribute(String oldAttributeName, String newAttributeName, String entityName, Model model);
 
-    Model changeTypeAttribute(AttributeDO attributeDO, String entityName, String dataTypeName, Model model);
+    Model changeTypeAttribute(AttributeDO attributeDO, String entityName, DataTypeDO attributeDataType, Model model);
 
     Model enableOpposite(RelationDO relation, RelationDO oppositeRelation, Model model);
 

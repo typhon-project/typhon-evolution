@@ -180,8 +180,14 @@ public class SMOAdapter implements SMO {
             }
             if (evolutionOperator == EvolutionOperator.CHANGETYPE) {
                 inputParameter.put(ChangeOperatorParameter.ATTRIBUTE, ((ChangeAttributeType) changeOperator).getAttributeToChange());
-                //TODO: deprecated getNewType?
-//                inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeAttributeType) changeOperator).getNewType());
+                if (changeOperator instanceof ChangePrimitiveDataTypeAttribute) {
+                    inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangePrimitiveDataTypeAttribute) changeOperator).getNewType());
+                } else if (changeOperator instanceof ChangeCustomDataTypeAttribute) {
+                    inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, ((ChangeCustomDataTypeAttribute) changeOperator).getNewType());
+                } else {
+                    inputParameter.put(ChangeOperatorParameter.ATTRIBUTE_TYPE, null);
+                }
+
             }
         }
         //INDEX

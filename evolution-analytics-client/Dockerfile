@@ -1,4 +1,4 @@
-FROM node:12.4.0-alpine
+FROM node:12.4.0-alpine as builder
 
 # Create Directory for the Container
 WORKDIR /usr/src/app
@@ -23,6 +23,12 @@ ADD . /usr/src/app
 # Build the Angular application
 RUN npm run build
 
-# Start the application
-CMD ["ng","serve","--host", "0.0.0.0"]
-EXPOSE 5000
+
+# Runtime
+FROM nginx
+COPY docker/proxy.conf /etc/nginx/conf.d/proxy.conf
+COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/proxy_params.conf /etc/nginx/snippets/proxy_params.conf
+COPY --from=builder /usr/src/app/dist/evolution-analytics-client /usr/share/nginx/html
+ENV API_HOST=evolution-backend
+ENV API_PORT=3000

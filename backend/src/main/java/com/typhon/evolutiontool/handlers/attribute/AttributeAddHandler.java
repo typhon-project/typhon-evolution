@@ -9,8 +9,7 @@ import com.typhon.evolutiontool.services.typhonDL.TyphonDLInterface;
 import com.typhon.evolutiontool.services.typhonML.TyphonMLInterface;
 import com.typhon.evolutiontool.services.typhonQL.TyphonQLInterface;
 import com.typhon.evolutiontool.utils.AttributeDOFactory;
-import typhonml.Attribute;
-import typhonml.Model;
+import typhonml.*;
 
 import java.util.Collections;
 
@@ -23,7 +22,13 @@ public class AttributeAddHandler extends BaseHandler {
     @Override
     public Model handle(SMO smo, Model model) throws InputParameterException {
         if (containParameters(smo, Collections.singletonList(ChangeOperatorParameter.ATTRIBUTE))) {
-            AttributeDO attributeDO = AttributeDOFactory.buildInstance((Attribute) smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE));
+            AttributeDO attributeDO;
+            Object attribute = smo.getInputParameter().get(ChangeOperatorParameter.ATTRIBUTE);
+            if (attribute instanceof AddAttribute) {
+                attributeDO = AttributeDOFactory.buildInstance((AddAttribute) attribute);
+            } else {
+                throw new InputParameterException("The input parameter 'attribute' type is not one of the required types: AddPrimitiveDataTypeAttribute, AddCustomDataTypeAttribute, AddAttribute");
+            }
 
             //TyphonML
             Model targetModel = typhonMLInterface.addAttribute(attributeDO, attributeDO.getEntity().getName(), model);

@@ -155,10 +155,10 @@ public interface TyphonQLInterface {
      * Change the attribute type in the polystore using a TyphonQL query
      *
      * @param attributeName     the name of the attribute
-     * @param attributeTypeName the name of the attribute type
+     * @param attributeType     the new type of the attribute
      * @param entityName        the name of the entity containing the attribute
      */
-    void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName);
+    void changeTypeAttribute(String attributeName, DataTypeDO attributeType, String entityName);
 
     /**
      * Update entity data (first WorkingSet) with the data from the second WorkingSet, joined by the relation.
@@ -172,4 +172,12 @@ public interface TyphonQLInterface {
      * @param firstOrSecondEntityRelation true if the entity contains the reference data to the second WS, false if the second WS contains the reference data to the entity
      */
     void updateEntityData(String entityName, WorkingSet firstWs, WorkingSet secondWs, EntityDO secondEntity, String relationName, Boolean firstOrSecondEntityRelation);
+
+    /**
+     * Add the entity attributes to the index of the table
+     *
+     * @param entityName the name of the entity containing the attributes to add to the index
+     * @param attributesNames the names of the attributes to add to the index
+     */
+    void addTableIndex(String entityName, Set<String> attributesNames);
 }

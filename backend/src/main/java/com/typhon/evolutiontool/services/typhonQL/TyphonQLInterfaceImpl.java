@@ -42,6 +42,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String UPDATE = "update ";
     private static final String SET = "set ";
     private static final String CREATE = "create ";
+    private static final String CREATE_INDEX = CREATE + "index ";
     private static final String RENAME = "rename ";
     private static final String RENAME_RELATION = RENAME + "relation ";
     private static final String RENAME_ATTRIBUTE = RENAME + "attribute ";
@@ -51,6 +52,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String DROP_ATTRIBUTE = DROP + "attribute ";
     private static final String AT = " at ";
     private static final String TO = " to ";
+    private static final String FOR = " for ";
     private static final String CARDINALITY_ZERO_ONE = "[0..1]";
     private static final String CARDINALITY_ONE_ONE = "[1..1]";
     private static final String CARDINALITY_ZERO_MANY = "[0..*]";
@@ -352,9 +354,9 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     }
 
     @Override
-    public void changeTypeAttribute(String attributeName, String attributeTypeName, String entityName) {
-        logger.debug("Change type attribute ['{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model", attributeName, attributeTypeName, entityName);
-        String tql = new StringBuilder(CHANGE).append(entityName).append(DOT).append(attributeName).append(COLON).append(attributeTypeName).toString();
+    public void changeTypeAttribute(String attributeName, DataTypeDO attributeType, String entityName) {
+        logger.debug("Change type of attribute '{}' to '{}' type] in entity [{}]  via TyphonQL on TyphonML model", attributeName, covertMLTypeToQLType(attributeType), entityName);
+        String tql = new StringBuilder(CHANGE).append(entityName).append(DOT).append(attributeName).append(COLON).append(covertMLTypeToQLType(attributeType)).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 
@@ -417,6 +419,13 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         String tql;
         logger.debug("Create relationship [{}] via TyphonQL DDL query on TyphonML model", relation.getName());
         tql = new StringBuilder(CREATE).append(relation.getSourceEntity().getName()).append(DOT).append(relation.getName()).append(RELATION).append(relation.getTargetEntity().getName()).append(getCardinalityValue(relation.getCardinality().getValue())).toString();
+        getTyphonQLWebServiceClient().update(tql);
+    }
+
+    @Override
+    public void addTableIndex(String entityName, Set<String> attributesNames) {
+        logger.debug("Add/update table index for entity '{}' and attributes: {}", attributesNames, entityName);
+        String tql = new StringBuilder(CREATE_INDEX).append(entityName).append("Index").append(FOR).append(entityName).append(DOT).append(OPENING_CURLY_BRACE).append(String.join(COMMA, attributesNames)).append(CLOSING_CURLY_BRACE).toString();
         getTyphonQLWebServiceClient().update(tql);
     }
 

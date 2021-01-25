@@ -1,13 +1,11 @@
 import express from 'express';
 import SocketIOStatic from 'socket.io';
-import {MongoHelper} from './helpers/mongo.helper';
-import {MongoService} from './services/mongo.service';
 import {SocketService} from './services/socket.service';
 import {mongoCrudApiRouter} from './api/routers/mongo.crud.api.router';
 import {mongoAnalyticsApiRouter} from "./api/routers/mongo.analytics.api.router";
 import {config} from 'dotenv';
 import {createServer} from 'http';
-import e from "cors";
+import cors from "cors";
 
 
 //Import .env configuration file
@@ -17,23 +15,23 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 //Cors configuration for access control for webservices: authorize all clients to use the webservices, all methods (get, put, ...), headers, ...
-app.use(e());
+app.use(cors({origin: '*'}));
 //API routers
 app.use('/', mongoCrudApiRouter);
 app.use('/', mongoAnalyticsApiRouter);
 
 const httpServer = createServer(app);
 const io = SocketIOStatic(httpServer);
-
-const mongoService = new MongoService();
-const mongoHelper = new MongoHelper();
+//
+// const mongoService = new MongoService();
+// const mongoHelper = new MongoHelper();
 const socketService = new SocketService();
-
-//Retrieve environment variables from .env file
-const MONGO_DB_URL = process.env.ANALYTICS_DB_URL;
-const MONGO_DB_NAME = process.env.ANALYTICS_DB_NAME;
-const MONGO_DB_USERNAME = process.env.ANALYTICS_DB_USER;
-const MONGO_DB_PWD = process.env.ANALYTICS_DB_PWD;
+//
+// //Retrieve environment variables from .env file
+// const MONGO_DB_URL = process.env.ANALYTICS_DB_URL;
+// const MONGO_DB_NAME = process.env.ANALYTICS_DB_NAME;
+// const MONGO_DB_USERNAME = process.env.ANALYTICS_DB_USER;
+// const MONGO_DB_PWD = process.env.ANALYTICS_DB_PWD;
 const PORT = process.env.BACKEND_DEPLOYMENT_PORT;
 
 

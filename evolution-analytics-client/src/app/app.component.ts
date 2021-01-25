@@ -26,7 +26,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.socketService.setupSocketConnection();
+    // console.log('process.env.BACKEND_ENDPOINT: ' + process.env.BACKEND_ENDPOINT);
+    console.log('environment.BACKEND_ENDPOINT: ' + environment.BACKEND_ENDPOINT);
+    // this.socketService.setupSocketConnection();
     // this.testMongoApiClientService();
   }
 

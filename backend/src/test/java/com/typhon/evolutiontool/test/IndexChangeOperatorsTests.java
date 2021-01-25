@@ -21,6 +21,16 @@ public class IndexChangeOperatorsTests extends InitialTest {
         TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/addTableIndexChangeOperator_final.xmi");
     }
+    @Test
+    public void testAddTableIndexVW() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/addTableIndex_VW_ChangeOperator.xmi");
+        AddIndex addIndex = (AddIndex) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(addIndex);
+
+        targetModel = evolutionService.evolveIndex(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/addTableIndex_VW_ChangeOperator_final.xmi");
+    }
 
     @Test
     public void testAddCollectionIndex() throws InputParameterException, EvolutionOperationNotSupported {

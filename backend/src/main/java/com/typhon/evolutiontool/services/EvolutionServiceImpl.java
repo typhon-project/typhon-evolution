@@ -96,8 +96,8 @@ public class EvolutionServiceImpl implements EvolutionService {
             //2. Serialize the XMI model in a TML model
             Services.serializeTML(currentModel, "temp/currentTMLModel.tml");
             //3. Read TML model and change operators files as Strings
-            String tmlContent = null;
-            String changeOperators = null;
+            String tmlContent;
+            String changeOperators;
             try {
                 BufferedReader tmlReader = new BufferedReader(new FileReader("temp/currentTMLModel.tml"));
                 StringBuilder tmlReaderStringBuilder = new StringBuilder();

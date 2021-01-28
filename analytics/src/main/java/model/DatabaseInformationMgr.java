@@ -323,6 +323,7 @@ public class DatabaseInformationMgr {
 			logger.info("Trying to count nb of records in Entity: " + entityName);
 			String query = "from " + entityName + " x select count(x.@id) as cnt";
 			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
+			 logger.info("sending to WS server...");
 			 javax.ws.rs.core.Response response = target
 		                .request(MediaType.APPLICATION_JSON)
 		                .header("Authorization", "Basic " + authStringEnc)
@@ -331,6 +332,7 @@ public class DatabaseInformationMgr {
 		        	logger.error("Impossible to count the number of records in Entity " + entityName);
 		        	return null;
 		        }
+		        logger.info("WS response received");
 		        String result = response.readEntity(String.class);
 		        JSONObject json = new JSONObject(result);
 		        JSONArray attributesValues = json.getJSONArray("values");

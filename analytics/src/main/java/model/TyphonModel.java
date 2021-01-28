@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONArray;
@@ -45,9 +47,14 @@ public class TyphonModel {
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
 //	private static final String GET_ML_MODELS_URL = "api/models/ml";
 	private static final String GET_ML_MODELS_URL = "api/model/ml";
+	private static final int WS_CONNECT_TIMEOUT = 2000;
+	private static final int WS_READ_TIMEOUT = 2000;
 
 	private static String authStringEnc;
-	private static final JerseyClient restClient = JerseyClientBuilder.createClient();
+
+	private static final JerseyClient restClient = JerseyClientBuilder
+			.createClient(new ClientConfig().property(ClientProperties.CONNECT_TIMEOUT, WS_CONNECT_TIMEOUT)
+					.property(ClientProperties.READ_TIMEOUT, WS_READ_TIMEOUT));
 	private static WebTarget webTarget;
 
 	private static ResourceSet resourceSet = new ResourceSetImpl();
@@ -199,7 +206,7 @@ public class TyphonModel {
 							}
 						}
 					}
-					
+
 					List<GraphEdge> graphEdges = ((GraphDB) database).getEdges();
 					if (graphEdges != null) {
 						for (GraphEdge graphEdge : graphEdges) {
@@ -267,7 +274,7 @@ public class TyphonModel {
 						}
 					}
 				}
-				
+
 //				List<GraphEdge> graphEdges = ((GraphDB) database).getEdges();
 //				if (graphEdges != null) {
 //					for (GraphEdge graphEdge : graphEdges) {
@@ -388,7 +395,7 @@ public class TyphonModel {
 			isOutdated = true;
 			AnalyticsDB.saveTyphonModel(oldModel, newModel);
 		}
-		
+
 		logger.info("model verified: " + onlyUpdateHistoriesIfCurrentModelIsOutdated);
 
 		if (!onlyUpdateHistoriesIfCurrentModelIsOutdated
@@ -522,7 +529,7 @@ public class TyphonModel {
 						return n;
 					}
 				}
-				
+
 //				for(GraphEdge e : g.getEdges()) {
 //					Entity entity = e.getEntity();
 //					if (entity.getName().equals(entityName)) {

@@ -376,6 +376,7 @@ public class TyphonModel {
 	}
 
 	public static void getCurrentModelWithStats(boolean onlyUpdateHistoriesIfCurrentModelIsOutdated) {
+		logger.info("updating entities statistics...");
 		TyphonModel oldModel;
 		synchronized (currentModel) {
 			oldModel = currentModel;
@@ -387,12 +388,17 @@ public class TyphonModel {
 			isOutdated = true;
 			AnalyticsDB.saveTyphonModel(oldModel, newModel);
 		}
+		
+		logger.info("model verified: " + onlyUpdateHistoriesIfCurrentModelIsOutdated);
 
 		if (!onlyUpdateHistoriesIfCurrentModelIsOutdated
 				|| (onlyUpdateHistoriesIfCurrentModelIsOutdated && isOutdated)) {
+			logger.info("getting current stats...");
 			Map<String, Long> entitySize = DatabaseInformationMgr.getCurrentModelWithStats(newModel, webTarget,
 					authStringEnc);
+			logger.info("current stats returned");
 			AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
+			logger.info("stats saved");
 		}
 
 	}

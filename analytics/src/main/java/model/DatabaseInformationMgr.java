@@ -88,6 +88,7 @@ public class DatabaseInformationMgr {
 		try {
 
 			for (Entity entity : m.getEntities()) {
+				logger.info("counting entity " + entity.getName());
 				Long nb = null;
 				Database database = m.getEntityDatabase(entity.getName());
 				if (database != null) {
@@ -120,10 +121,13 @@ public class DatabaseInformationMgr {
 				// nb = new Long(new Random().nextInt(1000000));
 
 				///////////////////////
-
+				logger.info("res:" + nb);
 				nb = nb == null ? 0 : nb;
 				res.put(entity.getName(), nb);
 			}
+		} catch (Exception | Error e) {
+			e.printStackTrace();
+			throw e;
 		} finally {
 			closeConnections(infos);
 		}
@@ -316,6 +320,7 @@ public class DatabaseInformationMgr {
 	
 	public static Long getCountEntity(WebTarget webTarget, String authStringEnc, String entityName) {
 		try {
+			logger.info("Trying to count nb of records in Entity: " + entityName);
 			String query = "from " + entityName + " x select count(x.@id) as cnt";
 			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
 			 javax.ws.rs.core.Response response = target
@@ -332,6 +337,7 @@ public class DatabaseInformationMgr {
 		        JSONArray lengthArray = (JSONArray) attributesValues.get(0);
 		        String length = lengthArray.getString(0);
 		        Long res = Long.parseLong(length);
+		        logger.info("Counting the number of records in Entity: " + entityName + ": " + res);
 		        return res;
 		} catch (Exception | Error e) {
 			logger.error("Impossible to count the number of records in Entity " + entityName);

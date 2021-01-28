@@ -20,7 +20,7 @@ EvoQuery attribute_rename(EvoQuery q, str entity, str old_name, str new_name, Sc
 	old = parse(#Id, old_name);
 	new = parse(#Id, new_name);
 	
-	if(!use_entity(q, eid)){
+	if(!use_entity(q, e)){
 		return q;
 	}
 	

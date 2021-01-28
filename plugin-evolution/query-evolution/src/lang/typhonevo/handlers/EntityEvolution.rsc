@@ -132,8 +132,8 @@ EvoQuery entity_split(EvoQuery q, EId old_name, EId entity1, EId entity2){
 
 
 
-EvoQuery entity_migration(EvoQuery q, EId entity_name){
-
-	return entity_rename(q, entity_name, parse(#EId, "<entity_name>_migrated"));
+EvoQuery entity_migration(EvoQuery q, str entity_name){
+	new_entity = entity_name + "_migrated";
+	return entity_rename(q, entity_name, new_entity);
 }
 

@@ -8,11 +8,23 @@ import lang::typhonevo::utils::QueryManipulation;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonevo::utils::SchemaUtils;
 import lang::typhonevo::utils::Util;
-
+import String;
 import lang::typhonml::Util;
 
 EvoQuery entity_merge(EvoQuery q,  str relation, str entity1, str entity2, Schema s){
-	
+
+	if(contains(relation, ".")){
+		splitted = split(".", relation);
+		rel_entity = splitted[0];
+		relation = splitted[1];
+		
+		if(rel_entity != entity1){
+			tmp = entity2;
+			entity2 = entity1;
+			entity1 = temp;
+		}
+	}
+
 	e1 = parse(#EId, entity1);
 	e2 = parse(#EId, entity2);
 	rela = parse(#Id, relation);
@@ -77,8 +89,8 @@ EvoQuery handle_merge_query(EvoQuery q, EId e1, EId e2, Id relation, Schema s){
 		
 		// remove duplicate reference for the alias in from
 		q = visit(q){
-			case (Query) `from <{Binding ","}+ bindings> select <Result result>, <Result result> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
-				=> (Query) `from <{Binding ","}+ bindings> select <Result result> <Where? where> <GroupBy? groupBy> <OrderBy? orderBy>`
+			case (Query) `from <{Binding ","}+ bindings> select <Result result>, <Result result> <Where? where> <Agg* a1>`
+				=> (Query) `from <{Binding ","}+ bindings> select <Result result> <Where? where> <Agg* a1>`
 		}
 		
 		q = removeExprFromWhere(q, relation);

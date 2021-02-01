@@ -541,7 +541,7 @@ public class ConceptualSchema {
 		content.add("}");
 
 		content.add("");
-//		content.add("documentdb " + documentdb + " {");
+		content.add("documentdb " + documentdb + " {");
 //
 //		if (isExistsDocumentDatabase() && splitTable.size() > 0) {
 //
@@ -557,7 +557,7 @@ public class ConceptualSchema {
 ////			    }
 //		}
 //
-//		content.add("}");
+		content.add("}");
 
 		writeToFile(file, content);
 	}

@@ -1,3 +1,0 @@
-apply /test.tml;
-
-from user u select u.@id

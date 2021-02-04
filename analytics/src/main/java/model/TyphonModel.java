@@ -20,6 +20,7 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import capture.mains.ConsumePostEvents;
 import db.AnalyticsDB;
 import nl.cwi.swat.typhonql.client.DatabaseInfo;
 import typhonml.impl.ModelImpl;
@@ -49,14 +50,11 @@ public class TyphonModel {
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
 //	private static final String GET_ML_MODELS_URL = "api/models/ml";
 	private static final String GET_ML_MODELS_URL = "api/model/ml";
-	private static final int WS_CONNECT_TIMEOUT = 60000;
-	private static final int WS_READ_TIMEOUT = 60000;
 
 	private static String authStringEnc;
 
 	private static final JerseyClient restClient = JerseyClientBuilder
-			.createClient(new ClientConfig().property(ClientProperties.CONNECT_TIMEOUT, WS_CONNECT_TIMEOUT)
-					.property(ClientProperties.READ_TIMEOUT, WS_READ_TIMEOUT));
+			.createClient();
 	private static WebTarget webTarget;
 
 	private static ResourceSet resourceSet = new ResourceSetImpl();
@@ -425,7 +423,7 @@ public class TyphonModel {
 	}
 
 	public static Long getEntityCount(String entityName) {
-		return DatabaseInformationMgr.getCountEntity(webTarget, authStringEnc, entityName);
+		return DatabaseInformationMgr.getCountEntity(authStringEnc, entityName);
 	}
 
 	public Relation getOpposite(Relation rel) {

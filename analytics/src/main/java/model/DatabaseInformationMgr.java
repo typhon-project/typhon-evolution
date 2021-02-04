@@ -20,7 +20,11 @@ import org.bson.BsonDocument;
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonValue;
 import org.bson.Document;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,6 +40,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import capture.mains.ConsumePostEvents;
 import nl.cwi.swat.typhonql.client.DatabaseInfo;
 import typhonml.ColumnDB;
 import typhonml.Database;
@@ -55,6 +60,12 @@ public class DatabaseInformationMgr {
 	public static final String GRAPHDB = "GRAPHDB";
 	public static final String COLUMNDB = "COLUMNDB";
 	public static final String KEYVALUEDB = "KEYVALUEDB";
+	
+	private static final int WS_CONNECT_TIMEOUT = 60000;
+	private static final int WS_READ_TIMEOUT = 60000;
+	private static final JerseyClient restClient = JerseyClientBuilder
+			.createClient(new ClientConfig().property(ClientProperties.CONNECT_TIMEOUT, WS_CONNECT_TIMEOUT)
+					.property(ClientProperties.READ_TIMEOUT, WS_READ_TIMEOUT));
 
 	public static String getDatatbaseType(Database database) {
 		if (database != null) {
@@ -183,7 +194,7 @@ public class DatabaseInformationMgr {
 		TyphonModel.initWebService("http://168.119.234.158:4200", "admin", "admin1@");
 		System.out.println(getCountEntity("ESPData"));
 	}
-	
+
 	private static Long getNbOfDocumentsInDocumentCollection(DocumentDB dDB, String collectionName,
 			List<ConnectionInfo> infos) {
 		return getCountEntity(collectionName);
@@ -317,25 +328,24 @@ public class DatabaseInformationMgr {
 			return null;
 		}
 	}
-	
-	public static Long getCountEntity(WebTarget webTarget, String authStringEnc, String entityName) {
+
+	public static Long getCountEntity(String authStringEnc, String entityName) {
 		try {
 			String query = "from " + entityName + " x select count(x.@id) as cnt";
-			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
-			 javax.ws.rs.core.Response response = target
-		                .request(MediaType.APPLICATION_JSON)
-		                .header("Authorization", "Basic " + authStringEnc)
-		                .post(javax.ws.rs.client.Entity.entity(query, MediaType.APPLICATION_JSON));
-		        if (response.getStatus() != 200) {
-		        	return null;
-		        }
-		        String result = response.readEntity(String.class);
-		        JSONObject json = new JSONObject(result);
-		        JSONArray attributesValues = json.getJSONArray("values");
-		        JSONArray lengthArray = (JSONArray) attributesValues.get(0);
-		        String length = lengthArray.getString(0);
-		        Long res = Long.parseLong(length);
-		        return res;
+			WebTarget target = restClient.target(ConsumePostEvents.WEBSERVICE_URL).path(GET_NOANALYTICS_QUERY);
+			javax.ws.rs.core.Response response = target.request(MediaType.APPLICATION_JSON)
+					.header("Authorization", "Basic " + authStringEnc)
+					.post(javax.ws.rs.client.Entity.entity(query, MediaType.APPLICATION_JSON));
+			if (response.getStatus() != 200) {
+				return null;
+			}
+			String result = response.readEntity(String.class);
+			JSONObject json = new JSONObject(result);
+			JSONArray attributesValues = json.getJSONArray("values");
+			JSONArray lengthArray = (JSONArray) attributesValues.get(0);
+			String length = lengthArray.getString(0);
+			Long res = Long.parseLong(length);
+			return res;
 		} catch (Exception | Error e) {
 //			logger.error("Impossible to count the number of records in Entity " + entityName);
 //			e.printStackTrace();

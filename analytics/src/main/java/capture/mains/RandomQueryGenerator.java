@@ -38,13 +38,14 @@ import typhonml.impl.TextTypeImpl;
 
 public class RandomQueryGenerator {
 
-	private static final int SELECT = 0;
+	private static final int SELECT = 3;
 	private static final int UPDATE = 1;
 	private static final int INSERT = 2;
-	private static final int DELETE = 3;
+	private static final int DELETE = 0;
 
 	private TyphonModel model = null;
-
+	
+	
 //	public static void main(String[] args) {
 //		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
 //				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
@@ -100,36 +101,36 @@ public class RandomQueryGenerator {
 		System.out.println(counter);
 	}
 
-	public static void main(String[] args) {
-		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
-				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
-				ConsumePostEvents.ANALYTICS_DB_NAME))
-			System.exit(1);
-		MongoDatabase db = AnalyticsDB.getDatabase();
-		MongoCollection coll = db.getCollection("TyphonEntityHistory");
-		FindIterable<Document> docs = coll.find();
-		MongoCursor<Document> cursor = docs.iterator();
-
-		while (cursor.hasNext()) {
-			Document doc = cursor.next();
-			Bson condition = Filters.eq("_id", doc.get("_id"));
-			int selects = new RandomDataGenerator().nextInt(0, 50);
-			int updates = new RandomDataGenerator().nextInt(0, 10);
-			int inserts = new RandomDataGenerator().nextInt(0, 10);
-			int deletes = new RandomDataGenerator().nextInt(0, 10);
-			int total = selects + updates + inserts + deletes;
-			Document update = new Document("$set",
-					new BasicDBObject("nbOfSelect", selects).append("nbOfInsert", inserts).append("nbOfUpdate", updates)
-							.append("nbOfDelete", deletes).append("nbOfQueries", total));
-			coll.updateOne(condition, update);
-		}
-
-	}
+//	public static void main(String[] args) {
+//		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
+//				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
+//				ConsumePostEvents.ANALYTICS_DB_NAME))
+//			System.exit(1);
+//		MongoDatabase db = AnalyticsDB.getDatabase();
+//		MongoCollection coll = db.getCollection("TyphonEntityHistory");
+//		FindIterable<Document> docs = coll.find();
+//		MongoCursor<Document> cursor = docs.iterator();
+//
+//		while (cursor.hasNext()) {
+//			Document doc = cursor.next();
+//			Bson condition = Filters.eq("_id", doc.get("_id"));
+//			int selects = new RandomDataGenerator().nextInt(0, 50);
+//			int updates = new RandomDataGenerator().nextInt(0, 10);
+//			int inserts = new RandomDataGenerator().nextInt(0, 10);
+//			int deletes = new RandomDataGenerator().nextInt(0, 10);
+//			int total = selects + updates + inserts + deletes;
+//			Document update = new Document("$set",
+//					new BasicDBObject("nbOfSelect", selects).append("nbOfInsert", inserts).append("nbOfUpdate", updates)
+//							.append("nbOfDelete", deletes).append("nbOfQueries", total));
+//			coll.updateOne(condition, update);
+//		}
+//
+//	}
 
 	public RandomQueryGenerator(TyphonModel model) {
 		this.model = model;
 	}
-
+	
 	public String randomQuery() {
 
 		Random r = new Random();
@@ -150,7 +151,7 @@ public class RandomQueryGenerator {
 
 	}
 
-	private String getRandomInsertQuery() {
+	public String getRandomInsertQuery() {
 		String res = "insert ";
 		List<Entity> entities = model.getEntities();
 		int i = new Random().nextInt(entities.size());
@@ -162,7 +163,7 @@ public class RandomQueryGenerator {
 		return res;
 	}
 
-	private String getRandomDeleteQuery() {
+	public String getRandomDeleteQuery() {
 		List<Entity> entities = model.getEntities();
 		int i = new Random().nextInt(entities.size());
 		Entity e = entities.get(i);
@@ -174,7 +175,7 @@ public class RandomQueryGenerator {
 		return res;
 	}
 
-	private String getRandomUpdateQuery() {
+	public String getRandomUpdateQuery() {
 		List<Entity> entities = model.getEntities();
 		int i = new Random().nextInt(entities.size());
 		Entity e = entities.get(i);
@@ -220,7 +221,7 @@ public class RandomQueryGenerator {
 		return res;
 	}
 
-	private String getRandomSelectQuery() {
+	public String getRandomSelectQuery() {
 		String res = "from ";
 		List<Entity> entities = model.getEntities();
 

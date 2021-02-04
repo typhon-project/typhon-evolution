@@ -40,6 +40,24 @@ EvoQuery removeExprFromWhere(EvoQuery q, Id relation)
 		case (Where) `where <VId v>.<Id c> == <Expr a>`
 			=> (Where) `where true == true`
 		when c := relation
+		case (Expr) `<Expr lhs> && <VId v>.<Id c> == <Expr rhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
+		case (Expr) `<VId v>.<Id c> == <Expr rhs> && <Expr lhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
+		case (Expr) `<Expr lhs> || <VId v>.<Id c> == <Expr rhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
+		case (Expr) `<VId v>.<Id c> == <Expr rhs> || <Expr lhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
+		case (Expr) `<Expr lhs> & <VId v>.<Id c> == <Expr rhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
+		case (Expr) `<VId v>.<Id c> == <Expr rhs> & <Expr lhs>`
+			=> (Expr) `<Expr lhs>`
+		when c := relation
 	};
 	
 

@@ -4,6 +4,35 @@ import IO;
 import lang::typhonevo::EvoAbstractSyntax;
 import lang::typhonevo::utils::EvolveStatus;
 import lang::typhonml::Util;
+import ParseTree;
+
+
+
+EvoQuery add_relation(EvoQuery q, str relation, str ent){
+	attr = parse(#Id, relation);
+	entity = parse(#EId, ent);
+
+	switch(q.q.query){
+		case s:(Statement) `insert <{Obj ","}* obj>`:{
+			for(/(EId) e := s){
+				if(e := entity)
+					return setStatusBroken(q, "Relation <attr> added to <entity>. Insert is broken");
+			}
+		}
+		case s:(Statement) `delete <EId ent> <VId var> <Where? where>`:{
+			if(ent := entity)
+				return setStatusWarn(q, "Relation <attr> added to <entity>. You may delete more information than expected");
+		}
+		case Query s:{
+			for(/(EId) e := s){
+				if(e := entity)
+					return setStatusWarn(q, "Relation <attr> added to <entity>. Result of the query may have changed");
+			}
+		}
+	}
+	
+	return q;
+}
 
 
 EvoQuery rename_relation(EvoQuery q, str entity, str old_name, str new_name){

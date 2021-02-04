@@ -45,7 +45,7 @@ EvoQuery transform(EvoQuery q, <"renameEntity", [old_name, new_name]>, Schema s)
 EvoQuery transform(EvoQuery q, <"removeEntity", [name]>, Schema s) = entity_remove(q, name);
 EvoQuery transform(EvoQuery q, <"mergeEntity", [e1, e2, relation]>, Schema s) = entity_merge(q, relation, e1, e2, s);
 EvoQuery transform(EvoQuery q, <"migrateEntity", [entity, db]>, Schema s) = entity_migration(q, entity);
-EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attr]>, Schema s) = split_vertical(q, entity, new_entity, attr, s);
+EvoQuery transform(EvoQuery q, <"splitEntityVertical", [new_entity, entity, attrs*]>, Schema s) = split_vertical(q, entity, new_entity, attrs, s);
 
 // ATTRIBUTES
 EvoQuery transform(EvoQuery q, <"renameAttribute", [entity, old_name, new_name]>, Schema s) = attribute_rename(q, entity, old_name, new_name, s);
@@ -54,6 +54,7 @@ EvoQuery transform(EvoQuery q, <"changeAttributeType", [entity, attr, t]>, Schem
 EvoQuery transform(EvoQuery q, <"addAttribute", [entity, attr, t]>, Schema s) = attribute_add(q, attr, entity);
 
 // RELATIONS
+EvoQuery transform(EvoQuery q, <"addRelation", [source, name , destination]>, Schema s) = add_relation(q, name, source);
 EvoQuery transform(EvoQuery q, <"renameRelation", [entity, old_name, new_name]>, Schema s) = rename_relation(q, entity, old_name, new_name);
 EvoQuery transform(EvoQuery q, <"removeRelation", [entity, name]>, Schema s) = remove_relation(q, entity, name);
 EvoQuery transform(EvoQuery q, <"changeRelationContainement", [name, containment]>, Schema s) = change_containment(q, name, containment);

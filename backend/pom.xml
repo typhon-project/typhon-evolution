@@ -48,27 +48,27 @@
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext</artifactId>
-            <version>2.23.0.v20200831-0730</version>
+            <version>2.21.0.v20200302-1141</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.core</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.18.0.v20200506-2143</version>
+            <version>3.17.100.v20200203-0917</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext.util</artifactId>
-            <version>2.23.0.v20200831-0730</version>
+            <version>2.21.0.v20200302-1141</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.equinox</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>3.13.0.v20200828-1034</version>
+            <version>3.11.0.v20200206-0817</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
-            <version>2.23.0.v20200831-0723</version>
+            <version>2.21.0.v20200302-1127</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.google.inject</groupId>-->

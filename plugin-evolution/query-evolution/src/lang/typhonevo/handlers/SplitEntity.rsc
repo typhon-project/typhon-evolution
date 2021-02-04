@@ -58,7 +58,9 @@ EvoQuery handle_split_query(EvoQuery q, EId e1, EId e2, list[str] extracted_attr
 		
 		for(str attribute <-extracted_attributes){
 			attr = parse(#Id, attribute);
-			tmp = true;
+			
+			if(i == attr)
+				tmp = true;
 		}
 		
 		if(tmp)

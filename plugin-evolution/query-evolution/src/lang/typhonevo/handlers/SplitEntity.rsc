@@ -15,11 +15,10 @@ import lang::typhonml::TyphonML;
 
 import lang::typhonml::Util;
 
-EvoQuery split_vertical(EvoQuery q,  str entity, str new_entity, str attribute, Schema s){
+EvoQuery split_vertical(EvoQuery q,  str entity, str new_entity, list[str] attributes, Schema s){
 	
 	e1 = parse(#EId, entity);
 	e2 = parse(#EId, new_entity);
-	attr = parse(#Id, attribute);
 	
 	// Filter the query using the impacted entity
 	relevant = false;
@@ -40,11 +39,11 @@ EvoQuery split_vertical(EvoQuery q,  str entity, str new_entity, str attribute, 
 		case (Statement) `update <Binding binding> <Where? where> set  { <{KeyVal ","}* keyVals> }` : 
 			return setStatusBroken(q, "Entity <e1> split into <e1>, <e2>. The update cannot be automatically adapted.");
 		case Query query : 
-			return handle_split_query(q, e1, e2, attr, s);
+			return handle_split_query(q, e1, e2, attributes, s);
 	};
 }
 
-EvoQuery handle_split_query(EvoQuery q, EId e1, EId e2, Id attr, Schema s){
+EvoQuery handle_split_query(EvoQuery q, EId e1, EId e2, list[str] extracted_attributes, Schema s){
 
 	// Retrieving useful info from the query 
 	
@@ -55,7 +54,14 @@ EvoQuery handle_split_query(EvoQuery q, EId e1, EId e2, Id attr, Schema s){
 	use_other_attrs = false;
 	
 	for(Id i <- attributes){
-		if(i == attr)
+		tmp = false;
+		
+		for(str attribute <-extracted_attributes){
+			attr = parse(#Id, attribute);
+			tmp = true;
+		}
+		
+		if(tmp)
 			use_new_entity_attrs= true;
 		else
 			use_other_attrs = true;
@@ -80,11 +86,16 @@ EvoQuery handle_split_query(EvoQuery q, EId e1, EId e2, Id attr, Schema s){
 		
 		// Call new entity attributes with correct alias
 		
-		old_reference = parse(#Expr, "<b>.<attr>");
-		new_reference = parse(#Expr, "<bind>.<attr>");
+		for(str attribute <-extracted_attributes){
+			attr = parse(#Id, attribute);
+			
+			old_reference = parse(#Expr, "<b>.<attr>");
+			new_reference = parse(#Expr, "<bind>.<attr>");
+			
+			e = visit(e){
+				case old_reference => new_reference
+			}
 		
-		e = visit(e){
-			case old_reference => new_reference
 		}
 		
 		return setStatusWarn(e, "Entity <e1> split into <e1> <e2>");

@@ -21,7 +21,7 @@ EvoQuery entity_merge(EvoQuery q,  str relation, str entity1, str entity2, Schem
 		if(rel_entity != entity1){
 			tmp = entity2;
 			entity2 = entity1;
-			entity1 = temp;
+			entity1 = tmp;
 		}
 	}
 

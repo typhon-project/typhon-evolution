@@ -320,30 +320,25 @@ public class DatabaseInformationMgr {
 	
 	public static Long getCountEntity(WebTarget webTarget, String authStringEnc, String entityName) {
 		try {
-			logger.info("Trying to count nb of records in Entity: " + entityName);
 			String query = "from " + entityName + " x select count(x.@id) as cnt";
 			 WebTarget target = webTarget.path(GET_NOANALYTICS_QUERY);
-			 logger.info("sending to WS server...");
 			 javax.ws.rs.core.Response response = target
 		                .request(MediaType.APPLICATION_JSON)
 		                .header("Authorization", "Basic " + authStringEnc)
 		                .post(javax.ws.rs.client.Entity.entity(query, MediaType.APPLICATION_JSON));
 		        if (response.getStatus() != 200) {
-		        	logger.error("Impossible to count the number of records in Entity " + entityName);
 		        	return null;
 		        }
-		        logger.info("WS response received");
 		        String result = response.readEntity(String.class);
 		        JSONObject json = new JSONObject(result);
 		        JSONArray attributesValues = json.getJSONArray("values");
 		        JSONArray lengthArray = (JSONArray) attributesValues.get(0);
 		        String length = lengthArray.getString(0);
 		        Long res = Long.parseLong(length);
-		        logger.info("Counting the number of records in Entity: " + entityName + ": " + res);
 		        return res;
 		} catch (Exception | Error e) {
-			logger.error("Impossible to count the number of records in Entity " + entityName);
-			e.printStackTrace();
+//			logger.error("Impossible to count the number of records in Entity " + entityName);
+//			e.printStackTrace();
 			return null;
 		}
 	}

@@ -33,10 +33,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -47,8 +49,8 @@ public class TyphonModel {
 	private static final String GET_ML_MODEL_URL = "api/model/ml/";
 //	private static final String GET_ML_MODELS_URL = "api/models/ml";
 	private static final String GET_ML_MODELS_URL = "api/model/ml";
-	private static final int WS_CONNECT_TIMEOUT = 2000;
-	private static final int WS_READ_TIMEOUT = 2000;
+	private static final int WS_CONNECT_TIMEOUT = 60000;
+	private static final int WS_READ_TIMEOUT = 60000;
 
 	private static String authStringEnc;
 
@@ -70,6 +72,22 @@ public class TyphonModel {
 	static {
 		typhonMLPackageRegistering();
 	}
+	
+	public static void main2(String[] args) {
+		try {
+			String t = null;
+			if(t.equals("ok"))
+				System.out.println("ok");
+		} catch (Exception e) {
+			String message = e.toString() + System.lineSeparator() + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining(System.lineSeparator()));
+			System.out.println(message);
+		}
+	}
+	
+	public static void main(String[] args) {
+		main2(args);
+	}
+	
 
 	private static Logger logger = Logger.getLogger(TyphonModel.class);
 
@@ -396,16 +414,12 @@ public class TyphonModel {
 			AnalyticsDB.saveTyphonModel(oldModel, newModel);
 		}
 
-		logger.info("model verified: " + onlyUpdateHistoriesIfCurrentModelIsOutdated);
 
 		if (!onlyUpdateHistoriesIfCurrentModelIsOutdated
 				|| (onlyUpdateHistoriesIfCurrentModelIsOutdated && isOutdated)) {
-			logger.info("getting current stats...");
 			Map<String, Long> entitySize = DatabaseInformationMgr.getCurrentModelWithStats(newModel, webTarget,
 					authStringEnc);
-			logger.info("current stats returned");
 			AnalyticsDB.saveEntitiesHistory(entitySize, newModel.getVersion());
-			logger.info("stats saved");
 		}
 
 	}

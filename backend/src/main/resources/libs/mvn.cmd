@@ -10,3 +10,4 @@ mvn install:install-file -Dfile="org.eclipse.xtext.util_2.21.0.v20200302-1141.ja
 mvn install:install-file -Dfile="org.eclipse.equinox.common_3.11.0.v20200206-0817.jar" -DgroupId="org.eclipse.equinox" -DartifactId="org.eclipse.equinox.common" -Dversion="3.11.0.v20200206-0817" -Dpackaging="jar"
 mvn install:install-file -Dfile="org.eclipse.xtext.xbase.lib_2.21.0.v20200302-1127.jar" -DgroupId="org.eclipse.xtext" -DartifactId="org.eclipse.xtext.xbase.lib" -Dversion="2.21.0.v20200302-1127" -Dpackaging="jar"
 
+

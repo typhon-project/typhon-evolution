@@ -1,16 +1,17 @@
 package com.typhon.evolutiontool.services.typhonQL;
 
+import com.google.common.collect.Sets;
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClient;
 import com.typhon.evolutiontool.client.TyphonQLWebServiceClientImpl;
 import com.typhon.evolutiontool.datatypes.*;
 import com.typhon.evolutiontool.entities.*;
-import com.typhon.evolutiontool.entities.Collection;
 import com.typhon.evolutiontool.utils.TyphonMLUtils;
+import com.typhon.evolutiontool.utils.UUIDGenerator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import typhonml.*;
+import typhonml.Model;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String COMMA = ",";
     private static final String COLON = ":";
     private static final String EQUALS = "=";
+    private static final String DOUBLE_EQUALS = "==";
     private static final String OPENING_CURLY_BRACE = "{";
     private static final String CLOSING_CURLY_BRACE = "}";
     private static final String OPENING_SQUARE_BRACKET = "[";
@@ -57,6 +59,7 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
     private static final String CARDINALITY_ONE_ONE = "[1..1]";
     private static final String CARDINALITY_ZERO_MANY = "[0..*]";
     private static final String CARDINALITY_ONE_MANY = "[1..*]";
+    private static final String UUID_TYPE = "uuid";
     private static final String UUID_ATTRIBUTE = "@id";
 
     private Logger logger = LoggerFactory.getLogger(TyphonQLInterfaceImpl.class);
@@ -101,7 +104,8 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         if (!databaseName.equals("DocumentDatabase")) {
             if (entity.getAttributes() != null && !entity.getAttributes().isEmpty()) {
                 for (String attributeName : entity.getAttributes().keySet()) {
-                    createEntityAttribute(entity.getName(), attributeName, entity.getAttributes().get(attributeName));
+//                    createEntityAttribute(entity.getName(), attributeName, entity.getAttributes().get(attributeName));
+                    addAttribute(attributeName, entity.getName(), entity.getAttributes().get(attributeName));
                 }
             }
         }
@@ -151,14 +155,14 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         }
         String tql = query.toString();
         JSONObject result = new JSONObject(getTyphonQLWebServiceClient().query(tql));
-        logger.info("Result: {}", result);
+        logger.debug("Result: {}", result);
         JSONArray attributes = result.getJSONArray("columnNames");
         JSONArray attributesValues = result.getJSONArray("values");
-        logger.info("Selected attributes: {}", attributes);
-        logger.info("Selected entities values: {}", attributesValues);
+        logger.debug("Selected attributes: {}", attributes);
+        logger.debug("Selected entities values: {}", attributesValues);
         WorkingSet ws = new WorkingSetImpl();
         if (attributesValues != null && !attributesValues.isEmpty()) {
-            List<EntityInstance> instances = new ArrayList<>();
+            LinkedList<EntityInstance> instances = new LinkedList<>();
             for (int index = 0; index < attributesValues.length(); index++) {
                 JSONArray entity = (JSONArray) attributesValues.get(index);
                 EntityInstance instance = new EntityInstance((String) entity.get(0));
@@ -168,14 +172,18 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
                     Object attributeValue = entity.get(attributeIndex);
                     //For relations, the field value is a Map containing the key "uuid" and its value
                     if (attributeValue instanceof Map) {
-                        instance.addAttribute(attributeName, "#" + ((Map) attributeValue).get("uuid"));
+                        instance.addAttribute(attributeName, "#" + ((Map) attributeValue).get(UUID_TYPE));
                     } else {
+                        if (attributeValue instanceof String) {
+                            attributeValue = ((String) attributeValue).replaceAll("\r\n", "\\\\n").replaceAll("\r|\n","\\\\n");
+                        }
                         instance.addAttribute(attributeName, attributeValue);
                     }
                 }
                 instances.add(instance);
             }
             ws.addEntityRows(entityName, instances);
+            logger.info("# of selected instances for entity '{}': {}", entityName, instances.size());
         }
         return ws;
     }
@@ -216,60 +224,201 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
             Map<String, DataTypeDO> attributes = entityDO.getAttributes();
             Set<String> attributesNames = attributes.keySet();
             List<String> attributesTypes = getQLAttributesTypes(attributes);
-            StringBuilder query = new StringBuilder("\"query\"").append(COLON).append("\"").append(INSERT).append(entityName).append(OPENING_CURLY_BRACE).append(attributesNames.stream().map(name -> name + COLON.trim() + "??" + name).collect(Collectors.joining(COMMA))).append(CLOSING_CURLY_BRACE).append("\"").append(COMMA);
-            StringBuilder parameterNames = new StringBuilder("\"parameterNames\"").append(COLON).append(OPENING_SQUARE_BRACKET).append(attributesNames.stream().map(name -> "\"" + name + "\"").collect(Collectors.joining(COMMA))).append(CLOSING_SQUARE_BRACKET).append(COMMA);
-            StringBuilder parameterTypes = new StringBuilder("\"parameterTypes\"").append(COLON).append(OPENING_SQUARE_BRACKET).append(attributesTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA))).append(CLOSING_SQUARE_BRACKET).append(COMMA);
-            StringBuilder boundRows = new StringBuilder("\"boundRows\"").append(COLON).append(instances.stream().map(inst -> inst.getAttributes().values().stream().map(value -> "\"" + value + "\"").collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET))).collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET)));
-            logger.info("Query: {}", query.toString());
-            logger.info("Parameter names: {}", parameterNames.toString());
-            logger.info("Parameter types: {}", parameterTypes.toString());
-            logger.info("Rows: {}", boundRows.toString());
+            Set<String> relationsNames = entityDO.getRelations().stream().map(RelationDO::getName).collect(Collectors.toSet());
+            StringBuilder query = new StringBuilder("\"query\"").append(COLON).append("\"").append(INSERT).append(entityName).append(OPENING_CURLY_BRACE)
+                    .append(UUID_ATTRIBUTE).append(COLON.trim()).append("??").append(UUID_TYPE.toUpperCase()).append(COMMA)
+                    .append(attributesNames.stream().map(name -> name + COLON.trim() + "??" + name).collect(Collectors.joining(COMMA)))
+//                    .append(!relationsNames.isEmpty() ? "," : "")
+//                    .append(!relationsNames.isEmpty() ? relationsNames.stream().map(name -> name + COLON.trim() + "??" + name).collect(Collectors.joining(COMMA)) : "")
+                    .append(CLOSING_CURLY_BRACE).append("\"").append(COMMA);
+            StringBuilder parameterNames = new StringBuilder("\"parameterNames\"").append(COLON).append(OPENING_SQUARE_BRACKET)
+                    .append("\"").append(UUID_TYPE.toUpperCase()).append("\"").append(COMMA)
+                    .append(attributesNames.stream().map(name -> "\"" + name + "\"").collect(Collectors.joining(COMMA)))
+//                    .append(!relationsNames.isEmpty() ? "," : "")
+//                    .append(!relationsNames.isEmpty() ? relationsNames.stream().map(name -> "\"" + name + "\"").collect(Collectors.joining(COMMA)) : "")
+                    .append(CLOSING_SQUARE_BRACKET).append(COMMA);
+            StringBuilder parameterTypes = new StringBuilder("\"parameterTypes\"").append(COLON).append(OPENING_SQUARE_BRACKET)
+                    .append("\"").append(UUID_TYPE).append("\"").append(COMMA)
+                    .append(attributesTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA)))
+//                    .append(!relationsNames.isEmpty() ? "," : "")
+//                    .append(!relationsNames.isEmpty() ? relationTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA)) : "")
+                    .append(CLOSING_SQUARE_BRACKET).append(COMMA);
+            Set<EntityInstance> orderedInstances = orderInstancesByAttributesAndRelationsNames(entityName, instances, attributesNames, relationsNames);
+            StringBuilder boundRows = new StringBuilder("\"boundRows\"").append(COLON)
+                    .append(orderedInstances.stream().map(inst -> inst.getAttributes().values().stream().map(value -> value.toString().equals("null") ? null : "\"" + value + "\"").collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET))).collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET)));
+            logger.debug("Query: {}", query.toString());
+            logger.debug("Parameter names: {}", parameterNames.toString());
+            logger.debug("Parameter types: {}", parameterTypes.toString());
+            logger.debug("Rows: {}", boundRows.toString());
             //One single insert statement code (not working anymore and worse performance):
 //            List<String> insertQueries = new ArrayList<>();
 //            for (EntityInstance instance : instances) {
 //                Map<String, Object> attributes = instance.getAttributes();
 //                insertQueries.add(attributes.entrySet().stream().map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, entityDO)).collect(Collectors.joining(COMMA, entityName + OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim())));
 //            }
-            tql = new StringBuilder(OPENING_CURLY_BRACE).append(query.toString()).append(parameterNames.toString()).append(parameterTypes.toString()).append(boundRows.toString()).append(CLOSING_CURLY_BRACE).toString();
-            logger.info("QL query: {}", tql);
+            logger.info("# of inserted instances for entity '{}': {}", entityName, instances.size());
+            tql = OPENING_CURLY_BRACE + query.toString() + parameterNames.toString() + parameterTypes.toString() + boundRows.toString() + CLOSING_CURLY_BRACE;
+            logger.debug("QL insert query: {}", tql);
             getTyphonQLWebServiceClient().update(tql);
+
+            if (!orderedInstances.isEmpty()) {
+                for (RelationDO relationDO : entityDO.getRelations()) {
+                    String relationName = relationDO.getName();
+                    String updateTql;
+                    switch (relationDO.getCardinality().getValue()) {
+                        case 0:
+                        case 1: updateTql = "{\"query\":\"" + UPDATE + entityName + " x where x.@id == ??UUID set {" + relationName + ": ??UUID2}\",\"parameterNames\":[\"UUID\", \"UUID2\"],\"parameterTypes\":[\"uuid\", \"uuid\"],\"boundRows\":"; break;
+                        case 2:
+                        case 3:
+                        default: updateTql = "{\"query\":\"" + UPDATE + entityName + " x where x.@id == ??UUID set {" + relationName + "+: [??UUID2]}\",\"parameterNames\":[\"UUID\", \"UUID2\"],\"parameterTypes\":[\"uuid\", \"uuid\"],\"boundRows\":"; break;
+                    }
+//                    boundRows\":[[\"018ca4a2-956a-3af8-bb52-4d6fb4095512\", \"3a1b6956-801f-3856-8324-cbb2e1c73571\"]";
+                    List<String> totalBoundRows = new ArrayList<>();
+                    boolean empty = true;
+                    for (EntityInstance instance : orderedInstances) {
+                        String instanceUuid = (String) instance.getAttributes().get(UUID_TYPE);
+                        Set<String> uuids = instance.getRelations().get(relationName);
+                        //[[instanceUUid, uuid1], [instanceUUid, uuid2]]
+                        if (uuids != null) {
+                            String currentBoundRows = uuids.stream().map(uuid -> OPENING_SQUARE_BRACKET + "\"" + instanceUuid + "\"" + COMMA + "\"" + uuid + "\"" + CLOSING_SQUARE_BRACKET).collect(Collectors.joining(COMMA));
+                            totalBoundRows.add(currentBoundRows);
+                            if (!uuids.isEmpty()) {
+                                empty = false;
+                            }
+                        }
+                    }
+                    String finalBoundRows = totalBoundRows.stream().collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET));
+                    updateTql = updateTql + finalBoundRows + CLOSING_CURLY_BRACE;
+                    logger.info("# of updated instances for relation '{}': {}", relationName, totalBoundRows.size());
+                    if (!empty) {
+                        getTyphonQLWebServiceClient().update(updateTql);
+                    }
+                }
+            }
         }
         return tql;
+    }
+
+    /**
+     * Orders the entity instances attributes and relations according to the ordered list of the parameters and relations names from the insert query
+     *
+     * @param entityName      the name of the entity containing the attributes and the relations
+     * @param instances       the entity instances to order
+     * @param attributesNames the ordered set of parameters names
+     * @param relationsNames  the ordered set of relations names
+     * @return the ordered entity instances list
+     */
+    private Set<EntityInstance> orderInstancesByAttributesAndRelationsNames(String entityName, List<EntityInstance> instances, Set<String> attributesNames, Set<String> relationsNames) {
+        Set<EntityInstance> orderedInstances = new HashSet<>();
+        Set<String> uuids = new HashSet<>();
+        if (instances != null && !instances.isEmpty()) {
+            for (EntityInstance instance : instances) {
+                String newUuid = UUIDGenerator.buildUUID(entityName, Collections.singletonList(instance.getUuid()));
+                if (!uuids.contains(newUuid)) {
+                    uuids.add(newUuid);
+                    EntityInstance orderedInstance = new EntityInstance(newUuid);
+                    Map<String, Object> instanceAttributes = instance.getAttributes();
+                    LinkedHashMap<String, Object> orderedAttributes = new LinkedHashMap<>();
+                    orderedAttributes.put(UUID_TYPE, newUuid);
+                    LinkedHashMap<String, Set<String>> orderedRelations = new LinkedHashMap<>();
+                    if (instanceAttributes != null && !instanceAttributes.isEmpty()) {
+                        if (attributesNames != null && !attributesNames.isEmpty()) {
+                            for (String attributeName : attributesNames) {
+                                orderedAttributes.put(attributeName, instanceAttributes.get(attributeName));
+                            }
+                        }
+                        if (relationsNames != null && !relationsNames.isEmpty()) {
+                            for (String relationsName : relationsNames) {
+                                String value = instanceAttributes.get(relationsName).toString();
+                                if (!value.equals("null")) {
+                                    orderedRelations.put(relationsName, Sets.newHashSet(instanceAttributes.get(relationsName).toString()));
+                                }
+                            }
+                        }
+                    }
+                    orderedInstance.setAttributes(orderedAttributes);
+                    orderedInstance.setRelations(orderedRelations);
+                    orderedInstances.add(orderedInstance);
+                } else {
+                    for (EntityInstance existingInstance : orderedInstances) {
+                        if (existingInstance.getUuid().equals(newUuid)) {
+                            Map<String, Object> instanceAttributes = instance.getAttributes();
+                            if (instanceAttributes != null && !instanceAttributes.isEmpty()) {
+                                if (relationsNames != null && !relationsNames.isEmpty()) {
+                                    for (String relationsName : relationsNames) {
+                                        Map<String, Set<String>> existingRelations = existingInstance.getRelations();
+                                        Set<String> relations = existingRelations.get(relationsName);
+                                        String value = instanceAttributes.get(relationsName).toString();
+                                        if (!value.equals("null")) {
+                                            if (relations == null) {
+                                                relations = Sets.newHashSet();
+                                                existingRelations.put(relationsName, relations);
+                                            }
+                                            relations.add(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return orderedInstances;
     }
 
     private List<String> getQLAttributesTypes(Map<String, DataTypeDO> attributes) {
         List<String> attributesTypes = new ArrayList<>();
         if (attributes != null && !attributes.isEmpty()) {
-            for (String attributeName: attributes.keySet()) {
+            for (String attributeName : attributes.keySet()) {
                 DataTypeDO attributeType = attributes.get(attributeName);
-                if (attributeType instanceof IntTypeDO) { attributesTypes.add("int"); continue; }
-                if (attributeType instanceof BigIntTypeDO) { attributesTypes.add("bigint"); continue; }
-                if (attributeType instanceof FloatTypeDO) { attributesTypes.add("float"); continue; }
-                if (attributeType instanceof StringTypeDO) { attributesTypes.add("string"); continue; }
-                if (attributeType instanceof BoolTypeDO) { attributesTypes.add("bool"); continue; }
-                if (attributeType instanceof TextTypeDO) { attributesTypes.add("text"); continue; }
-                if (attributeType instanceof DateTypeDO) { attributesTypes.add("date"); continue; }
-                if (attributeType instanceof DatetimeTypeDO) { attributesTypes.add("datetime"); continue; }
-                if (attributeType instanceof PointTypeDO) { attributesTypes.add("point"); continue; }
-                if (attributeType instanceof PolygonTypeDO) { attributesTypes.add("polygon"); continue; }
-                if (attributeType instanceof BlobTypeDO) { attributesTypes.add("blob"); }
+                if (attributeType instanceof IntTypeDO) {
+                    attributesTypes.add("int");
+                    continue;
+                }
+                if (attributeType instanceof BigIntTypeDO) {
+                    attributesTypes.add("bigint");
+                    continue;
+                }
+                if (attributeType instanceof FloatTypeDO) {
+                    attributesTypes.add("float");
+                    continue;
+                }
+                if (attributeType instanceof StringTypeDO) {
+                    attributesTypes.add("string");
+                    continue;
+                }
+                if (attributeType instanceof BoolTypeDO) {
+                    attributesTypes.add("bool");
+                    continue;
+                }
+                if (attributeType instanceof TextTypeDO) {
+                    attributesTypes.add("text");
+                    continue;
+                }
+                if (attributeType instanceof DateTypeDO) {
+                    attributesTypes.add("date");
+                    continue;
+                }
+                if (attributeType instanceof DatetimeTypeDO) {
+                    attributesTypes.add("datetime");
+                    continue;
+                }
+                if (attributeType instanceof PointTypeDO) {
+                    attributesTypes.add("point");
+                    continue;
+                }
+                if (attributeType instanceof PolygonTypeDO) {
+                    attributesTypes.add("polygon");
+                    continue;
+                }
+                if (attributeType instanceof BlobTypeDO) {
+                    attributesTypes.add("blob");
+                }
             }
         }
         return attributesTypes;
     }
-
-//    insert Products_migrated { Discontinued : "0",UnitPrice : 18.0,ProductName : "Chai",QuantityPerUnit : "10 boxes x 20 bags",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 10,CategoriesID : 1,UnitsInStock : 39,SuppliersID : 1},
-//    Products_migrated { Discontinued : "0",UnitPrice : 31.0,ProductName : "Ikura",QuantityPerUnit : "12 - 200 ml jars",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 0,CategoriesID : 8,UnitsInStock : 31,SuppliersID : 4},
-//    Products_migrated { Discontinued : "0",UnitPrice : 21.0,ProductName : "Queso Cabrales",QuantityPerUnit : "1 kg pkg.",UnitsOnOrder : 30,ProductId : 0,ReorderLevel : 30,CategoriesID : 4,UnitsInStock : 22,SuppliersID : 5},
-//    Products_migrated { Discontinued : "0",UnitPrice : 38.0,ProductName : "Queso Manchego La Pastora",QuantityPerUnit : "10 - 500 g pkgs.",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 0,CategoriesID : 4,UnitsInStock : 86,SuppliersID : 5},
-//    Products_migrated { Discontinued : "0",UnitPrice : 6.0,ProductName : "Konbu",QuantityPerUnit : "2 kg box",UnitsOnOrder : 0,ProductId : 0,ReorderLevel : 5,CategoriesID : 8,UnitsInStock : 24,SuppliersID : 6}
-
-//    {
-//    "query":"insert Products{ProductId:??ProductId,ProductName:??ProductName,QuantityPerUnit:??QuantityPerUnit,UnitPrice:??UnitPrice,UnitsInStock:??UnitsInStock,UnitsOnOrder:??UnitsOnOrder,ReorderLevel:??ReorderLevel,Discontinued:??Discontinued,CategoriesID:??CategoriesID,SuppliersID:??SuppliersID}",
-//    "parameterNames":["ProductId", "ProductName","SuppliersID","CategoriesID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued"],
-//    "parameterTypes": ["int","string","int","int","string","float","int","int","int","string"],
-//    "boundRows":[["1","Chai","1","1","10 boxes x 20 bags","18.0000","39","0","10","0"],["2","Chang","1","1","24 - 12 oz bottles","19.0000","17","40","25","0"]
-//    }
 
     @Override
     public void deleteEntityData(String entityName, String attributeName, String attributeValue) {
@@ -368,38 +517,73 @@ public class TyphonQLInterfaceImpl implements TyphonQLInterface {
         String tql = "";
         if (firstOrSecondEntityRelation) {
             if (entityInstances != null && !entityInstances.isEmpty()) {
+                boolean areParametersInitialised = false;
+                List<String> boundRows = new ArrayList<>();
+                String query = "";
+                String parameterNames = "";
+                String parameterTypes = "";
                 for (EntityInstance instance : entityInstances) {
                     String relationValue = (String) instance.getAttribute(relationName);
                     for (EntityInstance secondInstance : secondEntityInstances) {
+                        if (!areParametersInitialised) {
+                            List<String> attributesTypes = getQLAttributesTypes(secondEntity.getAttributes());
+                            query = "\"query\":\"" + UPDATE + entityName + BLANK + entityName.toLowerCase() + BLANK + WHERE + entityName.toLowerCase() + DOT + UUID_ATTRIBUTE + DOUBLE_EQUALS + "??UUID" + BLANK
+                                    + SET + OPENING_CURLY_BRACE
+                                    + secondInstance.getAttributes().keySet().stream().map(o -> o + ":" + " ??" + o).collect(Collectors.joining(COMMA))
+                                    + CLOSING_CURLY_BRACE + "\"" + COMMA;
+                            parameterNames = "\"parameterNames\":" + OPENING_SQUARE_BRACKET + "\"UUID\"" + secondInstance.getAttributes().keySet().stream().map(o -> "\"" + o + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + CLOSING_SQUARE_BRACKET + COMMA;
+                            parameterTypes = "\"parameterTypes\":" + OPENING_SQUARE_BRACKET + "\"uuid\"" + attributesTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + CLOSING_SQUARE_BRACKET + COMMA;
+                            areParametersInitialised = true;
+                        }
                         if (secondInstance.getUuid().equals(relationValue)) {
-                            EntityInstance referencedInstance = secondInstance;
-                                String updateQuery = referencedInstance.getAttributes().entrySet().stream()
-                                        .filter(attribute -> !attribute.getKey().equals(relationName))
-                                        .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
-                                tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
-                                        .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(instance.getUuid()).append(BLANK)
-                                        .append(SET).append(updateQuery).toString();
-                            getTyphonQLWebServiceClient().update(tql);
+                            boundRows.add("[" + "\"" + instance.getUuid() + "\"" + secondInstance.getAttributes().keySet().stream().map(key -> secondInstance.getAttributes().get(key).toString().equals("null") ? null : ("\"" + secondInstance.getAttributes().get(key)) + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + "]");
                             break;
+                            //Old code, inserting without parametrized queries.
+//                            EntityInstance referencedInstance = secondInstance;
+//                            String updateQuery = referencedInstance.getAttributes().entrySet().stream()
+//                                    .filter(attribute -> !attribute.getKey().equals(relationName))
+//                                    .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
+//                            tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
+//                                    .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(instance.getUuid()).append(BLANK)
+//                                    .append(SET).append(updateQuery).toString();
+//                            getTyphonQLWebServiceClient().update(tql);
+//                            break;
                         }
                     }
                 }
+                logger.info("# of updated instances for entity '{}': {}", entityName, boundRows.size());
+                String completeBoundRows = "\"boundRows\":" + boundRows.stream().collect(Collectors.joining(COMMA, OPENING_SQUARE_BRACKET, CLOSING_SQUARE_BRACKET));
+                tql = OPENING_CURLY_BRACE + query + parameterNames + parameterTypes + completeBoundRows + CLOSING_CURLY_BRACE;
+                getTyphonQLWebServiceClient().update(tql);
             }
         } else {
+            //TODO adapt for the inversed relation
             if (secondEntityInstances != null && !secondEntityInstances.isEmpty()) {
                 for (EntityInstance instance : secondEntityInstances) {
                     String relationValue = (String) instance.getAttribute(relationName);
                     for (EntityInstance entityInstance : entityInstances) {
                         if (entityInstance.getUuid().equals(relationValue)) {
-                            EntityInstance referencedInstance = entityInstance;
-                            String updateQuery = instance.getAttributes().entrySet().stream()
-                                    .filter(attribute -> !attribute.getKey().equals(relationName))
-                                    .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
-                            tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
-                                    .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(referencedInstance.getUuid()).append(BLANK)
-                                    .append(SET).append(updateQuery).toString();
+                            List<String> attributesTypes = getQLAttributesTypes(secondEntity.getAttributes());
+                            String query = "\"query\":\"" + UPDATE + entityName + BLANK + entityName.toLowerCase() + BLANK + WHERE + entityName.toLowerCase() + DOT + UUID_ATTRIBUTE + DOUBLE_EQUALS + "??UUID" + BLANK
+                                    + SET + OPENING_CURLY_BRACE
+                                    + entityInstance.getAttributes().keySet().stream().map(o -> o + ":" + " ??" + o).collect(Collectors.joining(COMMA))
+                                    + CLOSING_CURLY_BRACE + "\"" + COMMA;
+                            String parameterNames = "\"parameterNames\":" + OPENING_SQUARE_BRACKET + "\"UUID\"" + entityInstance.getAttributes().keySet().stream().map(o -> "\"" + o + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + CLOSING_SQUARE_BRACKET + COMMA;
+                            String parameterTypes = "\"parameterTypes\":" + OPENING_SQUARE_BRACKET + "\"uuid\"" + attributesTypes.stream().map(type -> "\"" + type + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + CLOSING_SQUARE_BRACKET + COMMA;
+                            String boundRows = "\"boundRows\":[[" + "\"" + instance.getUuid() + "\"" + entityInstance.getAttributes().keySet().stream().map(key -> entityInstance.getAttributes().get(key).toString().equals("null") ? null : ("\"" + entityInstance.getAttributes().get(key)) + "\"").collect(Collectors.joining(COMMA, COMMA, "")) + "]]";
+                            tql = OPENING_CURLY_BRACE + query + parameterNames + parameterTypes + boundRows + CLOSING_CURLY_BRACE;
                             getTyphonQLWebServiceClient().update(tql);
                             break;
+                            //Old code, inserting without parametrized queries.
+//                            EntityInstance referencedInstance = entityInstance;
+//                            String updateQuery = instance.getAttributes().entrySet().stream()
+//                                    .filter(attribute -> !attribute.getKey().equals(relationName))
+//                                    .map(entrySet -> entrySet.getKey() + COLON + getAttributeValueByType(entrySet, secondEntity)).collect(Collectors.joining(COMMA, OPENING_CURLY_BRACE, CLOSING_CURLY_BRACE.trim()));
+//                            tql = new StringBuilder(UPDATE).append(entityName).append(BLANK).append(entityName.toLowerCase()).append(BLANK)
+//                                    .append(WHERE).append(entityName.toLowerCase()).append(DOT).append(UUID_ATTRIBUTE).append(EQUALS).append("#").append(referencedInstance.getUuid()).append(BLANK)
+//                                    .append(SET).append(updateQuery).toString();
+//                            getTyphonQLWebServiceClient().update(tql);
+//                            break;
                         }
                     }
                 }

@@ -118,4 +118,12 @@ public interface TyphonMLInterface {
      * @return the ML model containing the merged entity
      */
     Model mergeEntities(String firstEntityName, String secondEntityName, Model model);
+
+    /**
+     * Retrieve the relations referencing the entity to migrate
+     * @param entityName the name of the entity to migrate
+     * @param model the ML model containing the schema
+     * @return
+     */
+    Map<String, String> getEntityIncomingRelations(String entityName, Model model);
 }

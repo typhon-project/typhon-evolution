@@ -7,6 +7,7 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.junit.Test;
 import typhonml.AddIndex;
 import typhonml.MergeEntity;
+import typhonml.MigrateEntity;
 
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -36,6 +37,7 @@ public class XMIAndTMLTests extends InitialTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+//        TyphonMLUtils.typhonMLPackageRegistering();
         sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/xmi.xmi");
         Services.serializeTML(sourceModel, "src/test/resources/tml.tml");
         String tmlContent = null;
@@ -64,18 +66,18 @@ public class XMIAndTMLTests extends InitialTest {
         assert tmlContent != null;
         assert changeOperators != null;
         try (PrintWriter out = new PrintWriter("src/test/resources/tml.tml")) {
-            out.println(tmlContent);
-            out.println(changeOperators);
+            out.print(tmlContent + " " + changeOperators);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         sourceModel = Services.loadXtextModel("src/test/resources/tml.tml");
         Services.serialize(sourceModel, "src/test/resources/xmi.xmi");
 
-        assert ((AddIndex) sourceModel.getChangeOperators().get(0)).getTable().getName().equals("AddressDB");
-        assert !((AddIndex) sourceModel.getChangeOperators().get(0)).getAttributes().isEmpty();
-        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getFirstEntityToMerge().getName().equals("User");
-        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getSecondEntityToMerge().getName().equals("Address");
-        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getNewEntityName().equals("User.address");
+        assert ((MigrateEntity) sourceModel.getChangeOperators().get(0)).getEntity().getName().equals("Customers");
+//        assert ((AddIndex) sourceModel.getChangeOperators().get(0)).getTable().getName().equals("AddressDB");
+//        assert !((AddIndex) sourceModel.getChangeOperators().get(0)).getAttributes().isEmpty();
+//        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getFirstEntityToMerge().getName().equals("User");
+//        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getSecondEntityToMerge().getName().equals("Address");
+//        assert ((MergeEntity) sourceModel.getChangeOperators().get(1)).getNewEntityName().equals("User.address");
     }
 }

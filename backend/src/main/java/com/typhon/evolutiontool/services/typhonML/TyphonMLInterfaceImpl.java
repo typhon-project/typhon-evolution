@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import typhonml.Collection;
 import typhonml.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TyphonMLInterfaceImpl implements TyphonMLInterface {
@@ -269,7 +267,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         typhonml.Entity entity = TyphonmlFactory.eINSTANCE.createEntity();
         entity.setName(newEntity.getName());
         newModel.getEntities().add(entity);
-        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type, newModel)));
+        newEntity.getAttributes().forEach((name, type) -> entity.getAttributes().add(this.createAttribute(name, type)));
         newEntity.getRelations().forEach(relationDO -> entity.getRelations().add(this.createRelation(relationDO, newModel)));
         return newModel;
     }
@@ -492,6 +490,26 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
             }
         }
         return newModel;
+    }
+
+    @Override
+    public Map<String, String> getEntityIncomingRelations(String entityName, Model model) {
+        Map<String, String> incomingRelationsNames = new HashMap<>();
+        Entity entityToMerge = getEntityByName(entityName, model);
+        List<Entity> modelEntities = model.getEntities();
+        if (entityToMerge != null && modelEntities != null && !modelEntities.isEmpty()) {
+            for (Entity entity : modelEntities) {
+                List<Relation> relations = entity.getRelations();
+                if (relations != null && !relations.isEmpty()) {
+                    for (Relation relation : relations) {
+                        if (entityToMerge.getName().equals(relation.getType().getName())) {
+                            incomingRelationsNames.put(entity.getName(), relation.getName());
+                        }
+                    }
+                }
+            }
+        }
+        return incomingRelationsNames;
     }
 
     @Override
@@ -722,7 +740,7 @@ public class TyphonMLInterfaceImpl implements TyphonMLInterface {
         return relation;
     }
 
-    private Attribute createAttribute(String name, DataTypeDO dataType, Model targetModel) {
+    private Attribute createAttribute(String name, DataTypeDO dataType) {
         Attribute attribute = TyphonmlFactory.eINSTANCE.createAttribute();
         attribute.setName(name);
         attribute.setType(getDataType(dataType));

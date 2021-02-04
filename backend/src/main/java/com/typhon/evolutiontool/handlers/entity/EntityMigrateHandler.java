@@ -12,6 +12,8 @@ import typhonml.Entity;
 import typhonml.Model;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EntityMigrateHandler extends BaseHandler {
 
@@ -33,6 +35,7 @@ public class EntityMigrateHandler extends BaseHandler {
             String targetEntityName = sourceEntityName + "_migrated";
             entityDO.setName(targetEntityName);
             DatabaseType targetDatabaseType = getDatabaseType(database);
+            Map<String, String> incomingRelations = typhonMLInterface.getEntityIncomingRelations(sourceEntityName, model);
 
             //Typhon ML
             //Check entity self referencing relations
@@ -40,18 +43,29 @@ public class EntityMigrateHandler extends BaseHandler {
             Model targetModel = typhonMLInterface.createEntityType(model, entityDO);
 //            targetModel = typhonMLInterface.createDatabase(targetDatabaseType, database.getName(), targetModel);
             targetModel = typhonMLInterface.createNewEntityMappingInDatabase(targetDatabaseType, database.getName(), targetEntityName, targetEntityName, targetModel);
+            if (incomingRelations != null && !incomingRelations.isEmpty()) {
+                for (String entityName : incomingRelations.keySet()) {
+                    targetModel = typhonMLInterface.deleteRelationshipInEntity(incomingRelations.get(entityName), entityName, targetModel);
+                }
+            }
             targetModel = typhonMLInterface.removeCurrentChangeOperator(targetModel);
 
             //Typhon QL
             try {
                 //Select the source entity data
-                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, entityDO.getAttributes().keySet(), null, null, null);
+                WorkingSet entityData = typhonQLInterface.selectEntityData(sourceEntityName, entityDO.getAttributes().keySet(), entityDO.getRelations().stream().map(RelationDO::getName).collect(Collectors.toList()), null, null);
                 //Manipulate the source entity data (modify the entity name, to the new entity name)
                 typhonQLInterface.updateEntityNameInSourceEntityData(entityData, sourceEntityName, targetEntityName);
                 //Upload the new XMI to the polystore
                 typhonQLInterface.uploadSchema(targetModel);
                 //Create the new entity, with its attributes and relations
                 typhonQLInterface.createEntity(entityDO, database.getName());
+                //Drop entity incoming relations
+                if (incomingRelations != null && !incomingRelations.isEmpty()) {
+                    for (String entityName : incomingRelations.keySet()) {
+                        typhonQLInterface.deleteRelationshipInEntity(incomingRelations.get(entityName), entityName);
+                    }
+                }
                 //Drop the source entity relationships
                 //TODO Drop relation is not yet implemented in TyphonQL
                 if (entityDO.getRelations() != null && !entityDO.getRelations().isEmpty()) {

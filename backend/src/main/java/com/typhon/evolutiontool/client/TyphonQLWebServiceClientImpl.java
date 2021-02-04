@@ -1,7 +1,6 @@
 package com.typhon.evolutiontool.client;
 
 import com.typhon.evolutiontool.utils.ApplicationProperties;
-import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import it.univaq.disim.typhon.acceleo.services.Services;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -40,7 +39,8 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
 
     @Override
     public void uploadModel(String schemaContent) {
-        logger.info("Querying TyphonQL web service to upload a new version of the TyphonML model : {}", schemaContent);
+        logger.info("Querying TyphonQL web service to upload a new version of the TyphonML model");
+        logger.debug("New TyphonML model : {}", schemaContent);
         WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_UPLOAD_ML_MODEL_URL));
         String escapedDoubleQuotesContent = schemaContent.replaceAll("\"", "\\\\\"");
         String json = "{\"name\":\"newTyphonMLModel\",\"contents\":\"" + escapedDoubleQuotesContent + "\"}";
@@ -83,7 +83,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
      */
     @Override
     public String query(String query) {
-        logger.info("Querying TyphonQL web service to execute a DML query: {}", query);
+        logger.info("Querying TyphonQL web service to execute the query: {}", query);
         WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_QUERY_URL));
 //        String query = "from User u select u";
         Response response = webTarget
@@ -94,8 +94,8 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        logger.info(applicationProperties.getValue(API_QUERY_URL) + " result: " + result);
-        logger.info("DML query for the polystore successful");
+        logger.debug(applicationProperties.getValue(API_QUERY_URL) + " result: " + result);
+        logger.info("Query executed successfully");
         return result;
     }
 
@@ -104,7 +104,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
      */
     @Override
     public void update(String query) {
-        logger.info("Querying TyphonQL web service to execute a DDL query: {}", query);
+        logger.info("Querying TyphonQL web service to execute the update query: {}", query != null ? query.length() <= 150 ? query : query.substring(0, 149) + " ..." : "");
         WebTarget webTarget = restClient.target(applicationProperties.getValue(POLYSTORE_API_URL)).path(applicationProperties.getValue(API_UPDATE_URL));
         Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
@@ -114,8 +114,8 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
             logger.error("Error during the web service query call: {}", webTarget.getUri());
         }
         String result = response.readEntity(String.class);
-        logger.info(applicationProperties.getValue(API_UPDATE_URL) + " result: " + result);
-        logger.info("DDL query for the polystore successful");
+        logger.debug(applicationProperties.getValue(API_UPDATE_URL) + " result: " + result);
+        logger.info("Update query successfully executed");
     }
 
     /**
@@ -156,7 +156,7 @@ public class TyphonQLWebServiceClientImpl implements TyphonQLWebServiceClient {
         try (PrintWriter out = new PrintWriter("xmis.xmi")) {
             out.println(result);
         } catch (FileNotFoundException e) {
-            System.err.println("Unable to write the content of the XMI file");
+            logger.error("Unable to write the content of the XMI file");
         }
         logger.info("Get TyphonML models successful");
     }

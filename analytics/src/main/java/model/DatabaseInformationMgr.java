@@ -61,8 +61,8 @@ public class DatabaseInformationMgr {
 	public static final String COLUMNDB = "COLUMNDB";
 	public static final String KEYVALUEDB = "KEYVALUEDB";
 	
-	private static final int WS_CONNECT_TIMEOUT = 5000;
-	private static final int WS_READ_TIMEOUT = 5000;
+	public static int WS_CONNECT_TIMEOUT = 5000;
+	public static int WS_READ_TIMEOUT = 5000;
 	private static final JerseyClient restClient = JerseyClientBuilder
 			.createClient(new ClientConfig().property(ClientProperties.CONNECT_TIMEOUT, WS_CONNECT_TIMEOUT)
 					.property(ClientProperties.READ_TIMEOUT, WS_READ_TIMEOUT));

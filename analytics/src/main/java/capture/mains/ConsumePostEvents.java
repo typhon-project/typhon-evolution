@@ -49,6 +49,7 @@ import ac.york.typhon.analytics.commons.serialization.EventSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import db.AnalyticsDB;
+import model.DatabaseInformationMgr;
 import model.TyphonModel;
 import query.Query;
 import recommendations.Recommendation;
@@ -117,6 +118,8 @@ public class ConsumePostEvents {
 		setAnalyticsDBPassword(analytics_db_pwd);
 		String analytics_db_name = getEnvironmentVariable(EnvironmentVariable.ANALYTICS_DB_NAME);
 		setAnalyticsDBName(analytics_db_name);
+		String ws_timeout_time = getEnvironmentVariable(EnvironmentVariable.WS_TIMEOUT_MS_TIME);
+		setWsTimeoutTime(ws_timeout_time);
 
 	}
 
@@ -218,6 +221,21 @@ public class ConsumePostEvents {
 		}
 		logger.info("DEFAULT KAFKA_IP: " + KAFKA_CHANNEL_IP);
 
+	}
+	
+	private static void setWsTimeoutTime(String timeout) {
+		if(timeout != null) {
+			try {
+				Integer time = Integer.parseInt(timeout);
+				DatabaseInformationMgr.WS_CONNECT_TIMEOUT = time;
+				DatabaseInformationMgr.WS_READ_TIMEOUT = time;
+				logger.info("WS TIMEOUT TIME: " + DatabaseInformationMgr.WS_CONNECT_TIMEOUT);
+				return;
+			} catch (Exception e) {
+			}
+		}
+		
+		logger.info("DEFAULT WS TIMEOUT TIME: " + DatabaseInformationMgr.WS_CONNECT_TIMEOUT);
 	}
 
 	private static void setWakeUpTime(String wakeup) {

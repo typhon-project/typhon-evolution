@@ -12,5 +12,6 @@ public class EnvironmentVariable {
 	public static final String ANALYTICS_DB_USER = "ANALYTICS_DB_USER";
 	public static final String ANALYTICS_DB_PWD = "ANALYTICS_DB_PWD";
 	public static final String ANALYTICS_DB_NAME = "ANALYTICS_DB_NAME";
+	public static final String WS_TIMEOUT_MS_TIME = "WS_TIMEOUT_MS_TIME";
 
 }

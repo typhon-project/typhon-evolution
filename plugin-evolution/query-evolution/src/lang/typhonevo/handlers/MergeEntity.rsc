@@ -95,7 +95,7 @@ EvoQuery handle_merge_query(EvoQuery q, EId e1, EId e2, Id relation, Schema s){
 		
 		q = removeExprFromWhere(q, relation);
 		
-		q = setStatusWarn(q, "Entities <e1> and <e2> merged. The query might return a different Query Set");
+		q = setStatusChanged(q, "Entities <e1> and <e2> merged. The query might return a different Query Set");
 		
 		return q;
 	}

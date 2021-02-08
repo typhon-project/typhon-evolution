@@ -79,6 +79,7 @@ EvoQuery handle_merge_query(EvoQuery q, EId e1, EId e2, Id relation, Schema s){
 		e2_alias = bindings[e2];
 		e1_alias = bindings[e1];
 		
+		
 		binding_to_delete = (Binding) `<EId e2> <VId e2_alias>`;
 		q = removeBinding(q, binding_to_delete); 
 		
@@ -86,12 +87,13 @@ EvoQuery handle_merge_query(EvoQuery q, EId e1, EId e2, Id relation, Schema s){
 		q = visit(q){
 			case e2_alias => e1_alias	
 		}
-		
+				
 		// remove duplicate reference for the alias in from
 		q = visit(q){
-			case (Query) `from <{Binding ","}+ bindings> select <Result result>, <Result result> <Where? where> <Agg* a1>`
-				=> (Query) `from <{Binding ","}+ bindings> select <Result result> <Where? where> <Agg* a1>`
+			case (Query) `from <{Binding ","}+ bindings> select <{Result ","}+ s1> <Where? where> <Agg* a1>`
+				=> (Query) `from <{Binding ","}+ bindings> select <{Result ","}+ s1> <Where? where> <Agg* a1>`
 		}
+		
 		
 		q = removeExprFromWhere(q, relation);
 		

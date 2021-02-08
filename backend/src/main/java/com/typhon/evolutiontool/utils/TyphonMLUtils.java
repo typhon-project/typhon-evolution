@@ -6,6 +6,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import typhonml.ChangeOperator;
 import typhonml.Model;
@@ -41,9 +42,24 @@ public class TyphonMLUtils {
     public static Model loadModelTyphonML(String modelPath) {
         ResourceSet resourceSet = new ResourceSetImpl();
         URI uri = URI.createFileURI(modelPath);
+//        EcoreUtil.resolveAll(resourceSet);
         Resource resource = resourceSet.getResource(uri, true);
         Model model = (Model) resource.getContents().get(0);
         return model;
+
+//        EPackage.Registry.INSTANCE.put(TyphonmlPackage.eNS_URI, TyphonmlPackage.eINSTANCE);
+//        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", TyphonmlPackage.eINSTANCE);
+//        Injector injector = new TyphonMLStandaloneSetup().createInjectorAndDoEMFRegistration();
+//        ResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+//        Resource xtextResource = resourceSet.getResource(URI.createURI("pol.tml"), true);
+//        xtextResource.load(null);
+//        EcoreUtil.resolveAll(xtextResource);
+//        Copier copier = new  EcoreUtil.Copier(true, false);
+//        EObject root = copier.copy(xtextResource.getContents().get(0));
+//        copier.copyReferences();
+//        Resource xmiResource = resourceSet.createResource(URI.createURI("test.xmi"));
+//        xmiResource.getContents().add(root);
+//        xmiResource.save(null);
     }
 
 

@@ -8,17 +8,29 @@ import com.typhon.evolutiontool.utils.TyphonMLUtils;
 import org.junit.Test;
 import typhonml.*;
 
+import java.util.Arrays;
+
 public class EntityChangeOperatorsTests extends InitialTest {
 
     @Test
     public void testMigrateEntityChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
-        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/migrateEntity2ChangeOperator.xmi");
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/migrateEntityChangeOperator.xmi");
         MigrateEntity migrateEntity = (MigrateEntity) sourceModel.getChangeOperators().get(0);
         SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
 
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
         TyphonMLUtils.removeChangeOperators(targetModel);
-        TyphonMLUtils.saveModel(targetModel, "src/test/resources/migrateEntity2ChangeOperator_final.xmi");
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/migrateEntityChangeOperator_final.xmi");
+    }
+    @Test
+    public void testMigrateEntityNorthwindChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/schema.xmi");
+        MigrateEntity migrateEntity = (MigrateEntity) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(migrateEntity);
+
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/schema_final.xmi");
     }
 
     @Test
@@ -63,6 +75,17 @@ public class EntityChangeOperatorsTests extends InitialTest {
         targetModel = evolutionService.evolveEntity(smo, sourceModel);
         TyphonMLUtils.removeChangeOperators(targetModel);
         TyphonMLUtils.saveModel(targetModel, "src/test/resources/splitVerticalEntityChangeOperator_final.xmi");
+    }
+
+    @Test
+    public void testSplitVerticalEntityNorthwindChangeOperator() throws InputParameterException, EvolutionOperationNotSupported {
+        sourceModel = TyphonMLUtils.loadModelTyphonML("src/test/resources/northwind_split_vertical.xmi");
+        SplitEntityVertical splitVerticalEntity = (SplitEntityVertical) sourceModel.getChangeOperators().get(0);
+        SMOAdapter smo = SMOFactory.createSMOAdapterFromChangeOperator(splitVerticalEntity);
+
+        targetModel = evolutionService.evolveEntity(smo, sourceModel);
+        TyphonMLUtils.removeChangeOperators(targetModel);
+        TyphonMLUtils.saveModel(targetModel, "src/test/resources/northwind_split_vertical_final.xmi");
     }
 
     @Test

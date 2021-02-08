@@ -1,54 +1,312 @@
 <?xml version="1.0" encoding="ASCII"?>
 <typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
-  <entities name="Review">
-    <attributes xsi:type="typhonml:Attribute" name="id">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
+  <entities name="CustomerDemographics">
+    <attributes xsi:type="typhonml:Attribute" name="CustomerTypeID">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
     </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="content">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    <attributes xsi:type="typhonml:Attribute" name="CustomerDesc">
+      <type xsi:type="typhonml:TextType"/>
     </attributes>
-    <relations name="product" cardinality="one">
+    <relations name="Customers" cardinality="zero_many">
       <type href="src/test/resources/tml.tml#|0"/>
     </relations>
   </entities>
-  <entities name="Product">
-    <attributes xsi:type="typhonml:Attribute" name="id">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="name">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="description">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
-    </attributes>
-    <relations name="orders" cardinality="zero_many">
-      <type href="src/test/resources/tml.tml#|1"/>
-    </relations>
-    <relations name="review" cardinality="zero_many" isContainment="true">
-      <type href="src/test/resources/tml.tml#|2"/>
-      <opposite href="src/test/resources/tml.tml#|3"/>
-    </relations>
-  </entities>
-  <entities name="OrderProduct">
-    <attributes xsi:type="typhonml:Attribute" name="id">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="product_date">
+  <entities name="Orders">
+    <attributes xsi:type="typhonml:Attribute" name="OrderDate">
       <type xsi:type="typhonml:DatetimeType"/>
     </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="totalAmount">
-      <type xsi:type="typhonml:BigintType"/>
+    <attributes xsi:type="typhonml:Attribute" name="RequiredDate">
+      <type xsi:type="typhonml:DatetimeType"/>
     </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="paidWith">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
+    <attributes xsi:type="typhonml:Attribute" name="ShippedDate">
+      <type xsi:type="typhonml:DatetimeType"/>
     </attributes>
-    <relations name="products" cardinality="zero_many">
+    <attributes xsi:type="typhonml:Attribute" name="Freight">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipAddress">
+      <type xsi:type="typhonml:StringType" maxSize="60"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipCity">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipRegion">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipPostalCode">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ShipCountry">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <relations name="Customers">
+      <type href="src/test/resources/tml.tml#|1"/>
+    </relations>
+    <relations name="Employees">
+      <type href="src/test/resources/tml.tml#|2"/>
+    </relations>
+    <relations name="Shippers">
+      <type href="src/test/resources/tml.tml#|3"/>
+    </relations>
+    <relations name="Order_Details" cardinality="zero_many">
       <type href="src/test/resources/tml.tml#|4"/>
       <opposite href="src/test/resources/tml.tml#|5"/>
     </relations>
-    <relations name="users" cardinality="one">
+  </entities>
+  <entities name="Products">
+    <attributes xsi:type="typhonml:Attribute" name="ProductName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="QuantityPerUnit">
+      <type xsi:type="typhonml:StringType" maxSize="20"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitPrice">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitsInStock">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="UnitsOnOrder">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ReorderLevel">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Discontinued">
+      <type xsi:type="typhonml:StringType" maxSize="5"/>
+    </attributes>
+    <relations name="Categories">
       <type href="src/test/resources/tml.tml#|6"/>
-      <opposite href="src/test/resources/tml.tml#|7"/>
+    </relations>
+    <relations name="Suppliers">
+      <type href="src/test/resources/tml.tml#|7"/>
+    </relations>
+    <relations name="Order_Details" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|8"/>
+      <opposite href="src/test/resources/tml.tml#|9"/>
+    </relations>
+  </entities>
+  <entities name="Suppliers">
+    <attributes xsi:type="typhonml:Attribute" name="CompanyName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ContactName">
+      <type xsi:type="typhonml:StringType" maxSize="30"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ContactTitle">
+      <type xsi:type="typhonml:StringType" maxSize="30"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Address">
+      <type xsi:type="typhonml:StringType" maxSize="60"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="City">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Region">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="PostalCode">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Country">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Phone">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Fax">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="HomePage">
+      <type xsi:type="typhonml:TextType"/>
+    </attributes>
+    <relations name="Products" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|10"/>
+      <opposite href="src/test/resources/tml.tml#|11"/>
+    </relations>
+  </entities>
+  <entities name="Customers">
+    <attributes xsi:type="typhonml:Attribute" name="CustomerID">
+      <type xsi:type="typhonml:StringType" maxSize="5"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="CompanyName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ContactName">
+      <type xsi:type="typhonml:StringType" maxSize="30"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="ContactTitle">
+      <type xsi:type="typhonml:StringType" maxSize="30"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Address">
+      <type xsi:type="typhonml:StringType" maxSize="60"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="City">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Region">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="PostalCode">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Country">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Phone">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Fax">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <relations name="Orders" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|12"/>
+      <opposite href="src/test/resources/tml.tml#|13"/>
+    </relations>
+    <relations name="CustomerDemographics" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|14"/>
+      <opposite href="src/test/resources/tml.tml#|15"/>
+    </relations>
+  </entities>
+  <entities name="Categories">
+    <attributes xsi:type="typhonml:Attribute" name="CategoryName">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Description">
+      <type xsi:type="typhonml:TextType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Picture">
+      <type xsi:type="typhonml:TextType"/>
+    </attributes>
+    <relations name="Products" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|16"/>
+      <opposite href="src/test/resources/tml.tml#|17"/>
+    </relations>
+  </entities>
+  <entities name="Shippers">
+    <attributes xsi:type="typhonml:Attribute" name="CompanyName">
+      <type xsi:type="typhonml:StringType" maxSize="40"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Phone">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <relations name="Orders" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|18"/>
+      <opposite href="src/test/resources/tml.tml#|19"/>
+    </relations>
+  </entities>
+  <entities name="Employees">
+    <attributes xsi:type="typhonml:Attribute" name="LastName">
+      <type xsi:type="typhonml:StringType" maxSize="20"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="FirstName">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Title">
+      <type xsi:type="typhonml:StringType" maxSize="30"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="TitleOfCourtesy">
+      <type xsi:type="typhonml:StringType" maxSize="25"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="BirthDate">
+      <type xsi:type="typhonml:DatetimeType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="HireDate">
+      <type xsi:type="typhonml:DatetimeType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Address">
+      <type xsi:type="typhonml:StringType" maxSize="60"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="City">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Region">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="PostalCode">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Country">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="HomePhone">
+      <type xsi:type="typhonml:StringType" maxSize="24"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Extension">
+      <type xsi:type="typhonml:StringType" maxSize="4"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Photo">
+      <type xsi:type="typhonml:TextType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Notes">
+      <type xsi:type="typhonml:TextType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="PhotoPath">
+      <type xsi:type="typhonml:StringType" maxSize="255"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Salary">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <relations name="Employees">
+      <type href="src/test/resources/tml.tml#|20"/>
+    </relations>
+    <relations name="Orders" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|21"/>
+      <opposite href="src/test/resources/tml.tml#|22"/>
+    </relations>
+    <relations name="Employees_1" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|23"/>
+      <opposite href="src/test/resources/tml.tml#|24"/>
+    </relations>
+    <relations name="Territories" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|25"/>
+    </relations>
+  </entities>
+  <entities name="Region">
+    <attributes xsi:type="typhonml:Attribute" name="RegionID">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="RegionDescription">
+      <type xsi:type="typhonml:StringType" maxSize="50"/>
+    </attributes>
+    <relations name="Territories" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|26"/>
+      <opposite href="src/test/resources/tml.tml#|27"/>
+    </relations>
+  </entities>
+  <entities name="Order_Details">
+    <attributes xsi:type="typhonml:Attribute" name="UnitPrice">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Quantity">
+      <type xsi:type="typhonml:IntType"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Discount">
+      <type xsi:type="typhonml:FloatType"/>
+    </attributes>
+    <relations name="Products" cardinality="one">
+      <type href="src/test/resources/tml.tml#|28"/>
+    </relations>
+    <relations name="Orders" cardinality="one">
+      <type href="src/test/resources/tml.tml#|29"/>
+    </relations>
+  </entities>
+  <entities name="Territories">
+    <attributes xsi:type="typhonml:Attribute" name="TerritoryID">
+      <type xsi:type="typhonml:StringType" maxSize="20"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="TerritoryDescription">
+      <type xsi:type="typhonml:StringType" maxSize="50"/>
+    </attributes>
+    <relations name="Region" cardinality="one">
+      <type href="src/test/resources/tml.tml#|30"/>
+    </relations>
+    <relations name="Employees" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|31"/>
+      <opposite href="src/test/resources/tml.tml#|32"/>
     </relations>
   </entities>
   <entities name="User">
@@ -58,20 +316,14 @@
     <attributes xsi:type="typhonml:Attribute" name="name">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="comments">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
-    </attributes>
     <attributes xsi:type="typhonml:Attribute" name="paymentsDetails">
-      <type xsi:type="typhonml:StringType" maxSize="32"/>
+      <type xsi:type="typhonml:StringType"/>
     </attributes>
-    <relations name="orders" cardinality="zero_many">
-      <type href="src/test/resources/tml.tml#|8"/>
-    </relations>
-    <relations name="address" cardinality="one">
-      <type href="src/test/resources/tml.tml#|9"/>
+    <relations name="address" cardinality="zero_many">
+      <type href="src/test/resources/tml.tml#|33"/>
     </relations>
   </entities>
-  <entities name="Address">
+  <entities name="UserAddress">
     <attributes xsi:type="typhonml:Attribute" name="streetName">
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
@@ -88,53 +340,84 @@
       <type xsi:type="typhonml:StringType" maxSize="32"/>
     </attributes>
     <relations name="user" cardinality="one">
-      <type href="src/test/resources/tml.tml#|10"/>
-      <opposite href="src/test/resources/tml.tml#|11"/>
+      <type href="src/test/resources/tml.tml#|34"/>
+      <opposite href="src/test/resources/tml.tml#|35"/>
     </relations>
   </entities>
   <databases xsi:type="typhonml:RelationalDB" name="RelationalDatabase">
-    <tables name="OrderDB">
-      <indexSpec name="orderIndex">
-        <attributes href="src/test/resources/tml.tml#|13"/>
+    <tables name="CustomerDemographics">
+      <idSpec>
+        <attributes href="src/test/resources/tml.tml#|37"/>
+      </idSpec>
+      <entity href="src/test/resources/tml.tml#|36"/>
+    </tables>
+    <tables name="Orders">
+      <indexSpec name="index_0">
+        <attributes href="src/test/resources/tml.tml#|39"/>
+      </indexSpec>
+      <entity href="src/test/resources/tml.tml#|38"/>
+    </tables>
+    <tables name="Products">
+      <indexSpec name="index_1">
+        <attributes href="src/test/resources/tml.tml#|41"/>
+      </indexSpec>
+      <entity href="src/test/resources/tml.tml#|40"/>
+    </tables>
+    <tables name="Suppliers">
+      <indexSpec name="index_2">
+        <attributes href="src/test/resources/tml.tml#|43"/>
+      </indexSpec>
+      <entity href="src/test/resources/tml.tml#|42"/>
+    </tables>
+    <tables name="Customers">
+      <indexSpec name="index_3">
+        <attributes href="src/test/resources/tml.tml#|45"/>
       </indexSpec>
       <idSpec>
-        <attributes href="src/test/resources/tml.tml#|14"/>
+        <attributes href="src/test/resources/tml.tml#|46"/>
       </idSpec>
-      <entity href="src/test/resources/tml.tml#|12"/>
+      <entity href="src/test/resources/tml.tml#|44"/>
     </tables>
-    <tables name="UserDB">
-      <indexSpec name="userIndex">
-        <attributes href="src/test/resources/tml.tml#|16"/>
+    <tables name="Categories">
+      <indexSpec name="index_4">
+        <attributes href="src/test/resources/tml.tml#|48"/>
       </indexSpec>
-      <idSpec>
-        <attributes href="src/test/resources/tml.tml#|17"/>
-      </idSpec>
-      <entity href="src/test/resources/tml.tml#|15"/>
+      <entity href="src/test/resources/tml.tml#|47"/>
     </tables>
-    <tables name="AddressDB">
-      <entity href="src/test/resources/tml.tml#|18"/>
+    <tables name="Shippers">
+      <entity href="src/test/resources/tml.tml#|49"/>
     </tables>
-    <tables name="ProductDB">
-      <indexSpec name="productIndex">
-        <attributes href="src/test/resources/tml.tml#|20"/>
+    <tables name="Employees">
+      <indexSpec name="index_5">
+        <attributes href="src/test/resources/tml.tml#|51"/>
       </indexSpec>
+      <entity href="src/test/resources/tml.tml#|50"/>
+    </tables>
+    <tables name="Region">
       <idSpec>
-        <attributes href="src/test/resources/tml.tml#|21"/>
+        <attributes href="src/test/resources/tml.tml#|53"/>
       </idSpec>
-      <entity href="src/test/resources/tml.tml#|19"/>
+      <entity href="src/test/resources/tml.tml#|52"/>
+    </tables>
+    <tables name="Order_Details">
+      <entity href="src/test/resources/tml.tml#|54"/>
+    </tables>
+    <tables name="Territories">
+      <idSpec>
+        <attributes href="src/test/resources/tml.tml#|56"/>
+      </idSpec>
+      <entity href="src/test/resources/tml.tml#|55"/>
+    </tables>
+    <tables name="User">
+      <entity href="src/test/resources/tml.tml#|57"/>
+    </tables>
+    <tables name="UserAddress">
+      <entity href="src/test/resources/tml.tml#|58"/>
     </tables>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="ReviewDB">
-      <entity href="src/test/resources/tml.tml#|22"/>
-    </collections>
-  </databases>
-  <changeOperators xsi:type="typhonml:AddIndex">
-    <table href="src/test/resources/tml.tml#|23"/>
-    <attributes href="src/test/resources/tml.tml#|24"/>
-  </changeOperators>
-  <changeOperators xsi:type="typhonml:MergeEntity" newEntityName="User.address">
-    <firstEntityToMerge href="src/test/resources/tml.tml#|25"/>
-    <secondEntityToMerge href="src/test/resources/tml.tml#|26"/>
+  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase"/>
+  <changeOperators xsi:type="typhonml:MigrateEntity">
+    <entity href="src/test/resources/tml.tml#|59"/>
+    <newDatabase xsi:type="typhonml:RelationalDB" href="src/test/resources/tml.tml#|60"/>
   </changeOperators>
 </typhonml:Model>

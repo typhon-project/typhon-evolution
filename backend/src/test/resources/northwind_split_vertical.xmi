@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<typhonml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
+<typhonml:Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typhonml="http://org.typhon.dsls.typhonml.sirius">
   <entities name="CustomerDemographics">
     <attributes xsi:type="typhonml:Attribute" name="CustomerTypeID">
       <type xsi:type="typhonml:StringType" maxSize="10"/>
@@ -68,6 +68,7 @@
       <type xsi:type="typhonml:StringType" maxSize="5"/>
     </attributes>
     <relations name="Categories" type="//@entities.5"/>
+    <relations name="Suppliers" type="//@entities.3"/>
     <relations name="Order_Details" type="//@entities.9" cardinality="zero_many" opposite="//@entities.9/@relations.0"/>
   </entities>
   <entities name="Suppliers">
@@ -104,6 +105,7 @@
     <attributes xsi:type="typhonml:Attribute" name="HomePage">
       <type xsi:type="typhonml:TextType"/>
     </attributes>
+    <relations name="Products" type="//@entities.2" cardinality="zero_many" opposite="//@entities.2/@relations.1"/>
   </entities>
   <entities name="Customers">
     <attributes xsi:type="typhonml:Attribute" name="CustomerID">
@@ -182,6 +184,21 @@
     <attributes xsi:type="typhonml:Attribute" name="HireDate">
       <type xsi:type="typhonml:DatetimeType"/>
     </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Address">
+      <type xsi:type="typhonml:StringType" maxSize="60"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="City">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Region">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="PostalCode">
+      <type xsi:type="typhonml:StringType" maxSize="10"/>
+    </attributes>
+    <attributes xsi:type="typhonml:Attribute" name="Country">
+      <type xsi:type="typhonml:StringType" maxSize="15"/>
+    </attributes>
     <attributes xsi:type="typhonml:Attribute" name="HomePhone">
       <type xsi:type="typhonml:StringType" maxSize="24"/>
     </attributes>
@@ -199,21 +216,6 @@
     </attributes>
     <attributes xsi:type="typhonml:Attribute" name="Salary">
       <type xsi:type="typhonml:FloatType"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="Address">
-      <type xsi:type="typhonml:StringType" maxSize="60"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="City">
-      <type xsi:type="typhonml:StringType" maxSize="15"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="Region">
-      <type xsi:type="typhonml:StringType" maxSize="15"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="PostalCode">
-      <type xsi:type="typhonml:StringType" maxSize="10"/>
-    </attributes>
-    <attributes xsi:type="typhonml:Attribute" name="Country">
-      <type xsi:type="typhonml:StringType" maxSize="15"/>
     </attributes>
     <relations name="Employees" type="//@entities.7"/>
     <relations name="Orders" type="//@entities.1" cardinality="zero_many" opposite="//@entities.1/@relations.1"/>
@@ -256,11 +258,18 @@
     <tables name="CustomerDemographics" entity="//@entities.0">
       <idSpec attributes="//@entities.0/@attributes.0"/>
     </tables>
+    <tables name="Orders" entity="//@entities.1">
+      <indexSpec name="index_0" attributes="//@entities.1/@attributes.0"/>
+    </tables>
     <tables name="Products" entity="//@entities.2">
       <indexSpec name="index_1" attributes="//@entities.2/@attributes.0"/>
     </tables>
     <tables name="Suppliers" entity="//@entities.3">
       <indexSpec name="index_2" attributes="//@entities.3/@attributes.0"/>
+    </tables>
+    <tables name="Customers" entity="//@entities.4">
+      <indexSpec name="index_3" attributes="//@entities.4/@attributes.5"/>
+      <idSpec attributes="//@entities.4/@attributes.0"/>
     </tables>
     <tables name="Categories" entity="//@entities.5">
       <indexSpec name="index_4" attributes="//@entities.5/@attributes.0"/>
@@ -277,8 +286,5 @@
       <idSpec attributes="//@entities.10/@attributes.0"/>
     </tables>
   </databases>
-  <databases xsi:type="typhonml:DocumentDB" name="DocumentDatabase">
-    <collections name="Customers" entity="//@entities.4"/>
-    <collections name="Orders" entity="//@entities.1"/>
-  </databases>
+  <changeOperators xsi:type="typhonml:SplitEntityVertical" entity1="//@entities.4" entity2name="Address" attributeList="//@entities.4/@attributes.4 //@entities.4/@attributes.5 //@entities.4/@attributes.6 //@entities.4/@attributes.7 //@entities.4/@attributes.8 //@entities.4/@attributes.9 //@entities.4/@attributes.10"/>
 </typhonml:Model>

@@ -261,7 +261,8 @@ public class PolyStoreFiller {
 			alphabeticalOrderMap.put(file.getName(), file);
 
 		List<File> fileList = new ArrayList<File>(alphabeticalOrderMap.values());
-		QLQueryInjector.polystoreServiceUrl = polystoreServiceUrl + PREPARED_UPDATE;
+		QLQueryInjector.polystoreServiceUrl = polystoreServiceUrl;
+		QLQueryInjector.polystoreServiceQueryUpdate = PREPARED_UPDATE;
 		QLQueryInjector.polystoreServicePassword = polystoreServicePassword;
 		QLQueryInjector.polystoreServiceLogin = polystoreServiceLogin;
 

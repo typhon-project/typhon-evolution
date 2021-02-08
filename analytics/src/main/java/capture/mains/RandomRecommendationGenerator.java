@@ -2,9 +2,15 @@ package capture.mains;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,8 +58,52 @@ public class RandomRecommendationGenerator {
 	private static final int MIGRATE = 2;
 	private static final int XOR = 3;
 	private static final int AND = 4;
-	
-	
+
+	private static String randomString() {
+		 int leftLimit = 97; // letter 'a'
+		    int rightLimit = 122; // letter 'z'
+		    int targetStringLength = 10;
+		    Random random = new Random();
+		    StringBuilder buffer = new StringBuilder(targetStringLength);
+		    for (int i = 0; i < targetStringLength; i++) {
+		        int randomLimitedInt = leftLimit + (int) 
+		          (random.nextFloat() * (rightLimit - leftLimit + 1));
+		        buffer.append((char) randomLimitedInt);
+		    }
+		    String generatedString = buffer.toString();
+		return generatedString;
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		String myDriver = "org.mariadb.jdbc.Driver";
+		String myUrl = "jdbc:mysql://localhost:3307/northwind";
+		Class.forName(myDriver);
+		Connection conn = DriverManager.getConnection(myUrl, "root", "password");
+
+		String query = " insert into Employees (LastName, FirstName, Address, City, PostalCode, Country, Notes)"
+				+ " values (?, ?, ?, ?, ?, ?, ?)";
+
+		// create the mysql insert preparedstatement
+
+		for (int i = 0; i < 20000; i++) {
+			PreparedStatement preparedStmt = conn.prepareStatement(query);
+			preparedStmt.setString(1, randomString());
+			preparedStmt.setString(2, randomString());
+			preparedStmt.setString(3, randomString());
+			preparedStmt.setString(4, randomString());
+			preparedStmt.setString(5, randomString());
+			preparedStmt.setString(6, randomString());
+			preparedStmt.setString(7, randomString());
+
+			// execute the preparedstatement
+			preparedStmt.execute();
+			System.out.println(i);
+		}
+
+		conn.close();
+
+	}
+
 //	public static void main(String[] args) throws ParserConfigurationException, TransformerException {
 //		RandomRecommendationGenerator g = new RandomRecommendationGenerator();
 //		Recommendation[] list = g.randomRecommendationList(0);
@@ -71,11 +121,11 @@ public class RandomRecommendationGenerator {
 //
 //		transformer.transform(domSource, streamResult);
 //	}
-	
+
 	public Recommendation randomRecommendation(int depth) {
 		int type = randomType(depth);
-		
-		switch(type) {
+
+		switch (type) {
 		case INDEX:
 			return randomIndex();
 		case MERGE:
@@ -88,12 +138,12 @@ public class RandomRecommendationGenerator {
 			return randomAnd(depth);
 		}
 		System.err.println("problem");
-		if(true)
+		if (true)
 			System.exit(0);
 		return null;
-		
+
 	}
-	
+
 	private Recommendation randomAnd(int depth) {
 		Recommendation[] list = randomRecommendationList(depth + 1);
 		AndRecommendation res = new AndRecommendation(list);
@@ -103,10 +153,10 @@ public class RandomRecommendationGenerator {
 	private Recommendation[] randomRecommendationList(int depth) {
 		int nb = 2;
 		Recommendation[] res = new Recommendation[nb];
-		for(int i = 0; i < nb; i++) {
+		for (int i = 0; i < nb; i++) {
 			res[i] = randomRecommendation(depth);
 		}
-		
+
 		return res;
 	}
 
@@ -118,920 +168,919 @@ public class RandomRecommendationGenerator {
 
 	private Recommendation randomMigrate() {
 		Entity ent = new Entity() {
-			
+
 			@Override
 			public void eSetDeliver(boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eNotify(Notification arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean eDeliver() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public EList<Adapter> eAdapters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void eUnset(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eSet(EStructuralFeature arg0, Object arg1) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Resource eResource() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean eIsSet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public boolean eIsProxy() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public Object eInvoke(EOperation arg0, EList<?> arg1) throws InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0, boolean arg1) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eCrossReferences() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EReference eContainmentFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EStructuralFeature eContainingFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EObject eContainer() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EClass eClass() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public TreeIterator<EObject> eAllContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setName(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setImportedNamespace(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getName() {
 				return "E";
 			}
-			
+
 			@Override
 			public String getImportedNamespace() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Table> getTables() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Relation> getRelations() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<NFunctionalTag> getNfunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<KeyValueElement> getKeyValueElements() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<GraphNode> getGraphNodes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<FunctionalTag> getFunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Column> getColumns() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Collection> getCollections() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EntityAttributeKind> getAttributes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		};
-		
-		
+
 		Database db = new Database() {
-			
+
 			@Override
 			public void eSetDeliver(boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eNotify(Notification arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean eDeliver() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public EList<Adapter> eAdapters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void eUnset(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eSet(EStructuralFeature arg0, Object arg1) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Resource eResource() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean eIsSet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public boolean eIsProxy() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public Object eInvoke(EOperation arg0, EList<?> arg1) throws InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0, boolean arg1) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eCrossReferences() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EReference eContainmentFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EStructuralFeature eContainingFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EObject eContainer() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EClass eClass() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public TreeIterator<EObject> eAllContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setName(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setImportedNamespace(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getName() {
 				return "db";
 			}
-			
+
 			@Override
 			public String getImportedNamespace() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		};
-		
+
 		MigrateEntityRecommendation res = new MigrateEntityRecommendation(ent, db);
 		return res;
 	}
 
 	private Recommendation randomMerge() {
 		Entity e1 = new Entity() {
-			
+
 			@Override
 			public void eSetDeliver(boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eNotify(Notification arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean eDeliver() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public EList<Adapter> eAdapters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void eUnset(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eSet(EStructuralFeature arg0, Object arg1) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Resource eResource() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean eIsSet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public boolean eIsProxy() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public Object eInvoke(EOperation arg0, EList<?> arg1) throws InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0, boolean arg1) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eCrossReferences() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EReference eContainmentFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EStructuralFeature eContainingFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EObject eContainer() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EClass eClass() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public TreeIterator<EObject> eAllContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setName(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setImportedNamespace(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getName() {
 				return "E1";
 			}
-			
+
 			@Override
 			public String getImportedNamespace() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Table> getTables() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Relation> getRelations() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<NFunctionalTag> getNfunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<KeyValueElement> getKeyValueElements() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<GraphNode> getGraphNodes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<FunctionalTag> getFunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Column> getColumns() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Collection> getCollections() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EntityAttributeKind> getAttributes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		};
-		
+
 		Entity e2 = new Entity() {
-			
+
 			@Override
 			public void eSetDeliver(boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eNotify(Notification arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean eDeliver() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public EList<Adapter> eAdapters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void eUnset(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eSet(EStructuralFeature arg0, Object arg1) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Resource eResource() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean eIsSet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public boolean eIsProxy() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public Object eInvoke(EOperation arg0, EList<?> arg1) throws InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0, boolean arg1) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eCrossReferences() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EReference eContainmentFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EStructuralFeature eContainingFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EObject eContainer() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EClass eClass() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public TreeIterator<EObject> eAllContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setName(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setImportedNamespace(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getName() {
 				return "E2";
 			}
-			
+
 			@Override
 			public String getImportedNamespace() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Table> getTables() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Relation> getRelations() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<NFunctionalTag> getNfunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<KeyValueElement> getKeyValueElements() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<GraphNode> getGraphNodes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<FunctionalTag> getFunctionalTags() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Column> getColumns() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<Collection> getCollections() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EntityAttributeKind> getAttributes() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		};
-		
+
 		Relation relation = new Relation() {
-			
+
 			@Override
 			public void eSetDeliver(boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eNotify(Notification arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public boolean eDeliver() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public EList<Adapter> eAdapters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void eUnset(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void eSet(EStructuralFeature arg0, Object arg1) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Resource eResource() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean eIsSet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public boolean eIsProxy() {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public Object eInvoke(EOperation arg0, EList<?> arg1) throws InvocationTargetException {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0, boolean arg1) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Object eGet(EStructuralFeature arg0) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eCrossReferences() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EList<EObject> eContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EReference eContainmentFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EStructuralFeature eContainingFeature() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EObject eContainer() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public EClass eClass() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public TreeIterator<EObject> eAllContents() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setName(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setImportedNamespace(String arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public String getName() {
 				return "rel";
 			}
-			
+
 			@Override
 			public String getImportedNamespace() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public void setType(Entity arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setOpposite(Relation arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setIsContainment(Boolean arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void setCardinality(Cardinality arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public Entity getType() {
 				return e2;
 			}
-			
+
 			@Override
 			public Relation getOpposite() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Boolean getIsContainment() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public Cardinality getCardinality() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 		};
-		
+
 		MergeEntitiesRecommendation res = new MergeEntitiesRecommendation(e1, e2, relation);
 		return res;
 	}
@@ -1044,6 +1093,5 @@ public class RandomRecommendationGenerator {
 	private static int randomType(int depth) {
 		return ThreadLocalRandom.current().nextInt(0, (depth > 1) ? 1 : 5);
 	}
-	
 
 }

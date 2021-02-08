@@ -13,22 +13,27 @@
         <dependency>
             <groupId>it.univaq.disim.typhonml</groupId>
             <artifactId>it.univaq.disim.typhonml</artifactId>
-            <version>1.0.0.202010150957</version>
+            <version>1.0.0.202102031601</version>
         </dependency>
         <dependency>
             <groupId>it.univaq.disim.typhonml</groupId>
             <artifactId>it.univaq.disim.typhonml.xtext</artifactId>
-            <version>1.0.0.202010150957</version>
+            <version>1.0.0.202102031601</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>it.univaq.disim.typhonml</groupId>-->
+<!--            <artifactId>it.univaq.disim.typhonml.acceleo</artifactId>-->
+<!--            <version>1.0.0.202102031601</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>it.univaq.disim.typhonml</groupId>
+            <groupId>it.univaq.disim.typhon</groupId>
             <artifactId>it.univaq.disim.typhon.acceleo</artifactId>
-            <version>1.0.0.202010150957</version>
+            <version>1.0.0.202102031601</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.emf</groupId>
             <artifactId>org.eclipse.emf.common</artifactId>
-            <version>2.20.0.v20200822-0801</version>
+            <version>2.21.0.v20200917-1439</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.emf</groupId>
@@ -43,25 +48,40 @@
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext</artifactId>
-            <version>2.23.0.v20200831-0730</version>
+            <version>2.21.0.v20200302-1141</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.core</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.18.0.v20200506-2143</version>
+            <version>3.17.100.v20200203-0917</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.xtext</groupId>
             <artifactId>org.eclipse.xtext.util</artifactId>
-            <version>2.23.0.v20200831-0730</version>
+            <version>2.21.0.v20200302-1141</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.equinox</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>3.13.0.v20200828-1034</version>
+            <version>3.11.0.v20200206-0817</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.xtext</groupId>
+            <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
+            <version>2.21.0.v20200302-1127</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.inject</groupId>-->
+<!--            <artifactId>com.google.inject</artifactId>-->
+<!--            <version>3.0.0.v201605172100</version>-->
+<!--        </dependency>-->
 
         <!-- Other useful Maven dependencies -->
+<!--        <dependency>-->
+<!--            <groupId>log4j</groupId>-->
+<!--            <artifactId>log4j</artifactId>-->
+<!--            <version>1.2.17</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

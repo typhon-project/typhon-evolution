@@ -1,1 +1,1 @@
-changeOperators[ AddIndex {table "RelationalDatabase.AddressDB" attributes ("Address.city") }, merge entities User Address as "User.address" ]
+changeOperators [ migrate Customers to DocumentDatabase ]

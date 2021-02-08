@@ -60,7 +60,8 @@ public class EvolutionServiceImpl implements EvolutionService {
         entityHandlers.put(EvolutionOperator.ADD, new EntityAddHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.REMOVE, new EntityRemoveHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.RENAME, new EntityRenameHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
-        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+//        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
+        entityHandlers.put(EvolutionOperator.MIGRATE, new EntityNewMigrateHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.SPLITHORIZONTAL, new EntitySplitHorizontalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
         entityHandlers.put(EvolutionOperator.SPLITVERTICAL, new EntitySplitVerticalHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
 //        entityHandlers.put(EvolutionOperator.MERGE, new EntityMergeHandler(typhonDLInterface, typhonMLInterface, typhonQLInterface));
@@ -122,8 +123,7 @@ public class EvolutionServiceImpl implements EvolutionService {
             logger.debug("Change operators to apply: " + changeOperators);
             //4. Create the new TML model containing the current model and the change operators
             try (PrintWriter out = new PrintWriter("temp/newTMLModel.tml")) {
-                out.println(tmlContent);
-                out.println(changeOperators);
+                out.print(tmlContent + " " + changeOperators);
             } catch (FileNotFoundException e) {
                 logger.error("Error while creating the TML model file containing the model and the change operators");
                 throw new Exception("Error while creating the TML model file containing the model and the change operators");

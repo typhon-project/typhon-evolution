@@ -25,11 +25,11 @@ public class ExecuteQueries {
 		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME,
 				ConsumePostEvents.WEBSERVICE_PASSWORD);
 		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
-		
+
 		String query = "from Address x0, User x1 select x0, x1 where x0.user == x1, x0.city == \"London\"";
 		simulateQuery(query);
 	}
-	
+
 	public static void main3(String[] args) {
 		if (!AnalyticsDB.initConnection(ConsumePostEvents.ANALYTICS_DB_IP, ConsumePostEvents.ANALYTICS_DB_PORT,
 				ConsumePostEvents.ANALYTICS_DB_USER, ConsumePostEvents.ANALYTICS_DB_PWD,
@@ -44,13 +44,55 @@ public class ExecuteQueries {
 			simulateQuery(query);
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		simulateQuery("from User uu select uu");
-	}
-	
-	private static void simulateQuery(String query) {
 		
+		TyphonModel.initWebService(ConsumePostEvents.WEBSERVICE_URL, ConsumePostEvents.WEBSERVICE_USERNAME,
+				ConsumePostEvents.WEBSERVICE_PASSWORD);
+		RandomQueryGenerator g = new RandomQueryGenerator(TyphonModel.getCurrentModel());
+		for(int i = 0; i < 2512; i++) {
+			System.out.println("select: " + i + "/2512");
+			simulateQuery(g.getRandomSelectQuery());
+		}
+		
+		for(int i = 0; i < 1232; i++) {
+			simulateQuery(g.getRandomInsertQuery());
+			System.out.println(i + "/1232");
+		}
+		
+		for(int i = 0; i < 67; i++)
+			simulateQuery(g.getRandomUpdateQuery());
+		
+		for(int i = 0; i < 95; i++)
+			simulateQuery(g.getRandomDeleteQuery());
+		
+		
+		
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Brussels\"", 2125);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"New York\"", 3224);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Rome\"", 3847);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Berlin\"", 4513);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Armsterdam\"", 5891);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Paris\"", 6234);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"Madrid\"", 7401);
+		simulateQuery("from Employees e, EmployeeAddress a select e.HomePhone, a.Address where e.EmployeeAddress== a && a.City == \"London\"", 8610);
+		
+		
+			
+	}
+
+	private static void simulateQuery(String query, int time) {
+
+		try {
+			PostEvent ev = generateRandomPostEvent(query, time);
+			produce(ev);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void simulateQuery(String query) {
+
 		try {
 			PostEvent ev = generateRandomPostEvent(query);
 			produce(ev);
@@ -91,8 +133,6 @@ public class ExecuteQueries {
 //			String output = resp.getEntity(String.class);
 //		}
 
-		
-		
 	}
 
 	private static void executeSelectQuery(String query) {
@@ -139,8 +179,27 @@ public class ExecuteQueries {
 		return post;
 	}
 
+	private static PostEvent generateRandomPostEvent(String query, int time) {
+		PreEvent event = new PreEvent();
+
+		event.setId(UUID.randomUUID().toString());
+		event.setQuery(query);
+		event.setDbUser("user");
+		event.setAuthenticated(true);
+
+		PostEvent post = new PostEvent();
+		post.setId(UUID.randomUUID().toString());
+		post.setQuery(query);
+		post.setPreEvent(event);
+		post.setSuccess(true);
+		post.setStartTime(new Date());
+		post.setEndTime(new Date(new Date().getTime() + time));
+
+		return post;
+	}
+
 	private static int getRandomExecutionTime() {
-		return getRandomNumberInRange(1, 1000);
+		return getRandomNumberInRange(75, 2315);
 	}
 
 	private static int getRandomNumberInRange(int min, int max) {
@@ -152,7 +211,6 @@ public class ExecuteQueries {
 		Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
 	}
-
 
 	public static void produce(PostEvent postEvent) throws Exception {
 		String kafkaConnection = IP_ADDRESS + ":29092";

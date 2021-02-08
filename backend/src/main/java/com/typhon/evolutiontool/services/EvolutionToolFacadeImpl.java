@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EvolutionToolFacadeImpl implements EvolutionToolFacade {
 
@@ -66,7 +68,8 @@ public class EvolutionToolFacadeImpl implements EvolutionToolFacade {
         try {
             newModel = executeChangeOperators(modelToEvolve);
         } catch (Exception e) {
-            message = "Error while evolving the model";
+
+            message = e.toString() + System.lineSeparator() + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining(System.lineSeparator()));
             logger.error(message);
         }
         logger.info(message);

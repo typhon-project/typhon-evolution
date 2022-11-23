@@ -26,7 +26,7 @@
     "evolution-analytics-model": "file:evolution-analytics-model",
     "express": "^4.17.1",
     "mongodb": "3.6.3",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "temp": "^0.9.1",
     "tmp": "^0.2.1"
   },

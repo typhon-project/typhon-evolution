@@ -24,7 +24,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "evolution-analytics-model": "file:evolution-analytics-model",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mongodb": "3.6.3",
     "socket.io": "^2.3.0",
     "temp": "^0.9.1",
